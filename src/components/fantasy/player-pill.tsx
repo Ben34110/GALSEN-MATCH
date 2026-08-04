@@ -19,7 +19,7 @@ export function PlayerPill({ player, points, selected, isCaptain, disabled, onTo
   return (
     <div
       className={cn(
-        "flex items-center gap-2 rounded-xl border px-2.5 py-2 transition-colors",
+        "flex items-center gap-1.5 rounded-xl border py-1.5 pl-2.5 pr-1.5 transition-colors duration-[var(--duration-fast)]",
         selected ? "border-accent bg-accent/10" : "border-border bg-surface",
         disabled && !selected && "opacity-40"
       )}
@@ -28,9 +28,9 @@ export function PlayerPill({ player, points, selected, isCaptain, disabled, onTo
         type="button"
         onClick={onToggle}
         disabled={disabled && !selected}
-        className="flex flex-1 items-center gap-2.5 text-left disabled:cursor-not-allowed"
+        className="flex min-h-11 flex-1 items-center gap-2.5 rounded-lg text-left disabled:cursor-not-allowed"
       >
-        <span className="grid size-8 shrink-0 place-items-center rounded-full bg-surface-2 text-[10px] font-bold text-foreground">
+        <span className="grid size-9 shrink-0 place-items-center rounded-full bg-surface-2 text-[10px] font-bold text-foreground">
           {player.photoInitials}
         </span>
         <span className="min-w-0">
@@ -46,15 +46,15 @@ export function PlayerPill({ player, points, selected, isCaptain, disabled, onTo
           aria-pressed={isCaptain}
           aria-label={isCaptain ? "Capitaine" : "Désigner comme capitaine"}
           className={cn(
-            "shrink-0 rounded-full p-1.5 transition-colors",
+            "grid size-9 shrink-0 place-items-center rounded-full transition-colors duration-[var(--duration-fast)] active:scale-90",
             isCaptain ? "bg-accent-2 text-accent-ink" : "bg-surface-2 text-muted hover:text-foreground"
           )}
         >
-          <Star size={13} fill={isCaptain ? "currentColor" : "none"} />
+          <Star size={14} fill={isCaptain ? "currentColor" : "none"} aria-hidden />
         </button>
       )}
 
-      <span className="w-9 shrink-0 text-right text-xs font-bold tabular-nums text-accent">
+      <span className="w-8 shrink-0 text-right text-xs font-bold tabular-nums text-accent">
         {selected ? `${points}` : ""}
       </span>
     </div>

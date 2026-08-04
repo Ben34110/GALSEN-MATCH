@@ -42,14 +42,16 @@ export function InstallPrompt() {
   return (
     <div
       className={cn(
-        "fixed inset-x-4 bottom-24 z-40 mx-auto flex max-w-sm items-center gap-3 rounded-2xl",
-        "border border-border bg-surface/95 p-3 pl-4 shadow-lg shadow-black/30 backdrop-blur"
+        "fixed inset-x-4 z-40 mx-auto flex max-w-sm items-center gap-3 rounded-2xl",
+        "bottom-[calc(5.5rem+var(--safe-bottom))] lg:inset-x-auto lg:bottom-6 lg:right-6 lg:mx-0 lg:w-96",
+        "border border-border bg-surface/95 p-3 pl-4 shadow-lg shadow-black/30 backdrop-blur",
+        "animate-rise-in"
       )}
       role="dialog"
       aria-label="Installer Galsen Match"
     >
-      <Download size={18} className="shrink-0 text-accent" />
-      <div className="flex-1 text-xs text-foreground">
+      <Download size={18} className="shrink-0 text-accent" aria-hidden />
+      <div className="flex-1 text-xs leading-snug text-foreground">
         {isIOS ? (
           <span>
             Installe Galsen Match : appuie sur <strong>Partager</strong> puis{" "}
@@ -62,7 +64,10 @@ export function InstallPrompt() {
       {!isIOS && deferredPrompt && (
         <button
           onClick={install}
-          className="shrink-0 rounded-full bg-accent px-3 py-1.5 text-xs font-semibold text-accent-ink"
+          className={cn(
+            "shrink-0 rounded-full bg-accent px-3.5 py-2 text-xs font-semibold text-accent-ink",
+            "transition-transform duration-[var(--duration-fast)] active:scale-95"
+          )}
         >
           Installer
         </button>
@@ -70,7 +75,7 @@ export function InstallPrompt() {
       <button
         onClick={() => writeLocalStorageValue(DISMISSED_KEY, "1")}
         aria-label="Fermer"
-        className="shrink-0 rounded-full p-1 text-muted hover:text-foreground"
+        className="grid size-8 shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
       >
         <X size={16} />
       </button>

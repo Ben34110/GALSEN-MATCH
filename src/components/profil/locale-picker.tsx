@@ -24,9 +24,13 @@ export function LocalePicker() {
         <button
           key={item.id}
           onClick={() => writeLocalStorageValue(STORAGE_KEY, item.id)}
+          aria-pressed={locale === item.id}
           className={cn(
-            "flex-1 rounded-xl border px-3 py-2.5 text-sm font-semibold transition-colors",
-            locale === item.id ? "border-accent bg-accent/10 text-foreground" : "border-border bg-surface text-muted"
+            "min-h-11 flex-1 rounded-xl border px-3 py-2.5 text-sm font-semibold",
+            "transition-[transform,border-color,background-color] duration-[var(--duration-fast)] active:scale-95",
+            locale === item.id
+              ? "border-accent bg-accent/10 text-foreground"
+              : "border-border bg-surface text-muted hover:border-accent/30"
           )}
         >
           {item.label}

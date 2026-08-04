@@ -1,7 +1,7 @@
 import { ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { formatRelativeTime } from "@/lib/utils";
+import { cn, formatRelativeTime } from "@/lib/utils";
 import type { Article } from "@/types";
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -13,7 +13,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export function ArticleCard({ article }: { article: Article }) {
   return (
-    <Card className="flex flex-col gap-2">
+    <Card className="flex h-full flex-col gap-2">
       <div className="flex items-center justify-between gap-2">
         <Badge tone="accent">{CATEGORY_LABELS[article.category] ?? article.category}</Badge>
         <span className="text-[11px] text-muted">{formatRelativeTime(article.publishedAt)}</span>
@@ -26,10 +26,13 @@ export function ArticleCard({ article }: { article: Article }) {
         href={article.sourceUrl}
         target="_blank"
         rel="noopener noreferrer nofollow"
-        className="mt-1 inline-flex items-center gap-1.5 text-xs font-semibold text-accent hover:underline"
+        className={cn(
+          "mt-auto inline-flex min-h-9 w-fit items-center gap-1.5 rounded-full pt-2 text-xs font-semibold",
+          "text-accent transition-colors hover:text-foreground hover:underline"
+        )}
       >
         Source : {article.sourceName}
-        <ExternalLink size={12} />
+        <ExternalLink size={12} aria-hidden />
       </a>
     </Card>
   );

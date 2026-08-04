@@ -11,24 +11,29 @@ export function AccentThemePicker() {
 
   return (
     <div className="grid grid-cols-3 gap-2.5">
-      {accentThemes.map((theme) => (
-        <button
-          key={theme.id}
-          onClick={() => applyAccentTheme(theme.id)}
-          className={cn(
-            "flex flex-col items-center gap-1.5 rounded-xl border p-2.5 transition-colors",
-            activeId === theme.id ? "border-accent bg-accent/10" : "border-border bg-surface"
-          )}
-        >
-          <span
-            className="grid size-9 place-items-center rounded-full"
-            style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent2})` }}
+      {accentThemes.map((theme) => {
+        const active = activeId === theme.id;
+        return (
+          <button
+            key={theme.id}
+            onClick={() => applyAccentTheme(theme.id)}
+            aria-pressed={active}
+            className={cn(
+              "flex min-h-11 flex-col items-center gap-1.5 rounded-xl border p-2.5",
+              "transition-[transform,border-color,background-color] duration-[var(--duration-fast)] active:scale-95",
+              active ? "border-accent bg-accent/10" : "border-border bg-surface hover:border-accent/30"
+            )}
           >
-            {activeId === theme.id && <Check size={16} className="text-white drop-shadow" />}
-          </span>
-          <span className="text-[11px] font-semibold text-foreground">{theme.label}</span>
-        </button>
-      ))}
+            <span
+              className="grid size-9 place-items-center rounded-full"
+              style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent2})` }}
+            >
+              {active && <Check size={16} className="text-white drop-shadow" aria-hidden />}
+            </span>
+            <span className="text-[11px] font-semibold text-foreground">{theme.label}</span>
+          </button>
+        );
+      })}
     </div>
   );
 }

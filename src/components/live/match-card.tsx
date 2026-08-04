@@ -33,7 +33,11 @@ export function MatchCard({ match }: { match: Match }) {
         <span className="text-[11px] font-semibold uppercase tracking-wide text-muted">
           {match.competition} · J{match.matchday}
         </span>
-        {match.status === "live" && <Badge tone="live">● {match.minute}&apos;</Badge>}
+        {match.status === "live" && (
+          <Badge tone="live" aria-label={`En direct, ${match.minute} minutes`}>
+            {match.minute}&apos;
+          </Badge>
+        )}
         {match.status === "scheduled" && <Badge tone="neutral">{formatKickoff(match.kickoffAt)}</Badge>}
         {match.status === "finished" && <Badge tone="neutral">Terminé</Badge>}
       </div>

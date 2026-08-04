@@ -29,13 +29,16 @@ export default function LivePage() {
         subtitle="Scores mis à jour via une couche de cache — API-Football n'est jamais interrogée directement par le client."
       />
 
-      <div className="mb-4 flex gap-1.5">
+      <div className="mb-5 flex gap-2" role="tablist">
         {TABS.map((item) => (
           <button
             key={item.id}
+            role="tab"
+            aria-selected={tab === item.id}
             onClick={() => setTab(item.id)}
             className={cn(
-              "rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors",
+              "min-h-10 rounded-full border px-4 py-2 text-xs font-semibold",
+              "transition-colors duration-[var(--duration-fast)] active:scale-95",
               tab === item.id
                 ? "border-accent bg-accent text-accent-ink"
                 : "border-border bg-surface text-muted hover:text-foreground"
@@ -47,11 +50,17 @@ export default function LivePage() {
       </div>
 
       {tab === "matches" ? (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-7">
           {live.length > 0 && (
             <section>
-              <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-accent-3">En direct</h2>
-              <div className="flex flex-col gap-3">
+              <h2 className="mb-2.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-accent-3">
+                <span className="relative flex size-1.5" aria-hidden>
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent-3 opacity-75" />
+                  <span className="relative inline-flex size-1.5 rounded-full bg-accent-3" />
+                </span>
+                En direct
+              </h2>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {live.map((match) => (
                   <MatchCard key={match.id} match={match} />
                 ))}
@@ -61,8 +70,8 @@ export default function LivePage() {
 
           {upcoming.length > 0 && (
             <section>
-              <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">À venir</h2>
-              <div className="flex flex-col gap-3">
+              <h2 className="mb-2.5 text-xs font-bold uppercase tracking-wide text-muted">À venir</h2>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {upcoming.map((match) => (
                   <MatchCard key={match.id} match={match} />
                 ))}
@@ -72,13 +81,19 @@ export default function LivePage() {
 
           {finished.length > 0 && (
             <section>
-              <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">Derniers résultats</h2>
-              <div className="flex flex-col gap-3">
+              <h2 className="mb-2.5 text-xs font-bold uppercase tracking-wide text-muted">Derniers résultats</h2>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {finished.map((match) => (
                   <MatchCard key={match.id} match={match} />
                 ))}
               </div>
             </section>
+          )}
+
+          {live.length === 0 && upcoming.length === 0 && finished.length === 0 && (
+            <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">
+              Aucun match à afficher pour l&apos;instant.
+            </p>
           )}
         </div>
       ) : (

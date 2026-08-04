@@ -40,30 +40,37 @@ export function ChatRoom({ rooms }: { rooms: ChatRoomType[] }) {
 
   return (
     <div className="flex flex-col">
-      <div className="mb-3 flex gap-1.5 overflow-x-auto pb-1">
+      <div className="-mx-4 mb-3 flex gap-2 overflow-x-auto px-4 pb-1 scrollbar-none sm:mx-0 sm:px-0">
         {rooms.map((room) => (
           <button
             key={room.id}
             onClick={() => setActiveRoomId(room.id)}
+            aria-pressed={room.id === activeRoomId}
             className={cn(
-              "flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors",
+              "flex min-h-10 shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-2 text-xs font-semibold",
+              "transition-colors duration-[var(--duration-fast)] active:scale-95",
               room.id === activeRoomId
                 ? "border-accent bg-accent text-accent-ink"
                 : "border-border bg-surface text-muted hover:text-foreground"
             )}
           >
-            <span>{room.flag}</span>
+            <span aria-hidden>{room.flag}</span>
             {room.name}
           </button>
         ))}
       </div>
 
-      <div className="flex min-h-[50vh] flex-col justify-end gap-2.5 rounded-2xl border border-border bg-surface p-3">
+      <div
+        role="log"
+        aria-live="polite"
+        aria-label={`Messages de ${activeRoom?.name ?? "la conversation"}`}
+        className="flex min-h-[60dvh] flex-col justify-end gap-2.5 rounded-2xl border border-border bg-surface p-3 sm:min-h-[50dvh]"
+      >
         {messages.length === 0 && (
           <p className="py-8 text-center text-sm text-muted">Aucun message pour l&apos;instant dans {activeRoom?.name}.</p>
         )}
         {messages.map((message) => (
-          <div key={message.id} className={cn("max-w-[85%]", message.authorName === "Toi" && "self-end")}>
+          <div key={message.id} className={cn("max-w-[85%] sm:max-w-[70%]", message.authorName === "Toi" && "self-end")}>
             <div
               className={cn(
                 "rounded-2xl px-3 py-2 text-sm",
@@ -80,6 +87,10 @@ export function ChatRoom({ rooms }: { rooms: ChatRoomType[] }) {
                 "mt-0.5 px-1 text-[10px] text-muted",
                 message.authorName === "Toi" && "text-right"
               )}
+              // Le mock génère createdAt relatif à Date.now() : le rendu serveur et
+              // l'hydratation client tombent parfois de part et d'autre d'une minute,
+              // ce qui ferait dévier ce texte d'un cran sans affecter le contenu réel.
+              suppressHydrationWarning
             >
               {formatRelativeTime(message.createdAt)}
             </p>
@@ -94,20 +105,28 @@ export function ChatRoom({ rooms }: { rooms: ChatRoomType[] }) {
         }}
         className="mt-3 flex items-center gap-2"
       >
+        <label htmlFor="chat-draft" className="sr-only">
+          Message pour {activeRoom?.name ?? "la conversation"}
+        </label>
         <input
+          id="chat-draft"
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
           placeholder={`Écrire dans ${activeRoom?.name ?? ""}…`}
           maxLength={500}
-          className="flex-1 rounded-full border border-border bg-surface px-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
+          autoComplete="off"
+          className="min-h-11 flex-1 rounded-full border border-border bg-surface px-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
         />
         <button
           type="submit"
           aria-label="Envoyer"
-          className="grid size-10 shrink-0 place-items-center rounded-full bg-accent text-accent-ink disabled:opacity-40"
+          className={cn(
+            "grid size-11 shrink-0 place-items-center rounded-full bg-accent text-accent-ink",
+            "transition-[transform,opacity] duration-[var(--duration-fast)] active:scale-90 disabled:opacity-40"
+          )}
           disabled={!draft.trim()}
         >
-          <Send size={16} />
+          <Send size={17} aria-hidden />
         </button>
       </form>
     </div>
