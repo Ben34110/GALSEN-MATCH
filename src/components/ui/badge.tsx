@@ -7,8 +7,8 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 
 const TONE_CLASSES: Record<NonNullable<BadgeProps["tone"]>, string> = {
   neutral: "bg-surface-2 text-muted",
-  accent: "bg-accent/15 text-accent",
-  live: "bg-accent-3/15 text-accent-3",
+  accent: "bg-accent/15 text-accent ring-1 ring-inset ring-accent/25",
+  live: "bg-accent-3/15 text-accent-3 ring-1 ring-inset ring-accent-3/30 shadow-[0_0_16px_-4px_rgba(217,79,79,0.6)]",
 };
 
 export function Badge({ tone = "neutral", className, children, ...props }: BadgeProps) {

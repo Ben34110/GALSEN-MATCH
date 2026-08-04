@@ -5,6 +5,7 @@ import { AppTopBar } from "@/components/nav/app-top-bar";
 import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import { InstallPrompt } from "@/components/pwa/install-prompt";
 import { AccentThemeProvider } from "@/components/theme/accent-theme-provider";
+import { AmbientGlow } from "@/components/theme/ambient-glow";
 
 export const metadata: Metadata = {
   title: "Galsen Match",
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-dvh bg-background text-foreground antialiased">
         <ServiceWorkerRegister />
         <AccentThemeProvider />
+        <AmbientGlow />
         <a
           href="#contenu"
           className={[
