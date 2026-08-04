@@ -46,7 +46,7 @@ export function StandingsTable({ rows }: { rows: StandingRow[] }) {
                   key={row.teamId}
                   className={cn(
                     "border-t border-border bg-surface transition-colors hover:bg-surface-2",
-                    qualified && "border-l-2 border-l-accent-emerald"
+                    qualified && "border-l-2 border-l-accent"
                   )}
                 >
                   <td className="px-3 py-2.5 tabular-nums text-muted">{index + 1}</td>
@@ -63,7 +63,7 @@ export function StandingsTable({ rows }: { rows: StandingRow[] }) {
         </table>
       </div>
       <p className="flex items-center gap-1.5 border-t border-border bg-surface px-3 py-2 text-[11px] text-muted">
-        <span className="inline-block h-2.5 w-1 rounded-full bg-accent-emerald" aria-hidden />
+        <span className="inline-block h-2.5 w-1 rounded-full bg-accent" aria-hidden />
         Zone de qualification (top {QUALIFICATION_CUTOFF})
       </p>
     </div>

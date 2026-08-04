@@ -2,8 +2,10 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 // Full-bleed splash screen — lives outside the (app) route group, so it
-// renders without the tab bar/top bar. Installed PWA users skip straight to
-// /actu (manifest start_url); this screen is for first web visits.
+// renders without the tab bar/top bar. The CTA always goes through
+// /onboarding: first-time visitors complete the wizard, returning visitors
+// (profile already in localStorage) are bounced straight to /actu by that
+// page. Installed PWA users skip this screen entirely (manifest start_url).
 export default function SplashPage() {
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 pb-[calc(2rem+var(--safe-bottom))] pt-[calc(1.5rem+var(--safe-top))]">
@@ -21,7 +23,7 @@ export default function SplashPage() {
             aria-hidden
           />
           <span className="absolute -right-1 top-8 size-9 rounded-full bg-accent-2 shadow-md sm:size-10" aria-hidden />
-          <span className="absolute -left-2 bottom-12 size-6 rounded-full bg-accent-emerald shadow-md sm:size-7" aria-hidden />
+          <span className="absolute -left-2 bottom-12 size-6 rounded-full bg-accent-3 shadow-md sm:size-7" aria-hidden />
 
           <svg viewBox="0 0 200 200" className="absolute inset-0 size-full p-9" aria-hidden>
             <circle cx="100" cy="100" r="64" fill="#ffffff" opacity="0.14" />
@@ -48,7 +50,7 @@ export default function SplashPage() {
       </div>
 
       <Link
-        href="/actu"
+        href="/onboarding"
         className={[
           "group mt-10 flex min-h-14 items-center justify-center gap-2 rounded-full bg-foreground px-6",
           "text-base font-semibold text-background shadow-lg transition-transform",

@@ -1,16 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Send } from "lucide-react";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { getInitialMessages } from "@/lib/data/chat";
+import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
+import { COUNTRY_CODE_BY_THEME_ID } from "@/lib/onboarding";
 import type { ChatMessage, ChatRoom as ChatRoomType } from "@/types";
 
 // Les messages vivent en mémoire côté client pour cette démo. Le passage à
 // Supabase Realtime remplacera useState par un canal souscrit sur
 // `chat_messages` filtré par room_id (insert émis en direct à tous les membres).
 export function ChatRoom({ rooms }: { rooms: ChatRoomType[] }) {
-  const [activeRoomId, setActiveRoomId] = useState(rooms[0]?.id ?? "");
+  const profile = useOnboardingProfile();
+  const countryCode = profile ? COUNTRY_CODE_BY_THEME_ID[profile.countryId] : undefined;
+
+  // Surface the user's own country room right after "Général" — the room
+  // they're most likely to want, per the onboarding country selection.
+  const orderedRooms = useMemo(() => {
+    if (!countryCode) return rooms;
+    const homeRoom = rooms.find((room) => room.countryCode === countryCode);
+    if (!homeRoom) return rooms;
+    const generalRooms = rooms.filter((room) => room.type === "general");
+    const otherRooms = rooms.filter((room) => room.id !== homeRoom.id && room.type !== "general");
+    return [...generalRooms, homeRoom, ...otherRooms];
+  }, [rooms, countryCode]);
+
+  const homeRoomId = rooms.find((room) => room.countryCode === countryCode)?.id;
+  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+  const activeRoomId = selectedRoomId ?? homeRoomId ?? rooms[0]?.id ?? "";
+
   const [messagesByRoom, setMessagesByRoom] = useState<Record<string, ChatMessage[]>>(() =>
     Object.fromEntries(rooms.map((room) => [room.id, getInitialMessages(room.id)]))
   );
@@ -39,12 +58,12 @@ export function ChatRoom({ rooms }: { rooms: ChatRoomType[] }) {
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="-mx-4 mb-3 flex gap-2 overflow-x-auto px-4 pb-1 scrollbar-none sm:mx-0 sm:px-0">
-        {rooms.map((room) => (
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="-mx-4 mb-3 flex shrink-0 gap-2 overflow-x-auto px-4 pb-1 scrollbar-none sm:mx-0 sm:px-0">
+        {orderedRooms.map((room) => (
           <button
             key={room.id}
-            onClick={() => setActiveRoomId(room.id)}
+            onClick={() => setSelectedRoomId(room.id)}
             aria-pressed={room.id === activeRoomId}
             className={cn(
               "flex min-h-10 shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-2 text-xs font-semibold",
@@ -64,7 +83,7 @@ export function ChatRoom({ rooms }: { rooms: ChatRoomType[] }) {
         role="log"
         aria-live="polite"
         aria-label={`Messages de ${activeRoom?.name ?? "la conversation"}`}
-        className="flex min-h-[60dvh] flex-col justify-end gap-2.5 rounded-2xl border border-border bg-surface p-3 sm:min-h-[50dvh]"
+        className="flex min-h-0 flex-1 flex-col justify-end gap-2.5 overflow-y-auto rounded-2xl border border-border bg-surface p-3"
       >
         {messages.length === 0 && (
           <p className="py-8 text-center text-sm text-muted">Aucun message pour l&apos;instant dans {activeRoom?.name}.</p>
@@ -103,7 +122,7 @@ export function ChatRoom({ rooms }: { rooms: ChatRoomType[] }) {
           event.preventDefault();
           sendMessage();
         }}
-        className="mt-3 flex items-center gap-2"
+        className="mt-3 flex shrink-0 items-center gap-2"
       >
         <label htmlFor="chat-draft" className="sr-only">
           Message pour {activeRoom?.name ?? "la conversation"}

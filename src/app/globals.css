@@ -2,10 +2,10 @@
 
 /*
  * Galsen Match — design tokens.
- * Soft UI / light-pastel system — cream surface, white cards, lavender/
- * emerald/gold accents. --accent / --accent-2 are still rewritten at runtime
- * (page Profil) to adapt the accent to a nation or club, but the *default*
- * identity is the lavender "Galsen touch" below, not a per-nation color.
+ * Soft UI / light-pastel system — cream surface, white cards, a pan-African
+ * green/yellow/red accent trio. --accent / --accent-2 are still rewritten at
+ * runtime (page Profil) to adapt the accent to a nation or club, but the
+ * *default* identity is the green/gold/red "Galsen touch" below.
  */
 :root {
   --background: #f7f7fc;
@@ -15,16 +15,15 @@
   --foreground: #1e1e24;
   --muted: #6f6e7f;
 
-  /* Deepened slightly from the reference's #7C73E6 so white text on solid
-     lavender clears WCAG AA (4.5:1) — the pastel swatch alone tests ~3.9:1. */
-  --accent: #5b50de;
+  /* Flag green, deepened enough that white text on a solid fill clears WCAG
+     AA (4.5:1) — a brighter "grass" green like #21A366 only tests ~3.2:1. */
+  --accent: #16794a;
   --accent-ink: #ffffff;
-  /* accent-2 / accent-3 are pastel-light by design: pair them with tinted
+  /* accent-2 / accent-3 are bright/light by design: pair them with tinted
      backgrounds + dark foreground text or decorative dots/icons, never as a
      solid fill under light/white text (see Badge). */
-  --accent-2: #f2b84b;
-  --accent-3: #c43f35;
-  --accent-emerald: #2ecc91;
+  --accent-2: #f5c518;
+  --accent-3: #ce1126;
 
   /* Frosted-white tokens for nav/overlay chrome (soft glass, not dark glass). */
   --glass-surface: rgba(255, 255, 255, 0.82);
@@ -44,7 +43,6 @@
   --color-accent-ink: var(--accent-ink);
   --color-accent-2: var(--accent-2);
   --color-accent-3: var(--accent-3);
-  --color-accent-emerald: var(--accent-emerald);
   --color-glass-border: var(--glass-border);
   --color-glass-highlight: var(--glass-highlight);
 
@@ -141,13 +139,14 @@ body {
   box-shadow: var(--shadow-lg);
 }
 
-/* Lavender → gold gradient — logo mark, active nav state, hero accents. */
+/* Green → gold → red — the pan-African flag gradient. Logo mark, active nav
+   state, hero accents. */
 .gradient-accent {
-  background-image: linear-gradient(135deg, var(--accent), var(--accent-2));
+  background-image: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 55%, var(--accent-3) 100%);
 }
 
 .gradient-accent-text {
-  background-image: linear-gradient(135deg, var(--accent), var(--accent-2));
+  background-image: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 55%, var(--accent-3) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;

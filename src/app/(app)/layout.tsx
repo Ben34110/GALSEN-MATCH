@@ -1,5 +1,6 @@
 import { FloatingNav } from "@/components/nav/floating-nav";
 import { AppTopBar } from "@/components/nav/app-top-bar";
+import { OnboardingGate } from "@/components/onboarding/onboarding-gate";
 
 // Chrome (top bar + nav) shared by every tab (/actu, /live, /fantasy, /chat,
 // /profil). The splash screen at "/" sits outside this group so it renders
@@ -29,7 +30,7 @@ export default function AppShellLayout({ children }: { children: React.ReactNode
             "sm:px-6 lg:max-w-3xl lg:px-0 lg:pb-16 lg:pt-10",
           ].join(" ")}
         >
-          {children}
+          <OnboardingGate>{children}</OnboardingGate>
         </main>
       </div>
     </>

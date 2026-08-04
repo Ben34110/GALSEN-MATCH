@@ -5,12 +5,16 @@ import { Check } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { PlayerPill } from "@/components/fantasy/player-pill";
 import { cn } from "@/lib/utils";
+import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
+import { FANTASY_LINEUP_STORAGE_KEY } from "@/lib/fantasy-lineup";
 import {
   calculateLineupPoints,
   computePlayerPoints,
   isCompositionComplete,
 } from "@/services/fantasy-scoring";
 import type { LineupSlot, Player, PlayerMatchStat, PlayerPosition } from "@/types";
+
+const CURRENT_MATCHDAY = 12;
 
 const POSITION_LABELS: Record<PlayerPosition, string> = {
   G: "Gardien",
@@ -65,6 +69,10 @@ export function LineupBuilder({ pool, stats }: LineupBuilderProps) {
 
   function complete() {
     setSaved(true);
+    writeLocalStorageValue(
+      FANTASY_LINEUP_STORAGE_KEY,
+      JSON.stringify({ selectedIds, captainId, matchday: CURRENT_MATCHDAY })
+    );
   }
 
   return (

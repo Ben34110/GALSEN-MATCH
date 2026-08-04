@@ -4,7 +4,7 @@ import type { AccentTheme } from "@/types";
 // les variables CSS --accent / --accent-2 sur :root (voir profil/page.tsx).
 // "default" mirrors the root tokens in globals.css — keep the two in sync.
 export const accentThemes: AccentTheme[] = [
-  { id: "default", label: "Galsen (par défaut)", accent: "#5b50de", accentInk: "#ffffff", accent2: "#f2b84b" },
+  { id: "default", label: "Galsen (par défaut)", accent: "#16794a", accentInk: "#ffffff", accent2: "#f5c518" },
   { id: "senegal", label: "Sénégal", accent: "#21a366", accentInk: "#04150c", accent2: "#e3b23c" },
   { id: "cotedivoire", label: "Côte d'Ivoire", accent: "#e8792f", accentInk: "#210f00", accent2: "#2f9e5c" },
   { id: "cameroun", label: "Cameroun", accent: "#2f9e5c", accentInk: "#04150c", accent2: "#d94f4f" },
