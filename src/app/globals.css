@@ -1,26 +1,59 @@
 @import "tailwindcss";
 
+/*
+ * Galsen Match — design tokens.
+ * L'app est dark-mode natif (pas de bascule clair/sombre).
+ * --accent / --accent-2 sont réécrits à l'exécution (page Profil) pour
+ * adapter la couleur d'accentuation au pays ou au club favori.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #060e0a;
+  --surface: #0d1913;
+  --surface-2: #13221a;
+  --border: #1f3327;
+  --foreground: #eef4ee;
+  --muted: #93a89b;
+
+  --accent: #21a366;
+  --accent-ink: #04150c;
+  --accent-2: #e3b23c;
+  --accent-3: #d94f4f;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-2: var(--accent-2);
+  --color-accent-3: var(--accent-3);
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--border);
+}
+
+html {
+  color-scheme: dark;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
