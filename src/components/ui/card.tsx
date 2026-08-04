@@ -19,7 +19,7 @@ export function Card({ className, interactive = false, tone = "solid", ...props 
           "transition-[transform,border-color,background-color] duration-[var(--duration-fast)] ease-[var(--ease-out)]",
           "active:scale-[0.98]",
           tone === "solid" && "hover:border-accent/40 hover:bg-surface-2",
-          tone === "glass" && "hover:bg-white/[0.04]",
+          tone === "glass" && "hover:bg-foreground/[0.03]",
         ],
         className
       )}

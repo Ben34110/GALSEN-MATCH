@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Newspaper, Radio, Trophy, MessageCircle, User } from "lucide-react";
+import { Home, Radio, Trophy, MessageCircle, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { href: "/actu", label: "Actu", icon: Newspaper },
-  { href: "/live", label: "Live", icon: Radio },
+  { href: "/actu", label: "Accueil", icon: Home },
+  { href: "/live", label: "Matchs", icon: Radio },
   { href: "/fantasy", label: "Fantasy", icon: Trophy },
-  { href: "/chat", label: "Chat", icon: MessageCircle },
+  { href: "/chat", label: "Live Chat", icon: MessageCircle },
   { href: "/profil", label: "Profil", icon: User },
 ] as const;
 
@@ -19,7 +19,7 @@ export function FloatingNav() {
 
   return (
     <>
-      {/* Mobile / tablet (<1024px): floating glass pill above the home-indicator safe area. */}
+      {/* Mobile / tablet (<1024px): floating soft pill above the home-indicator safe area. */}
       <nav
         className="fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-[calc(0.75rem+var(--safe-bottom))] pt-2 lg:hidden"
         aria-label="Navigation principale"
@@ -53,7 +53,7 @@ export function FloatingNav() {
         </ul>
       </nav>
 
-      {/* Desktop (≥1024px): persistent glass sidebar replaces the bottom bar entirely. */}
+      {/* Desktop (≥1024px): persistent soft sidebar replaces the bottom bar entirely. */}
       <nav
         className="glass-panel sticky top-8 hidden h-fit w-60 shrink-0 flex-col gap-6 self-start rounded-2xl p-4 lg:flex"
         aria-label="Navigation principale"
@@ -62,7 +62,7 @@ export function FloatingNav() {
           <span className="gradient-accent glow-accent grid size-9 shrink-0 place-items-center rounded-xl text-sm font-extrabold text-accent-ink">
             GM
           </span>
-          <span className="text-base font-extrabold tracking-tight text-foreground">Galsen Match</span>
+          <span className="font-serif text-base font-bold tracking-tight text-foreground">Galsen Match</span>
         </Link>
 
         <ul className="flex flex-col gap-1">
@@ -78,7 +78,7 @@ export function FloatingNav() {
                     "transition-colors duration-[var(--duration-base)] ease-[var(--ease-out)]",
                     active
                       ? "gradient-accent glow-accent text-accent-ink"
-                      : "text-muted hover:bg-white/[0.06] hover:text-foreground"
+                      : "text-muted hover:bg-foreground/[0.04] hover:text-foreground"
                   )}
                 >
                   <Icon size={20} strokeWidth={active ? 2.4 : 2} />

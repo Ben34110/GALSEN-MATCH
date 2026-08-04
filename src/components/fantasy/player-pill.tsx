@@ -47,7 +47,7 @@ export function PlayerPill({ player, points, selected, isCaptain, disabled, onTo
           aria-label={isCaptain ? "Capitaine" : "Désigner comme capitaine"}
           className={cn(
             "grid size-9 shrink-0 place-items-center rounded-full transition-colors duration-[var(--duration-fast)] active:scale-90",
-            isCaptain ? "bg-accent-2 text-accent-ink" : "bg-surface-2 text-muted hover:text-foreground"
+            isCaptain ? "bg-accent-2 text-foreground" : "bg-surface-2 text-muted hover:text-foreground"
           )}
         >
           <Star size={14} fill={isCaptain ? "currentColor" : "none"} aria-hidden />

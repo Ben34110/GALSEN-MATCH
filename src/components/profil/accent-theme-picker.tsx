@@ -7,7 +7,7 @@ import { ACCENT_STORAGE_KEY, applyAccentTheme } from "@/components/theme/accent-
 import { useLocalStorageValue } from "@/hooks/use-local-storage-value";
 
 export function AccentThemePicker() {
-  const activeId = useLocalStorageValue(ACCENT_STORAGE_KEY) ?? "senegal";
+  const activeId = useLocalStorageValue(ACCENT_STORAGE_KEY) ?? "default";
 
   return (
     <div className="grid grid-cols-3 gap-2.5">

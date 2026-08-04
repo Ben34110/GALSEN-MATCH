@@ -11,8 +11,8 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: "/actu",
     display: "standalone",
     orientation: "portrait",
-    background_color: "#060e0a",
-    theme_color: "#060e0a",
+    background_color: "#f7f7fc",
+    theme_color: "#f7f7fc",
     lang: "fr",
     icons: [
       {

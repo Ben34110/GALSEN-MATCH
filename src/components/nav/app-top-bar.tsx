@@ -11,7 +11,7 @@ export function AppTopBar() {
           <span className="gradient-accent glow-accent grid size-7 shrink-0 place-items-center rounded-lg text-xs font-extrabold text-accent-ink">
             GM
           </span>
-          <span className="text-sm font-extrabold tracking-tight text-foreground">Galsen Match</span>
+          <span className="font-serif text-sm font-bold tracking-tight text-foreground">Galsen Match</span>
         </Link>
       </div>
     </header>
