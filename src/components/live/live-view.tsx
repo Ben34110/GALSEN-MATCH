@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { MatchCard } from "@/components/live/match-card";
 import { StandingsTable } from "@/components/live/standings-table";
+import { FavoritesPanel } from "@/components/live/favorites-panel";
 import { SectionHeader } from "@/components/ui/section-header";
 import { cn } from "@/lib/utils";
 import type { COMPETITIONS } from "@/lib/api-football";
@@ -12,6 +13,7 @@ import type { Match, StandingRow } from "@/types";
 const TABS = [
   { id: "matches", label: "Matchs" },
   { id: "standings", label: "Classement" },
+  { id: "favorites", label: "Favoris" },
 ] as const;
 
 interface LiveViewProps {
@@ -132,7 +134,7 @@ export function LiveView({
             </p>
           )}
         </div>
-      ) : (
+      ) : tab === "standings" ? (
         <div>
           <p className="mb-3 text-xs font-medium text-muted">
             {standingsSource === "api"
@@ -147,6 +149,8 @@ export function LiveView({
             </p>
           )}
         </div>
+      ) : (
+        <FavoritesPanel />
       )}
     </div>
   );

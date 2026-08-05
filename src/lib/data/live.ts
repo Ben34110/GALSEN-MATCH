@@ -1,11 +1,13 @@
 import { matches, standings } from "@/lib/mock/matches";
 import { teams } from "@/lib/mock/teams";
 import {
-  COMPETITIONS,
+  getFinishedFixtures,
   getFixtureById,
   getLiveFixtures,
   getStandingsForSeason,
   getTeamSquad,
+  getUpcomingFixtures,
+  getUpcomingFixturesForTeam,
   LIGUE1_SENEGAL_ID,
   type ApiFixture,
   type ApiStandingRow,
@@ -26,10 +28,6 @@ function guessCurrentSeason(): number {
   // Most European/African league seasons run roughly Aug–Jun, so Jan–Jun
   // still belongs to the season that started the previous calendar year.
   return month >= 7 ? year : year - 1;
-}
-
-function competitionName(leagueId: number): string {
-  return COMPETITIONS.find((c) => c.id === leagueId)?.name ?? "Compétition";
 }
 
 function mapFixtureStatus(short: string): MatchStatus {
@@ -54,11 +52,11 @@ function mapTeamRef(team: { id: number; name: string; logo: string }): TeamRef {
   return { id: String(team.id), name: team.name, logo: team.logo };
 }
 
-function mapFixtureToMatch(fixture: ApiFixture, leagueId: number): Match {
+function mapFixtureToMatch(fixture: ApiFixture): Match {
   const status = mapFixtureStatus(fixture.fixture.status.short);
   return {
     id: `api-${fixture.fixture.id}`,
-    competition: competitionName(leagueId),
+    competition: fixture.league.name,
     matchday: 0,
     roundLabel: mapRoundLabel(fixture.league.round),
     homeTeamId: String(fixture.teams.home.id),
@@ -93,26 +91,35 @@ function sortByKickoff(list: Match[]): Match[] {
   return [...list].sort((a, b) => new Date(a.kickoffAt).getTime() - new Date(b.kickoffAt).getTime());
 }
 
-// Point de bascule (partiellement franchi) : les matchs EN DIRECT viennent
-// réellement d'API-Football pour n'importe quelle compétition. Pour Ligue 1
-// Sénégal, "à venir" / "derniers résultats" restent mock (aucune donnée
-// réelle accessible pour la saison en cours sur le plan actuel). Les autres
-// compétitions n'ont pas de mock — elles n'affichent que ce que l'API
-// renvoie réellement pour "en direct".
+// Point de bascule (franchi pour les matchs) : en direct, à venir et
+// derniers résultats viennent tous réellement d'API-Football, pour
+// n'importe quelle compétition. Pour Ligue 1 Sénégal, le mock ne sert plus
+// que de filet de sécurité si une requête échoue — les autres compétitions
+// n'ont pas de mock et affichent uniquement ce que l'API renvoie.
 export async function getMatches(leagueId: number = LIGUE1_SENEGAL_ID): Promise<Match[]> {
-  const live = await getLiveFixtures(leagueId);
-  const realLive = !live.error ? live.data.map((fixture) => mapFixtureToMatch(fixture, leagueId)) : [];
+  const season = guessCurrentSeason();
+  const [live, upcoming, finished] = await Promise.all([
+    getLiveFixtures(leagueId),
+    getUpcomingFixtures(leagueId, season),
+    getFinishedFixtures(leagueId, season),
+  ]);
+
+  const toMatches = (result: { error: string | null; data: ApiFixture[] }) =>
+    !result.error ? result.data.map(mapFixtureToMatch) : [];
+
+  const realLive = toMatches(live);
+  const realUpcoming = toMatches(upcoming);
+  const realFinished = toMatches(finished);
+  const realTotal = realLive.length + realUpcoming.length + realFinished.length;
 
   if (leagueId !== LIGUE1_SENEGAL_ID) {
-    return sortByKickoff(realLive);
+    return sortByKickoff([...realLive, ...realUpcoming, ...realFinished]);
   }
 
-  const mockMatches = sortByKickoff(matches);
-  if (realLive.length > 0) {
-    const mockNonLive = mockMatches.filter((match) => match.status !== "live");
-    return sortByKickoff([...realLive, ...mockNonLive]);
+  if (realTotal > 0) {
+    return sortByKickoff([...realLive, ...realUpcoming, ...realFinished]);
   }
-  return mockMatches;
+  return sortByKickoff(matches);
 }
 
 export interface StandingsResult {
@@ -151,10 +158,18 @@ export async function getStandings(leagueId: number = LIGUE1_SENEGAL_ID): Promis
   return { rows: [], season: 0, source: "mock" };
 }
 
-export async function getFixtureDetail(fixtureId: number, leagueId: number = LIGUE1_SENEGAL_ID): Promise<Match | null> {
+export async function getFixtureDetail(fixtureId: number): Promise<Match | null> {
   const result = await getFixtureById(fixtureId);
   if (result.error || result.data.length === 0) return null;
-  return mapFixtureToMatch(result.data[0], leagueId);
+  return mapFixtureToMatch(result.data[0]);
+}
+
+// All upcoming fixtures for one favorited team, across every competition it
+// plays in — see components/live/favorites-panel.tsx.
+export async function getUpcomingMatchesForTeam(teamId: number, count = 10): Promise<Match[]> {
+  const result = await getUpcomingFixturesForTeam(teamId, count);
+  if (result.error) return [];
+  return sortByKickoff(result.data.map(mapFixtureToMatch));
 }
 
 export interface TeamSquad {

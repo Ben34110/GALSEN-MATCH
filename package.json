@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "sync:players": "node scripts/sync-african-players.mjs"
+    "sync:players": "node scripts/sync-african-players.mjs",
+    "sync:teams": "node scripts/sync-teams.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

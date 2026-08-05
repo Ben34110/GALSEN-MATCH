@@ -12,15 +12,6 @@ export interface Team {
   country: string;
 }
 
-export interface Player {
-  id: string;
-  fullName: string;
-  position: PlayerPosition;
-  teamId: string;
-  nationality: string;
-  photoInitials: string;
-}
-
 export interface Article {
   id: string;
   title: string;
@@ -73,8 +64,7 @@ export interface StandingRow {
 }
 
 // A real club's current squad entry, from API-Football's /players/squads
-// (see lib/data/live.ts getSquad) — not related to the Fantasy Player type,
-// which stays scoped to the Ligue 1 Sénégal mock pool.
+// (see lib/data/live.ts getSquad).
 export interface SquadPlayer {
   id: number;
   name: string;
@@ -87,8 +77,7 @@ export interface SquadPlayer {
 // A real African player from the top 5 European leagues (+ Ligue 1
 // Sénégal), pre-crawled via scripts/sync-african-players.mjs into
 // lib/data/generated/african-players.json. Used by the onboarding player
-// picker — separate from the Fantasy Player type/scoring, which stays
-// Senegal-mock-only.
+// picker and the Fantasy Starting 6 pool (see services/real-player-scoring.ts).
 export interface AfricanPlayer {
   id: number;
   name: string;
@@ -106,14 +95,16 @@ export interface AfricanPlayer {
   assists: number;
 }
 
-export interface PlayerMatchStat {
-  playerId: string;
-  matchId: string;
-  rating: number | null;
-  minutes: number;
-  goals: number;
-  assists: number;
-  cleanSheet: boolean;
+// A real club from the 5 big European leagues, pre-crawled via
+// scripts/sync-teams.mjs into lib/data/generated/teams.json — powers the
+// team search + favorite feature (see components/live/favorites-panel.tsx).
+export interface LeagueTeam {
+  id: number;
+  name: string;
+  logo: string;
+  country: string;
+  leagueId: number;
+  leagueName: string;
 }
 
 export interface LineupSlot {

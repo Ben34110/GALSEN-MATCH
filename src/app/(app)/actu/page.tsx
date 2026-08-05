@@ -2,17 +2,17 @@
 
 import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeftRight, ChevronRight, Newspaper, Radio, Star, Trophy } from "lucide-react";
 import { ArticleCard } from "@/components/actu/article-card";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { getArticles } from "@/lib/data/news";
-import { getFantasyPool, getPlayerStatsMap } from "@/lib/data/fantasy";
-import { calculateLineupPoints } from "@/services/fantasy-scoring";
+import { getAfricanPlayers, positionCode } from "@/lib/data/african-players";
+import { calculateRealLineupPoints } from "@/services/real-player-scoring";
 import { useSavedLineup } from "@/hooks/use-saved-lineup";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { initialsFromUsername } from "@/lib/onboarding";
-import type { LineupSlot } from "@/types";
 
 const FILTERS = [
   { id: "all", label: "Tout" },
@@ -36,17 +36,20 @@ export default function ActuPage() {
   const articlesRef = useRef<HTMLDivElement>(null);
 
   const profile = useOnboardingProfile();
-  const pool = useMemo(() => getFantasyPool(), []);
-  const stats = useMemo(() => getPlayerStatsMap(), []);
+  const pool = useMemo(() => getAfricanPlayers(), []);
   const savedLineup = useSavedLineup();
   const lineupPlayers = savedLineup
     ? savedLineup.selectedIds
-        .map((id) => pool.find((player) => player.id === id))
+        .map((id) => pool.find((player) => String(player.id) === id))
         .filter((player): player is NonNullable<typeof player> => Boolean(player))
     : [];
-  const lineupSlots: LineupSlot[] = lineupPlayers.map((player) => ({ playerId: player.id, position: player.position }));
   const lineupPoints =
-    savedLineup && lineupSlots.length === 6 ? calculateLineupPoints(lineupSlots, savedLineup.captainId, stats) : null;
+    savedLineup && lineupPlayers.length === 6
+      ? calculateRealLineupPoints(
+          lineupPlayers.map((player) => ({ player, position: positionCode(player.position) ?? "A" })),
+          savedLineup.captainId
+        )
+      : null;
 
   function goToArticles(nextFilter: (typeof FILTERS)[number]["id"]) {
     setFilter(nextFilter);
@@ -84,16 +87,16 @@ export default function ActuPage() {
 
           <div className="flex items-center justify-between gap-1">
             {lineupPlayers.map((player) => {
-              const isCaptain = player.id === savedLineup.captainId;
+              const isCaptain = String(player.id) === savedLineup.captainId;
               return (
                 <div key={player.id} className="flex flex-1 flex-col items-center gap-1.5">
                   <span
                     className={cn(
-                      "relative grid size-10 place-items-center rounded-full bg-white/20 text-[11px] font-bold",
+                      "relative grid size-10 place-items-center overflow-hidden rounded-full bg-white/20",
                       isCaptain && "ring-2 ring-white"
                     )}
                   >
-                    {player.photoInitials}
+                    <Image src={player.photo} alt="" width={40} height={40} className="size-10 object-cover" unoptimized />
                     {isCaptain && (
                       <Star
                         size={12}

@@ -1,10 +1,10 @@
+import Image from "next/image";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getTeamById } from "@/lib/mock/teams";
-import type { Player } from "@/types";
+import type { AfricanPlayer } from "@/types";
 
 interface PlayerPillProps {
-  player: Player;
+  player: AfricanPlayer;
   points: number;
   selected: boolean;
   isCaptain: boolean;
@@ -14,8 +14,6 @@ interface PlayerPillProps {
 }
 
 export function PlayerPill({ player, points, selected, isCaptain, disabled, onToggle, onSetCaptain }: PlayerPillProps) {
-  const team = getTeamById(player.teamId);
-
   return (
     <div
       className={cn(
@@ -30,12 +28,19 @@ export function PlayerPill({ player, points, selected, isCaptain, disabled, onTo
         disabled={disabled && !selected}
         className="flex min-h-11 flex-1 items-center gap-2.5 rounded-lg text-left disabled:cursor-not-allowed"
       >
-        <span className="grid size-9 shrink-0 place-items-center rounded-full bg-surface-2 text-[10px] font-bold text-foreground">
-          {player.photoInitials}
-        </span>
+        <Image
+          src={player.photo}
+          alt=""
+          width={36}
+          height={36}
+          className="size-9 shrink-0 rounded-full bg-surface-2 object-cover"
+          unoptimized
+        />
         <span className="min-w-0">
-          <span className="block truncate text-sm font-semibold text-foreground">{player.fullName}</span>
-          <span className="block text-[11px] text-muted">{team?.shortName ?? "—"}</span>
+          <span className="block truncate text-sm font-semibold text-foreground">{player.name}</span>
+          <span className="block truncate text-[11px] text-muted">
+            {player.nationality} · {player.teamName ?? "—"}
+          </span>
         </span>
       </button>
 

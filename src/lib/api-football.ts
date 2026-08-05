@@ -80,7 +80,10 @@ export interface ApiFixture {
     date: string;
     status: { long: string; short: string; elapsed: number | null };
   };
-  league: { round: string };
+  // Read directly off each fixture (not looked up from our own COMPETITIONS
+  // list) so a favorited team's fixtures in a cup/continental competition we
+  // don't otherwise track still get a correct, real competition name.
+  league: { id: number; name: string; round: string };
   teams: { home: ApiFixtureTeam; away: ApiFixtureTeam };
   goals: { home: number | null; away: number | null };
   score: { halftime: { home: number | null; away: number | null } };
@@ -138,4 +141,21 @@ export function getFixtureById(fixtureId: number) {
 // req/day quota instead of pre-fetching every team in every league upfront.
 export function getTeamSquad(teamId: number) {
   return apiFootballGet<ApiSquadResponse>("/players/squads", { team: teamId }, 24 * 60 * 60);
+}
+
+// Upcoming/finished fixtures for a whole competition. Cached for a while —
+// a fixture list only changes when new matches are scheduled/played.
+export function getUpcomingFixtures(leagueId: number, season: number, count = 10) {
+  return apiFootballGet<ApiFixture>("/fixtures", { league: leagueId, season, next: count }, 15 * 60);
+}
+
+export function getFinishedFixtures(leagueId: number, season: number, count = 10) {
+  return apiFootballGet<ApiFixture>("/fixtures", { league: leagueId, season, last: count }, 15 * 60);
+}
+
+// All upcoming fixtures for one team, across every competition it plays in
+// (league, cup, friendlies) — no league/season needed. Powers the favorite
+// team follow feature.
+export function getUpcomingFixturesForTeam(teamId: number, count = 10) {
+  return apiFootballGet<ApiFixture>("/fixtures", { team: teamId, next: count }, 15 * 60);
 }

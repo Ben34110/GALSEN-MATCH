@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Check, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { accentThemes } from "@/lib/mock/accent-themes";
-import { getAfricanPlayers } from "@/lib/data/african-players";
+import { getAfricanPlayers, searchAfricanPlayers } from "@/lib/data/african-players";
 import { applyAccentTheme } from "@/components/theme/accent-theme-provider";
 import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
 import { COUNTRY_FLAGS, NATIONALITY_BY_THEME_ID, ONBOARDING_STORAGE_KEY } from "@/lib/onboarding";
@@ -39,22 +39,14 @@ export default function OnboardingPage() {
   const [playerSearch, setPlayerSearch] = useState("");
 
   const visiblePlayers = useMemo(() => {
-    const query = playerSearch.trim().toLowerCase();
-    if (!query) {
+    if (!playerSearch.trim()) {
       // Default: this player's own nation, most-capped first — the rest of
       // the continent is one search away.
       const nationality = countryId ? NATIONALITY_BY_THEME_ID[countryId] : undefined;
       const ownCountry = nationality ? players.filter((player) => player.nationality === nationality) : players;
       return [...ownCountry].sort((a, b) => b.appearances + b.goals - (a.appearances + a.goals));
     }
-    return players
-      .filter(
-        (player) =>
-          player.name.toLowerCase().includes(query) ||
-          player.nationality.toLowerCase().includes(query) ||
-          player.teamName?.toLowerCase().includes(query)
-      )
-      .slice(0, 40);
+    return searchAfricanPlayers(players, playerSearch).slice(0, 40);
   }, [players, playerSearch, countryId]);
 
   // Already onboarded (e.g. revisiting the URL): skip straight back into the app.
