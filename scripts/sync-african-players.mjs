@@ -1,12 +1,20 @@
-// One-off/occasional sync script (NOT part of the Next.js runtime) that
-// crawls all players across the 5 "big" leagues + Ligue 1 Sénégal for the
-// most recent complete season, filters to African nationalities, and writes
-// the result to src/lib/data/generated/african-players.json for the app to
-// import directly — no runtime API calls needed to browse this list.
+// One-off/occasional sync script (NOT part of the Next.js runtime).
+//
+// v2 methodology change: the original version filtered players from the 5
+// big leagues by their `nationality` field (birth/passport country). That
+// misses dual-nationals who represent an African nation without being born
+// there — e.g. Habib Diarra (Sunderland) has nationality "France" but plays
+// internationally for Senegal, so he was silently excluded.
+//
+// This version instead enumerates each African nation's NATIONAL TEAM squad
+// directly (the actual source of truth for "who represents this country"),
+// then looks up each player's real club/goals/assists for the season. Much
+// cheaper too: ~54 squad calls + ~1 detail call per capped player, instead
+// of paging through every player in 5 leagues.
 //
 // Run with: node scripts/sync-african-players.mjs
 // Reads API_FOOTBALL_KEY from .env.local (parsed manually — this script
-// runs outside Next.js, so next's automatic env loading doesn't apply).
+// runs outside Next.js).
 
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -40,104 +48,77 @@ if (!API_KEY) {
 const BASE_URL = "https://v3.football.api-sports.io";
 const SEASON = 2025; // most recent complete season with full player stats coverage
 
-const LEAGUES = [
-  { id: 403, name: "Ligue 1 Sénégal" },
-  { id: 39, name: "Premier League" },
-  { id: 140, name: "La Liga" },
-  { id: 135, name: "Serie A" },
-  { id: 78, name: "Bundesliga" },
-  { id: 61, name: "Ligue 1" },
+// All 54 CAF member nations' senior national team ids, found via
+// GET /teams?search=<country name> and taking the `national: true` entry.
+const NATIONAL_TEAMS = [
+  { name: "Algeria", id: 1532 },
+  { name: "Angola", id: 1529 },
+  { name: "Benin", id: 1516 },
+  { name: "Botswana", id: 1520 },
+  { name: "Burkina Faso", id: 1502 },
+  { name: "Burundi", id: 1528 },
+  { name: "Cameroon", id: 1530 },
+  { name: "Cape Verde", id: 1533 },
+  { name: "Central African Republic", id: 1527 },
+  { name: "Chad", id: 1523 },
+  { name: "Comoros", id: 1524 },
+  { name: "DR Congo", id: 1508 },
+  { name: "Congo", id: 1517 },
+  { name: "Djibouti", id: 1535 },
+  { name: "Egypt", id: 32 },
+  { name: "Equatorial Guinea", id: 1521 },
+  { name: "Eritrea", id: 1498 },
+  { name: "Eswatini", id: 2995 },
+  { name: "Ethiopia", id: 1506 },
+  { name: "Gabon", id: 1503 },
+  { name: "Gambia", id: 1492 },
+  { name: "Ghana", id: 1504 },
+  { name: "Guinea", id: 1509 },
+  { name: "Guinea-Bissau", id: 1513 },
+  { name: "Ivory Coast", id: 1501 },
+  { name: "Kenya", id: 1511 },
+  { name: "Lesotho", id: 1518 },
+  { name: "Liberia", id: 1525 },
+  { name: "Libya", id: 1526 },
+  { name: "Madagascar", id: 1490 },
+  { name: "Malawi", id: 1495 },
+  { name: "Mali", id: 1500 },
+  { name: "Mauritania", id: 1491 },
+  { name: "Mauritius", id: 1497 },
+  { name: "Morocco", id: 31 },
+  { name: "Mozambique", id: 1512 },
+  { name: "Namibia", id: 1493 },
+  { name: "Niger", id: 1505 },
+  { name: "Nigeria", id: 19 },
+  { name: "Rwanda", id: 1514 },
+  { name: "Senegal", id: 13 },
+  { name: "Seychelles", id: 1515 },
+  { name: "Sierra Leone", id: 1499 },
+  { name: "Somalia", id: 8050 },
+  { name: "South Africa", id: 1531 },
+  { name: "South Sudan", id: 1496 },
+  { name: "Sudan", id: 1510 },
+  { name: "Tanzania", id: 1489 },
+  { name: "Togo", id: 1534 },
+  { name: "Tunisia", id: 28 },
+  { name: "Uganda", id: 1519 },
+  { name: "Zambia", id: 1507 },
+  { name: "Zimbabwe", id: 1522 },
 ];
 
-// All 54 AU member states + common alternate spellings/aliases this API (or
-// its underlying data) might use. Verified against a live /countries pull,
-// but nationality strings for countries without their own tracked league
-// (e.g. Chad, Niger, Cape Verde) aren't in that list, so this is hand-built
-// from general African-nation knowledge and cross-checked against the
-// unique nationality strings actually observed during the crawl (see the
-// "unmatched but suspicious" log at the end of this script).
-const AFRICAN_ALIASES = {
-  algeria: "Algeria",
-  angola: "Angola",
-  benin: "Benin",
-  botswana: "Botswana",
-  "burkina faso": "Burkina Faso",
-  "burkina-faso": "Burkina Faso",
-  burundi: "Burundi",
-  cameroon: "Cameroon",
-  "cabo verde": "Cape Verde",
-  "cape verde": "Cape Verde",
-  "central african republic": "Central African Republic",
-  chad: "Chad",
-  comoros: "Comoros",
-  congo: "Congo",
-  "congo dr": "DR Congo",
-  "congo-dr": "DR Congo",
-  "dr congo": "DR Congo",
-  "democratic republic of the congo": "DR Congo",
-  "republic of the congo": "Congo",
-  djibouti: "Djibouti",
-  egypt: "Egypt",
-  "equatorial guinea": "Equatorial Guinea",
-  eritrea: "Eritrea",
-  eswatini: "Eswatini",
-  swaziland: "Eswatini",
-  ethiopia: "Ethiopia",
-  gabon: "Gabon",
-  gambia: "Gambia",
-  "the gambia": "Gambia",
-  ghana: "Ghana",
-  guinea: "Guinea",
-  "guinea-bissau": "Guinea-Bissau",
-  "guinea bissau": "Guinea-Bissau",
-  "ivory coast": "Ivory Coast",
-  "ivory-coast": "Ivory Coast",
-  "cote d'ivoire": "Ivory Coast",
-  "côte d'ivoire": "Ivory Coast",
-  kenya: "Kenya",
-  lesotho: "Lesotho",
-  liberia: "Liberia",
-  libya: "Libya",
-  madagascar: "Madagascar",
-  malawi: "Malawi",
-  mali: "Mali",
-  mauritania: "Mauritania",
-  mauritius: "Mauritius",
-  morocco: "Morocco",
-  mozambique: "Mozambique",
-  namibia: "Namibia",
-  niger: "Niger",
-  nigeria: "Nigeria",
-  rwanda: "Rwanda",
-  "sao tome and principe": "São Tomé and Príncipe",
-  senegal: "Senegal",
-  seychelles: "Seychelles",
-  "sierra leone": "Sierra Leone",
-  somalia: "Somalia",
-  "south africa": "South Africa",
-  "south-africa": "South Africa",
-  "south sudan": "South Sudan",
-  sudan: "Sudan",
-  tanzania: "Tanzania",
-  togo: "Togo",
-  tunisia: "Tunisia",
-  uganda: "Uganda",
-  zambia: "Zambia",
-  zimbabwe: "Zimbabwe",
-};
+const NATION_NAME_SET = new Set(NATIONAL_TEAMS.map((n) => n.name.toLowerCase()));
+const YOUTH_TEAM_RE = /\bU1[5-9]\b|\bU2[0-3]\b/i;
 
-function normalizeNationality(raw) {
-  if (!raw) return null;
-  const key = raw.trim().toLowerCase();
-  return AFRICAN_ALIASES[key] ?? null;
+function isClubStatEntry(teamName) {
+  if (!teamName) return false;
+  if (NATION_NAME_SET.has(teamName.toLowerCase())) return false;
+  if (YOUTH_TEAM_RE.test(teamName)) return false;
+  return true;
 }
 
 const CACHE_DIR = path.join(ROOT, ".cache/api-football");
 mkdirSync(CACHE_DIR, { recursive: true });
 
-// Caches raw responses to disk so re-running this script while fixing a bug
-// in the filtering/mapping logic below doesn't re-spend API quota — only a
-// cache miss (first run, or a genuinely new query) hits the network.
 async function apiGet(pathname, params) {
   const cacheKey = `${pathname.replace(/\//g, "_")}_${Object.entries(params)
     .map(([k, v]) => `${k}-${v}`)
@@ -149,6 +130,10 @@ async function apiGet(pathname, params) {
   } catch {
     // cache miss — fall through to a live request
   }
+
+  // Only real network calls get throttled — cache hits return above, before
+  // this line, so re-runs that are mostly cached stay fast.
+  await new Promise((resolve) => setTimeout(resolve, 300));
 
   const url = new URL(`${BASE_URL}${pathname}`);
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, String(v));
@@ -162,83 +147,108 @@ async function apiGet(pathname, params) {
   return json;
 }
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function crawlLeague(league) {
-  const players = [];
-  const first = await apiGet("/players", { league: league.id, season: SEASON, page: 1 });
-  const totalPages = first.paging.total;
-  console.log(`[${league.name}] ${totalPages} pages (~${totalPages * 20} players)`);
-
-  let pageData = first.response;
-  for (let page = 1; page <= totalPages; page++) {
-    if (page > 1) {
-      await sleep(120);
-      const result = await apiGet("/players", { league: league.id, season: SEASON, page });
-      pageData = result.response;
-    }
-    for (const entry of pageData) {
-      players.push({ entry, leagueName: league.name });
-    }
-    if (page % 10 === 0 || page === totalPages) {
-      console.log(`  [${league.name}] page ${page}/${totalPages}`);
+// Small concurrency-limited pool — this script makes ~1500-2000 requests;
+// running them 100% serially would take far too long, but unbounded
+// parallelism risks the per-minute rate limit.
+async function runPool(items, limit, worker) {
+  const results = new Array(items.length);
+  let cursor = 0;
+  async function runOne() {
+    while (cursor < items.length) {
+      const index = cursor++;
+      results[index] = await worker(items[index], index);
     }
   }
-  return players;
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, runOne));
+  return results;
+}
+
+async function fetchNationalSquad(nation) {
+  try {
+    const result = await apiGet("/players/squads", { team: nation.id });
+    const players = result.response[0]?.players ?? [];
+    console.log(`[${nation.name}] ${players.length} players`);
+    return players.map((p) => ({ ...p, nationality: nation.name }));
+  } catch (err) {
+    console.warn(`[${nation.name}] failed: ${err.message}`);
+    return [];
+  }
+}
+
+async function fetchPlayerClubDetail(playerId) {
+  try {
+    const result = await apiGet("/players", { id: playerId, season: SEASON });
+    const entry = result.response[0];
+    if (!entry) return null;
+
+    const clubEntries = (entry.statistics ?? []).filter((s) => isClubStatEntry(s.team?.name));
+    const best = clubEntries.sort((a, b) => (b.games.appearences ?? 0) - (a.games.appearences ?? 0))[0];
+
+    return {
+      firstname: entry.player.firstname,
+      lastname: entry.player.lastname,
+      age: entry.player.age,
+      position: best?.games?.position ?? null,
+      teamName: best?.team?.name ?? null,
+      teamLogo: best?.team?.logo ?? null,
+      leagueName: best?.league?.name ?? null,
+      appearances: best?.games?.appearences ?? 0,
+      goals: best?.goals?.total ?? 0,
+      assists: best?.goals?.assists ?? 0,
+    };
+  } catch (err) {
+    console.warn(`  player ${playerId} detail failed: ${err.message}`);
+    return null;
+  }
 }
 
 async function main() {
-  const allEntries = [];
-  for (const league of LEAGUES) {
-    const entries = await crawlLeague(league);
-    allEntries.push(...entries);
+  const squadResults = [];
+  for (const nation of NATIONAL_TEAMS) {
+    const players = await fetchNationalSquad(nation);
+    squadResults.push(...players);
   }
 
-  console.log(`\nTotal player entries scanned: ${allEntries.length}`);
+  console.log(`\nTotal squad entries (all 54 nations): ${squadResults.length}`);
 
-  const uniqueNationalities = new Set();
-  const africanPlayers = [];
-  const seenIds = new Set();
+  // A handful of players can appear in more than one nation's recent squad
+  // list only in edge cases (shouldn't normally happen); keep the first.
+  const seen = new Set();
+  const uniquePlayers = squadResults.filter((p) => {
+    if (seen.has(p.id)) return false;
+    seen.add(p.id);
+    return true;
+  });
 
-  for (const { entry, leagueName } of allEntries) {
-    const player = entry.player;
-    if (player.nationality) uniqueNationalities.add(player.nationality);
+  console.log(`Unique players: ${uniquePlayers.length}. Fetching club details...`);
 
-    const normalized = normalizeNationality(player.nationality);
-    if (!normalized) continue;
-    if (seenIds.has(player.id)) continue; // a player can appear on multiple pages/leagues via transfers
-    seenIds.add(player.id);
-
-    const stat = entry.statistics?.[0];
-    africanPlayers.push({
+  let done = 0;
+  const detailed = await runPool(uniquePlayers, 2, async (player) => {
+    const detail = await fetchPlayerClubDetail(player.id);
+    done += 1;
+    if (done % 50 === 0) console.log(`  ...${done}/${uniquePlayers.length} player details fetched`);
+    return {
       id: player.id,
       name: player.name,
-      firstname: player.firstname,
-      lastname: player.lastname,
-      age: player.age,
-      nationality: normalized,
+      firstname: detail?.firstname ?? null,
+      lastname: detail?.lastname ?? null,
+      age: detail?.age ?? player.age,
+      nationality: player.nationality,
       photo: player.photo,
-      position: stat?.games?.position ?? null,
-      teamName: stat?.team?.name ?? null,
-      teamLogo: stat?.team?.logo ?? null,
-      leagueName,
-      appearances: stat?.games?.appearences ?? 0,
-      goals: stat?.goals?.total ?? 0,
-      assists: stat?.goals?.assists ?? 0,
-    });
-  }
+      position: detail?.position ?? player.position,
+      teamName: detail?.teamName ?? null,
+      teamLogo: detail?.teamLogo ?? null,
+      leagueName: detail?.leagueName ?? "Sélection nationale",
+      appearances: detail?.appearances ?? 0,
+      goals: detail?.goals ?? 0,
+      assists: detail?.assists ?? 0,
+    };
+  });
 
-  console.log(`African players found: ${africanPlayers.length}`);
-
-  // Nationalities seen but not matched — sanity check for missed aliases.
-  const unmatched = [...uniqueNationalities].filter((n) => !normalizeNationality(n)).sort();
-  console.log(`\nAll ${uniqueNationalities.size} unique nationalities encountered (unmatched ones you should eyeball):`);
-  console.log(unmatched.join(", "));
+  console.log(`\nDone. ${detailed.length} African players (real national team squads).`);
 
   const byNationality = {};
-  for (const p of africanPlayers) byNationality[p.nationality] = (byNationality[p.nationality] ?? 0) + 1;
+  for (const p of detailed) byNationality[p.nationality] = (byNationality[p.nationality] ?? 0) + 1;
   console.log("\nBreakdown by nationality:");
   for (const [nat, count] of Object.entries(byNationality).sort((a, b) => b[1] - a[1])) {
     console.log(`  ${nat}: ${count}`);
@@ -247,8 +257,8 @@ async function main() {
   const outDir = path.join(ROOT, "src/lib/data/generated");
   mkdirSync(outDir, { recursive: true });
   const outPath = path.join(outDir, "african-players.json");
-  writeFileSync(outPath, JSON.stringify(africanPlayers, null, 2));
-  console.log(`\nWrote ${africanPlayers.length} players to ${path.relative(ROOT, outPath)}`);
+  writeFileSync(outPath, JSON.stringify(detailed, null, 2));
+  console.log(`\nWrote ${detailed.length} players to ${path.relative(ROOT, outPath)}`);
 }
 
 main().catch((err) => {

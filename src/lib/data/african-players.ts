@@ -26,16 +26,19 @@ export function getAfricanPlayers(): AfricanPlayer[] {
 // API-Football's `player.name` is often abbreviated ("P. Gueye") even
 // though `firstname`/`lastname` are full ("Pape Alassane" / "Gueye") — so
 // searching only `name` misses a query like "pape" for a player displayed
-// as "P. Gueye". Match against firstname/lastname/name/nationality/team.
+// as "P. Gueye". Match against firstname/lastname/name/nationality/team,
+// combined into one haystack and tokenized so a two-word query like "habib
+// diarra" matches even though "habib" only appears in firstname and
+// "diarra" only in lastname — neither field alone contains the full phrase.
 export function searchAfricanPlayers(players: AfricanPlayer[], query: string): AfricanPlayer[] {
-  const q = query.trim().toLowerCase();
-  if (!q) return players;
-  return players.filter(
-    (player) =>
-      player.name.toLowerCase().includes(q) ||
-      player.firstname?.toLowerCase().includes(q) ||
-      player.lastname?.toLowerCase().includes(q) ||
-      player.nationality.toLowerCase().includes(q) ||
-      player.teamName?.toLowerCase().includes(q)
-  );
+  const tokens = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  if (tokens.length === 0) return players;
+
+  return players.filter((player) => {
+    const haystack = [player.name, player.firstname, player.lastname, player.nationality, player.teamName]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+    return tokens.every((token) => haystack.includes(token));
+  });
 }
