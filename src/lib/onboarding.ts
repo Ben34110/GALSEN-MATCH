@@ -26,6 +26,18 @@ export const COUNTRY_FLAGS: Record<string, string> = {
   maroc: "🇲🇦",
 };
 
+// Maps accent-theme country ids to the exact nationality string used in
+// lib/data/generated/african-players.json (see scripts/sync-african-players.mjs),
+// so the onboarding player picker can default to showing the user's own
+// country's players first.
+export const NATIONALITY_BY_THEME_ID: Record<string, string> = {
+  senegal: "Senegal",
+  cotedivoire: "Ivory Coast",
+  cameroun: "Cameroon",
+  mali: "Mali",
+  maroc: "Morocco",
+};
+
 // First two letters of the username, matching the avatar-initials pattern
 // used elsewhere (e.g. profil, dashboard greeting).
 export function initialsFromUsername(username: string): string {

@@ -7,6 +7,20 @@ const BASE_URL = "https://v3.football.api-sports.io";
 // Ligue 1 Sénégal. Found via GET /leagues?country=Senegal.
 export const LIGUE1_SENEGAL_ID = 403;
 
+// The "top 5" European leagues, ids confirmed via GET /leagues?id=X against
+// the real account. Senegal stays the app's default/home competition; these
+// are additional ones the competition switcher on /live offers.
+export const COMPETITIONS = [
+  { id: LIGUE1_SENEGAL_ID, name: "Ligue 1 Sénégal" },
+  { id: 39, name: "Premier League" },
+  { id: 140, name: "La Liga" },
+  { id: 135, name: "Serie A" },
+  { id: 78, name: "Bundesliga" },
+  { id: 61, name: "Ligue 1" },
+] as const;
+
+export type CompetitionId = (typeof COMPETITIONS)[number]["id"];
+
 interface ApiFootballEnvelope<T> {
   response: T[];
   errors: Record<string, string> | unknown[];
@@ -83,6 +97,20 @@ interface ApiStandingsResponse {
   league: { standings: ApiStandingRow[][] };
 }
 
+export interface ApiSquadPlayer {
+  id: number;
+  name: string;
+  age: number;
+  number: number | null;
+  position: string;
+  photo: string;
+}
+
+interface ApiSquadResponse {
+  team: { id: number; name: string; logo: string };
+  players: ApiSquadPlayer[];
+}
+
 // --- The 3 requested endpoints ---
 
 // Currently live matches for one competition (defaults to Ligue 1 Sénégal).
@@ -100,4 +128,14 @@ export function getStandingsForSeason(season: number, leagueId: number = LIGUE1_
 // Full detail for a single fixture (score, teams, halftime).
 export function getFixtureById(fixtureId: number) {
   return apiFootballGet<ApiFixture>("/fixtures", { id: fixtureId }, 60);
+}
+
+// Current squad for one team — name/photo/position/age. Deliberately NOT a
+// requested endpoint from the original 3, but needed to browse real players
+// per club. Unlike /players, this isn't season-restricted on the free plan.
+// Fetched lazily (only when a team page is actually visited) and cached for
+// a day, since squads barely change — this keeps it well within the 100
+// req/day quota instead of pre-fetching every team in every league upfront.
+export function getTeamSquad(teamId: number) {
+  return apiFootballGet<ApiSquadResponse>("/players/squads", { team: teamId }, 24 * 60 * 60);
 }

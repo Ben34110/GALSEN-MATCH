@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# api-football sync cache (raw API dumps, regenerate via scripts/sync-african-players.mjs)
+.cache/

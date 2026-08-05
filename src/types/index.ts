@@ -72,6 +72,40 @@ export interface StandingRow {
   points: number;
 }
 
+// A real club's current squad entry, from API-Football's /players/squads
+// (see lib/data/live.ts getSquad) — not related to the Fantasy Player type,
+// which stays scoped to the Ligue 1 Sénégal mock pool.
+export interface SquadPlayer {
+  id: number;
+  name: string;
+  age: number;
+  number: number | null;
+  position: string;
+  photo: string;
+}
+
+// A real African player from the top 5 European leagues (+ Ligue 1
+// Sénégal), pre-crawled via scripts/sync-african-players.mjs into
+// lib/data/generated/african-players.json. Used by the onboarding player
+// picker — separate from the Fantasy Player type/scoring, which stays
+// Senegal-mock-only.
+export interface AfricanPlayer {
+  id: number;
+  name: string;
+  firstname: string | null;
+  lastname: string | null;
+  age: number | null;
+  nationality: string;
+  photo: string;
+  position: string | null;
+  teamName: string | null;
+  teamLogo: string | null;
+  leagueName: string;
+  appearances: number;
+  goals: number;
+  assists: number;
+}
+
 export interface PlayerMatchStat {
   playerId: string;
   matchId: string;

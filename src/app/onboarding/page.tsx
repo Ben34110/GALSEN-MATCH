@@ -2,19 +2,26 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
+import { Check, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { accentThemes } from "@/lib/mock/accent-themes";
-import { getTeamById } from "@/lib/mock/teams";
-import { getFantasyPool } from "@/lib/data/fantasy";
+import { getAfricanPlayers } from "@/lib/data/african-players";
 import { applyAccentTheme } from "@/components/theme/accent-theme-provider";
 import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
-import { COUNTRY_FLAGS, ONBOARDING_STORAGE_KEY } from "@/lib/onboarding";
+import { COUNTRY_FLAGS, NATIONALITY_BY_THEME_ID, ONBOARDING_STORAGE_KEY } from "@/lib/onboarding";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 
 const COUNTRIES = accentThemes.filter((theme) => theme.id !== "default");
 
 const STEPS = ["country", "players", "username"] as const;
+
+const POSITION_LABELS: Record<string, string> = {
+  Goalkeeper: "Gardien",
+  Defender: "Défenseur",
+  Midfielder: "Milieu",
+  Attacker: "Attaquant",
+};
 
 // First-run wizard: country -> 3 favorite players -> username. Lives outside
 // the (app) route group (full-bleed, no tab bar), same as the splash screen.
@@ -23,12 +30,32 @@ const STEPS = ["country", "players", "username"] as const;
 export default function OnboardingPage() {
   const router = useRouter();
   const profile = useOnboardingProfile();
-  const pool = useMemo(() => getFantasyPool(), []);
+  const players = useMemo(() => getAfricanPlayers(), []);
 
   const [stepIndex, setStepIndex] = useState(0);
   const [countryId, setCountryId] = useState<string | null>(null);
   const [playerIds, setPlayerIds] = useState<string[]>([]);
   const [username, setUsername] = useState("");
+  const [playerSearch, setPlayerSearch] = useState("");
+
+  const visiblePlayers = useMemo(() => {
+    const query = playerSearch.trim().toLowerCase();
+    if (!query) {
+      // Default: this player's own nation, most-capped first — the rest of
+      // the continent is one search away.
+      const nationality = countryId ? NATIONALITY_BY_THEME_ID[countryId] : undefined;
+      const ownCountry = nationality ? players.filter((player) => player.nationality === nationality) : players;
+      return [...ownCountry].sort((a, b) => b.appearances + b.goals - (a.appearances + a.goals));
+    }
+    return players
+      .filter(
+        (player) =>
+          player.name.toLowerCase().includes(query) ||
+          player.nationality.toLowerCase().includes(query) ||
+          player.teamName?.toLowerCase().includes(query)
+      )
+      .slice(0, 40);
+  }, [players, playerSearch, countryId]);
 
   // Already onboarded (e.g. revisiting the URL): skip straight back into the app.
   useEffect(() => {
@@ -135,21 +162,44 @@ export default function OnboardingPage() {
           <>
             <h1 className="font-serif text-2xl font-bold text-foreground">Tes 3 joueurs préférés</h1>
             <p className="mt-1.5 text-sm leading-relaxed text-muted">
-              Choisis-en exactement trois — ils te serviront de base pour ton Starting 6.
+              Choisis-en exactement trois parmi {players.length} joueurs africains des 5 grands championnats
+              européens — ils te serviront de base pour ton Starting 6.
             </p>
-            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-accent">
-              {playerIds.length}/3 sélectionnés
-            </p>
+
+            <div className="mt-4 flex items-center justify-between gap-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-accent">
+                {playerIds.length}/3 sélectionnés
+              </p>
+              {!playerSearch && (
+                <p className="text-[11px] text-muted">
+                  {countryId ? COUNTRY_FLAGS[countryId] : ""} Joueurs de ta nation d&apos;abord
+                </p>
+              )}
+            </div>
+
+            <div className="relative mt-3">
+              <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
+              <input
+                value={playerSearch}
+                onChange={(event) => setPlayerSearch(event.target.value)}
+                placeholder="Chercher un joueur, un pays, un club…"
+                className={cn(
+                  "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-sm text-foreground",
+                  "placeholder:text-muted focus:border-accent focus:outline-none"
+                )}
+              />
+            </div>
+
             <div className="mt-3 flex flex-col gap-1.5">
-              {pool.map((player) => {
-                const selected = playerIds.includes(player.id);
-                const team = getTeamById(player.teamId);
+              {visiblePlayers.map((player) => {
+                const idStr = String(player.id);
+                const selected = playerIds.includes(idStr);
                 const disabled = !selected && playerIds.length >= 3;
                 return (
                   <button
                     key={player.id}
                     type="button"
-                    onClick={() => togglePlayer(player.id)}
+                    onClick={() => togglePlayer(idStr)}
                     disabled={disabled}
                     aria-pressed={selected}
                     className={cn(
@@ -159,17 +209,28 @@ export default function OnboardingPage() {
                       disabled && "opacity-40"
                     )}
                   >
-                    <span className="grid size-8 shrink-0 place-items-center rounded-full bg-surface-2 text-[10px] font-bold text-foreground">
-                      {player.photoInitials}
-                    </span>
+                    <Image
+                      src={player.photo}
+                      alt=""
+                      width={32}
+                      height={32}
+                      className="size-8 shrink-0 rounded-full bg-surface-2 object-cover"
+                      unoptimized
+                    />
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-semibold text-foreground">{player.fullName}</span>
-                      <span className="block text-[11px] text-muted">{team?.shortName ?? "—"}</span>
+                      <span className="block truncate text-sm font-semibold text-foreground">{player.name}</span>
+                      <span className="block truncate text-[11px] text-muted">
+                        {player.nationality} · {player.teamName ?? "—"}
+                        {player.position && ` · ${POSITION_LABELS[player.position] ?? player.position}`}
+                      </span>
                     </span>
                     {selected && <Check size={16} className="shrink-0 text-accent" aria-hidden />}
                   </button>
                 );
               })}
+              {visiblePlayers.length === 0 && (
+                <p className="py-6 text-center text-sm text-muted">Aucun joueur trouvé pour cette recherche.</p>
+              )}
             </div>
           </>
         )}

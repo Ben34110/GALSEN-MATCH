@@ -1,28 +1,35 @@
 import { matches, standings } from "@/lib/mock/matches";
 import { teams } from "@/lib/mock/teams";
 import {
+  COMPETITIONS,
   getFixtureById,
   getLiveFixtures,
   getStandingsForSeason,
+  getTeamSquad,
   LIGUE1_SENEGAL_ID,
   type ApiFixture,
   type ApiStandingRow,
 } from "@/lib/api-football";
-import type { Match, MatchStatus, StandingRow, Team, TeamRef } from "@/types";
+import type { Match, MatchStatus, SquadPlayer, StandingRow, Team, TeamRef } from "@/types";
 
-// Free-tier API-Football coverage for Ligue 1 Sénégal (league 403) stops at
-// the 2024 season — the live current season returns a plan-restriction error
-// ("Free plans do not have access to this season, try from 2022 to 2024.").
-// Standings below try the current season first and fall back to this one.
+// Safety-net season to fall back to if a standings request errors outright
+// (e.g. a lapsed key/plan) — kept from when the free plan capped every
+// league at 2022-2024. On the current Pro plan this path shouldn't trigger
+// in practice; see the "no matches played yet" fallback below for the
+// actually-common case (fresh season, all-0 table).
 const LATEST_ACCESSIBLE_SEASON = 2024;
 
 function guessCurrentSeason(): number {
   const now = new Date();
   const year = now.getUTCFullYear();
   const month = now.getUTCMonth() + 1;
-  // Most African league seasons run roughly Aug–Jun, so Jan–Jun still
-  // belongs to the season that started the previous calendar year.
+  // Most European/African league seasons run roughly Aug–Jun, so Jan–Jun
+  // still belongs to the season that started the previous calendar year.
   return month >= 7 ? year : year - 1;
+}
+
+function competitionName(leagueId: number): string {
+  return COMPETITIONS.find((c) => c.id === leagueId)?.name ?? "Compétition";
 }
 
 function mapFixtureStatus(short: string): MatchStatus {
@@ -47,11 +54,11 @@ function mapTeamRef(team: { id: number; name: string; logo: string }): TeamRef {
   return { id: String(team.id), name: team.name, logo: team.logo };
 }
 
-function mapFixtureToMatch(fixture: ApiFixture): Match {
+function mapFixtureToMatch(fixture: ApiFixture, leagueId: number): Match {
   const status = mapFixtureStatus(fixture.fixture.status.short);
   return {
     id: `api-${fixture.fixture.id}`,
-    competition: "Ligue 1 Sénégal",
+    competition: competitionName(leagueId),
     matchday: 0,
     roundLabel: mapRoundLabel(fixture.league.round),
     homeTeamId: String(fixture.teams.home.id),
@@ -87,21 +94,24 @@ function sortByKickoff(list: Match[]): Match[] {
 }
 
 // Point de bascule (partiellement franchi) : les matchs EN DIRECT viennent
-// réellement d'API-Football. "À venir" / "Derniers résultats" restent mock
-// pour l'instant — la saison en cours (2025) de Ligue 1 Sénégal n'est pas
-// accessible sur le plan gratuit (voir LATEST_ACCESSIBLE_SEASON ci-dessus),
-// donc il n'y a aucune donnée réelle à afficher pour ces sections tant que
-// le plan n'est pas mis à niveau.
-export async function getMatches(): Promise<Match[]> {
-  const mockMatches = sortByKickoff(matches);
+// réellement d'API-Football pour n'importe quelle compétition. Pour Ligue 1
+// Sénégal, "à venir" / "derniers résultats" restent mock (aucune donnée
+// réelle accessible pour la saison en cours sur le plan actuel). Les autres
+// compétitions n'ont pas de mock — elles n'affichent que ce que l'API
+// renvoie réellement pour "en direct".
+export async function getMatches(leagueId: number = LIGUE1_SENEGAL_ID): Promise<Match[]> {
+  const live = await getLiveFixtures(leagueId);
+  const realLive = !live.error ? live.data.map((fixture) => mapFixtureToMatch(fixture, leagueId)) : [];
 
-  const live = await getLiveFixtures(LIGUE1_SENEGAL_ID);
-  if (!live.error && live.data.length > 0) {
-    const realLive = live.data.map(mapFixtureToMatch);
+  if (leagueId !== LIGUE1_SENEGAL_ID) {
+    return sortByKickoff(realLive);
+  }
+
+  const mockMatches = sortByKickoff(matches);
+  if (realLive.length > 0) {
     const mockNonLive = mockMatches.filter((match) => match.status !== "live");
     return sortByKickoff([...realLive, ...mockNonLive]);
   }
-
   return mockMatches;
 }
 
@@ -111,34 +121,68 @@ export interface StandingsResult {
   source: "api" | "mock";
 }
 
-// Tries the current season first, falls back to the latest one the free
-// plan actually covers, and falls back to mock data only if both fail.
-export async function getStandings(): Promise<StandingsResult> {
+// Tries the current season first, falls back to the previous one if the
+// current season exists but no match has been played yet (a fresh table is
+// all 0s right after a season kicks off — not useful), then to the latest
+// season the plan covers if the current one errors outright, and finally to
+// mock data (Senegal only) if nothing works.
+export async function getStandings(leagueId: number = LIGUE1_SENEGAL_ID): Promise<StandingsResult> {
   const currentSeason = guessCurrentSeason();
-  let result = await getStandingsForSeason(currentSeason);
+  let result = await getStandingsForSeason(currentSeason, leagueId);
   let season = currentSeason;
+  let rows = result.data[0]?.league.standings[0];
 
-  if (result.error) {
-    result = await getStandingsForSeason(LATEST_ACCESSIBLE_SEASON);
-    season = LATEST_ACCESSIBLE_SEASON;
+  const noMatchesPlayedYet = !result.error && rows && rows.length > 0 && rows.every((row) => row.all.played === 0);
+
+  if (result.error || !rows || rows.length === 0 || noMatchesPlayedYet) {
+    const fallbackSeason = noMatchesPlayedYet ? currentSeason - 1 : LATEST_ACCESSIBLE_SEASON;
+    result = await getStandingsForSeason(fallbackSeason, leagueId);
+    season = fallbackSeason;
+    rows = result.data[0]?.league.standings[0];
   }
 
-  const rows = result.data[0]?.league.standings[0];
   if (!result.error && rows && rows.length > 0) {
     return { rows: rows.map(mapStandingToRow), season, source: "api" };
   }
 
-  return {
-    rows: [...standings].sort((a, b) => b.points - a.points),
-    season: 0,
-    source: "mock",
-  };
+  if (leagueId === LIGUE1_SENEGAL_ID) {
+    return { rows: [...standings].sort((a, b) => b.points - a.points), season: 0, source: "mock" };
+  }
+  return { rows: [], season: 0, source: "mock" };
 }
 
-export async function getFixtureDetail(fixtureId: number): Promise<Match | null> {
+export async function getFixtureDetail(fixtureId: number, leagueId: number = LIGUE1_SENEGAL_ID): Promise<Match | null> {
   const result = await getFixtureById(fixtureId);
   if (result.error || result.data.length === 0) return null;
-  return mapFixtureToMatch(result.data[0]);
+  return mapFixtureToMatch(result.data[0], leagueId);
+}
+
+export interface TeamSquad {
+  teamName: string;
+  teamLogo: string;
+  players: SquadPlayer[];
+}
+
+// Fetched on demand (see app/(app)/live/team/[id]/page.tsx) — never
+// pre-fetched for a whole league at once, to stay well inside the daily
+// request quota (see getTeamSquad's comment in lib/api-football.ts).
+export async function getSquad(teamId: number): Promise<TeamSquad | null> {
+  const result = await getTeamSquad(teamId);
+  if (result.error || result.data.length === 0) return null;
+
+  const { team, players } = result.data[0];
+  return {
+    teamName: team.name,
+    teamLogo: team.logo,
+    players: players.map((player) => ({
+      id: player.id,
+      name: player.name,
+      age: player.age,
+      number: player.number,
+      position: player.position,
+      photo: player.photo,
+    })),
+  };
 }
 
 export function getTeams(): Team[] {

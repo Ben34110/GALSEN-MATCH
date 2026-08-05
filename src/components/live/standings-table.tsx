@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { getTeamById } from "@/lib/mock/teams";
 import type { StandingRow } from "@/types";
@@ -54,16 +55,28 @@ export function StandingsTable({ rows }: { rows: StandingRow[] }) {
                 >
                   <td className="px-3 py-2.5 tabular-nums text-muted">{index + 1}</td>
                   <td className="px-3 py-2.5 font-semibold text-foreground">
-                    <div className="flex items-center gap-2">
-                      {logo ? (
-                        <Image src={logo} alt="" width={20} height={20} className="size-5 shrink-0 object-contain" unoptimized />
-                      ) : (
+                    {row.team ? (
+                      <Link
+                        href={`/live/team/${row.team.id}`}
+                        className="flex items-center gap-2 transition-colors hover:text-accent"
+                      >
+                        {logo ? (
+                          <Image src={logo} alt="" width={20} height={20} className="size-5 shrink-0 object-contain" unoptimized />
+                        ) : (
+                          <span className="grid size-5 shrink-0 place-items-center rounded-full bg-surface-2 text-[9px] font-bold text-muted">
+                            ?
+                          </span>
+                        )}
+                        {name}
+                      </Link>
+                    ) : (
+                      <div className="flex items-center gap-2">
                         <span className="grid size-5 shrink-0 place-items-center rounded-full bg-surface-2 text-[9px] font-bold text-muted">
                           {mockTeam?.logoInitials ?? "?"}
                         </span>
-                      )}
-                      {name}
-                    </div>
+                        {name}
+                      </div>
+                    )}
                   </td>
                   <td className="px-2 py-2.5 text-center tabular-nums text-muted">{row.played}</td>
                   <td className="px-2 py-2.5 text-center tabular-nums text-muted">{row.won}</td>

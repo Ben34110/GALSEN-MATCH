@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { MatchCard } from "@/components/live/match-card";
 import { StandingsTable } from "@/components/live/standings-table";
 import { SectionHeader } from "@/components/ui/section-header";
 import { cn } from "@/lib/utils";
+import type { COMPETITIONS } from "@/lib/api-football";
 import type { Match, StandingRow } from "@/types";
 
 const TABS = [
@@ -13,14 +15,24 @@ const TABS = [
 ] as const;
 
 interface LiveViewProps {
+  competitions: typeof COMPETITIONS;
+  activeLeagueId: number;
   matches: Match[];
   standingsRows: StandingRow[];
   standingsSeason: number;
   standingsSource: "api" | "mock";
 }
 
-export function LiveView({ matches, standingsRows, standingsSeason, standingsSource }: LiveViewProps) {
+export function LiveView({
+  competitions,
+  activeLeagueId,
+  matches,
+  standingsRows,
+  standingsSeason,
+  standingsSource,
+}: LiveViewProps) {
   const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("matches");
+  const activeCompetition = competitions.find((c) => c.id === activeLeagueId) ?? competitions[0];
 
   const live = matches.filter((match) => match.status === "live");
   const upcoming = matches.filter((match) => match.status === "scheduled");
@@ -30,9 +42,28 @@ export function LiveView({ matches, standingsRows, standingsSeason, standingsSou
     <div>
       <SectionHeader
         eyebrow="Livescore"
-        title="Ligue 1 Sénégal"
+        title={activeCompetition.name}
         subtitle="Scores mis à jour via une couche de cache — API-Football n'est jamais interrogée directement par le client."
       />
+
+      <div className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 scrollbar-none sm:mx-0 sm:px-0">
+        {competitions.map((competition) => (
+          <Link
+            key={competition.id}
+            href={competition.id === competitions[0].id ? "/live" : `/live?league=${competition.id}`}
+            aria-current={competition.id === activeLeagueId ? "page" : undefined}
+            className={cn(
+              "flex min-h-10 shrink-0 items-center rounded-full border px-3.5 py-2 text-xs font-semibold",
+              "transition-colors duration-[var(--duration-fast)] active:scale-95",
+              competition.id === activeLeagueId
+                ? "border-accent bg-accent text-accent-ink"
+                : "border-border bg-surface text-muted hover:text-foreground"
+            )}
+          >
+            {competition.name}
+          </Link>
+        ))}
+      </div>
 
       <div className="mb-5 flex gap-2" role="tablist">
         {TABS.map((item) => (
@@ -105,10 +136,16 @@ export function LiveView({ matches, standingsRows, standingsSeason, standingsSou
         <div>
           <p className="mb-3 text-xs font-medium text-muted">
             {standingsSource === "api"
-              ? `Saison ${standingsSeason}/${standingsSeason + 1} — dernière saison disponible sur le plan API actuel.`
+              ? `Saison ${standingsSeason}/${standingsSeason + 1}`
               : "Classement de démonstration — API-Football indisponible pour cette requête."}
           </p>
-          <StandingsTable rows={standingsRows} />
+          {standingsRows.length > 0 ? (
+            <StandingsTable rows={standingsRows} />
+          ) : (
+            <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">
+              Classement indisponible pour l&apos;instant.
+            </p>
+          )}
         </div>
       )}
     </div>
