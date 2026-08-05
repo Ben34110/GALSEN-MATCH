@@ -1,11 +1,16 @@
-// Point de bascule : le profil d'onboarding (pays, joueurs favoris, pseudo)
-// sera écrit sur `users` (Supabase) au lieu du localStorage.
+import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
+
+// Point de bascule : le profil d'onboarding (pays, joueurs favoris, pseudo,
+// club favori) sera écrit sur `users` (Supabase) au lieu du localStorage —
+// voir updateOnboardingProfile ci-dessous, seul point d'écriture, pour
+// brancher l'appel Supabase le moment venu sans toucher aux composants.
 export const ONBOARDING_STORAGE_KEY = "galsen-match:onboarding";
 
 export interface OnboardingProfile {
   countryId: string; // matches an id in lib/mock/accent-themes.ts (senegal, cotedivoire, ...)
   playerIds: string[]; // exactly 3
   username: string;
+  favoriteClubId: number | null; // real API-Football team id (lib/data/team-directory.ts), editable from Profil
 }
 
 // Maps accent-theme country ids to the chat rooms' ISO country codes so the
@@ -57,8 +62,27 @@ export function parseOnboardingProfile(raw: string | null): OnboardingProfile | 
     ) {
       return null;
     }
-    return { countryId: parsed.countryId, playerIds: parsed.playerIds, username: parsed.username.trim() };
+    return {
+      countryId: parsed.countryId,
+      playerIds: parsed.playerIds,
+      username: parsed.username.trim(),
+      // Added after the initial onboarding shipped — older saved profiles
+      // simply won't have it yet, default to null rather than invalidating them.
+      favoriteClubId: typeof parsed.favoriteClubId === "number" ? parsed.favoriteClubId : null,
+    };
   } catch {
     return null;
   }
+}
+
+// The one write path for the profile after onboarding (country, 3 favorite
+// players, favorite club — see Profil). Reactive: writeLocalStorageValue
+// notifies every useOnboardingProfile() subscriber immediately, so the
+// dashboard greeting, chat room order, nav theming etc. all update at once.
+export function updateOnboardingProfile(
+  current: OnboardingProfile,
+  updates: Partial<Pick<OnboardingProfile, "countryId" | "playerIds" | "username" | "favoriteClubId">>
+): void {
+  const next: OnboardingProfile = { ...current, ...updates };
+  writeLocalStorageValue(ONBOARDING_STORAGE_KEY, JSON.stringify(next));
 }

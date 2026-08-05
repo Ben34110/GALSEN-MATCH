@@ -22,7 +22,7 @@ interface LiveViewProps {
   matches: Match[];
   standingsRows: StandingRow[];
   standingsSeason: number;
-  standingsSource: "api" | "mock";
+  standingsSource: "api" | "mock" | "placeholder";
 }
 
 export function LiveView({
@@ -137,9 +137,13 @@ export function LiveView({
       ) : tab === "standings" ? (
         <div>
           <p className="mb-3 text-xs font-medium text-muted">
-            {standingsSource === "api"
-              ? `Saison ${standingsSeason}/${standingsSeason + 1}`
-              : "Classement de démonstration — API-Football indisponible pour cette requête."}
+            {standingsSource === "api" &&
+              (standingsRows.every((row) => row.played === 0)
+                ? `Saison ${standingsSeason}/${standingsSeason + 1} — aucun match joué pour l'instant, classement à 0 point.`
+                : `Saison ${standingsSeason}/${standingsSeason + 1}`)}
+            {standingsSource === "mock" && "Classement de démonstration — API-Football indisponible pour cette requête."}
+            {standingsSource === "placeholder" &&
+              `Saison ${standingsSeason}/${standingsSeason + 1} — aucun match joué pour l'instant, classement à 0 point.`}
           </p>
           {standingsRows.length > 0 ? (
             <StandingsTable rows={standingsRows} />

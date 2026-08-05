@@ -83,7 +83,7 @@ export default function OnboardingPage() {
     if (!countryId) return;
     writeLocalStorageValue(
       ONBOARDING_STORAGE_KEY,
-      JSON.stringify({ countryId, playerIds, username: username.trim() })
+      JSON.stringify({ countryId, playerIds, username: username.trim(), favoriteClubId: null })
     );
     applyAccentTheme(countryId);
     router.push("/actu");

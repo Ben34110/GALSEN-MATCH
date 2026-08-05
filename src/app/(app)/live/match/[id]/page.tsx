@@ -4,11 +4,14 @@ import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { TeamFavoriteButton } from "@/components/live/team-favorite-button";
 import { getFixtureDetail } from "@/lib/data/live";
 import { formatKickoff } from "@/lib/utils";
 import type { TeamRef } from "@/types";
 
 function TeamBlock({ team, score }: { team?: TeamRef; score: number | null }) {
+  const teamId = team ? Number(team.id) : NaN;
+
   return (
     <div className="flex flex-1 flex-col items-center gap-2 text-center">
       {team?.logo ? (
@@ -20,6 +23,7 @@ function TeamBlock({ team, score }: { team?: TeamRef; score: number | null }) {
       )}
       <span className="text-sm font-semibold text-foreground">{team?.name ?? "Équipe inconnue"}</span>
       <span className="text-2xl font-extrabold tabular-nums text-foreground">{score ?? "–"}</span>
+      {team && Number.isFinite(teamId) && <TeamFavoriteButton teamId={teamId} teamName={team.name} />}
     </div>
   );
 }

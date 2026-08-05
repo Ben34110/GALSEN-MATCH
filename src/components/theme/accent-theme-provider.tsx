@@ -12,6 +12,7 @@ export function applyAccentTheme(themeId: string) {
   root.style.setProperty("--accent", theme.accent);
   root.style.setProperty("--accent-ink", theme.accentInk);
   root.style.setProperty("--accent-2", theme.accent2);
+  root.style.setProperty("--accent-3", theme.accent3);
   writeLocalStorageValue(ACCENT_STORAGE_KEY, theme.id);
 }
 

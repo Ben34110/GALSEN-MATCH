@@ -1,5 +1,6 @@
 import { matches, standings } from "@/lib/mock/matches";
 import { teams } from "@/lib/mock/teams";
+import { getTeamDirectory } from "@/lib/data/team-directory";
 import {
   getFinishedFixtures,
   getFixtureById,
@@ -125,26 +126,42 @@ export async function getMatches(leagueId: number = LIGUE1_SENEGAL_ID): Promise<
 export interface StandingsResult {
   rows: StandingRow[];
   season: number;
-  source: "api" | "mock";
+  source: "api" | "mock" | "placeholder";
 }
 
-// Tries the current season first, falls back to the previous one if the
-// current season exists but no match has been played yet (a fresh table is
-// all 0s right after a season kicks off — not useful), then to the latest
-// season the plan covers if the current one errors outright, and finally to
-// mock data (Senegal only) if nothing works.
+// A team's zero-played row for the synthetic fallback below — built from the
+// team directory (real clubs) rather than the Senegal-only mock array, since
+// it must work for any of the 5 tracked leagues.
+function placeholderRow(team: { id: number; name: string; logo: string }): StandingRow {
+  return {
+    teamId: String(team.id),
+    team: { id: String(team.id), name: team.name, logo: team.logo },
+    played: 0,
+    won: 0,
+    drawn: 0,
+    lost: 0,
+    points: 0,
+  };
+}
+
+// Tries the current season first — including a fresh, all-0 table right
+// after a season kicks off, which is exactly what should be shown (a real
+// "0 match played" view, not last season's completed standings pretending to
+// be current). Only falls back to the latest season the plan covers if the
+// current one errors outright (e.g. a lapsed key/plan). If nothing works:
+// Senegal has a curated mock table; the 5 big leagues instead get a
+// synthetic "0 match played" table built from the real team directory,
+// alphabetical, so the section is never blocked/hidden — just honest about
+// not having real numbers yet.
 export async function getStandings(leagueId: number = LIGUE1_SENEGAL_ID): Promise<StandingsResult> {
   const currentSeason = guessCurrentSeason();
   let result = await getStandingsForSeason(currentSeason, leagueId);
   let season = currentSeason;
   let rows = result.data[0]?.league.standings[0];
 
-  const noMatchesPlayedYet = !result.error && rows && rows.length > 0 && rows.every((row) => row.all.played === 0);
-
-  if (result.error || !rows || rows.length === 0 || noMatchesPlayedYet) {
-    const fallbackSeason = noMatchesPlayedYet ? currentSeason - 1 : LATEST_ACCESSIBLE_SEASON;
-    result = await getStandingsForSeason(fallbackSeason, leagueId);
-    season = fallbackSeason;
+  if (result.error || !rows || rows.length === 0) {
+    result = await getStandingsForSeason(LATEST_ACCESSIBLE_SEASON, leagueId);
+    season = LATEST_ACCESSIBLE_SEASON;
     rows = result.data[0]?.league.standings[0];
   }
 
@@ -155,7 +172,11 @@ export async function getStandings(leagueId: number = LIGUE1_SENEGAL_ID): Promis
   if (leagueId === LIGUE1_SENEGAL_ID) {
     return { rows: [...standings].sort((a, b) => b.points - a.points), season: 0, source: "mock" };
   }
-  return { rows: [], season: 0, source: "mock" };
+
+  const leagueTeams = getTeamDirectory()
+    .filter((team) => team.leagueId === leagueId)
+    .sort((a, b) => a.name.localeCompare(b.name));
+  return { rows: leagueTeams.map(placeholderRow), season: currentSeason, source: "placeholder" };
 }
 
 export async function getFixtureDetail(fixtureId: number): Promise<Match | null> {

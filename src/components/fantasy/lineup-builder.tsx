@@ -12,7 +12,6 @@ import { calculateRealLineupPoints, computeSeasonPoints } from "@/services/real-
 import { isCompositionComplete } from "@/services/fantasy-scoring";
 import type { AfricanPlayer, LineupSlot, PlayerPosition } from "@/types";
 
-const CURRENT_MATCHDAY = 12;
 const DEFAULT_PER_GROUP = 15;
 
 const POSITION_LABELS: Record<PlayerPosition, string> = {
@@ -27,11 +26,21 @@ const POSITION_ORDER: PlayerPosition[] = ["G", "D", "M", "A"];
 
 interface LineupBuilderProps {
   pool: AfricanPlayer[];
+  journee: number;
+  initialSelectedIds?: string[];
+  initialCaptainId?: string | null;
+  onSaved?: () => void;
 }
 
-export function LineupBuilder({ pool }: LineupBuilderProps) {
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [captainId, setCaptainId] = useState<string | null>(null);
+export function LineupBuilder({
+  pool,
+  journee,
+  initialSelectedIds = [],
+  initialCaptainId = null,
+  onSaved,
+}: LineupBuilderProps) {
+  const [selectedIds, setSelectedIds] = useState<string[]>(initialSelectedIds);
+  const [captainId, setCaptainId] = useState<string | null>(initialCaptainId);
   const [saved, setSaved] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -104,8 +113,11 @@ export function LineupBuilder({ pool }: LineupBuilderProps) {
     setSaved(true);
     writeLocalStorageValue(
       FANTASY_LINEUP_STORAGE_KEY,
-      JSON.stringify({ selectedIds, captainId, matchday: CURRENT_MATCHDAY })
+      JSON.stringify({ selectedIds, captainId, matchday: journee })
     );
+    // Let the "Enregistré ✓" confirmation flash briefly before switching to
+    // the pitch view, instead of navigating away the instant it appears.
+    setTimeout(() => onSaved?.(), 700);
   }
 
   return (

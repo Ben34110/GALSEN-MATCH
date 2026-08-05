@@ -87,6 +87,7 @@ export interface AfricanPlayer {
   nationality: string;
   photo: string;
   position: string | null;
+  teamId: number | null; // real API-Football club id — powers "prochain match" lookups
   teamName: string | null;
   teamLogo: string | null;
   leagueName: string;
@@ -134,4 +135,5 @@ export interface AccentTheme {
   accent: string;
   accentInk: string;
   accent2: string;
+  accent3: string;
 }
