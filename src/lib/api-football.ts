@@ -153,6 +153,20 @@ export function getFinishedFixtures(leagueId: number, season: number, count = 10
   return apiFootballGet<ApiFixture>("/fixtures", { league: leagueId, season, last: count }, 15 * 60);
 }
 
+// The round API-Football considers "current" for a competition right now —
+// e.g. "Regular Season - 1". Used to fetch a whole matchday's fixtures at
+// once (see getFixturesForRound) instead of a flat "next N" count, which cuts
+// a round in half for any league with fewer than 10 matches per round (18-
+// team leagues play 9 a round, so "next 10" always spilled one fixture into
+// the following round).
+export function getCurrentRound(leagueId: number, season: number) {
+  return apiFootballGet<string>("/fixtures/rounds", { league: leagueId, season, current: "true" }, 60 * 60);
+}
+
+export function getFixturesForRound(leagueId: number, season: number, round: string) {
+  return apiFootballGet<ApiFixture>("/fixtures", { league: leagueId, season, round }, 15 * 60);
+}
+
 // All upcoming fixtures for one team, across every competition it plays in
 // (league, cup, friendlies) — no league/season needed. Powers the favorite
 // team follow feature.

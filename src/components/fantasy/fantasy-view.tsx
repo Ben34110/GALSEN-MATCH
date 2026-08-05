@@ -44,9 +44,13 @@ export function FantasyView({ pool }: FantasyViewProps) {
         eyebrow="Starting 6"
         title={`Journée ${journee}`}
         subtitle={
-          countdown.expired
-            ? "Les compositions sont closes pour cette journée — la prochaine ouvre lundi."
-            : `Compositions ouvertes jusqu'à dimanche minuit — ${formatCountdown(countdown.days, countdown.hours, countdown.minutes)} restant(es).`
+          showBuilder
+            ? countdown.expired
+              ? "Les compositions sont closes pour cette journée — la prochaine ouvre lundi."
+              : `Compositions ouvertes jusqu'à dimanche minuit — ${formatCountdown(countdown.days, countdown.hours, countdown.minutes)} restant(es).`
+            : countdown.expired
+              ? `La journée ${journee} a commencé — suis tes joueurs ci-dessous.`
+              : `La journée ${journee} commence dans ${formatCountdown(countdown.days, countdown.hours, countdown.minutes)}.`
         }
       />
 

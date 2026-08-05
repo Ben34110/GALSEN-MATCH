@@ -2,8 +2,10 @@ import { matches, standings } from "@/lib/mock/matches";
 import { teams } from "@/lib/mock/teams";
 import { getTeamDirectory } from "@/lib/data/team-directory";
 import {
+  getCurrentRound,
   getFinishedFixtures,
   getFixtureById,
+  getFixturesForRound,
   getLiveFixtures,
   getStandingsForSeason,
   getTeamSquad,
@@ -99,18 +101,47 @@ function sortByKickoff(list: Match[]): Match[] {
 // n'ont pas de mock et affichent uniquement ce que l'API renvoie.
 export async function getMatches(leagueId: number = LIGUE1_SENEGAL_ID): Promise<Match[]> {
   const season = guessCurrentSeason();
-  const [live, upcoming, finished] = await Promise.all([
-    getLiveFixtures(leagueId),
-    getUpcomingFixtures(leagueId, season),
-    getFinishedFixtures(leagueId, season),
-  ]);
-
   const toMatches = (result: { error: string | null; data: ApiFixture[] }) =>
     !result.error ? result.data.map(mapFixtureToMatch) : [];
 
-  const realLive = toMatches(live);
-  const realUpcoming = toMatches(upcoming);
-  const realFinished = toMatches(finished);
+  const roundResult = await getCurrentRound(leagueId, season);
+  const currentRound = !roundResult.error ? roundResult.data[0] : undefined;
+
+  let realLive: Match[];
+  let realUpcoming: Match[];
+  let realFinished: Match[];
+
+  if (currentRound) {
+    // A whole round in one request, then bucketed locally by status — this
+    // is what actually gets "the next matchday" right: a flat next/last
+    // count cuts a round in half for any 18-team league (9 matches/round),
+    // mixing in a fixture from the following round.
+    const [live, round] = await Promise.all([getLiveFixtures(leagueId), getFixturesForRound(leagueId, season, currentRound)]);
+    const liveMatches = toMatches(live);
+    const roundMatches = toMatches(round);
+    const liveIds = new Set(liveMatches.map((m) => m.id));
+
+    realLive = liveMatches;
+    realUpcoming = [];
+    realFinished = [];
+    for (const match of roundMatches) {
+      if (liveIds.has(match.id) || match.status === "live") continue;
+      if (match.status === "finished") realFinished.push(match);
+      else realUpcoming.push(match);
+    }
+  } else {
+    // No round info for this league/season (e.g. Ligue 1 Sénégal — API-
+    // Football doesn't track it at all) — fall back to a flat next/last count.
+    const [live, upcoming, finished] = await Promise.all([
+      getLiveFixtures(leagueId),
+      getUpcomingFixtures(leagueId, season),
+      getFinishedFixtures(leagueId, season),
+    ]);
+    realLive = toMatches(live);
+    realUpcoming = toMatches(upcoming);
+    realFinished = toMatches(finished);
+  }
+
   const realTotal = realLive.length + realUpcoming.length + realFinished.length;
 
   if (leagueId !== LIGUE1_SENEGAL_ID) {

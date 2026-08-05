@@ -108,7 +108,9 @@ export function LiveView({
 
           {upcoming.length > 0 && (
             <section>
-              <h2 className="mb-2.5 text-xs font-bold uppercase tracking-wide text-muted">À venir</h2>
+              <h2 className="mb-2.5 text-xs font-bold uppercase tracking-wide text-muted">
+                À venir — {upcoming[0]?.roundLabel ?? `J${upcoming[0]?.matchday}`}
+              </h2>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {upcoming.map((match) => (
                   <MatchCard key={match.id} match={match} />

@@ -8,7 +8,7 @@ export const ONBOARDING_STORAGE_KEY = "galsen-match:onboarding";
 
 export interface OnboardingProfile {
   countryId: string; // matches an id in lib/mock/accent-themes.ts (senegal, cotedivoire, ...)
-  playerIds: string[]; // exactly 3
+  playerIds: string[]; // exactly 3 once onboarded; can transiently be 0-2 while editing in Profil
   username: string;
   favoriteClubId: number | null; // real API-Football team id (lib/data/team-directory.ts), editable from Profil
 }
@@ -56,7 +56,13 @@ export function parseOnboardingProfile(raw: string | null): OnboardingProfile | 
     if (
       typeof parsed.countryId !== "string" ||
       !Array.isArray(parsed.playerIds) ||
-      parsed.playerIds.length !== 3 ||
+      // Onboarding requires exactly 3 to finish (see app/onboarding/page.tsx's
+      // canAdvance), but once a profile exists, editing it in Profil needs to
+      // allow a transient 0-3 range — e.g. removing one player to swap it in
+      // for another. Rejecting anything but exactly 3 here used to bounce the
+      // user straight back into the onboarding wizard the moment they removed
+      // a player to replace it.
+      parsed.playerIds.length > 3 ||
       typeof parsed.username !== "string" ||
       !parsed.username.trim()
     ) {

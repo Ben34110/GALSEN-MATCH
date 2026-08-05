@@ -46,7 +46,15 @@ if (!API_KEY) {
 }
 
 const BASE_URL = "https://v3.football.api-sports.io";
-const SEASON = 2025; // most recent complete season with full player stats coverage
+// Two different seasons on purpose: STATS_SEASON is the most recent
+// *completed* season — it's the one with meaningful appearances/goals/
+// assists to rank players by. CLUB_SEASON is the season in progress right
+// now — querying it gets each player's actual current club post-transfer-
+// window, which STATS_SEASON alone gets wrong for anyone who moved since
+// (and returns nothing at all for anyone who didn't play in STATS_SEASON,
+// e.g. a debutant — see fetchPlayerClubDetail).
+const STATS_SEASON = 2025;
+const CLUB_SEASON = 2026;
 
 // All 54 CAF member nations' senior national team ids, found via
 // GET /teams?search=<country name> and taking the `national: true` entry.
@@ -137,14 +145,23 @@ async function apiGet(pathname, params) {
 
   const url = new URL(`${BASE_URL}${pathname}`);
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, String(v));
-  const res = await fetch(url, { headers: { "x-apisports-key": API_KEY } });
-  const json = await res.json();
-  if (json.errors && !Array.isArray(json.errors) && Object.keys(json.errors).length > 0) {
-    throw new Error(`API error for ${pathname}: ${JSON.stringify(json.errors)}`);
-  }
 
-  writeFileSync(cachePath, JSON.stringify(json));
-  return json;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const res = await fetch(url, { headers: { "x-apisports-key": API_KEY } });
+    const json = await res.json();
+    const rateLimited = json.errors && !Array.isArray(json.errors) && "rateLimit" in json.errors;
+    if (rateLimited) {
+      const waitMs = 2000 * (attempt + 1);
+      await new Promise((resolve) => setTimeout(resolve, waitMs));
+      continue;
+    }
+    if (json.errors && !Array.isArray(json.errors) && Object.keys(json.errors).length > 0) {
+      throw new Error(`API error for ${pathname}: ${JSON.stringify(json.errors)}`);
+    }
+    writeFileSync(cachePath, JSON.stringify(json));
+    return json;
+  }
+  throw new Error(`API rate-limited for ${pathname} after retries`);
 }
 
 // Small concurrency-limited pool — this script makes ~1500-2000 requests;
@@ -175,27 +192,41 @@ async function fetchNationalSquad(nation) {
   }
 }
 
+function bestClubEntry(entry) {
+  const clubEntries = (entry?.statistics ?? []).filter((s) => isClubStatEntry(s.team?.name));
+  return clubEntries.sort((a, b) => (b.games.appearences ?? 0) - (a.games.appearences ?? 0))[0];
+}
+
 async function fetchPlayerClubDetail(playerId) {
   try {
-    const result = await apiGet("/players", { id: playerId, season: SEASON });
-    const entry = result.response[0];
-    if (!entry) return null;
+    // Sequential, not Promise.all — each worker already runs at a controlled
+    // concurrency (see runPool below); doubling that per-player by firing 2
+    // requests at once was enough extra burst to trip the per-minute rate
+    // limit on a fresh (uncached) run.
+    const statsResult = await apiGet("/players", { id: playerId, season: STATS_SEASON });
+    const clubResult = await apiGet("/players", { id: playerId, season: CLUB_SEASON });
+    const statsEntry = statsResult.response[0];
+    const clubSeasonEntry = clubResult.response[0];
+    if (!statsEntry && !clubSeasonEntry) return null;
 
-    const clubEntries = (entry.statistics ?? []).filter((s) => isClubStatEntry(s.team?.name));
-    const best = clubEntries.sort((a, b) => (b.games.appearences ?? 0) - (a.games.appearences ?? 0))[0];
+    const statsBest = bestClubEntry(statsEntry);
+    // Prefer the current season's club (post-transfer-window); fall back to
+    // last season's if the player has no CLUB_SEASON entry yet.
+    const clubBest = bestClubEntry(clubSeasonEntry) ?? statsBest;
 
+    const source = statsEntry ?? clubSeasonEntry;
     return {
-      firstname: entry.player.firstname,
-      lastname: entry.player.lastname,
-      age: entry.player.age,
-      position: best?.games?.position ?? null,
-      teamId: best?.team?.id ?? null,
-      teamName: best?.team?.name ?? null,
-      teamLogo: best?.team?.logo ?? null,
-      leagueName: best?.league?.name ?? null,
-      appearances: best?.games?.appearences ?? 0,
-      goals: best?.goals?.total ?? 0,
-      assists: best?.goals?.assists ?? 0,
+      firstname: source.player.firstname,
+      lastname: source.player.lastname,
+      age: source.player.age,
+      position: clubBest?.games?.position ?? statsBest?.games?.position ?? null,
+      teamId: clubBest?.team?.id ?? null,
+      teamName: clubBest?.team?.name ?? null,
+      teamLogo: clubBest?.team?.logo ?? null,
+      leagueName: clubBest?.league?.name ?? null,
+      appearances: statsBest?.games?.appearences ?? 0,
+      goals: statsBest?.goals?.total ?? 0,
+      assists: statsBest?.goals?.assists ?? 0,
     };
   } catch (err) {
     console.warn(`  player ${playerId} detail failed: ${err.message}`);

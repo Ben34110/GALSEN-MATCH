@@ -119,20 +119,26 @@ export function PitchView({ slots, captainId }: PitchViewProps) {
   }, [slots.map((s) => s.player.id).join(",")]);
 
   return (
-    <div
-      className={cn(
-        "relative mx-auto aspect-[3/4] w-full max-w-sm overflow-hidden rounded-2xl shadow-md",
-        "bg-[repeating-linear-gradient(180deg,#2a8f52_0px,#2a8f52_40px,#278a4d_40px,#278a4d_80px)]"
-      )}
-    >
-      <svg viewBox="0 0 300 400" className="absolute inset-0 size-full" aria-hidden>
-        <rect x="6" y="6" width="288" height="388" fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="2" />
-        <circle cx="150" cy="6" r="55" fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="2" />
-        <rect x="80" y="316" width="140" height="78" fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="2" />
-        <rect x="115" y="360" width="70" height="34" fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="2" />
-        <circle cx="150" cy="330" r="2.5" fill="rgba(255,255,255,0.7)" />
-        <path d="M 115 316 A 40 40 0 0 0 185 316" fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="2" />
-      </svg>
+    <div className="relative mx-auto mb-9 aspect-[3/4] w-full max-w-sm">
+      {/* Background + markings are clipped to the pitch shape; the row below
+          (player tokens) is a sibling with no overflow-hidden of its own, so
+          a token anchored near the bottom (goalkeeper) can render its name
+          label past the pitch's bottom edge instead of being cut off. */}
+      <div
+        className={cn(
+          "absolute inset-0 overflow-hidden rounded-2xl shadow-md",
+          "bg-[repeating-linear-gradient(180deg,#2a8f52_0px,#2a8f52_40px,#278a4d_40px,#278a4d_80px)]"
+        )}
+      >
+        <svg viewBox="0 0 300 400" className="absolute inset-0 size-full" aria-hidden>
+          <rect x="6" y="6" width="288" height="388" fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="2" />
+          <circle cx="150" cy="6" r="55" fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="2" />
+          <rect x="80" y="316" width="140" height="78" fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="2" />
+          <rect x="115" y="360" width="70" height="34" fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="2" />
+          <circle cx="150" cy="330" r="2.5" fill="rgba(255,255,255,0.7)" />
+          <path d="M 115 316 A 40 40 0 0 0 185 316" fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="2" />
+        </svg>
+      </div>
 
       {ROWS.map(({ position, topPercent }) => {
         const rowSlots = slots.filter((slot) => slot.position === position);

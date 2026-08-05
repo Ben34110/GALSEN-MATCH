@@ -37,7 +37,22 @@ if (!API_KEY) {
 }
 
 const BASE_URL = "https://v3.football.api-sports.io";
-const SEASON = 2025; // most recent complete season — rosters barely change league-to-league anyway
+
+// The season in progress right now, not last season — /teams for a
+// completed season can include mid-season relegation-playoff participants
+// (e.g. Ligue 1's barrage) that aren't actually members of the league, which
+// showed up as a bug (Rodez listed under "Ligue 1"). Most European/African
+// league seasons run roughly Aug-Jun, so Jan-Jun still belongs to the season
+// that started the previous calendar year — same rule used by
+// guessCurrentSeason() in lib/data/live.ts.
+function guessCurrentSeason() {
+  const now = new Date();
+  const year = now.getUTCFullYear();
+  const month = now.getUTCMonth() + 1;
+  return month >= 7 ? year : year - 1;
+}
+
+const SEASON = guessCurrentSeason();
 
 const LEAGUES = [
   { id: 39, name: "Premier League" },
