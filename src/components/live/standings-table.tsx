@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { getTeamById } from "@/lib/mock/teams";
 import type { StandingRow } from "@/types";
@@ -39,7 +40,9 @@ export function StandingsTable({ rows }: { rows: StandingRow[] }) {
           </thead>
           <tbody>
             {rows.map((row, index) => {
-              const team = getTeamById(row.teamId);
+              const mockTeam = row.team ? undefined : getTeamById(row.teamId);
+              const name = row.team?.name ?? mockTeam?.name ?? "—";
+              const logo = row.team?.logo;
               const qualified = index < QUALIFICATION_CUTOFF;
               return (
                 <tr
@@ -50,7 +53,18 @@ export function StandingsTable({ rows }: { rows: StandingRow[] }) {
                   )}
                 >
                   <td className="px-3 py-2.5 tabular-nums text-muted">{index + 1}</td>
-                  <td className="px-3 py-2.5 font-semibold text-foreground">{team?.name ?? "—"}</td>
+                  <td className="px-3 py-2.5 font-semibold text-foreground">
+                    <div className="flex items-center gap-2">
+                      {logo ? (
+                        <Image src={logo} alt="" width={20} height={20} className="size-5 shrink-0 object-contain" unoptimized />
+                      ) : (
+                        <span className="grid size-5 shrink-0 place-items-center rounded-full bg-surface-2 text-[9px] font-bold text-muted">
+                          {mockTeam?.logoInitials ?? "?"}
+                        </span>
+                      )}
+                      {name}
+                    </div>
+                  </td>
                   <td className="px-2 py-2.5 text-center tabular-nums text-muted">{row.played}</td>
                   <td className="px-2 py-2.5 text-center tabular-nums text-muted">{row.won}</td>
                   <td className="px-2 py-2.5 text-center tabular-nums text-muted">{row.drawn}</td>

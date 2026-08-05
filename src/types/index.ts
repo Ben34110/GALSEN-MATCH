@@ -33,21 +33,38 @@ export interface Article {
 
 export type MatchStatus = "scheduled" | "live" | "finished";
 
+// Team info embedded directly on a Match/StandingRow when it comes from
+// API-Football — its fixtures/standings already carry name+logo, so no
+// separate lookup against lib/mock/teams.ts is needed for real data.
+export interface TeamRef {
+  id: string;
+  name: string;
+  logo?: string;
+}
+
 export interface Match {
   id: string;
   competition: string;
   matchday: number;
+  roundLabel?: string; // e.g. "J12" — derived from API-Football's free-text round when present
   homeTeamId: string;
   awayTeamId: string;
+  homeTeam?: TeamRef;
+  awayTeam?: TeamRef;
   status: MatchStatus;
   homeScore: number | null;
   awayScore: number | null;
   minute: number | null; // renseigné si status === "live"
+  liveLabel?: string; // e.g. "Mi-temps" instead of a raw minute count
+  halftimeScore?: { home: number | null; away: number | null };
   kickoffAt: string; // ISO date
+  source?: "api" | "mock";
+  apiFixtureId?: number; // set when source === "api" — links to /live/match/[id]
 }
 
 export interface StandingRow {
   teamId: string;
+  team?: TeamRef;
   played: number;
   won: number;
   drawn: number;
