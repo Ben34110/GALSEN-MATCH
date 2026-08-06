@@ -4,15 +4,38 @@ import { cn } from "@/lib/utils";
 import { getTeamById } from "@/lib/mock/teams";
 import type { StandingRow } from "@/types";
 
-const QUALIFICATION_CUTOFF = 3;
+// API-Football's standings rows carry a free-text "description" per zone
+// (e.g. "Promotion - CAF Champions League (Qualification)", "Relegation -
+// Ligue 2") — see StandingRow.zone. Rather than hardcoding each league's own
+// qualification rules (different every competition, and wrong the moment a
+// league restructures), the zone text itself is read to pick a color:
+// relegation is always red, a Champions-League-level spot is always green
+// (the strongest continental prize), anything else (Europa/Confederation
+// Cup, playoffs, a lower-division promotion zone, ...) is gold. The legend
+// below is built from whatever zones are actually present in these rows.
+function zoneColor(zone: string): { border: string; dot: string } {
+  const z = zone.toLowerCase();
+  if (z.includes("relegation")) return { border: "border-l-accent-3", dot: "bg-accent-3" };
+  if (z.includes("champions league")) return { border: "border-l-accent", dot: "bg-accent" };
+  return { border: "border-l-accent-2", dot: "bg-accent-2" };
+}
+
+function zoneLabel(zone: string): string {
+  if (/^relegation$/i.test(zone)) return "Relégation";
+  if (/^relegation - /i.test(zone)) return `Relégation — ${zone.slice("relegation - ".length)}`;
+  if (/^promotion - /i.test(zone)) return zone.slice("promotion - ".length);
+  return zone;
+}
 
 export function StandingsTable({ rows }: { rows: StandingRow[] }) {
+  const zones = Array.from(new Set(rows.map((row) => row.zone).filter((zone): zone is string => Boolean(zone))));
+
   return (
     <div className="overflow-hidden rounded-2xl border border-border">
       <div className="overflow-x-auto">
         <table className="w-full min-w-[420px] text-sm">
           <caption className="sr-only">
-            Classement Ligue 1 Sénégal — les trois premières équipes sont en zone de qualification.
+            Classement — les lignes colorées à gauche indiquent une zone de qualification ou de relégation.
           </caption>
           <thead>
             <tr className="bg-surface-2 text-[11px] uppercase tracking-wide text-muted">
@@ -43,14 +66,14 @@ export function StandingsTable({ rows }: { rows: StandingRow[] }) {
             {rows.map((row, index) => {
               const mockTeam = row.team ? undefined : getTeamById(row.teamId);
               const name = row.team?.name ?? mockTeam?.name ?? "—";
-              const logo = row.team?.logo;
-              const qualified = index < QUALIFICATION_CUTOFF;
+              const logo = row.team?.logo ?? mockTeam?.logo;
+              const color = row.zone ? zoneColor(row.zone) : null;
               return (
                 <tr
                   key={row.teamId}
                   className={cn(
                     "border-t border-border bg-surface transition-colors hover:bg-surface-2",
-                    qualified && "border-l-2 border-l-accent"
+                    color && `border-l-2 ${color.border}`
                   )}
                 >
                   <td className="px-3 py-2.5 tabular-nums text-muted">{index + 1}</td>
@@ -71,9 +94,13 @@ export function StandingsTable({ rows }: { rows: StandingRow[] }) {
                       </Link>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <span className="grid size-5 shrink-0 place-items-center rounded-full bg-surface-2 text-[9px] font-bold text-muted">
-                          {mockTeam?.logoInitials ?? "?"}
-                        </span>
+                        {logo ? (
+                          <Image src={logo} alt="" width={20} height={20} className="size-5 shrink-0 object-contain" unoptimized />
+                        ) : (
+                          <span className="grid size-5 shrink-0 place-items-center rounded-full bg-surface-2 text-[9px] font-bold text-muted">
+                            {mockTeam?.logoInitials ?? "?"}
+                          </span>
+                        )}
                         {name}
                       </div>
                     )}
@@ -89,10 +116,16 @@ export function StandingsTable({ rows }: { rows: StandingRow[] }) {
           </tbody>
         </table>
       </div>
-      <p className="flex items-center gap-1.5 border-t border-border bg-surface px-3 py-2 text-[11px] text-muted">
-        <span className="inline-block h-2.5 w-1 rounded-full bg-accent" aria-hidden />
-        Zone de qualification (top {QUALIFICATION_CUTOFF})
-      </p>
+      {zones.length > 0 && (
+        <div className="flex flex-col gap-1.5 border-t border-border bg-surface px-3 py-2.5">
+          {zones.map((zone) => (
+            <p key={zone} className="flex items-center gap-1.5 text-[11px] text-muted">
+              <span className={cn("inline-block h-2.5 w-1 shrink-0 rounded-full", zoneColor(zone).dot)} aria-hidden />
+              {zoneLabel(zone)}
+            </p>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

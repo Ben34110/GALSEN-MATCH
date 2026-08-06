@@ -106,6 +106,7 @@ export interface ApiStandingRow {
   team: { id: number; name: string; logo: string };
   points: number;
   all: { played: number; win: number; draw: number; lose: number };
+  description: string | null;
 }
 
 interface ApiStandingsResponse {

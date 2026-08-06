@@ -9,6 +9,7 @@ export interface Team {
   name: string;
   shortName: string;
   logoInitials: string;
+  logo: string;
   country: string;
 }
 
@@ -61,6 +62,10 @@ export interface StandingRow {
   drawn: number;
   lost: number;
   points: number;
+  // Raw "description" from API-Football's standings row, e.g. "Promotion -
+  // Champions League (League phase)" or "Relegation" — null when the row
+  // isn't in any zone (mid-table) or the league hasn't published one yet.
+  zone: string | null;
 }
 
 // A real club's current squad entry, from API-Football's /players/squads

@@ -1,4 +1,4 @@
-import { matches, standings } from "@/lib/mock/matches";
+import { getMockMatches, standings } from "@/lib/mock/matches";
 import { teams } from "@/lib/mock/teams";
 import { getTeamDirectory } from "@/lib/data/team-directory";
 import {
@@ -102,6 +102,7 @@ function mapStandingToRow(row: ApiStandingRow): StandingRow {
     drawn: row.all.draw,
     lost: row.all.lose,
     points: row.points,
+    zone: row.description,
   };
 }
 
@@ -172,21 +173,24 @@ export async function getMatches(leagueId: number = LIGUE1_SENEGAL_ID): Promise<
     realFinished = toMatches(finished);
   }
 
+  const realTotal = realLive.length + realUpcoming.length + realFinished.length;
+
   if (leagueId !== LIGUE1_SENEGAL_ID) {
     return sortByKickoff([...realLive, ...realUpcoming, ...realFinished]);
   }
 
-  // Real data only counts as "available" here if it has something live or
-  // upcoming — Senegal's season boundary (real results for the season that
-  // just ended, but the next one's fixtures not scheduled in the API yet)
-  // otherwise passed as real data with 0 upcoming matches, silently
-  // outranking the curated mock, which does have upcoming fixtures. A fan
-  // checking "what's next" got nothing instead of the demo data that at
-  // least answers that question.
-  if (realLive.length + realUpcoming.length > 0) {
+  // Real, even if it's finished-results-only with nothing upcoming yet
+  // (Senegal's season boundary — the next one's fixtures aren't scheduled in
+  // the API yet), beats a fictional standby: every other tracked league
+  // already shows exactly this "only Derniers résultats, no À venir" state
+  // with no special-casing, and a fan would rather see real recent results
+  // than a demo match invented to always look "in progress". The mock is a
+  // last resort for when the API has genuinely nothing at all — an outright
+  // failure, not just an empty season.
+  if (realTotal > 0) {
     return sortByKickoff([...realLive, ...realUpcoming, ...realFinished]);
   }
-  return sortByKickoff(matches);
+  return sortByKickoff(getMockMatches());
 }
 
 export interface StandingsResult {
@@ -207,6 +211,7 @@ function placeholderRow(team: { id: number; name: string; logo: string }): Stand
     drawn: 0,
     lost: 0,
     points: 0,
+    zone: null,
   };
 }
 

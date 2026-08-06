@@ -21,7 +21,7 @@ function TeamRow({
   // needed. Mock matches fall back to the static team list.
   const mockTeam = teamRef ? undefined : getTeamById(teamId);
   const name = teamRef?.name ?? mockTeam?.name ?? "Équipe inconnue";
-  const logo = teamRef?.logo;
+  const logo = teamRef?.logo ?? mockTeam?.logo;
 
   return (
     <div className="flex items-center justify-between">
