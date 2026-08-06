@@ -97,8 +97,8 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 pb-[calc(2rem+var(--safe-bottom))] pt-[calc(1.5rem+var(--safe-top))]">
-      <div className="flex items-center gap-2">
+    <div className="mx-auto flex h-dvh w-full max-w-md flex-col overflow-hidden px-6 pt-[calc(1.5rem+var(--safe-top))]">
+      <div className="flex shrink-0 items-center gap-2">
         <span className="gradient-accent grid size-9 place-items-center rounded-xl text-sm font-extrabold text-accent-ink">
           GM
         </span>
@@ -106,7 +106,7 @@ export default function OnboardingPage() {
       </div>
 
       <div
-        className="mt-8 flex gap-1.5"
+        className="mt-8 flex shrink-0 gap-1.5"
         role="progressbar"
         aria-valuenow={stepIndex + 1}
         aria-valuemin={1}
@@ -123,7 +123,7 @@ export default function OnboardingPage() {
         ))}
       </div>
 
-      <div className="mt-8 flex-1">
+      <div className="mt-8 flex-1 overflow-y-auto pb-4">
         {step === "country" && (
           <>
             <h1 className="font-serif text-2xl font-bold text-foreground">Ton pays</h1>
@@ -278,7 +278,7 @@ export default function OnboardingPage() {
         )}
       </div>
 
-      <div className="mt-8 flex items-center gap-3">
+      <div className="mt-4 flex shrink-0 items-center gap-3 border-t border-border pb-[calc(1.25rem+var(--safe-bottom))] pt-4">
         {stepIndex > 0 && (
           <button
             type="button"
