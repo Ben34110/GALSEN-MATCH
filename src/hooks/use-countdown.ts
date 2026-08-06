@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getCountdownParts, type CountdownParts } from "@/lib/fantasy-gameweek";
+import { getCountdownParts, type CountdownParts } from "@/lib/countdown";
 
 // Ticks once a second. Deliberately not driven by useSyncExternalStore —
 // unlike the localStorage-backed hooks elsewhere, there's no external

@@ -1,3 +1,5 @@
+export type { CountdownParts } from "@/lib/countdown";
+
 // Journée (gameweek) N is a calendar week starting Monday 00:00 — matches
 // for N are played *during* that week, so the squad for N must be locked in
 // *before* it starts, not at the end of it (the earlier model locked at the
@@ -41,20 +43,3 @@ export function getGameweekInfo(now: Date = new Date()): GameweekInfo {
   };
 }
 
-export interface CountdownParts {
-  totalMs: number;
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-  expired: boolean;
-}
-
-export function getCountdownParts(deadline: Date, now: Date = new Date()): CountdownParts {
-  const totalMs = Math.max(0, deadline.getTime() - now.getTime());
-  const seconds = Math.floor(totalMs / 1000) % 60;
-  const minutes = Math.floor(totalMs / (60 * 1000)) % 60;
-  const hours = Math.floor(totalMs / (60 * 60 * 1000)) % 24;
-  const days = Math.floor(totalMs / (24 * 60 * 60 * 1000));
-  return { totalMs, days, hours, minutes, seconds, expired: totalMs <= 0 };
-}

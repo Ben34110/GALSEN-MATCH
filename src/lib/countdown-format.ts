@@ -1,4 +1,4 @@
-import type { CountdownParts } from "@/lib/fantasy-gameweek";
+import type { CountdownParts } from "@/lib/countdown";
 
 // Always renders down to the second, ticking live — used by both Fantasy's
 // deadline countdown and the "À venir" events tab's countdowns. The

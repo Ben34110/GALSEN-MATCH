@@ -1,8 +1,11 @@
 // One-off/occasional sync script (NOT part of the Next.js runtime) that
-// fetches all teams across every tracked league (Ligue 1 Sénégal + 8 other
-// African leagues + the 5 big European leagues) and writes the result to
+// fetches all teams across every tracked African league (Ligue 1 Sénégal +
+// 8 other domestic leagues) and writes the result to
 // src/lib/data/generated/teams.json — a fast, searchable team directory for
-// the "favorite team" feature (see components/live/*).
+// the favorite-club feature in Profil (see components/profil/
+// preferences-editor.tsx). The 5 big European leagues used to be included
+// too, back when there was a live club-scores tab — dropped when the app
+// narrowed to African football only.
 //
 // Run with: node scripts/sync-teams.mjs
 // Reads API_FOOTBALL_KEY from .env.local (parsed manually — this script
@@ -39,7 +42,6 @@ if (!API_KEY) {
 
 const BASE_URL = "https://v3.football.api-sports.io";
 
-// Ids match COMPETITIONS in src/lib/api-football.ts.
 const LEAGUES = [
   { id: 403, name: "Ligue 1 Sénégal" },
   { id: 399, name: "NPFL (Nigeria)" },
@@ -50,11 +52,6 @@ const LEAGUES = [
   { id: 386, name: "Ligue 1 (Côte d'Ivoire)" },
   { id: 570, name: "Premier League (Ghana)" },
   { id: 288, name: "Premier Soccer League (Afrique du Sud)" },
-  { id: 39, name: "Premier League" },
-  { id: 140, name: "La Liga" },
-  { id: 135, name: "Serie A" },
-  { id: 78, name: "Bundesliga" },
-  { id: 61, name: "Ligue 1" },
 ];
 
 const CACHE_DIR = path.join(ROOT, ".cache/api-football");

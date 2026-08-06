@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeftRight, ChevronRight, Newspaper, Radio, Star, Trophy } from "lucide-react";
+import { ArrowLeftRight, CalendarClock, ChevronRight, Newspaper, Star, Trophy } from "lucide-react";
 import { ArticleCard } from "@/components/actu/article-card";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -26,7 +26,7 @@ const FILTERS = [
 ] as const;
 
 const QUICK_LINKS = [
-  { id: "directs", label: "Directs", icon: Radio },
+  { id: "upcoming", label: "À venir", icon: CalendarClock },
   { id: "mercato", label: "Mercato", icon: ArrowLeftRight },
   { id: "fantasy", label: "Fantasy", icon: Trophy },
   { id: "actu", label: "Actualités", icon: Newspaper },
@@ -166,9 +166,9 @@ export default function ActuPage() {
             "transition-transform duration-[var(--duration-fast)] active:scale-95"
           );
 
-          if (id === "directs") {
+          if (id === "upcoming") {
             return (
-              <Link key={id} href="/live" className={className}>
+              <Link key={id} href="/upcoming" className={className}>
                 {content}
               </Link>
             );

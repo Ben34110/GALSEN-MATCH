@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLayoutEffect, useRef, useState, type RefObject } from "react";
-import { Home, Radio, Trophy, MessageCircle, User } from "lucide-react";
+import { Home, CalendarClock, Trophy, MessageCircle, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { href: "/actu", label: "Accueil", icon: Home },
-  { href: "/live", label: "Matchs", icon: Radio },
+  { href: "/upcoming", label: "À venir", icon: CalendarClock },
   { href: "/fantasy", label: "Fantasy", icon: Trophy },
   { href: "/chat", label: "Live Chat", icon: MessageCircle },
   { href: "/profil", label: "Profil", icon: User },

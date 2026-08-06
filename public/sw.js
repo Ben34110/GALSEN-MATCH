@@ -2,10 +2,10 @@
 // utilisable hors-ligne. Stratégie : network-first pour les pages (toujours
 // essayer le réseau, retomber sur le cache si hors-ligne), cache-first pour
 // les assets statiques (JS/CSS/icônes) versionnés par Next.js.
-const CACHE_NAME = "galsen-match-v1";
+const CACHE_NAME = "galsen-match-v2";
 const OFFLINE_URL = "/actu";
 
-const PRECACHE_URLS = ["/actu", "/live", "/fantasy", "/chat", "/profil", "/icon.svg"];
+const PRECACHE_URLS = ["/actu", "/upcoming", "/fantasy", "/chat", "/profil", "/icon.svg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -75,14 +75,14 @@ self.addEventListener("push", (event) => {
       body: payload.body,
       icon: payload.icon || "/icon.svg",
       badge: "/icon.svg",
-      data: { url: payload.url || "/live" },
+      data: { url: payload.url || "/fantasy" },
     })
   );
 });
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const targetUrl = event.notification.data && event.notification.data.url ? event.notification.data.url : "/live";
+  const targetUrl = event.notification.data && event.notification.data.url ? event.notification.data.url : "/fantasy";
 
   event.waitUntil(
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {

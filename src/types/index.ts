@@ -4,15 +4,6 @@
 
 export type PlayerPosition = "G" | "D" | "M" | "A";
 
-export interface Team {
-  id: string;
-  name: string;
-  shortName: string;
-  logoInitials: string;
-  logo: string;
-  country: string;
-}
-
 export interface Article {
   id: string;
   title: string;
@@ -25,9 +16,7 @@ export interface Article {
 
 export type MatchStatus = "scheduled" | "live" | "finished";
 
-// Team info embedded directly on a Match/StandingRow when it comes from
-// API-Football — its fixtures/standings already carry name+logo, so no
-// separate lookup against lib/mock/teams.ts is needed for real data.
+// Team info embedded directly on a Match/MatchLineup from API-Football.
 export interface TeamRef {
   id: string;
   name: string;
@@ -54,31 +43,6 @@ export interface Match {
   apiFixtureId?: number; // set when source === "api" — links to /live/match/[id]
 }
 
-export interface StandingRow {
-  teamId: string;
-  team?: TeamRef;
-  played: number;
-  won: number;
-  drawn: number;
-  lost: number;
-  points: number;
-  // Raw "description" from API-Football's standings row, e.g. "Promotion -
-  // Champions League (League phase)" or "Relegation" — null when the row
-  // isn't in any zone (mid-table) or the league hasn't published one yet.
-  zone: string | null;
-}
-
-// A real club's current squad entry, from API-Football's /players/squads
-// (see lib/data/live.ts getSquad).
-export interface SquadPlayer {
-  id: number;
-  name: string;
-  age: number;
-  number: number | null;
-  position: string;
-  photo: string;
-}
-
 // A real African player from the top 5 European leagues (+ Ligue 1
 // Sénégal), pre-crawled via scripts/sync-african-players.mjs into
 // lib/data/generated/african-players.json. Used by the onboarding player
@@ -101,9 +65,9 @@ export interface AfricanPlayer {
   assists: number;
 }
 
-// A real club from the 5 big European leagues, pre-crawled via
-// scripts/sync-teams.mjs into lib/data/generated/teams.json — powers the
-// team search + favorite feature (see components/live/favorites-panel.tsx).
+// A real club, pre-crawled via scripts/sync-teams.mjs into
+// lib/data/generated/teams.json — powers the favorite-club search in Profil
+// (see components/profil/preferences-editor.tsx).
 export interface LeagueTeam {
   id: number;
   name: string;
