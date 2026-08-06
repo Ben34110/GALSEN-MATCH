@@ -171,6 +171,49 @@ export function getLiveFixtures(leagueId: number = LIGUE1_SENEGAL_ID) {
   return apiFootballGet<ApiFixture>("/fixtures", { live: "all", league: leagueId }, 30);
 }
 
+// Every fixture live right now, across every league in the world — one
+// request instead of one per favorited team, used by the notification
+// poller (see app/api/cron/poll/route.ts) to find goals/cards for
+// favorited clubs/players without needing to know which leagues they're
+// even in.
+export function getAllLiveFixtures() {
+  return apiFootballGet<ApiFixture>("/fixtures", { live: "all" }, 30);
+}
+
+// Every fixture on a given date (YYYY-MM-DD), across every league — used by
+// the poller to catch a favorited club's kickoff/lineup announcement without
+// polling per-team.
+export function getFixturesByDate(date: string) {
+  return apiFootballGet<ApiFixture>("/fixtures", { date }, 60);
+}
+
+export interface ApiFixtureEvent {
+  time: { elapsed: number; extra: number | null };
+  team: { id: number; name: string };
+  player: { id: number | null; name: string | null };
+  assist: { id: number | null; name: string | null };
+  type: string; // "Goal" | "Card" | "subst" | "Var"
+  detail: string; // "Normal Goal", "Yellow Card", "Red Card", ...
+}
+
+// Goals/cards/substitutions for one fixture, in chronological order —
+// polled only for fixtures currently live and involving a favorited
+// club/player (see the poller).
+export function getFixtureEvents(fixtureId: number) {
+  return apiFootballGet<ApiFixtureEvent>("/fixtures/events", { fixture: fixtureId }, 30);
+}
+
+export interface ApiFixturePlayerStats {
+  team: { id: number };
+  players: { player: { id: number; name: string }; statistics: { games: { rating: string | null } }[] }[];
+}
+
+// Per-player end-of-match ratings — only meaningful once a fixture is FT;
+// polled once per fixture the first time it's seen finished.
+export function getFixturePlayerStats(fixtureId: number) {
+  return apiFootballGet<ApiFixturePlayerStats>("/fixtures/players", { fixture: fixtureId }, 60 * 60);
+}
+
 // Season standings. Cached for hours — a table rarely moves more than once
 // or twice a day even mid-season.
 export function getStandingsForSeason(season: number, leagueId: number = LIGUE1_SENEGAL_ID) {
@@ -180,6 +223,29 @@ export function getStandingsForSeason(season: number, leagueId: number = LIGUE1_
 // Full detail for a single fixture (score, teams, halftime).
 export function getFixtureById(fixtureId: number) {
   return apiFootballGet<ApiFixture>("/fixtures", { id: fixtureId }, 60);
+}
+
+export interface ApiLineupPlayer {
+  player: { id: number; name: string; number: number | null; pos: string | null; grid: string | null };
+}
+
+export interface ApiLineup {
+  team: { id: number; name: string; logo: string };
+  coach: { id: number; name: string; photo: string | null } | null;
+  formation: string | null;
+  startXI: ApiLineupPlayer[];
+  substitutes: ApiLineupPlayer[];
+}
+
+// Starting XI + bench + formation, once announced (usually ~1h before
+// kickoff) — published or not, this same endpoint just returns an empty
+// response array beforehand, so "no lineup yet" and "API error" both read
+// as an empty result here; the caller treats both as "not out yet".
+// Cached briefly: once a lineup is out it never changes, but polling for
+// "has it come out yet" needs to notice within a couple of minutes (see
+// app/api/cron/poll/route.ts).
+export function getFixtureLineups(fixtureId: number) {
+  return apiFootballGet<ApiLineup>("/fixtures/lineups", { fixture: fixtureId }, 120);
 }
 
 // Current squad for one team — name/photo/position/age. Deliberately NOT a

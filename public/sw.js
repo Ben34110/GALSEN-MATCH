@@ -56,3 +56,44 @@ self.addEventListener("fetch", (event) => {
     );
   }
 });
+
+// Push payload shape sent by the poller (see app/api/cron/poll/route.ts):
+// { title, body, url, icon? } — url is where notificationclick below
+// navigates to (a match detail page, e.g. "/live/match/12345").
+self.addEventListener("push", (event) => {
+  if (!event.data) return;
+
+  let payload;
+  try {
+    payload = event.data.json();
+  } catch {
+    return;
+  }
+
+  event.waitUntil(
+    self.registration.showNotification(payload.title, {
+      body: payload.body,
+      icon: payload.icon || "/icon.svg",
+      badge: "/icon.svg",
+      data: { url: payload.url || "/live" },
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const targetUrl = event.notification.data && event.notification.data.url ? event.notification.data.url : "/live";
+
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
+      for (const client of clients) {
+        const clientUrl = new URL(client.url);
+        if (clientUrl.pathname === targetUrl && "focus" in client) return client.focus();
+      }
+      if (clients.length > 0 && "navigate" in clients[0]) {
+        return clients[0].focus().then(() => clients[0].navigate(targetUrl));
+      }
+      return self.clients.openWindow(targetUrl);
+    })
+  );
+});

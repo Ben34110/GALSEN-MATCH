@@ -5,6 +5,7 @@ import {
   getCurrentRound,
   getFinishedFixtures,
   getFixtureById,
+  getFixtureLineups,
   getFixturesForRound,
   getLeagueCurrentSeason,
   getLiveFixtures,
@@ -16,7 +17,7 @@ import {
   type ApiFixture,
   type ApiStandingRow,
 } from "@/lib/api-football";
-import type { Match, MatchStatus, SquadPlayer, StandingRow, Team, TeamRef } from "@/types";
+import type { Match, MatchLineup, MatchLineupPlayer, MatchStatus, SquadPlayer, StandingRow, Team, TeamRef } from "@/types";
 
 // Safety-net season to fall back to if a standings request errors outright
 // (e.g. a lapsed key/plan) — kept from when the free plan capped every
@@ -254,6 +255,26 @@ export async function getFixtureDetail(fixtureId: number): Promise<Match | null>
   const result = await getFixtureById(fixtureId);
   if (result.error || result.data.length === 0) return null;
   return mapFixtureToMatch(result.data[0]);
+}
+
+function mapLineupPlayer(entry: { player: { id: number; name: string; number: number | null; pos: string | null } }): MatchLineupPlayer {
+  return { id: entry.player.id, name: entry.player.name, number: entry.player.number, position: entry.player.pos };
+}
+
+// Both teams' starting XI/bench once announced — an empty array here means
+// "not published yet" (usually ~1h before kickoff), not an error; the
+// caller can't tell the difference and shouldn't need to (see
+// app/(app)/live/match/[id]/page.tsx).
+export async function getMatchLineups(fixtureId: number): Promise<MatchLineup[]> {
+  const result = await getFixtureLineups(fixtureId);
+  if (result.error) return [];
+  return result.data.map((lineup) => ({
+    team: { id: String(lineup.team.id), name: lineup.team.name, logo: lineup.team.logo },
+    coachName: lineup.coach?.name ?? null,
+    formation: lineup.formation,
+    startXI: lineup.startXI.map(mapLineupPlayer),
+    substitutes: lineup.substitutes.map(mapLineupPlayer),
+  }));
 }
 
 // All upcoming fixtures for one favorited team, across every competition it

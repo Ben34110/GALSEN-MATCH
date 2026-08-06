@@ -118,6 +118,24 @@ export interface LineupSlot {
   position: PlayerPosition;
 }
 
+// A real match's announced starting XI/bench (see lib/data/live.ts
+// getMatchLineups) — distinct from LineupSlot above, which is a Fantasy
+// Starting 6 slot.
+export interface MatchLineupPlayer {
+  id: number;
+  name: string;
+  number: number | null;
+  position: string | null; // raw API code: G/D/M/F
+}
+
+export interface MatchLineup {
+  team: TeamRef;
+  coachName: string | null;
+  formation: string | null;
+  startXI: MatchLineupPlayer[];
+  substitutes: MatchLineupPlayer[];
+}
+
 export interface ChatRoom {
   id: string;
   type: "country" | "general";

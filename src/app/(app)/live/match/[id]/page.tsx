@@ -5,7 +5,8 @@ import { ChevronLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { TeamFavoriteButton } from "@/components/live/team-favorite-button";
-import { getFixtureDetail } from "@/lib/data/live";
+import { MatchLineups } from "@/components/live/match-lineups";
+import { getFixtureDetail, getMatchLineups } from "@/lib/data/live";
 import { formatKickoff } from "@/lib/utils";
 import type { TeamRef } from "@/types";
 
@@ -33,7 +34,7 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ id
   const fixtureId = Number(id);
   if (!Number.isFinite(fixtureId)) notFound();
 
-  const match = await getFixtureDetail(fixtureId);
+  const [match, lineups] = await Promise.all([getFixtureDetail(fixtureId), getMatchLineups(fixtureId)]);
   if (!match) notFound();
 
   return (
@@ -70,6 +71,10 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ id
           </p>
         )}
       </Card>
+
+      <div className="mt-4">
+        <MatchLineups lineups={lineups} />
+      </div>
     </div>
   );
 }

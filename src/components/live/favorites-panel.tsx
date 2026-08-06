@@ -2,12 +2,17 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { ChevronDown, Search, Star } from "lucide-react";
+import { Bell, ChevronDown, Search, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getTeamDirectory, searchTeams } from "@/lib/data/team-directory";
 import { useFavoriteTeamIds, toggleFavoriteTeam } from "@/hooks/use-favorite-teams";
 import { fetchTeamUpcomingMatches } from "@/app/(app)/live/actions";
 import { MatchCard } from "@/components/live/match-card";
+import { NotificationPrefsPanel, type NotificationOption } from "@/components/notifications/notification-prefs-panel";
+import { ensurePushSubscription } from "@/hooks/use-push-subscription";
+import { getOrCreateDeviceId } from "@/lib/device-id";
+import { deleteClubNotificationPrefs, getClubNotificationPrefs, saveClubNotificationPrefs } from "@/app/actions/notifications";
+import { DEFAULT_CLUB_PREFS, type ClubNotificationPrefs } from "@/lib/notification-prefs";
 import type { Match } from "@/types";
 
 // A team id absent from this map means "not fetched yet" — rendered as
@@ -19,12 +24,25 @@ type MatchesState = Record<number, Match[] | "error">;
 // section off screen; "Voir plus" reveals the rest on demand.
 const DEFAULT_VISIBLE_MATCHES = 3;
 
+const CLUB_NOTIFICATION_OPTIONS: NotificationOption<ClubNotificationPrefs>[] = [
+  { key: "notifyLineup", label: "Compo annoncée" },
+  { key: "notifyGoals", label: "Chaque but" },
+  { key: "notifyKickoff", label: "Coup d'envoi" },
+  { key: "notifyFulltime", label: "Fin du match" },
+];
+
 export function FavoritesPanel() {
   const teams = useMemo(() => getTeamDirectory(), []);
   const favoriteIds = useFavoriteTeamIds();
   const [search, setSearch] = useState("");
   const [matchesByTeam, setMatchesByTeam] = useState<MatchesState>({});
   const [expandedTeamIds, setExpandedTeamIds] = useState<number[]>([]);
+  // The team currently showing the "choose your notifications" panel — set
+  // when adding a new favorite (confirming = favorites it) or editing an
+  // existing one's prefs (confirming just updates them).
+  const [prefsPanel, setPrefsPanel] = useState<{ teamId: number; mode: "add" | "edit"; initial: ClubNotificationPrefs } | null>(
+    null
+  );
 
   const results = useMemo(() => (search.trim() ? searchTeams(teams, search).slice(0, 30) : []), [teams, search]);
   const favoriteTeams = useMemo(
@@ -41,6 +59,32 @@ export function FavoritesPanel() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only re-run when the favorite id set itself changes
   }, [favoriteIds.join(",")]);
+
+  function openAddPrefs(teamId: number) {
+    setPrefsPanel({ teamId, mode: "add", initial: DEFAULT_CLUB_PREFS });
+  }
+
+  function openEditPrefs(teamId: number) {
+    setPrefsPanel({ teamId, mode: "edit", initial: DEFAULT_CLUB_PREFS });
+    getClubNotificationPrefs(getOrCreateDeviceId(), teamId).then((prefs) => {
+      setPrefsPanel((current) => (current?.teamId === teamId ? { ...current, initial: prefs } : current));
+    });
+  }
+
+  async function confirmPrefs(prefs: ClubNotificationPrefs) {
+    if (!prefsPanel) return;
+    const { teamId, mode } = prefsPanel;
+    if (mode === "add") toggleFavoriteTeam(teamId, favoriteIds);
+    await ensurePushSubscription();
+    await saveClubNotificationPrefs(getOrCreateDeviceId(), teamId, prefs);
+    setPrefsPanel(null);
+  }
+
+  function removeFavorite(teamId: number) {
+    toggleFavoriteTeam(teamId, favoriteIds);
+    deleteClubNotificationPrefs(getOrCreateDeviceId(), teamId);
+    if (prefsPanel?.teamId === teamId) setPrefsPanel(null);
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -63,27 +107,35 @@ export function FavoritesPanel() {
             {results.map((team) => {
               const isFavorite = favoriteIds.includes(team.id);
               return (
-                <div
-                  key={team.id}
-                  className="flex min-h-11 items-center gap-2.5 rounded-xl border border-border bg-surface px-2.5 py-2"
-                >
-                  <Image src={team.logo} alt="" width={28} height={28} className="size-7 shrink-0 object-contain" unoptimized />
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-semibold text-foreground">{team.name}</span>
-                    <span className="block text-[11px] text-muted">{team.leagueName}</span>
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => toggleFavoriteTeam(team.id, favoriteIds)}
-                    aria-pressed={isFavorite}
-                    aria-label={isFavorite ? `Retirer ${team.name} des favoris` : `Ajouter ${team.name} aux favoris`}
-                    className={cn(
-                      "grid size-9 shrink-0 place-items-center rounded-full transition-colors duration-[var(--duration-fast)] active:scale-90",
-                      isFavorite ? "bg-accent-2 text-foreground" : "bg-surface-2 text-muted hover:text-foreground"
-                    )}
-                  >
-                    <Star size={16} fill={isFavorite ? "currentColor" : "none"} aria-hidden />
-                  </button>
+                <div key={team.id} className="flex flex-col gap-2">
+                  <div className="flex min-h-11 items-center gap-2.5 rounded-xl border border-border bg-surface px-2.5 py-2">
+                    <Image src={team.logo} alt="" width={28} height={28} className="size-7 shrink-0 object-contain" unoptimized />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-semibold text-foreground">{team.name}</span>
+                      <span className="block text-[11px] text-muted">{team.leagueName}</span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => (isFavorite ? removeFavorite(team.id) : openAddPrefs(team.id))}
+                      aria-pressed={isFavorite}
+                      aria-label={isFavorite ? `Retirer ${team.name} des favoris` : `Ajouter ${team.name} aux favoris`}
+                      className={cn(
+                        "grid size-9 shrink-0 place-items-center rounded-full transition-colors duration-[var(--duration-fast)] active:scale-90",
+                        isFavorite ? "bg-accent-2 text-foreground" : "bg-surface-2 text-muted hover:text-foreground"
+                      )}
+                    >
+                      <Star size={16} fill={isFavorite ? "currentColor" : "none"} aria-hidden />
+                    </button>
+                  </div>
+                  {prefsPanel?.teamId === team.id && prefsPanel.mode === "add" && (
+                    <NotificationPrefsPanel
+                      title={`Notifications — ${team.name}`}
+                      options={CLUB_NOTIFICATION_OPTIONS}
+                      initialPrefs={prefsPanel.initial}
+                      onConfirm={confirmPrefs}
+                      onCancel={() => setPrefsPanel(null)}
+                    />
+                  )}
                 </div>
               );
             })}
@@ -107,15 +159,38 @@ export function FavoritesPanel() {
                     <Image src={team.logo} alt="" width={18} height={18} className="size-[18px] object-contain" unoptimized />
                     {team.name}
                   </h2>
-                  <button
-                    type="button"
-                    onClick={() => toggleFavoriteTeam(team.id, favoriteIds)}
-                    aria-label={`Retirer ${team.name} des favoris`}
-                    className="grid size-8 shrink-0 place-items-center rounded-full text-accent-2 transition-transform active:scale-90"
-                  >
-                    <Star size={16} fill="currentColor" aria-hidden />
-                  </button>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => openEditPrefs(team.id)}
+                      aria-label={`Gérer les notifications pour ${team.name}`}
+                      className="grid size-8 shrink-0 place-items-center rounded-full text-muted transition-colors hover:text-foreground"
+                    >
+                      <Bell size={15} aria-hidden />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeFavorite(team.id)}
+                      aria-label={`Retirer ${team.name} des favoris`}
+                      className="grid size-8 shrink-0 place-items-center rounded-full text-accent-2 transition-transform active:scale-90"
+                    >
+                      <Star size={16} fill="currentColor" aria-hidden />
+                    </button>
+                  </div>
                 </div>
+
+                {prefsPanel?.teamId === team.id && prefsPanel.mode === "edit" && (
+                  <div className="mb-2.5">
+                    <NotificationPrefsPanel
+                      title={`Notifications — ${team.name}`}
+                      options={CLUB_NOTIFICATION_OPTIONS}
+                      initialPrefs={prefsPanel.initial}
+                      onConfirm={confirmPrefs}
+                      onCancel={() => setPrefsPanel(null)}
+                      confirmLabel="Enregistrer"
+                    />
+                  </div>
+                )}
 
                 {state === undefined && <p className="py-4 text-center text-sm text-muted">Chargement…</p>}
                 {state === "error" && (
