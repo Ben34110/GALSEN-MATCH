@@ -26,6 +26,11 @@ export function writeLocalStorageValue(key: string, value: string) {
   emitChange();
 }
 
+export function removeLocalStorageValue(key: string) {
+  window.localStorage.removeItem(key);
+  emitChange();
+}
+
 export function useLocalStorageValue(key: string): string | null {
   return useSyncExternalStore(
     subscribe,

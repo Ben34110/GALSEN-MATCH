@@ -5,7 +5,7 @@
 // localStorage. Notification preferences and push subscriptions follow the
 // same model: a random id generated once per device/browser and reused,
 // rather than a real user id.
-const DEVICE_ID_KEY = "galsen-match:device-id";
+export const DEVICE_ID_KEY = "galsen-match:device-id";
 
 export function getOrCreateDeviceId(): string {
   const existing = window.localStorage.getItem(DEVICE_ID_KEY);

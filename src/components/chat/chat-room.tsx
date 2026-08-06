@@ -5,7 +5,8 @@ import { Send } from "lucide-react";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { getInitialMessages } from "@/lib/data/chat";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
-import { COUNTRY_CODE_BY_THEME_ID } from "@/lib/onboarding";
+import { COUNTRY_CODE_BY_THEME_ID, COUNTRY_FLAGS, initialsFromUsername } from "@/lib/onboarding";
+import { CountryAvatar } from "@/components/ui/country-avatar";
 import type { ChatMessage, ChatRoom as ChatRoomType } from "@/types";
 
 // Les messages vivent en mémoire côté client pour cette démo. Le passage à
@@ -90,6 +91,15 @@ export function ChatRoom({ rooms }: { rooms: ChatRoomType[] }) {
         )}
         {messages.map((message) => (
           <div key={message.id} className={cn("max-w-[85%] sm:max-w-[70%]", message.authorName === "Toi" && "self-end")}>
+            {message.authorName === "Toi" && profile && (
+              <div className="mb-1 flex items-center justify-end gap-1.5">
+                <span className="text-xs font-semibold text-foreground">{profile.username}</span>
+                <span aria-hidden className="text-sm leading-none">
+                  {COUNTRY_FLAGS[profile.countryId] ?? "🌍"}
+                </span>
+                <CountryAvatar initials={initialsFromUsername(profile.username)} size={10} />
+              </div>
+            )}
             <div
               className={cn(
                 "rounded-2xl px-3 py-2 text-sm",

@@ -1,6 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
+import { CountryAvatar } from "@/components/ui/country-avatar";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { COUNTRY_FLAGS, initialsFromUsername } from "@/lib/onboarding";
 import { getAccentTheme } from "@/lib/mock/accent-themes";
@@ -14,9 +15,7 @@ export function ProfileIdentityCard() {
 
   return (
     <Card className="mb-6 flex items-center gap-3.5">
-      <span className="grid size-14 shrink-0 place-items-center rounded-full bg-accent text-lg font-extrabold text-accent-ink">
-        {profile ? initialsFromUsername(profile.username) : "AD"}
-      </span>
+      <CountryAvatar initials={profile ? initialsFromUsername(profile.username) : "AD"} size={14} />
       <div className="min-w-0">
         <p className="truncate text-base font-bold text-foreground">{username}</p>
         <p className="text-sm text-muted">
