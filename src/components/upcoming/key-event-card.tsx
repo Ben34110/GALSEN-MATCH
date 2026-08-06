@@ -1,8 +1,10 @@
 "use client";
 
+import { CalendarPlus } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { useCountdown } from "@/hooks/use-countdown";
 import { formatCountdown } from "@/lib/countdown-format";
+import { downloadEventToCalendar } from "@/lib/calendar-export";
 import type { KeyEvent } from "@/lib/data/key-events";
 
 export function KeyEventCard({ event }: { event: KeyEvent }) {
@@ -35,6 +37,15 @@ export function KeyEventCard({ event }: { event: KeyEvent }) {
           )}
         </span>
       </div>
+
+      <button
+        type="button"
+        onClick={() => downloadEventToCalendar(event)}
+        className="flex min-h-10 items-center justify-center gap-1.5 rounded-xl border border-border bg-surface text-xs font-semibold text-muted transition-colors hover:border-accent/40 hover:text-foreground"
+      >
+        <CalendarPlus size={15} aria-hidden />
+        Ajouter à mon calendrier
+      </button>
     </Card>
   );
 }

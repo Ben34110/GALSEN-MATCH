@@ -78,7 +78,7 @@ export function FloatingNav() {
         <ul ref={mobileContainerRef} className="glass-panel relative flex items-center gap-1 rounded-full px-2 py-1.5">
           {mobileRect && (
             <span
-              className="gradient-accent glow-accent absolute inset-y-1.5 left-0 rounded-full transition-[transform,width] duration-300 ease-[var(--ease-spring)]"
+              className="glass-accent absolute inset-y-1.5 left-0 rounded-full transition-[transform,width] duration-300 ease-[var(--ease-spring)]"
               style={{ width: mobileRect.size, transform: `translateX(${mobileRect.offset}px)` }}
               aria-hidden
             />
@@ -93,7 +93,7 @@ export function FloatingNav() {
                   className={cn(
                     "relative z-10 flex min-h-11 min-w-11 flex-col items-center justify-center gap-0.5 rounded-full px-3.5 py-1.5",
                     "text-[11px] font-medium transition-[color,transform] duration-[var(--duration-fast)] ease-[var(--ease-out)] active:scale-90",
-                    active ? "text-accent-ink" : "text-muted hover:text-foreground"
+                    active ? "text-accent" : "text-muted hover:text-foreground"
                   )}
                 >
                   <Icon size={20} strokeWidth={active ? 2.4 : 2} />
@@ -120,7 +120,7 @@ export function FloatingNav() {
         <ul ref={desktopContainerRef} className="relative flex flex-col gap-1">
           {desktopRect && (
             <span
-              className="gradient-accent glow-accent absolute inset-x-0 left-0 rounded-xl transition-[transform,height] duration-300 ease-[var(--ease-spring)]"
+              className="glass-accent absolute inset-x-0 left-0 rounded-xl transition-[transform,height] duration-300 ease-[var(--ease-spring)]"
               style={{ height: desktopRect.size, transform: `translateY(${desktopRect.offset}px)` }}
               aria-hidden
             />
@@ -135,7 +135,7 @@ export function FloatingNav() {
                   className={cn(
                     "relative z-10 flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold",
                     "transition-colors duration-[var(--duration-base)] ease-[var(--ease-out)]",
-                    active ? "text-accent-ink" : "text-muted hover:bg-foreground/[0.04] hover:text-foreground"
+                    active ? "text-accent" : "text-muted hover:bg-foreground/[0.04] hover:text-foreground"
                   )}
                 >
                   <Icon size={20} strokeWidth={active ? 2.4 : 2} />

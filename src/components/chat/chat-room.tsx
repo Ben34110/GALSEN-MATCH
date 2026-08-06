@@ -7,6 +7,8 @@ import { getInitialMessages } from "@/lib/data/chat";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { COUNTRY_CODE_BY_THEME_ID, COUNTRY_FLAGS, initialsFromUsername } from "@/lib/onboarding";
 import { CountryAvatar } from "@/components/ui/country-avatar";
+import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
+import { HAS_CHATTED_KEY } from "@/lib/badges";
 import type { ChatMessage, ChatRoom as ChatRoomType } from "@/types";
 
 // Les messages vivent en mémoire côté client pour cette démo. Le passage à
@@ -56,6 +58,7 @@ export function ChatRoom({ rooms }: { rooms: ChatRoomType[] }) {
       [activeRoomId]: [...(current[activeRoomId] ?? []), message],
     }));
     setDraft("");
+    writeLocalStorageValue(HAS_CHATTED_KEY, "true");
   }
 
   return (

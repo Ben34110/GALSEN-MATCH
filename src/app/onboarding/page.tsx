@@ -37,6 +37,13 @@ export default function OnboardingPage() {
   const [playerIds, setPlayerIds] = useState<string[]>([]);
   const [username, setUsername] = useState("");
   const [playerSearch, setPlayerSearch] = useState("");
+  const [countrySearch, setCountrySearch] = useState("");
+
+  const visibleCountries = useMemo(() => {
+    const query = countrySearch.trim().toLowerCase();
+    if (!query) return COUNTRIES;
+    return COUNTRIES.filter((country) => country.label.toLowerCase().includes(query));
+  }, [countrySearch]);
 
   const visiblePlayers = useMemo(() => {
     if (!playerSearch.trim()) {
@@ -121,10 +128,25 @@ export default function OnboardingPage() {
           <>
             <h1 className="font-serif text-2xl font-bold text-foreground">Ton pays</h1>
             <p className="mt-1.5 text-sm leading-relaxed text-muted">
-              On mettra en avant l&apos;actu, le chat et les couleurs de ta nation.
+              On mettra en avant l&apos;actu, le chat et les couleurs de ta nation — les 54 pays de la CAF sont
+              disponibles.
             </p>
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              {COUNTRIES.map((country) => {
+
+            <div className="relative mt-4">
+              <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
+              <input
+                value={countrySearch}
+                onChange={(event) => setCountrySearch(event.target.value)}
+                placeholder="Chercher un pays…"
+                className={cn(
+                  "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-base text-foreground",
+                  "placeholder:text-muted focus:border-accent focus:outline-none"
+                )}
+              />
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              {visibleCountries.map((country) => {
                 const active = countryId === country.id;
                 return (
                   <button
@@ -146,6 +168,9 @@ export default function OnboardingPage() {
                   </button>
                 );
               })}
+              {visibleCountries.length === 0 && (
+                <p className="col-span-2 py-6 text-center text-sm text-muted">Aucun pays trouvé.</p>
+              )}
             </div>
           </>
         )}

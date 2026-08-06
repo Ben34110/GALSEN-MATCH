@@ -1,4 +1,5 @@
 import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
+import { AFRICAN_NATIONS } from "@/lib/data/african-nations";
 
 // Point de bascule : le profil d'onboarding (pays, joueurs favoris, pseudo,
 // club favori) sera écrit sur `users` (Supabase) au lieu du localStorage —
@@ -7,41 +8,30 @@ import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
 export const ONBOARDING_STORAGE_KEY = "galsen-match:onboarding";
 
 export interface OnboardingProfile {
-  countryId: string; // matches an id in lib/mock/accent-themes.ts (senegal, cotedivoire, ...)
+  countryId: string; // matches an id in lib/data/african-nations.ts (any of the 54)
   playerIds: string[]; // exactly 3 once onboarded; can transiently be 0-2 while editing in Profil
   username: string;
   favoriteClubId: number | null; // real API-Football team id (lib/data/team-directory.ts), editable from Profil
 }
 
-// Maps accent-theme country ids to the chat rooms' ISO country codes so the
-// user's chat room can be surfaced first (see components/chat/chat-room.tsx).
-export const COUNTRY_CODE_BY_THEME_ID: Record<string, string> = {
-  senegal: "SN",
-  cotedivoire: "CI",
-  cameroun: "CM",
-  mali: "ML",
-  maroc: "MA",
-};
+// Maps a country's theme/onboarding id to the chat rooms' ISO country code
+// (components/chat/chat-room.tsx surfaces the user's own room first) — all
+// derived from the single 54-nation source of truth.
+export const COUNTRY_CODE_BY_THEME_ID: Record<string, string> = Object.fromEntries(
+  AFRICAN_NATIONS.map((nation) => [nation.id, nation.countryCode])
+);
 
-export const COUNTRY_FLAGS: Record<string, string> = {
-  senegal: "🇸🇳",
-  cotedivoire: "🇨🇮",
-  cameroun: "🇨🇲",
-  mali: "🇲🇱",
-  maroc: "🇲🇦",
-};
+export const COUNTRY_FLAGS: Record<string, string> = Object.fromEntries(
+  AFRICAN_NATIONS.map((nation) => [nation.id, nation.flag])
+);
 
-// Maps accent-theme country ids to the exact nationality string used in
-// lib/data/generated/african-players.json (see scripts/sync-african-players.mjs),
-// so the onboarding player picker can default to showing the user's own
-// country's players first.
-export const NATIONALITY_BY_THEME_ID: Record<string, string> = {
-  senegal: "Senegal",
-  cotedivoire: "Ivory Coast",
-  cameroun: "Cameroon",
-  mali: "Mali",
-  maroc: "Morocco",
-};
+// Maps a country's theme/onboarding id to the exact nationality string used
+// in lib/data/generated/african-players.json (see
+// scripts/sync-african-players.mjs), so the onboarding player picker can
+// default to showing the user's own country's players first.
+export const NATIONALITY_BY_THEME_ID: Record<string, string> = Object.fromEntries(
+  AFRICAN_NATIONS.map((nation) => [nation.id, nation.nationality])
+);
 
 // First two letters of the username, matching the avatar-initials pattern
 // used elsewhere (e.g. profil, dashboard greeting).

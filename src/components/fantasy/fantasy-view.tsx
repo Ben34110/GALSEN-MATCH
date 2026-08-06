@@ -1,18 +1,21 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Trophy } from "lucide-react";
+import Link from "next/link";
+import { Check, ListOrdered, Trophy } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { SectionHeader } from "@/components/ui/section-header";
+import { cn } from "@/lib/utils";
 import { PitchView } from "@/components/fantasy/pitch-view";
 import { useFantasyStorage, saveSquadForJournee } from "@/hooks/use-saved-lineup";
 import { useCountdown } from "@/hooks/use-countdown";
+import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
+import { getOrCreateDeviceId } from "@/lib/device-id";
+import { syncFantasySquad } from "@/app/actions/fantasy-sync";
 import { getGameweekInfo } from "@/lib/fantasy-gameweek";
 import { formatCountdown } from "@/lib/countdown-format";
-import { EMPTY_SEATS, filledCount, isSquadComplete, type SeatId } from "@/lib/fantasy-lineup";
-import { calculateRealLineupPoints } from "@/services/real-player-scoring";
-import { positionCode } from "@/lib/data/african-players";
-import type { AfricanPlayer, PlayerPosition } from "@/types";
+import { EMPTY_SEATS, filledCount, isSquadComplete, type SeatId, type SeatMap } from "@/lib/fantasy-lineup";
+import type { AfricanPlayer } from "@/types";
 
 interface FantasyViewProps {
   pool: AfricanPlayer[];
@@ -24,6 +27,8 @@ export function FantasyView({ pool }: FantasyViewProps) {
   const { activeJournee, activeStarted, editableJournee, editableDeadline } = useMemo(() => getGameweekInfo(), []);
   const countdown = useCountdown(editableDeadline);
   const storage = useFantasyStorage();
+  const profile = useOnboardingProfile();
+  const [justSaved, setJustSaved] = useState(false);
 
   // Defaults to the active (locked-once-started) journée; a button switches
   // to preparing the next one instead of the two ever being conflated.
@@ -34,23 +39,26 @@ export function FantasyView({ pool }: FantasyViewProps) {
   const filled = filledCount(squad.seats);
   const complete = isSquadComplete(squad.seats);
 
-  const entries = Object.values(squad.seats)
-    .filter((id): id is string => id !== null)
-    .map((id) => pool.find((p) => String(p.id) === id))
-    .filter((p): p is AfricanPlayer => Boolean(p))
-    .map((player) => ({ player, position: positionCode(player.position) ?? ("A" as PlayerPosition) }));
-  const totalPoints = complete ? calculateRealLineupPoints(entries, squad.captainId) : null;
+  // Best-effort background sync to Supabase so the leaderboard sees this
+  // squad — never blocks the local save/UI (see docs/notifications.md's
+  // same pattern for why: local state is the source of truth, the remote
+  // copy is just for cross-device ranking).
+  function syncRemote(seats: SeatMap, captainId: string | null) {
+    if (!profile) return;
+    syncFantasySquad(getOrCreateDeviceId(), viewingJournee, profile.username, seats, captainId);
+  }
 
   function assign(seatId: SeatId, playerId: string) {
-    saveSquadForJournee(storage, viewingJournee, { ...squad, seats: { ...squad.seats, [seatId]: playerId } });
+    const next = { ...squad, seats: { ...squad.seats, [seatId]: playerId } };
+    saveSquadForJournee(storage, viewingJournee, next);
+    syncRemote(next.seats, next.captainId);
   }
 
   function remove(seatId: SeatId) {
     const nextCaptainId = squad.captainId === squad.seats[seatId] ? null : squad.captainId;
-    saveSquadForJournee(storage, viewingJournee, {
-      seats: { ...squad.seats, [seatId]: null },
-      captainId: nextCaptainId,
-    });
+    const next = { seats: { ...squad.seats, [seatId]: null }, captainId: nextCaptainId };
+    saveSquadForJournee(storage, viewingJournee, next);
+    syncRemote(next.seats, next.captainId);
   }
 
   const activeSquad = storage[activeJournee];
@@ -67,6 +75,15 @@ export function FantasyView({ pool }: FantasyViewProps) {
               ? "Les compositions sont closes pour cette journée."
               : `Compositions ouvertes jusqu'au coup d'envoi — ${formatCountdown(countdown)} restant(es).`
             : `La journée ${viewingJournee} a commencé — composition verrouillée.`
+        }
+        action={
+          <Link
+            href={`/fantasy/leaderboard?journee=${activeJournee}`}
+            aria-label="Classement général"
+            className="grid size-11 shrink-0 place-items-center rounded-full border border-border bg-surface text-foreground transition-transform duration-[var(--duration-fast)] active:scale-90"
+          >
+            <ListOrdered size={20} aria-hidden />
+          </Link>
         }
       />
 
@@ -90,20 +107,44 @@ export function FantasyView({ pool }: FantasyViewProps) {
           editable={isEditableView}
           onAssign={assign}
           onRemove={remove}
-          onSetCaptain={(playerId) => saveSquadForJournee(storage, viewingJournee, { ...squad, captainId: playerId })}
+          onSetCaptain={(playerId) => {
+            const next = { ...squad, captainId: playerId };
+            saveSquadForJournee(storage, viewingJournee, next);
+            syncRemote(next.seats, next.captainId);
+          }}
         />
 
         {!isEditableView && !activeHasTeam && (
           <p className="text-center text-sm text-muted">Aucune équipe n&apos;a été sélectionnée pour cette journée.</p>
         )}
 
-        {totalPoints !== null && (
-          <Card className="flex w-full items-center justify-between gap-3 border-accent/40">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">Points estimés</p>
-              <p className="text-2xl font-extrabold tabular-nums text-foreground">{totalPoints}</p>
-            </div>
-          </Card>
+        {isEditableView && (
+          <button
+            type="button"
+            disabled={!complete}
+            onClick={() => {
+              saveSquadForJournee(storage, viewingJournee, squad);
+              syncRemote(squad.seats, squad.captainId);
+              setJustSaved(true);
+              setTimeout(() => setJustSaved(false), 1500);
+            }}
+            className={cn(
+              "flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-5 text-base font-bold",
+              "transition-transform duration-[var(--duration-fast)]",
+              complete ? "bg-accent text-accent-ink active:scale-[0.98]" : "cursor-not-allowed bg-surface-2 text-muted"
+            )}
+          >
+            {justSaved ? (
+              <>
+                <Check size={18} aria-hidden />
+                Équipe enregistrée
+              </>
+            ) : complete ? (
+              `Enregistrer l'équipe pour la Journée ${viewingJournee}`
+            ) : (
+              `Choisis tes ${TOTAL_SEATS} joueurs (${filled}/${TOTAL_SEATS})`
+            )}
+          </button>
         )}
 
         {viewingJournee === activeJournee && activeStarted && (

@@ -1,3 +1,4 @@
+import { BadgesSection } from "@/components/profil/badges-section";
 import { LocalePicker } from "@/components/profil/locale-picker";
 import { LogoutButton } from "@/components/profil/logout-button";
 import { PreferencesEditor } from "@/components/profil/preferences-editor";
@@ -10,6 +11,10 @@ export default function ProfilPage() {
       <SectionHeader eyebrow="Profil" title="Ton compte" />
 
       <ProfileIdentityCard />
+
+      <div className="mb-8">
+        <BadgesSection />
+      </div>
 
       <div className="mb-8">
         <PreferencesEditor />

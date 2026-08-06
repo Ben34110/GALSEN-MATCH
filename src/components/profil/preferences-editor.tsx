@@ -57,10 +57,15 @@ export function PreferencesEditor() {
 
   const [playerSearch, setPlayerSearch] = useState("");
   const [clubSearch, setClubSearch] = useState("");
+  const [countrySearch, setCountrySearch] = useState("");
   const [clubPrefsPanel, setClubPrefsPanel] = useState<ClubPrefsPanelState | null>(null);
   const [playerPrefsPanel, setPlayerPrefsPanel] = useState<PlayerPrefsPanelState | null>(null);
 
   if (!profile) return null;
+
+  const visibleCountries = countrySearch.trim()
+    ? COUNTRIES.filter((country) => country.label.toLowerCase().includes(countrySearch.trim().toLowerCase()))
+    : COUNTRIES;
 
   const selectedPlayers = profile.playerIds
     .map((id) => allPlayers.find((player) => String(player.id) === id))
@@ -157,32 +162,68 @@ export function PreferencesEditor() {
       <section>
         <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">Pays favori</h2>
         <p className="mb-3 text-sm leading-relaxed text-muted">
-          Adapte les couleurs de l&apos;app et l&apos;ordre du chat à ta nation.
+          Adapte les couleurs de l&apos;app et l&apos;ordre du chat à ta nation — les 54 pays de la CAF sont
+          disponibles.
         </p>
-        <div className="grid grid-cols-3 gap-2.5">
-          {COUNTRIES.map((country) => {
-            const active = profile.countryId === country.id;
-            return (
-              <button
-                key={country.id}
-                type="button"
-                onClick={() => setCountry(country.id)}
-                aria-pressed={active}
-                className={cn(
-                  "flex min-h-11 flex-col items-center gap-1.5 rounded-xl border p-2.5",
-                  "transition-[transform,border-color,background-color] duration-[var(--duration-fast)] active:scale-95",
-                  active ? "border-accent bg-accent/10" : "border-border bg-surface hover:border-accent/30"
-                )}
-              >
-                <span className="text-2xl" aria-hidden>
-                  {COUNTRY_FLAGS[country.id]}
-                </span>
-                <span className="text-[11px] font-semibold text-foreground">{country.label}</span>
-                {active && <Check size={14} className="text-accent" aria-hidden />}
-              </button>
-            );
-          })}
+
+        {(() => {
+          const current = COUNTRIES.find((country) => country.id === profile.countryId);
+          if (!current) return null;
+          return (
+            <div className="mb-2.5 flex min-h-11 items-center gap-2.5 rounded-xl border border-accent bg-accent/10 px-2.5 py-2">
+              <span className="text-2xl" aria-hidden>
+                {COUNTRY_FLAGS[current.id]}
+              </span>
+              <span className="flex-1 text-sm font-semibold text-foreground">{current.label}</span>
+              <Check size={16} className="shrink-0 text-accent" aria-hidden />
+            </div>
+          );
+        })()}
+
+        <div className="relative">
+          <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
+          <input
+            value={countrySearch}
+            onChange={(event) => setCountrySearch(event.target.value)}
+            placeholder="Changer de pays…"
+            className={cn(
+              "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-base text-foreground",
+              "placeholder:text-muted focus:border-accent focus:outline-none"
+            )}
+          />
         </div>
+
+        {countrySearch.trim() && (
+          <div className="mt-1.5 grid grid-cols-3 gap-2">
+            {visibleCountries.map((country) => {
+              const active = profile.countryId === country.id;
+              return (
+                <button
+                  key={country.id}
+                  type="button"
+                  onClick={() => {
+                    setCountry(country.id);
+                    setCountrySearch("");
+                  }}
+                  aria-pressed={active}
+                  className={cn(
+                    "flex min-h-11 flex-col items-center gap-1.5 rounded-xl border p-2.5",
+                    "transition-[transform,border-color,background-color] duration-[var(--duration-fast)] active:scale-95",
+                    active ? "border-accent bg-accent/10" : "border-border bg-surface hover:border-accent/30"
+                  )}
+                >
+                  <span className="text-2xl" aria-hidden>
+                    {COUNTRY_FLAGS[country.id]}
+                  </span>
+                  <span className="text-[11px] font-semibold text-foreground">{country.label}</span>
+                </button>
+              );
+            })}
+            {visibleCountries.length === 0 && (
+              <p className="col-span-3 py-2 text-center text-xs text-muted">Aucun pays trouvé.</p>
+            )}
+          </div>
+        )}
       </section>
 
       <section>

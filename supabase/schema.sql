@@ -66,6 +66,25 @@ create table if not exists notified_events (
 
 create index if not exists notified_events_fixture_idx on notified_events (fixture_id);
 
+-- One row per device per journée — synced up whenever the local squad
+-- changes (see app/actions/fantasy-sync.ts), so the leaderboard
+-- (app/(app)/fantasy/leaderboard/page.tsx) can rank every device's squad
+-- for a given journée. Points aren't stored here — computed at read time
+-- from `seats` against the same real player stats Fantasy itself uses, so
+-- a leaderboard read never goes stale relative to a stat update.
+create table if not exists fantasy_squads (
+  id uuid primary key default gen_random_uuid(),
+  device_id text not null,
+  journee integer not null,
+  username text not null,
+  seats jsonb not null,
+  captain_id text,
+  updated_at timestamptz not null default now(),
+  unique (device_id, journee)
+);
+
+create index if not exists fantasy_squads_journee_idx on fantasy_squads (journee);
+
 -- No RLS policies: every read/write goes through server-only code using the
 -- service_role key (see lib/supabase.ts) — the anon key is never used, so
 -- there's no client-side access path to lock down.
@@ -73,3 +92,4 @@ alter table push_subscriptions enable row level security;
 alter table favorite_club_notifications enable row level security;
 alter table favorite_player_notifications enable row level security;
 alter table notified_events enable row level security;
+alter table fantasy_squads enable row level security;

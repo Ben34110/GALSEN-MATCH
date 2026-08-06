@@ -85,12 +85,12 @@ export default function ActuPage() {
       </header>
 
       {squad && lineupPlayers.length > 0 ? (
-        <Card className="gradient-accent mb-6 flex flex-col gap-4 border-0 text-accent-ink shadow-md lg:mb-8">
+        <Card className="glass-accent mb-6 flex flex-col gap-4 text-foreground shadow-md lg:mb-8">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-bold uppercase tracking-wide text-accent-ink/75">
+            <span className="text-xs font-bold uppercase tracking-wide text-muted">
               Ton équipe · Journée {previewJournee}
             </span>
-            <span className="rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide">
+            <span className="rounded-full bg-accent/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-accent">
               {squadComplete ? `${lineupPoints} pts est.` : `${lineupPlayers.length}/11`}
             </span>
           </div>
@@ -102,8 +102,8 @@ export default function ActuPage() {
                 <div key={player.id} className="flex flex-col items-center gap-1.5">
                   <span
                     className={cn(
-                      "relative grid size-9 place-items-center overflow-hidden rounded-full bg-white/20",
-                      isCaptain && "ring-2 ring-white"
+                      "relative grid size-9 place-items-center overflow-hidden rounded-full bg-accent/10",
+                      isCaptain && "ring-2 ring-accent"
                     )}
                   >
                     <Image src={player.photo} alt="" width={36} height={36} className="size-9 object-cover" unoptimized />
@@ -124,7 +124,7 @@ export default function ActuPage() {
           <Link
             href="/fantasy"
             className={cn(
-              "flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-white px-4 text-sm font-bold text-accent",
+              "flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-accent px-4 text-sm font-bold text-accent-ink",
               "transition-transform duration-[var(--duration-fast)] active:scale-[0.98]"
             )}
           >

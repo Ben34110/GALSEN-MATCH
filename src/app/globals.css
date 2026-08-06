@@ -166,6 +166,18 @@ body {
   box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--accent) 55%, transparent);
 }
 
+/* Frosted glass tinted with the live accent color (country-reactive, same
+   as .gradient-accent) instead of a solid fill — active nav state, the Home
+   Fantasy-squad card. Pair with text-accent (not text-accent-ink: this is a
+   light, translucent surface, not a solid saturated one — white text would
+   fail contrast on it). */
+.glass-accent {
+  background: color-mix(in srgb, var(--accent) 16%, var(--glass-surface));
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
