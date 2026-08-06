@@ -257,10 +257,17 @@ export async function getFixtureDetail(fixtureId: number): Promise<Match | null>
 }
 
 // All upcoming fixtures for one favorited team, across every competition it
-// plays in — see components/live/favorites-panel.tsx.
+// plays in — see components/live/favorites-panel.tsx and
+// components/fantasy/pitch-view.tsx, which both already distinguish a
+// rejected promise ("Matchs indisponibles"/"Prochain match indisponible")
+// from a genuinely empty array ("Aucun match à venir programmé"). Throwing
+// here (instead of swallowing the error into an empty array) is what makes
+// that distinction actually reach them — a transient API error used to
+// render identically to "this team truly has no upcoming fixtures", which
+// is a much more confusing message when it's actually just a fetch failure.
 export async function getUpcomingMatchesForTeam(teamId: number, count = 10): Promise<Match[]> {
   const result = await getUpcomingFixturesForTeam(teamId, count);
-  if (result.error) return [];
+  if (result.error) throw new Error(result.error);
   return sortByKickoff(result.data.map(mapFixtureToMatch));
 }
 
