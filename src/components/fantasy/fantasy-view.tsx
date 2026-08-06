@@ -4,11 +4,13 @@ import { useMemo, useState } from "react";
 import { Trophy } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { SectionHeader } from "@/components/ui/section-header";
-import { LineupBuilder } from "@/components/fantasy/lineup-builder";
 import { PitchView } from "@/components/fantasy/pitch-view";
-import { useSavedLineup } from "@/hooks/use-saved-lineup";
+import { useFantasyStorage, saveSquadForJournee } from "@/hooks/use-saved-lineup";
 import { useCountdown } from "@/hooks/use-countdown";
-import { getCurrentGameweek } from "@/lib/fantasy-gameweek";
+import { getGameweekInfo } from "@/lib/fantasy-gameweek";
+import { formatCountdown } from "@/lib/countdown-format";
+import { EMPTY_SEATS, filledCount, isSquadComplete, type SeatId } from "@/lib/fantasy-lineup";
+import { calculateRealLineupPoints } from "@/services/real-player-scoring";
 import { positionCode } from "@/lib/data/african-players";
 import type { AfricanPlayer, PlayerPosition } from "@/types";
 
@@ -16,79 +18,114 @@ interface FantasyViewProps {
   pool: AfricanPlayer[];
 }
 
-function formatCountdown(days: number, hours: number, minutes: number): string {
-  if (days > 0) return `${days} j ${hours} h`;
-  if (hours > 0) return `${hours} h ${minutes} min`;
-  return `${minutes} min`;
-}
+const TOTAL_SEATS = 11;
 
 export function FantasyView({ pool }: FantasyViewProps) {
-  const { journee, deadline } = useMemo(() => getCurrentGameweek(), []);
-  const countdown = useCountdown(deadline);
-  const savedLineup = useSavedLineup();
-  const hasCurrentWeekLineup = savedLineup?.matchday === journee;
-  const [editing, setEditing] = useState(false);
-  const showBuilder = editing || !hasCurrentWeekLineup;
+  const { activeJournee, activeStarted, editableJournee, editableDeadline } = useMemo(() => getGameweekInfo(), []);
+  const countdown = useCountdown(editableDeadline);
+  const storage = useFantasyStorage();
 
-  const savedSlots = useMemo(() => {
-    if (!savedLineup || !hasCurrentWeekLineup) return [];
-    return savedLineup.selectedIds
-      .map((id) => pool.find((p) => String(p.id) === id))
-      .filter((p): p is AfricanPlayer => Boolean(p))
-      .map((player) => ({ player, position: positionCode(player.position) ?? ("A" as PlayerPosition) }));
-  }, [savedLineup, hasCurrentWeekLineup, pool]);
+  // Defaults to the active (locked-once-started) journée; a button switches
+  // to preparing the next one instead of the two ever being conflated.
+  const [viewingJournee, setViewingJournee] = useState(activeJournee);
+  const isEditableView = viewingJournee === editableJournee && !(activeStarted && viewingJournee === activeJournee);
+
+  const squad = storage[viewingJournee] ?? { seats: EMPTY_SEATS, captainId: null };
+  const filled = filledCount(squad.seats);
+  const complete = isSquadComplete(squad.seats);
+
+  const entries = Object.values(squad.seats)
+    .filter((id): id is string => id !== null)
+    .map((id) => pool.find((p) => String(p.id) === id))
+    .filter((p): p is AfricanPlayer => Boolean(p))
+    .map((player) => ({ player, position: positionCode(player.position) ?? ("A" as PlayerPosition) }));
+  const totalPoints = complete ? calculateRealLineupPoints(entries, squad.captainId) : null;
+
+  function assign(seatId: SeatId, playerId: string) {
+    saveSquadForJournee(storage, viewingJournee, { ...squad, seats: { ...squad.seats, [seatId]: playerId } });
+  }
+
+  function remove(seatId: SeatId) {
+    const nextCaptainId = squad.captainId === squad.seats[seatId] ? null : squad.captainId;
+    saveSquadForJournee(storage, viewingJournee, {
+      seats: { ...squad.seats, [seatId]: null },
+      captainId: nextCaptainId,
+    });
+  }
+
+  const activeSquad = storage[activeJournee];
+  const activeHasTeam = activeSquad && filledCount(activeSquad.seats) > 0;
 
   return (
     <div>
       <SectionHeader
-        eyebrow="Starting 6"
-        title={`Journée ${journee}`}
+        eyebrow="Starting XI"
+        title={`Journée ${viewingJournee}`}
         subtitle={
-          showBuilder
+          isEditableView
             ? countdown.expired
-              ? "Les compositions sont closes pour cette journée — la prochaine ouvre lundi."
-              : `Compositions ouvertes jusqu'à dimanche minuit — ${formatCountdown(countdown.days, countdown.hours, countdown.minutes)} restant(es).`
-            : countdown.expired
-              ? `La journée ${journee} a commencé — suis tes joueurs ci-dessous.`
-              : `La journée ${journee} commence dans ${formatCountdown(countdown.days, countdown.hours, countdown.minutes)}.`
+              ? "Les compositions sont closes pour cette journée."
+              : `Compositions ouvertes jusqu'au coup d'envoi — ${formatCountdown(countdown)} restant(es).`
+            : `La journée ${viewingJournee} a commencé — composition verrouillée.`
         }
       />
 
-      {showBuilder ? (
-        <>
-          <Card className="mb-5 flex items-center gap-3">
-            <span className="grid size-11 shrink-0 place-items-center rounded-full bg-accent-2/15 text-accent-2">
-              <Trophy size={20} aria-hidden />
-            </span>
-            <p className="text-sm leading-snug text-muted">
-              {pool.length} vrais joueurs africains des 5 grands championnats européens. Points estimés à partir de
-              leurs vraies statistiques de la saison (apparitions, buts, passes).
-            </p>
-          </Card>
+      {isEditableView && (
+        <Card className="mb-5 flex items-center gap-3">
+          <span className="grid size-11 shrink-0 place-items-center rounded-full bg-accent-2/15 text-accent-2">
+            <Trophy size={20} aria-hidden />
+          </span>
+          <p className="text-sm leading-snug text-muted">
+            Touche un poste vide pour choisir un joueur africain — 1 gardien, 4 défenseurs, 3 milieux, 3
+            attaquants. {filled}/{TOTAL_SEATS} sélectionné{filled > 1 ? "s" : ""}.
+          </p>
+        </Card>
+      )}
 
-          <LineupBuilder
-            pool={pool}
-            journee={journee}
-            initialSelectedIds={hasCurrentWeekLineup ? savedLineup!.selectedIds : []}
-            initialCaptainId={hasCurrentWeekLineup ? savedLineup!.captainId : null}
-            onSaved={() => setEditing(false)}
-          />
-        </>
-      ) : (
-        <div className="flex flex-col items-center gap-4">
-          <PitchView slots={savedSlots} captainId={savedLineup?.captainId ?? null} />
+      <div className="flex flex-col items-center gap-4">
+        <PitchView
+          pool={pool}
+          seats={squad.seats}
+          captainId={squad.captainId}
+          editable={isEditableView}
+          onAssign={assign}
+          onRemove={remove}
+          onSetCaptain={(playerId) => saveSquadForJournee(storage, viewingJournee, { ...squad, captainId: playerId })}
+        />
+
+        {!isEditableView && !activeHasTeam && (
+          <p className="text-center text-sm text-muted">Aucune équipe n&apos;a été sélectionnée pour cette journée.</p>
+        )}
+
+        {totalPoints !== null && (
+          <Card className="flex w-full items-center justify-between gap-3 border-accent/40">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">Points estimés</p>
+              <p className="text-2xl font-extrabold tabular-nums text-foreground">{totalPoints}</p>
+            </div>
+          </Card>
+        )}
+
+        {viewingJournee === activeJournee && activeStarted && (
           <button
             type="button"
-            onClick={() => setEditing(true)}
-            className={[
-              "flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-border bg-surface px-5",
-              "text-sm font-semibold text-foreground transition-transform duration-[var(--duration-fast)] active:scale-95",
-            ].join(" ")}
+            onClick={() => setViewingJournee(editableJournee)}
+            className="flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-border bg-surface px-5 text-sm font-semibold text-foreground transition-transform duration-[var(--duration-fast)] active:scale-95"
           >
-            Modifier ma composition
+            Préparer la journée {editableJournee}
           </button>
-        </div>
-      )}
+        )}
+
+        {viewingJournee === editableJournee && activeStarted && (
+          <button
+            type="button"
+            onClick={() => setViewingJournee(activeJournee)}
+            className="flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-border bg-surface px-5 text-sm font-semibold text-foreground transition-transform duration-[var(--duration-fast)] active:scale-95"
+          >
+            Revenir à la journée {activeJournee}
+          </button>
+        )}
+      </div>
     </div>
   );
 }

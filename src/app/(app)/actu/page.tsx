@@ -10,9 +10,12 @@ import { cn } from "@/lib/utils";
 import { getArticles } from "@/lib/data/news";
 import { getAfricanPlayers, positionCode } from "@/lib/data/african-players";
 import { calculateRealLineupPoints } from "@/services/real-player-scoring";
-import { useSavedLineup } from "@/hooks/use-saved-lineup";
+import { useFantasyStorage } from "@/hooks/use-saved-lineup";
+import { getGameweekInfo } from "@/lib/fantasy-gameweek";
+import { filledCount, isSquadComplete } from "@/lib/fantasy-lineup";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { initialsFromUsername } from "@/lib/onboarding";
+import type { AfricanPlayer, PlayerPosition } from "@/types";
 
 const FILTERS = [
   { id: "all", label: "Tout" },
@@ -37,17 +40,24 @@ export default function ActuPage() {
 
   const profile = useOnboardingProfile();
   const pool = useMemo(() => getAfricanPlayers(), []);
-  const savedLineup = useSavedLineup();
-  const lineupPlayers = savedLineup
-    ? savedLineup.selectedIds
+  const { activeJournee, editableJournee } = useMemo(() => getGameweekInfo(), []);
+  const storage = useFantasyStorage();
+  // Prefer previewing the journée currently being played if a team was set
+  // for it; otherwise fall back to whatever's being prepared next.
+  const previewJournee = storage[activeJournee] && filledCount(storage[activeJournee].seats) > 0 ? activeJournee : editableJournee;
+  const squad = storage[previewJournee];
+  const lineupPlayers: AfricanPlayer[] = squad
+    ? Object.values(squad.seats)
+        .filter((id): id is string => id !== null)
         .map((id) => pool.find((player) => String(player.id) === id))
-        .filter((player): player is NonNullable<typeof player> => Boolean(player))
+        .filter((player): player is AfricanPlayer => Boolean(player))
     : [];
+  const squadComplete = Boolean(squad && isSquadComplete(squad.seats));
   const lineupPoints =
-    savedLineup && lineupPlayers.length === 6
+    squad && squadComplete
       ? calculateRealLineupPoints(
-          lineupPlayers.map((player) => ({ player, position: positionCode(player.position) ?? "A" })),
-          savedLineup.captainId
+          lineupPlayers.map((player) => ({ player, position: (positionCode(player.position) ?? "A") as PlayerPosition })),
+          squad.captainId
         )
       : null;
 
@@ -74,32 +84,32 @@ export default function ActuPage() {
         </Link>
       </header>
 
-      {savedLineup && lineupPlayers.length === 6 ? (
+      {squad && lineupPlayers.length > 0 ? (
         <Card className="gradient-accent mb-6 flex flex-col gap-4 border-0 text-accent-ink shadow-md lg:mb-8">
           <div className="flex items-center justify-between gap-2">
             <span className="text-xs font-bold uppercase tracking-wide text-accent-ink/75">
-              Ton Starting 6 · Journée {savedLineup.matchday}
+              Ton équipe · Journée {previewJournee}
             </span>
             <span className="rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide">
-              {lineupPoints} pts est.
+              {squadComplete ? `${lineupPoints} pts est.` : `${lineupPlayers.length}/11`}
             </span>
           </div>
 
-          <div className="flex items-center justify-between gap-1">
+          <div className="flex flex-wrap items-center justify-center gap-2">
             {lineupPlayers.map((player) => {
-              const isCaptain = String(player.id) === savedLineup.captainId;
+              const isCaptain = String(player.id) === squad.captainId;
               return (
-                <div key={player.id} className="flex flex-1 flex-col items-center gap-1.5">
+                <div key={player.id} className="flex flex-col items-center gap-1.5">
                   <span
                     className={cn(
-                      "relative grid size-10 place-items-center overflow-hidden rounded-full bg-white/20",
+                      "relative grid size-9 place-items-center overflow-hidden rounded-full bg-white/20",
                       isCaptain && "ring-2 ring-white"
                     )}
                   >
-                    <Image src={player.photo} alt="" width={40} height={40} className="size-10 object-cover" unoptimized />
+                    <Image src={player.photo} alt="" width={36} height={36} className="size-9 object-cover" unoptimized />
                     {isCaptain && (
                       <Star
-                        size={12}
+                        size={11}
                         className="absolute -right-1 -top-1 rounded-full bg-accent-2 p-0.5 text-foreground"
                         fill="currentColor"
                         aria-hidden
@@ -125,7 +135,7 @@ export default function ActuPage() {
       ) : (
         <Card className="mb-6 flex items-center justify-between gap-3 lg:mb-8">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Starting 6 · Journée 12</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Journée {previewJournee}</p>
             <p className="text-base font-bold text-foreground">Compose ton équipe de la semaine</p>
           </div>
           <Link

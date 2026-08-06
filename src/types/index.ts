@@ -113,14 +113,8 @@ export interface LeagueTeam {
   leagueName: string;
 }
 
-export interface LineupSlot {
-  playerId: string;
-  position: PlayerPosition;
-}
-
 // A real match's announced starting XI/bench (see lib/data/live.ts
-// getMatchLineups) — distinct from LineupSlot above, which is a Fantasy
-// Starting 6 slot.
+// getMatchLineups).
 export interface MatchLineupPlayer {
   id: number;
   name: string;

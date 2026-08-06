@@ -1,22 +1,44 @@
-// Journée (gameweek) N is a calendar week: opens Monday 00:00, locks the
-// following Monday 00:00 ("jusqu'au dimanche minuit" — Sunday night into
-// Monday). Journée 1's week starts at EPOCH_MONDAY; every completed week
-// since then advances the gameweek by one, entirely computed from the
-// clock — no cron/scheduled job needed to "roll over" a new gameweek.
-const EPOCH_MONDAY_UTC = Date.UTC(2026, 0, 5); // 2026-01-05 is a Monday
+// Journée (gameweek) N is a calendar week starting Monday 00:00 — matches
+// for N are played *during* that week, so the squad for N must be locked in
+// *before* it starts, not at the end of it (the earlier model locked at the
+// end of N's own week, which meant you could still edit a journée's team
+// after that week's matches had already happened — backwards). 2026-08-17
+// is the Monday the big European leagues resume on average, so that's
+// Journée 1's start.
+const EPOCH_MONDAY_UTC = Date.UTC(2026, 7, 17); // 2026-08-17 is a Monday
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
-export interface Gameweek {
-  journee: number;
-  deadline: Date; // next Monday 00:00 UTC — composition locks at this instant
+export interface GameweekInfo {
+  // The journée currently being played this week — locked (its deadline,
+  // its own start, has already passed). Before Journée 1 even begins, this
+  // equals 1 and activeStarted is false (nothing is locked yet).
+  activeJournee: number;
+  activeStarted: boolean;
+  // The journée the player can still build/edit right now — the same as
+  // activeJournee before Journée 1 starts, otherwise the next one.
+  editableJournee: number;
+  editableDeadline: Date;
 }
 
-export function getCurrentGameweek(now: Date = new Date()): Gameweek {
-  const elapsed = now.getTime() - EPOCH_MONDAY_UTC;
-  const weekIndex = Math.max(0, Math.floor(elapsed / WEEK_MS));
-  const journee = weekIndex + 1;
-  const deadline = new Date(EPOCH_MONDAY_UTC + (weekIndex + 1) * WEEK_MS);
-  return { journee, deadline };
+export function getGameweekInfo(now: Date = new Date()): GameweekInfo {
+  const boundaryIndex = Math.floor((now.getTime() - EPOCH_MONDAY_UTC) / WEEK_MS);
+
+  if (boundaryIndex < 0) {
+    return {
+      activeJournee: 1,
+      activeStarted: false,
+      editableJournee: 1,
+      editableDeadline: new Date(EPOCH_MONDAY_UTC),
+    };
+  }
+
+  const activeJournee = boundaryIndex + 1;
+  return {
+    activeJournee,
+    activeStarted: true,
+    editableJournee: activeJournee + 1,
+    editableDeadline: new Date(EPOCH_MONDAY_UTC + (boundaryIndex + 1) * WEEK_MS),
+  };
 }
 
 export interface CountdownParts {
