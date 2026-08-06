@@ -49,6 +49,70 @@ const STARTED_STATUSES = new Set(["1H", "2H", "HT", "ET", "P", "LIVE", "BT"]);
 const FINISHED_STATUSES = new Set(["FT", "AET", "PEN"]);
 const NOT_STARTED_STATUSES = new Set(["NS", "TBD"]);
 
+// A little variety so it doesn't read like a robot filled out a form —
+// picks a random title/body template per event so the same person scoring
+// twice in one game doesn't get the exact same sentence twice.
+function pick<T>(options: T[]): T {
+  return options[Math.floor(Math.random() * options.length)];
+}
+
+const KICKOFF_TEMPLATES = [
+  (match: string) => ({ title: "⚽️ C'est parti !", body: `${match} vient de démarrer, installe-toi confortablement.` }),
+  (match: string) => ({ title: "🟢 Coup d'envoi !", body: `${match} a commencé, prépare le café.` }),
+  (match: string) => ({ title: "🚀 Ça y est !", body: `${match} — le ballon roule enfin.` }),
+];
+
+const LINEUP_TEMPLATES = [
+  (match: string) => ({ title: "📋 La compo est tombée !", body: `${match} — les 22 acteurs du jour sont connus.` }),
+  (match: string) => ({ title: "🚨 Compo dispo !", body: `${match}, va vite checker qui commence.` }),
+];
+
+const PLAYER_LINEUP_TEMPLATES = [
+  (player: string) => ({ title: "🌟 Titulaire !", body: `${player} commence le match, en pleine confiance.` }),
+  (player: string) => ({ title: "✅ Sur la feuille de match !", body: `${player} est titulaire aujourd'hui, à toi de stresser.` }),
+];
+
+const CLUB_GOAL_TEMPLATES = [
+  (team: string, scorer: string, score: string) => ({ title: "GOAL !! 🔥", body: `${team} vient de marquer${scorer} — ${score}` }),
+  (team: string, scorer: string, score: string) => ({
+    title: "⚽️💥 But !",
+    body: `${team} trouve le chemin des filets${scorer}, score : ${score}`,
+  }),
+  (team: string, scorer: string, score: string) => ({ title: "🎉 Ça tremble !", body: `${team} fait trembler les filets${scorer} (${score})` }),
+];
+
+const PLAYER_GOAL_TEMPLATES = [
+  (player: string, score: string) => ({ title: "BUUUUT ! 🎉🔥", body: `${player} vient de marquer ! Score actuel : ${score}` }),
+  (player: string, score: string) => ({ title: "⚽️👑 Il l'a fait !", body: `${player} plante son but, score : ${score}` }),
+  (player: string, score: string) => ({ title: "🚀 Quel missile !", body: `${player} envoie le ballon au fond — ${score}` }),
+];
+
+const ASSIST_TEMPLATES = [
+  (player: string) => ({ title: "🎯 Caviar servi !", body: `${player} régale avec une passe décisive.` }),
+  (player: string) => ({ title: "✨ Le petit plus !", body: `${player} offre une passe décisive en or.` }),
+];
+
+const CARD_TEMPLATES: Record<"yellow" | "red", ((player: string) => { title: string; body: string })[]> = {
+  yellow: [
+    (player: string) => ({ title: "🟨 Petit avertissement", body: `${player} prend un carton jaune, faut se calmer un peu.` }),
+    (player: string) => ({ title: "🟨 Oups", body: `${player} écope d'un jaune, l'arbitre n'a pas rigolé.` }),
+  ],
+  red: [
+    (player: string) => ({ title: "🟥 Douche direct !", body: `${player} voit rouge et rentre aux vestiaires plus tôt que prévu.` }),
+    (player: string) => ({ title: "🟥 Aïe aïe aïe", body: `${player} est expulsé — soirée compliquée.` }),
+  ],
+};
+
+const FULLTIME_TEMPLATES = [
+  (match: string, score: string) => ({ title: "🏁 Terminé !", body: `${match} : ${score}. GG à tous.` }),
+  (match: string, score: string) => ({ title: "🔚 C'est fini !", body: `${match} se termine sur le score de ${score}.` }),
+];
+
+const RATING_TEMPLATES = [
+  (player: string, rating: string) => ({ title: "📊 La note tombe", body: `${player} termine avec un ${rating}/10 ce soir.` }),
+  (player: string, rating: string) => ({ title: "🧾 Bulletin de note", body: `${player} repart avec un ${rating}/10.` }),
+];
+
 export async function GET(request: Request) {
   const auth = request.headers.get("authorization");
   if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -95,9 +159,11 @@ export async function GET(request: Request) {
       .filter((id): id is number => id !== null)
   );
 
-  const pending: { deviceId: string; title: string; body: string; url: string }[] = [];
-  function queue(deviceId: string, title: string, body: string, fixtureId: number) {
-    pending.push({ deviceId, title, body, url: `/live/match/${fixtureId}` });
+  // icon: shown as the notification's avatar-style image (player photo or
+  // team logo) — see public/sw.js's push handler, which reads payload.icon.
+  const pending: { deviceId: string; title: string; body: string; url: string; icon?: string }[] = [];
+  function queue(deviceId: string, title: string, body: string, fixtureId: number, icon?: string) {
+    pending.push({ deviceId, title, body, url: `/live/match/${fixtureId}`, icon });
   }
 
   async function notifiedKey(fixtureId: number, eventKey: string): Promise<boolean> {
@@ -125,10 +191,15 @@ export async function GET(request: Request) {
   function involvesFavoritedPlayerTeam(fixture: ApiFixture): boolean {
     return favoritedPlayerTeamIds.has(fixture.teams.home.id) || favoritedPlayerTeamIds.has(fixture.teams.away.id);
   }
+  function logoFor(fixture: ApiFixture, teamId: number): string | undefined {
+    if (fixture.teams.home.id === teamId) return fixture.teams.home.logo;
+    if (fixture.teams.away.id === teamId) return fixture.teams.away.logo;
+    return undefined;
+  }
 
-  // --- Kickoff / lineup / fulltime, for today's fixtures involving a favorited club ---
-  const clubFixturesToday = todayFixtures.filter(involvesFavoritedClub);
-  for (const fixture of clubFixturesToday) {
+  // --- Kickoff / lineup / fulltime, for today's fixtures involving a favorited club or player ---
+  const clubOrPlayerFixturesToday = todayFixtures.filter((f) => involvesFavoritedClub(f) || involvesFavoritedPlayerTeam(f));
+  for (const fixture of clubOrPlayerFixturesToday) {
     const fixtureId = fixture.fixture.id;
     const status = fixture.fixture.status.short;
     const homeId = fixture.teams.home.id;
@@ -136,38 +207,58 @@ export async function GET(request: Request) {
     const matchLabel = `${fixture.teams.home.name} vs ${fixture.teams.away.name}`;
 
     for (const teamId of [homeId, awayId]) {
-      if (!clubTeamIds.has(teamId)) continue;
-      const devices = clubPrefRows.filter((r) => r.team_id === teamId);
+      const clubDevices = clubPrefRows.filter((r) => r.team_id === teamId);
+      const teamLogo = logoFor(fixture, teamId);
 
       if (!NOT_STARTED_STATUSES.has(status)) {
         const lineupKey = `lineup-${teamId}`;
-        if (!(await notifiedKey(fixtureId, lineupKey))) {
+        if (clubDevices.some((d) => d.notify_lineup) && !(await notifiedKey(fixtureId, lineupKey))) {
           const lineupResult = await getFixtureLineups(fixtureId);
           if (!lineupResult.error && lineupResult.data.length > 0) {
-            for (const device of devices.filter((d) => d.notify_lineup)) {
-              queue(device.device_id, "Compo annoncée", `${matchLabel} — la compo est sortie.`, fixtureId);
+            const { title, body } = pick(LINEUP_TEMPLATES)(matchLabel);
+            for (const device of clubDevices.filter((d) => d.notify_lineup)) {
+              queue(device.device_id, title, body, fixtureId, teamLogo);
             }
             await markKey(fixtureId, lineupKey);
+
+            // Same lineup fetch also answers "is my favorited player starting?" —
+            // check it here instead of a second /fixtures/lineups call.
+            const teamLineup = lineupResult.data.find((l) => l.team.id === teamId);
+            if (teamLineup) {
+              for (const slot of teamLineup.startXI) {
+                if (!favoritedPlayerMeta.has(slot.player.id)) continue;
+                const playerKey = `player-lineup-${slot.player.id}`;
+                if (await notifiedKey(fixtureId, playerKey)) continue;
+                const player = favoritedPlayerMeta.get(slot.player.id)!;
+                const { title: pTitle, body: pBody } = pick(PLAYER_LINEUP_TEMPLATES)(player.name);
+                for (const device of playerPrefRows.filter((r) => r.player_id === slot.player.id && r.notify_lineup)) {
+                  queue(device.device_id, pTitle, pBody, fixtureId, player.photo);
+                }
+                await markKey(fixtureId, playerKey);
+              }
+            }
           }
         }
       }
 
-      if (STARTED_STATUSES.has(status) || FINISHED_STATUSES.has(status)) {
+      if ((STARTED_STATUSES.has(status) || FINISHED_STATUSES.has(status)) && clubDevices.some((d) => d.notify_kickoff)) {
         const kickoffKey = `kickoff-${teamId}`;
         if (!(await notifiedKey(fixtureId, kickoffKey))) {
-          for (const device of devices.filter((d) => d.notify_kickoff)) {
-            queue(device.device_id, "Coup d'envoi", `${matchLabel} vient de commencer.`, fixtureId);
+          const { title, body } = pick(KICKOFF_TEMPLATES)(matchLabel);
+          for (const device of clubDevices.filter((d) => d.notify_kickoff)) {
+            queue(device.device_id, title, body, fixtureId, teamLogo);
           }
           await markKey(fixtureId, kickoffKey);
         }
       }
 
-      if (FINISHED_STATUSES.has(status)) {
+      if (FINISHED_STATUSES.has(status) && clubDevices.some((d) => d.notify_fulltime)) {
         const fulltimeKey = `fulltime-${teamId}`;
         if (!(await notifiedKey(fixtureId, fulltimeKey))) {
           const score = `${fixture.goals.home ?? 0}-${fixture.goals.away ?? 0}`;
-          for (const device of devices.filter((d) => d.notify_fulltime)) {
-            queue(device.device_id, "Fin du match", `${matchLabel} (${score})`, fixtureId);
+          const { title, body } = pick(FULLTIME_TEMPLATES)(matchLabel, score);
+          for (const device of clubDevices.filter((d) => d.notify_fulltime)) {
+            queue(device.device_id, title, body, fixtureId, teamLogo);
           }
           await markKey(fixtureId, fulltimeKey);
         }
@@ -179,6 +270,7 @@ export async function GET(request: Request) {
   const relevantLiveFixtures = liveFixtures.filter((f) => involvesFavoritedClub(f) || involvesFavoritedPlayerTeam(f));
   for (const fixture of relevantLiveFixtures) {
     const fixtureId = fixture.fixture.id;
+    const currentScore = `${fixture.goals.home ?? 0}-${fixture.goals.away ?? 0}`;
     const eventsResult = await getFixtureEvents(fixtureId);
     if (eventsResult.error) continue;
 
@@ -190,8 +282,10 @@ export async function GET(request: Request) {
           const key = `club-goal-${elapsedKey}-${event.team.id}`;
           if (!(await notifiedKey(fixtureId, key))) {
             const scorer = event.player.name ? ` (${event.player.name})` : "";
+            const teamLogo = logoFor(fixture, event.team.id);
+            const { title, body } = pick(CLUB_GOAL_TEMPLATES)(event.team.name, scorer, currentScore);
             for (const device of clubPrefRows.filter((r) => r.team_id === event.team.id && r.notify_goals)) {
-              queue(device.device_id, "But !", `${event.team.name} marque${scorer}.`, fixtureId);
+              queue(device.device_id, title, body, fixtureId, teamLogo);
             }
             await markKey(fixtureId, key);
           }
@@ -199,9 +293,10 @@ export async function GET(request: Request) {
         if (event.player.id && favoritedPlayerMeta.has(event.player.id)) {
           const key = `player-goal-${elapsedKey}-${event.player.id}`;
           if (!(await notifiedKey(fixtureId, key))) {
-            const name = favoritedPlayerMeta.get(event.player.id)!.name;
+            const player = favoritedPlayerMeta.get(event.player.id)!;
+            const { title, body } = pick(PLAYER_GOAL_TEMPLATES)(player.name, currentScore);
             for (const device of playerPrefRows.filter((r) => r.player_id === event.player.id && r.notify_goal)) {
-              queue(device.device_id, "But !", `${name} vient de marquer.`, fixtureId);
+              queue(device.device_id, title, body, fixtureId, player.photo);
             }
             await markKey(fixtureId, key);
           }
@@ -209,9 +304,10 @@ export async function GET(request: Request) {
         if (event.assist.id && favoritedPlayerMeta.has(event.assist.id)) {
           const key = `player-assist-${elapsedKey}-${event.assist.id}`;
           if (!(await notifiedKey(fixtureId, key))) {
-            const name = favoritedPlayerMeta.get(event.assist.id)!.name;
+            const player = favoritedPlayerMeta.get(event.assist.id)!;
+            const { title, body } = pick(ASSIST_TEMPLATES)(player.name);
             for (const device of playerPrefRows.filter((r) => r.player_id === event.assist.id && r.notify_assist)) {
-              queue(device.device_id, "Passe décisive !", `${name} vient de délivrer une passe décisive.`, fixtureId);
+              queue(device.device_id, title, body, fixtureId, player.photo);
             }
             await markKey(fixtureId, key);
           }
@@ -221,10 +317,11 @@ export async function GET(request: Request) {
       if (event.type === "Card" && event.player.id && favoritedPlayerMeta.has(event.player.id)) {
         const key = `player-card-${elapsedKey}-${event.player.id}-${event.detail}`;
         if (!(await notifiedKey(fixtureId, key))) {
-          const name = favoritedPlayerMeta.get(event.player.id)!.name;
-          const cardLabel = event.detail.toLowerCase().includes("red") ? "carton rouge" : "carton jaune";
+          const player = favoritedPlayerMeta.get(event.player.id)!;
+          const color = event.detail.toLowerCase().includes("red") ? "red" : "yellow";
+          const { title, body } = pick(CARD_TEMPLATES[color])(player.name);
           for (const device of playerPrefRows.filter((r) => r.player_id === event.player.id && r.notify_card)) {
-            queue(device.device_id, "Carton", `${name} reçoit un ${cardLabel}.`, fixtureId);
+            queue(device.device_id, title, body, fixtureId, player.photo);
           }
           await markKey(fixtureId, key);
         }
@@ -249,9 +346,10 @@ export async function GET(request: Request) {
         if (!favoritedPlayerMeta.has(entry.player.id)) continue;
         const rating = entry.statistics[0]?.games.rating;
         if (!rating) continue;
-        const name = favoritedPlayerMeta.get(entry.player.id)!.name;
+        const player = favoritedPlayerMeta.get(entry.player.id)!;
+        const { title, body } = pick(RATING_TEMPLATES)(player.name, rating);
         for (const device of playerPrefRows.filter((r) => r.player_id === entry.player.id && r.notify_rating)) {
-          queue(device.device_id, "Note de fin de match", `${name} a été noté ${rating}/10.`, fixtureId);
+          queue(device.device_id, title, body, fixtureId, player.photo);
         }
       }
     }
@@ -268,7 +366,7 @@ export async function GET(request: Request) {
       try {
         await webpush.sendNotification(
           { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
-          JSON.stringify({ title: message.title, body: message.body, url: message.url })
+          JSON.stringify({ title: message.title, body: message.body, url: message.url, icon: message.icon })
         );
         sent += 1;
       } catch (err) {

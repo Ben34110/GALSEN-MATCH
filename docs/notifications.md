@@ -49,6 +49,10 @@ Vercel Cron on the free Hobby plan only runs once a day, far too rare for "notif
 
 Tapping a notification opens the app at `/live/match/<fixtureId>`, which now also renders the announced lineup (see `src/components/live/match-lineups.tsx`).
 
+### Tone and images
+
+Copy is casual on purpose (several random variants per event, see the `*_TEMPLATES` arrays at the top of `route.ts`) — e.g. a goal notification might read "GOAL !! 🔥 Bayern München vient de marquer (H. Kane) — 2-1" one time and "🎉 Ça tremble ! Bayern München fait trembler les filets (H. Kane) (2-1)" the next. Goal notifications always include the current score. Each notification's icon is the specific player's photo (for player-scoped events: goal/assist/card/rating/starting-lineup) or the scoring/relevant club's crest (for club-scoped events: kickoff/lineup/fulltime/goal) — not the generic app icon.
+
 ## Testing
 
 The service worker (`public/sw.js`) only registers in production builds (see `components/pwa/service-worker-register.tsx`) to avoid fighting Next's dev-mode hot reload — so the actual "grant permission → subscribe → receive a push" flow can only be tested on a deployed build, not `next dev`. Once deployed with the above configured: favorite a club with notifications on, wait for its next live match, and the poll endpoint should pick up kickoff/goals/fulltime automatically.
