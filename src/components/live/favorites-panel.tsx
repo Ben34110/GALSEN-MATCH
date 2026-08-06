@@ -71,13 +71,18 @@ export function FavoritesPanel() {
     });
   }
 
-  async function confirmPrefs(prefs: ClubNotificationPrefs) {
+  function confirmPrefs(prefs: ClubNotificationPrefs) {
     if (!prefsPanel) return;
     const { teamId, mode } = prefsPanel;
     if (mode === "add") toggleFavoriteTeam(teamId, favoriteIds);
-    await ensurePushSubscription();
-    await saveClubNotificationPrefs(getOrCreateDeviceId(), teamId, prefs);
+    // Close immediately — the favorite itself is already saved (localStorage,
+    // synchronous). Push subscription + the Supabase write are best-effort
+    // background work; waiting on them here used to mean that if
+    // ensurePushSubscription() ever hung (e.g. the service worker still
+    // installing on a first visit), the panel would sit open forever,
+    // looking exactly like "nothing got saved" even though it had.
     setPrefsPanel(null);
+    ensurePushSubscription().then(() => saveClubNotificationPrefs(getOrCreateDeviceId(), teamId, prefs));
   }
 
   function removeFavorite(teamId: number) {

@@ -95,7 +95,7 @@ export function PreferencesEditor() {
     });
   }
 
-  async function confirmPlayerPrefs(prefs: PlayerNotificationPrefs) {
+  function confirmPlayerPrefs(prefs: PlayerNotificationPrefs) {
     if (!profile || !playerPrefsPanel) return;
     const { playerId, mode } = playerPrefsPanel;
     if (mode === "add") {
@@ -104,9 +104,14 @@ export function PreferencesEditor() {
       }
       setPlayerSearch("");
     }
-    await ensurePushSubscription();
-    await savePlayerNotificationPrefs(getOrCreateDeviceId(), Number(playerId), prefs);
+    // Close immediately — the favorite itself is already saved (localStorage,
+    // synchronous) at this point. Push subscription + the Supabase write are
+    // best-effort background work; waiting on them here used to mean that if
+    // ensurePushSubscription() ever hung (e.g. the service worker still
+    // installing on a first visit), the panel would just sit open forever,
+    // looking exactly like "nothing got saved" even though it had.
     setPlayerPrefsPanel(null);
+    ensurePushSubscription().then(() => savePlayerNotificationPrefs(getOrCreateDeviceId(), Number(playerId), prefs));
   }
 
   function openAddClubPrefs(teamId: number) {
@@ -120,7 +125,7 @@ export function PreferencesEditor() {
     });
   }
 
-  async function confirmClubPrefs(prefs: ClubNotificationPrefs) {
+  function confirmClubPrefs(prefs: ClubNotificationPrefs) {
     if (!profile || !clubPrefsPanel) return;
     const { teamId, mode } = clubPrefsPanel;
     if (mode === "add") {
@@ -131,9 +136,10 @@ export function PreferencesEditor() {
       addFavoriteTeam(teamId, favoriteTeamIds);
       setClubSearch("");
     }
-    await ensurePushSubscription();
-    await saveClubNotificationPrefs(getOrCreateDeviceId(), teamId, prefs);
+    // Close immediately — see confirmPlayerPrefs above for why this doesn't
+    // wait on push subscription / the Supabase write.
     setClubPrefsPanel(null);
+    ensurePushSubscription().then(() => saveClubNotificationPrefs(getOrCreateDeviceId(), teamId, prefs));
   }
 
   function clearClub() {
@@ -239,17 +245,24 @@ export function PreferencesEditor() {
         </div>
 
         {selectedPlayers.length < 3 && (
-          <div className="relative">
-            <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
-            <input
-              value={playerSearch}
-              onChange={(event) => setPlayerSearch(event.target.value)}
-              placeholder="Ajouter un joueur…"
-              className={cn(
-                "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-base text-foreground",
-                "placeholder:text-muted focus:border-accent focus:outline-none"
-              )}
-            />
+          <div>
+            {/* The icon is positioned relative to THIS wrapper, not the one
+                also holding search results below — otherwise as results (and
+                a notification-prefs panel) render and grow the block taller,
+                top-1/2 recenters into the middle of the whole thing instead
+                of staying pinned to the input row. */}
+            <div className="relative">
+              <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
+              <input
+                value={playerSearch}
+                onChange={(event) => setPlayerSearch(event.target.value)}
+                placeholder="Ajouter un joueur…"
+                className={cn(
+                  "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-base text-foreground",
+                  "placeholder:text-muted focus:border-accent focus:outline-none"
+                )}
+              />
+            </div>
             {playerSearch.trim() && (
               <div className="mt-1.5 flex flex-col gap-1.5">
                 {playerResults.map((player) => {
@@ -335,17 +348,19 @@ export function PreferencesEditor() {
             )}
           </div>
         ) : (
-          <div className="relative">
-            <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
-            <input
-              value={clubSearch}
-              onChange={(event) => setClubSearch(event.target.value)}
-              placeholder="Chercher un club (Real Madrid, Bayern…)"
-              className={cn(
-                "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-base text-foreground",
-                "placeholder:text-muted focus:border-accent focus:outline-none"
-              )}
-            />
+          <div>
+            <div className="relative">
+              <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
+              <input
+                value={clubSearch}
+                onChange={(event) => setClubSearch(event.target.value)}
+                placeholder="Chercher un club (Real Madrid, Bayern…)"
+                className={cn(
+                  "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-base text-foreground",
+                  "placeholder:text-muted focus:border-accent focus:outline-none"
+                )}
+              />
+            </div>
             {clubSearch.trim() && (
               <div className="mt-1.5 flex flex-col gap-1.5">
                 {clubResults.map((team) => (
