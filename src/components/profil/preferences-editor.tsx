@@ -141,7 +141,7 @@ export function PreferencesEditor() {
               onChange={(event) => setPlayerSearch(event.target.value)}
               placeholder="Ajouter un joueur…"
               className={cn(
-                "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-sm text-foreground",
+                "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-base text-foreground",
                 "placeholder:text-muted focus:border-accent focus:outline-none"
               )}
             />
@@ -204,7 +204,7 @@ export function PreferencesEditor() {
               onChange={(event) => setClubSearch(event.target.value)}
               placeholder="Chercher un club (Real Madrid, Bayern…)"
               className={cn(
-                "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-sm text-foreground",
+                "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-base text-foreground",
                 "placeholder:text-muted focus:border-accent focus:outline-none"
               )}
             />

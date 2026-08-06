@@ -79,6 +79,15 @@ html {
   color-scheme: light;
 }
 
+html,
+body {
+  /* Belt-and-braces against zoom on a native-feeling mobile app: the
+     viewport meta (maximumScale/userScalable, see layout.tsx) blocks pinch
+     zoom, touch-action here blocks double-tap-to-zoom, which some mobile
+     browsers apply independently of the viewport meta. */
+  touch-action: pan-x pan-y;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

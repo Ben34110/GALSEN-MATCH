@@ -134,7 +134,7 @@ export function ChatRoom({ rooms }: { rooms: ChatRoomType[] }) {
           placeholder={`Écrire dans ${activeRoom?.name ?? ""}…`}
           maxLength={500}
           autoComplete="off"
-          className="min-h-11 flex-1 rounded-full border border-border bg-surface px-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
+          className="min-h-11 flex-1 rounded-full border border-border bg-surface px-4 py-2.5 text-base text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
         />
         <button
           type="submit"

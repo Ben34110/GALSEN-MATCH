@@ -111,6 +111,7 @@ export async function getMatches(leagueId: number = LIGUE1_SENEGAL_ID): Promise<
   let realUpcoming: Match[];
   let realFinished: Match[];
 
+  let roundFetchFailed = false;
   if (currentRound) {
     // A whole round in one request, then bucketed locally by status — this
     // is what actually gets "the next matchday" right: a flat next/last
@@ -129,9 +130,23 @@ export async function getMatches(leagueId: number = LIGUE1_SENEGAL_ID): Promise<
       if (match.status === "finished") realFinished.push(match);
       else realUpcoming.push(match);
     }
+    // A round name known but its fixtures request itself erroring (e.g. a
+    // transient rate limit) shouldn't read as "this round has 0 matches" —
+    // that's how a single bad response, cached by Next's fetch layer for the
+    // next 15 minutes, turned into "aucun match à afficher" for a whole
+    // matchday that very much exists. Retry once via the flat next/last path
+    // below, which hits different cache keys.
+    roundFetchFailed = Boolean(round.error) && realUpcoming.length === 0 && realFinished.length === 0;
   } else {
+    realLive = [];
+    realUpcoming = [];
+    realFinished = [];
+  }
+
+  if (!currentRound || roundFetchFailed) {
     // No round info for this league/season (e.g. Ligue 1 Sénégal — API-
-    // Football doesn't track it at all) — fall back to a flat next/last count.
+    // Football doesn't track it at all), or the round-based fetch above
+    // failed outright — fall back to a flat next/last count.
     const [live, upcoming, finished] = await Promise.all([
       getLiveFixtures(leagueId),
       getUpcomingFixtures(leagueId, season),
