@@ -7,16 +7,28 @@ const BASE_URL = "https://v3.football.api-sports.io";
 // Ligue 1 Sénégal. Found via GET /leagues?country=Senegal.
 export const LIGUE1_SENEGAL_ID = 403;
 
-// The "top 5" European leagues, ids confirmed via GET /leagues?id=X against
-// the real account. Senegal stays the app's default/home competition; these
-// are additional ones the competition switcher on /live offers.
+// Ids confirmed via GET /leagues?id=X (Europe) and GET /leagues?country=X
+// (Africa) against the real account. Senegal stays the app's default/home
+// competition; the rest populate the league picker on /live, grouped by
+// region there. Each African league runs on its own season-numbering
+// convention (see getLeagueCurrentSeason below — some start well before
+// August, or are still "current" between seasons), so season is always
+// resolved dynamically rather than guessed from today's date.
 export const COMPETITIONS = [
-  { id: LIGUE1_SENEGAL_ID, name: "Ligue 1 Sénégal" },
-  { id: 39, name: "Premier League" },
-  { id: 140, name: "La Liga" },
-  { id: 135, name: "Serie A" },
-  { id: 78, name: "Bundesliga" },
-  { id: 61, name: "Ligue 1" },
+  { id: LIGUE1_SENEGAL_ID, name: "Ligue 1 Sénégal", region: "africa" },
+  { id: 399, name: "NPFL (Nigeria)", region: "africa" },
+  { id: 233, name: "Premier League (Égypte)", region: "africa" },
+  { id: 200, name: "Botola Pro (Maroc)", region: "africa" },
+  { id: 186, name: "Ligue 1 (Algérie)", region: "africa" },
+  { id: 202, name: "Ligue 1 (Tunisie)", region: "africa" },
+  { id: 386, name: "Ligue 1 (Côte d'Ivoire)", region: "africa" },
+  { id: 570, name: "Premier League (Ghana)", region: "africa" },
+  { id: 288, name: "Premier Soccer League (Afrique du Sud)", region: "africa" },
+  { id: 39, name: "Premier League", region: "europe" },
+  { id: 140, name: "La Liga", region: "europe" },
+  { id: 135, name: "Serie A", region: "europe" },
+  { id: 78, name: "Bundesliga", region: "europe" },
+  { id: 61, name: "Ligue 1", region: "europe" },
 ] as const;
 
 export type CompetitionId = (typeof COMPETITIONS)[number]["id"];
@@ -112,6 +124,42 @@ export interface ApiSquadPlayer {
 interface ApiSquadResponse {
   team: { id: number; name: string; logo: string };
   players: ApiSquadPlayer[];
+}
+
+interface ApiLeagueSeason {
+  year: number;
+  start: string;
+  current: boolean;
+}
+
+interface ApiLeagueInfo {
+  seasons: ApiLeagueSeason[];
+}
+
+export interface LeagueSeasonInfo {
+  // The season number API-Football itself uses internally — pass this to
+  // every other endpoint's `season` param.
+  querySeason: number;
+  // The calendar year the season actually started in, for display ("Saison
+  // {displayYear}/{displayYear + 1}"). Usually equal to querySeason, but not
+  // always — NPFL (Nigeria) labels its season by the year it *ends* in
+  // (querySeason 2026 for a season that started in 2025), so displaying
+  // querySeason directly would show the wrong years for that league.
+  displayYear: number;
+}
+
+// The season API-Football itself considers "current" for a given league
+// right now — each African league runs on its own convention (start month,
+// whether it's still "current" between two seasons, calendar-year vs
+// Aug-June), so this is resolved per league instead of guessed from today's
+// date. Cached a day; a league's current season only flips a couple of
+// times a year.
+export async function getLeagueCurrentSeason(leagueId: number): Promise<LeagueSeasonInfo | null> {
+  const result = await apiFootballGet<ApiLeagueInfo>("/leagues", { id: leagueId, current: "true" }, 24 * 60 * 60);
+  if (result.error) return null;
+  const season = result.data[0]?.seasons.find((s) => s.current);
+  if (!season) return null;
+  return { querySeason: season.year, displayYear: Number(season.start.slice(0, 4)) };
 }
 
 // --- The 3 requested endpoints ---

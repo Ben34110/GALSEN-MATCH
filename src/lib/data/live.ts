@@ -6,6 +6,7 @@ import {
   getFinishedFixtures,
   getFixtureById,
   getFixturesForRound,
+  getLeagueCurrentSeason,
   getLiveFixtures,
   getStandingsForSeason,
   getTeamSquad,
@@ -31,6 +32,20 @@ function guessCurrentSeason(): number {
   // Most European/African league seasons run roughly Aug–Jun, so Jan–Jun
   // still belongs to the season that started the previous calendar year.
   return month >= 7 ? year : year - 1;
+}
+
+// Every league here runs on its own season-numbering convention (start
+// month, whether it's still "current" between two seasons, calendar-year vs
+// Aug-June) — e.g. Morocco and Ivory Coast's real "current" season on
+// API-Football is 2025 while most of Europe is already on 2026 at the same
+// point in the calendar. Resolving it per league beats guessing from
+// today's date; the guess is only a last-resort fallback if that lookup
+// itself fails (e.g. a lapsed key/plan).
+async function resolveSeason(leagueId: number): Promise<{ querySeason: number; displayYear: number }> {
+  const season = await getLeagueCurrentSeason(leagueId);
+  if (season) return season;
+  const guessed = guessCurrentSeason();
+  return { querySeason: guessed, displayYear: guessed };
 }
 
 function mapFixtureStatus(short: string): MatchStatus {
@@ -100,7 +115,7 @@ function sortByKickoff(list: Match[]): Match[] {
 // que de filet de sécurité si une requête échoue — les autres compétitions
 // n'ont pas de mock et affichent uniquement ce que l'API renvoie.
 export async function getMatches(leagueId: number = LIGUE1_SENEGAL_ID): Promise<Match[]> {
-  const season = guessCurrentSeason();
+  const { querySeason: season } = await resolveSeason(leagueId);
   const toMatches = (result: { error: string | null; data: ApiFixture[] }) =>
     !result.error ? result.data.map(mapFixtureToMatch) : [];
 
@@ -157,13 +172,18 @@ export async function getMatches(leagueId: number = LIGUE1_SENEGAL_ID): Promise<
     realFinished = toMatches(finished);
   }
 
-  const realTotal = realLive.length + realUpcoming.length + realFinished.length;
-
   if (leagueId !== LIGUE1_SENEGAL_ID) {
     return sortByKickoff([...realLive, ...realUpcoming, ...realFinished]);
   }
 
-  if (realTotal > 0) {
+  // Real data only counts as "available" here if it has something live or
+  // upcoming — Senegal's season boundary (real results for the season that
+  // just ended, but the next one's fixtures not scheduled in the API yet)
+  // otherwise passed as real data with 0 upcoming matches, silently
+  // outranking the curated mock, which does have upcoming fixtures. A fan
+  // checking "what's next" got nothing instead of the demo data that at
+  // least answers that question.
+  if (realLive.length + realUpcoming.length > 0) {
     return sortByKickoff([...realLive, ...realUpcoming, ...realFinished]);
   }
   return sortByKickoff(matches);
@@ -177,7 +197,7 @@ export interface StandingsResult {
 
 // A team's zero-played row for the synthetic fallback below — built from the
 // team directory (real clubs) rather than the Senegal-only mock array, since
-// it must work for any of the 5 tracked leagues.
+// it must work for any of the other 13 tracked leagues.
 function placeholderRow(team: { id: number; name: string; logo: string }): StandingRow {
   return {
     teamId: String(team.id),
@@ -195,14 +215,14 @@ function placeholderRow(team: { id: number; name: string; logo: string }): Stand
 // "0 match played" view, not last season's completed standings pretending to
 // be current). Only falls back to the latest season the plan covers if the
 // current one errors outright (e.g. a lapsed key/plan). If nothing works:
-// Senegal has a curated mock table; the 5 big leagues instead get a
+// Senegal has a curated mock table; the other 13 leagues instead get a
 // synthetic "0 match played" table built from the real team directory,
 // alphabetical, so the section is never blocked/hidden — just honest about
 // not having real numbers yet.
 export async function getStandings(leagueId: number = LIGUE1_SENEGAL_ID): Promise<StandingsResult> {
-  const currentSeason = guessCurrentSeason();
-  let result = await getStandingsForSeason(currentSeason, leagueId);
-  let season = currentSeason;
+  const { querySeason, displayYear } = await resolveSeason(leagueId);
+  let result = await getStandingsForSeason(querySeason, leagueId);
+  let season = displayYear;
   let rows = result.data[0]?.league.standings[0];
 
   if (result.error || !rows || rows.length === 0) {
@@ -222,7 +242,7 @@ export async function getStandings(leagueId: number = LIGUE1_SENEGAL_ID): Promis
   const leagueTeams = getTeamDirectory()
     .filter((team) => team.leagueId === leagueId)
     .sort((a, b) => a.name.localeCompare(b.name));
-  return { rows: leagueTeams.map(placeholderRow), season: currentSeason, source: "placeholder" };
+  return { rows: leagueTeams.map(placeholderRow), season: displayYear, source: "placeholder" };
 }
 
 export async function getFixtureDetail(fixtureId: number): Promise<Match | null> {

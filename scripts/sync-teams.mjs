@@ -1,7 +1,8 @@
 // One-off/occasional sync script (NOT part of the Next.js runtime) that
-// fetches all teams across the 5 big European leagues and writes the
-// result to src/lib/data/generated/teams.json — a fast, searchable team
-// directory for the "favorite team" feature (see components/live/*).
+// fetches all teams across every tracked league (Ligue 1 Sénégal + 8 other
+// African leagues + the 5 big European leagues) and writes the result to
+// src/lib/data/generated/teams.json — a fast, searchable team directory for
+// the "favorite team" feature (see components/live/*).
 //
 // Run with: node scripts/sync-teams.mjs
 // Reads API_FOOTBALL_KEY from .env.local (parsed manually — this script
@@ -38,23 +39,17 @@ if (!API_KEY) {
 
 const BASE_URL = "https://v3.football.api-sports.io";
 
-// The season in progress right now, not last season — /teams for a
-// completed season can include mid-season relegation-playoff participants
-// (e.g. Ligue 1's barrage) that aren't actually members of the league, which
-// showed up as a bug (Rodez listed under "Ligue 1"). Most European/African
-// league seasons run roughly Aug-Jun, so Jan-Jun still belongs to the season
-// that started the previous calendar year — same rule used by
-// guessCurrentSeason() in lib/data/live.ts.
-function guessCurrentSeason() {
-  const now = new Date();
-  const year = now.getUTCFullYear();
-  const month = now.getUTCMonth() + 1;
-  return month >= 7 ? year : year - 1;
-}
-
-const SEASON = guessCurrentSeason();
-
+// Ids match COMPETITIONS in src/lib/api-football.ts.
 const LEAGUES = [
+  { id: 403, name: "Ligue 1 Sénégal" },
+  { id: 399, name: "NPFL (Nigeria)" },
+  { id: 233, name: "Premier League (Égypte)" },
+  { id: 200, name: "Botola Pro (Maroc)" },
+  { id: 186, name: "Ligue 1 (Algérie)" },
+  { id: 202, name: "Ligue 1 (Tunisie)" },
+  { id: 386, name: "Ligue 1 (Côte d'Ivoire)" },
+  { id: 570, name: "Premier League (Ghana)" },
+  { id: 288, name: "Premier Soccer League (Afrique du Sud)" },
   { id: 39, name: "Premier League" },
   { id: 140, name: "La Liga" },
   { id: 135, name: "Serie A" },
@@ -89,12 +84,30 @@ async function apiGet(pathname, params) {
   return json;
 }
 
+// Each league runs on its own season-numbering convention — Morocco and
+// Ivory Coast's real "current" season is 2025 while most of Europe is
+// already on 2026 at the same point in the calendar. Resolved per league,
+// same as getLeagueCurrentSeason() in lib/api-football.ts at runtime,
+// instead of a single guessed season applied to everyone (that's how Rodez,
+// an actual Ligue 2 club caught up in a relegation barrage under the wrong
+// season, ended up listed under "Ligue 1").
+async function currentSeasonFor(leagueId) {
+  const result = await apiGet("/leagues", { id: leagueId, current: "true" });
+  const season = result.response[0]?.seasons.find((s) => s.current);
+  return season?.year ?? null;
+}
+
 async function main() {
   const allTeams = [];
 
   for (const league of LEAGUES) {
-    const result = await apiGet("/teams", { league: league.id, season: SEASON });
-    console.log(`[${league.name}] ${result.results} teams`);
+    const season = await currentSeasonFor(league.id);
+    if (!season) {
+      console.warn(`[${league.name}] could not resolve current season, skipping`);
+      continue;
+    }
+    const result = await apiGet("/teams", { league: league.id, season });
+    console.log(`[${league.name}] season ${season}: ${result.results} teams`);
     for (const entry of result.response) {
       allTeams.push({
         id: entry.team.id,
