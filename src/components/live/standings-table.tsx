@@ -13,11 +13,11 @@ import type { StandingRow } from "@/types";
 // (the strongest continental prize), anything else (Europa/Confederation
 // Cup, playoffs, a lower-division promotion zone, ...) is gold. The legend
 // below is built from whatever zones are actually present in these rows.
-function zoneColor(zone: string): { border: string; dot: string } {
+function zoneColor(zone: string): { border: string; tint: string; dot: string } {
   const z = zone.toLowerCase();
-  if (z.includes("relegation")) return { border: "border-l-accent-3", dot: "bg-accent-3" };
-  if (z.includes("champions league")) return { border: "border-l-accent", dot: "bg-accent" };
-  return { border: "border-l-accent-2", dot: "bg-accent-2" };
+  if (z.includes("relegation")) return { border: "border-l-accent-3", tint: "bg-accent-3/5", dot: "bg-accent-3" };
+  if (z.includes("champions league")) return { border: "border-l-accent", tint: "bg-accent/5", dot: "bg-accent" };
+  return { border: "border-l-accent-2", tint: "bg-accent-2/5", dot: "bg-accent-2" };
 }
 
 function zoneLabel(zone: string): string {
@@ -32,32 +32,45 @@ export function StandingsTable({ rows }: { rows: StandingRow[] }) {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-border">
+      {/* table-fixed + narrow fixed-width numeric columns: the whole grid
+          fits a phone's width with no horizontal scroll needed — overflow-x
+          stays only as a safety net for unusually narrow viewports. */}
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[420px] text-sm">
+        <table className="w-full table-fixed text-sm">
           <caption className="sr-only">
-            Classement — les lignes colorées à gauche indiquent une zone de qualification ou de relégation.
+            Classement — les lignes colorées à gauche et teintées indiquent une zone de qualification ou de
+            relégation ; les lignes neutres ne jouent rien.
           </caption>
+          <colgroup>
+            <col className="w-6" />
+            <col />
+            <col className="w-6" />
+            <col className="w-6" />
+            <col className="w-6" />
+            <col className="w-6" />
+            <col className="w-9" />
+          </colgroup>
           <thead>
-            <tr className="bg-surface-2 text-[11px] uppercase tracking-wide text-muted">
-              <th scope="col" className="px-3 py-2.5 text-left font-semibold">
+            <tr className="bg-surface-2 text-[10px] uppercase tracking-wide text-muted">
+              <th scope="col" className="py-2 pl-2 text-left font-semibold">
                 #
               </th>
-              <th scope="col" className="px-3 py-2.5 text-left font-semibold">
+              <th scope="col" className="py-2 pl-1.5 text-left font-semibold">
                 Équipe
               </th>
-              <th scope="col" className="px-2 py-2.5 text-center font-semibold">
+              <th scope="col" className="py-2 text-center font-semibold">
                 J
               </th>
-              <th scope="col" className="px-2 py-2.5 text-center font-semibold">
+              <th scope="col" className="py-2 text-center font-semibold">
                 V
               </th>
-              <th scope="col" className="px-2 py-2.5 text-center font-semibold">
+              <th scope="col" className="py-2 text-center font-semibold">
                 N
               </th>
-              <th scope="col" className="px-2 py-2.5 text-center font-semibold">
+              <th scope="col" className="py-2 text-center font-semibold">
                 D
               </th>
-              <th scope="col" className="px-3 py-2.5 text-right font-semibold">
+              <th scope="col" className="py-2 pr-2 text-right font-semibold">
                 Pts
               </th>
             </tr>
@@ -72,44 +85,44 @@ export function StandingsTable({ rows }: { rows: StandingRow[] }) {
                 <tr
                   key={row.teamId}
                   className={cn(
-                    "border-t border-border bg-surface transition-colors hover:bg-surface-2",
-                    color && `border-l-2 ${color.border}`
+                    "border-t border-border transition-colors hover:bg-surface-2",
+                    color ? `border-l-2 ${color.border} ${color.tint}` : "bg-surface"
                   )}
                 >
-                  <td className="px-3 py-2.5 tabular-nums text-muted">{index + 1}</td>
-                  <td className="px-3 py-2.5 font-semibold text-foreground">
+                  <td className="py-2 pl-2 tabular-nums text-muted">{index + 1}</td>
+                  <td className="py-2 pl-1.5 pr-1 font-semibold text-foreground">
                     {row.team ? (
                       <Link
                         href={`/live/team/${row.team.id}`}
-                        className="flex items-center gap-2 transition-colors hover:text-accent"
+                        className="flex items-center gap-1.5 transition-colors hover:text-accent"
                       >
                         {logo ? (
-                          <Image src={logo} alt="" width={20} height={20} className="size-5 shrink-0 object-contain" unoptimized />
+                          <Image src={logo} alt="" width={18} height={18} className="size-[18px] shrink-0 object-contain" unoptimized />
                         ) : (
-                          <span className="grid size-5 shrink-0 place-items-center rounded-full bg-surface-2 text-[9px] font-bold text-muted">
+                          <span className="grid size-[18px] shrink-0 place-items-center rounded-full bg-surface-2 text-[8px] font-bold text-muted">
                             ?
                           </span>
                         )}
-                        {name}
+                        <span className="truncate">{name}</span>
                       </Link>
                     ) : (
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         {logo ? (
-                          <Image src={logo} alt="" width={20} height={20} className="size-5 shrink-0 object-contain" unoptimized />
+                          <Image src={logo} alt="" width={18} height={18} className="size-[18px] shrink-0 object-contain" unoptimized />
                         ) : (
-                          <span className="grid size-5 shrink-0 place-items-center rounded-full bg-surface-2 text-[9px] font-bold text-muted">
+                          <span className="grid size-[18px] shrink-0 place-items-center rounded-full bg-surface-2 text-[8px] font-bold text-muted">
                             {mockTeam?.logoInitials ?? "?"}
                           </span>
                         )}
-                        {name}
+                        <span className="truncate">{name}</span>
                       </div>
                     )}
                   </td>
-                  <td className="px-2 py-2.5 text-center tabular-nums text-muted">{row.played}</td>
-                  <td className="px-2 py-2.5 text-center tabular-nums text-muted">{row.won}</td>
-                  <td className="px-2 py-2.5 text-center tabular-nums text-muted">{row.drawn}</td>
-                  <td className="px-2 py-2.5 text-center tabular-nums text-muted">{row.lost}</td>
-                  <td className="px-3 py-2.5 text-right tabular-nums font-extrabold text-accent">{row.points}</td>
+                  <td className="py-2 text-center text-xs tabular-nums text-muted">{row.played}</td>
+                  <td className="py-2 text-center text-xs tabular-nums text-muted">{row.won}</td>
+                  <td className="py-2 text-center text-xs tabular-nums text-muted">{row.drawn}</td>
+                  <td className="py-2 text-center text-xs tabular-nums text-muted">{row.lost}</td>
+                  <td className="py-2 pr-2 text-right tabular-nums font-extrabold text-accent">{row.points}</td>
                 </tr>
               );
             })}
@@ -124,6 +137,10 @@ export function StandingsTable({ rows }: { rows: StandingRow[] }) {
               {zoneLabel(zone)}
             </p>
           ))}
+          <p className="flex items-center gap-1.5 text-[11px] text-muted">
+            <span className="inline-block h-2.5 w-1 shrink-0 rounded-full bg-border" aria-hidden />
+            Aucun enjeu
+          </p>
         </div>
       )}
     </div>

@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { accentThemes } from "@/lib/mock/accent-themes";
 import { applyAccentTheme } from "@/components/theme/accent-theme-provider";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
+import { useFavoriteTeamIds, addFavoriteTeam, removeFavoriteTeam } from "@/hooks/use-favorite-teams";
 import { COUNTRY_FLAGS, updateOnboardingProfile } from "@/lib/onboarding";
 import { getAfricanPlayers, searchAfricanPlayers } from "@/lib/data/african-players";
 import { getTeamDirectory, searchTeams } from "@/lib/data/team-directory";
@@ -15,6 +16,7 @@ const COUNTRIES = accentThemes.filter((theme) => theme.id !== "default");
 
 export function PreferencesEditor() {
   const profile = useOnboardingProfile();
+  const favoriteTeamIds = useFavoriteTeamIds();
   const allPlayers = useMemo(() => getAfricanPlayers(), []);
   const allTeams = useMemo(() => getTeamDirectory(), []);
 
@@ -52,12 +54,17 @@ export function PreferencesEditor() {
 
   function setClub(teamId: number) {
     if (!profile) return;
+    // If a different club was previously set as "préféré", it stays in the
+    // Matchs favorites list (the user favorited it there, not just here) —
+    // only the newly-picked club gets added.
     updateOnboardingProfile(profile, { favoriteClubId: teamId });
+    addFavoriteTeam(teamId, favoriteTeamIds);
     setClubSearch("");
   }
 
   function clearClub() {
     if (!profile) return;
+    if (profile.favoriteClubId) removeFavoriteTeam(profile.favoriteClubId, favoriteTeamIds);
     updateOnboardingProfile(profile, { favoriteClubId: null });
   }
 

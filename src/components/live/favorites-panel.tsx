@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { Search, Star } from "lucide-react";
+import { ChevronDown, Search, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getTeamDirectory, searchTeams } from "@/lib/data/team-directory";
 import { useFavoriteTeamIds, toggleFavoriteTeam } from "@/hooks/use-favorite-teams";
@@ -14,11 +14,17 @@ import type { Match } from "@/types";
 // loading. Present-but-"error" or an array are the two settled states.
 type MatchesState = Record<number, Match[] | "error">;
 
+// Only the next 3 matches per club by default — a favorited club with a busy
+// fixture list (cup + league + friendlies) shouldn't push every other
+// section off screen; "Voir plus" reveals the rest on demand.
+const DEFAULT_VISIBLE_MATCHES = 3;
+
 export function FavoritesPanel() {
   const teams = useMemo(() => getTeamDirectory(), []);
   const favoriteIds = useFavoriteTeamIds();
   const [search, setSearch] = useState("");
   const [matchesByTeam, setMatchesByTeam] = useState<MatchesState>({});
+  const [expandedTeamIds, setExpandedTeamIds] = useState<number[]>([]);
 
   const results = useMemo(() => (search.trim() ? searchTeams(teams, search).slice(0, 30) : []), [teams, search]);
   const favoriteTeams = useMemo(
@@ -117,11 +123,34 @@ export function FavoritesPanel() {
                 )}
                 {Array.isArray(state) &&
                   (state.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                      {state.map((match) => (
-                        <MatchCard key={match.id} match={match} />
-                      ))}
-                    </div>
+                    (() => {
+                      const isExpanded = expandedTeamIds.includes(team.id);
+                      const visible = isExpanded ? state : state.slice(0, DEFAULT_VISIBLE_MATCHES);
+                      const hiddenCount = state.length - visible.length;
+                      return (
+                        <>
+                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                            {visible.map((match) => (
+                              <MatchCard key={match.id} match={match} />
+                            ))}
+                          </div>
+                          {state.length > DEFAULT_VISIBLE_MATCHES && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setExpandedTeamIds((current) =>
+                                  isExpanded ? current.filter((id) => id !== team.id) : [...current, team.id]
+                                )
+                              }
+                              className="mt-2.5 flex min-h-9 w-full items-center justify-center gap-1 rounded-xl border border-border bg-surface text-xs font-semibold text-muted transition-colors hover:text-foreground"
+                            >
+                              {isExpanded ? "Voir moins" : `Voir ${hiddenCount} match${hiddenCount > 1 ? "s" : ""} de plus`}
+                              <ChevronDown size={14} className={cn("transition-transform", isExpanded && "rotate-180")} aria-hidden />
+                            </button>
+                          )}
+                        </>
+                      );
+                    })()
                   ) : (
                     <p className="py-4 text-center text-sm text-muted">Aucun match à venir programmé.</p>
                   ))}
