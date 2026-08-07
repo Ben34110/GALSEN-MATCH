@@ -9,15 +9,32 @@
 create extension if not exists "pgcrypto";
 
 -- One row per subscribed browser/device. A device can have at most one
--- active subscription (re-subscribing replaces it via upsert on device_id).
+-- active subscription (re-subscribing replaces it via upsert on device_id)
+-- — device_id is the one identity key that matters here. `endpoint` is
+-- deliberately NOT unique: the browser's push service (e.g. Apple's
+-- web.push.apple.com) can hand back the very same endpoint for a device
+-- that generated a fresh device_id — reinstalling the PWA or clearing site
+-- data resets lib/device-id.ts's random id, but doesn't necessarily change
+-- what the OS push service considers "this subscription". A unique
+-- constraint on endpoint made that legitimate case fail outright: upserting
+-- on device_id would try to INSERT a new row (no conflict on device_id, a
+-- brand new id), which then hit "duplicate key value violates unique
+-- constraint push_subscriptions_endpoint_key" because some OTHER device_id
+-- already owned that endpoint — silently breaking every notification type
+-- for that device from that point on (confirmed live: reproduced this
+-- exact 23505 error by re-inserting a real endpoint under a new device_id).
 create table if not exists push_subscriptions (
   id uuid primary key default gen_random_uuid(),
   device_id text not null unique,
-  endpoint text not null unique,
+  endpoint text not null,
   p256dh text not null,
   auth text not null,
   created_at timestamptz not null default now()
 );
+
+-- Migration for a project created before this was caught — see the comment
+-- above for why the constraint shouldn't exist at all.
+alter table push_subscriptions drop constraint if exists push_subscriptions_endpoint_key;
 
 -- Per-device, per-favorited-club notification preferences. A row only
 -- exists if the device has favorited that club — deleting the row is how
