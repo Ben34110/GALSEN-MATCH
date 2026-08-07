@@ -85,6 +85,28 @@ create table if not exists fantasy_squads (
 
 create index if not exists fantasy_squads_journee_idx on fantasy_squads (journee);
 
+-- Aggregated news articles, pulled from each source's RSS/XML feed by
+-- GET /api/cron/fetch-news (see src/lib/news/sources.ts for the source
+-- list and src/lib/news/rss-sync.ts for the fetch/parse/upsert logic).
+-- `content_url` is the dedup key — the cron endpoint upserts on it with
+-- ignoreDuplicates, so re-fetching the same feed every 30 minutes never
+-- creates duplicate rows for an article it's already stored.
+create table if not exists news (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  summary text,
+  content_url text not null unique,
+  image_url text,
+  author text,
+  source_name text not null,
+  country text not null default 'general',
+  published_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists news_country_idx on news (country);
+create index if not exists news_published_at_idx on news (published_at desc);
+
 -- No RLS policies: every read/write goes through server-only code using the
 -- service_role key (see lib/supabase.ts) — the anon key is never used, so
 -- there's no client-side access path to lock down.
@@ -93,3 +115,4 @@ alter table favorite_club_notifications enable row level security;
 alter table favorite_player_notifications enable row level security;
 alter table notified_events enable row level security;
 alter table fantasy_squads enable row level security;
+alter table news enable row level security;

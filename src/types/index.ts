@@ -4,14 +4,19 @@
 
 export type PlayerPosition = "G" | "D" | "M" | "A";
 
+// Aggregated from RSS feeds by GET /api/cron/fetch-news (see
+// lib/news/rss-sync.ts) and stored in Supabase's `news` table.
 export interface Article {
   id: string;
   title: string;
-  summaryAi: string;
+  summary: string | null;
+  contentUrl: string;
+  imageUrl: string | null;
+  author: string | null;
   sourceName: string;
-  sourceUrl: string;
-  category: string;
-  publishedAt: string; // ISO date
+  // Matches an id in lib/data/african-nations.ts, or "general".
+  country: string;
+  publishedAt: string | null; // ISO date
 }
 
 export type MatchStatus = "scheduled" | "live" | "finished";
