@@ -197,6 +197,30 @@ function bestClubEntry(entry) {
   return clubEntries.sort((a, b) => (b.games.appearences ?? 0) - (a.games.appearences ?? 0))[0];
 }
 
+// /players season stats only report a club once the player has actually
+// featured in a match there. Right after a transfer — before their debut —
+// they still show the OLD club, sometimes for weeks. /transfers is recorded
+// the moment the move is registered, so its most recent entry is
+// authoritative for "who do they play for right now" even when match stats
+// haven't caught up yet (e.g. Nicolas Jackson returning from a Bayern
+// München loan to Chelsea before playing a single game there).
+async function fetchLatestTransferTeam(playerId) {
+  try {
+    const result = await apiGet("/transfers", { player: playerId });
+    const transfers = result.response[0]?.transfers ?? [];
+    // "Free agent" entries use a placeholder team (id: null, name set to the
+    // player's own name, e.g. "Salah Mohamed") instead of a real club — not
+    // a club to display, so skip back to the last transfer with a real one.
+    const realMoves = transfers.filter((t) => t.teams?.in?.id != null);
+    if (realMoves.length === 0) return null;
+    const [latest] = [...realMoves].sort((a, b) => new Date(b.date) - new Date(a.date));
+    return latest?.teams?.in ?? null;
+  } catch (err) {
+    console.warn(`  player ${playerId} transfers failed: ${err.message}`);
+    return null;
+  }
+}
+
 async function fetchPlayerClubDetail(playerId) {
   try {
     // Sequential, not Promise.all — each worker already runs at a controlled
@@ -212,7 +236,12 @@ async function fetchPlayerClubDetail(playerId) {
     const statsBest = bestClubEntry(statsEntry);
     // Prefer the current season's club (post-transfer-window); fall back to
     // last season's if the player has no CLUB_SEASON entry yet.
-    const clubBest = bestClubEntry(clubSeasonEntry) ?? statsBest;
+    let clubBest = bestClubEntry(clubSeasonEntry) ?? statsBest;
+
+    const latestTransferTeam = await fetchLatestTransferTeam(playerId);
+    if (latestTransferTeam && latestTransferTeam.id !== clubBest?.team?.id) {
+      clubBest = { team: latestTransferTeam, league: clubBest?.league, games: clubBest?.games };
+    }
 
     const source = statsEntry ?? clubSeasonEntry;
     return {
