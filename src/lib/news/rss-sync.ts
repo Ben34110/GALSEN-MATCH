@@ -1,6 +1,7 @@
 import Parser from "rss-parser";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { NEWS_SOURCES, type NewsSource } from "@/lib/news/sources";
+import { classifyCountry } from "@/lib/news/country-classifier";
 
 interface MediaContentEntry {
   $: { url?: string; medium?: string };
@@ -215,14 +216,28 @@ export async function fetchSourceArticles(source: NewsSource): Promise<ParsedNew
     let imageUrl = resolveFeedImage(item) ?? (await fetchOgImage(link));
     if (imageUrl && !(await verifyImageReachable(imageUrl))) imageUrl = null;
 
+    const title = fixMojibake(item.title.trim());
+    const summary = item.contentSnippet ? fixMojibake(truncate(item.contentSnippet, SUMMARY_MAX_LENGTH)) : null;
+
+    // A pan-African source (country: "general") gets its actual country
+    // detected per-article from the text itself, instead of every one of
+    // its articles landing in the catch-all "Général" bucket — e.g.
+    // Afrik-Foot covers the whole continent, but a given headline is
+    // almost always about one specific nation's team/league/mercato.
+    // Country-specific sources keep their fixed country as-is (no need to
+    // re-detect what's already known, and it avoids a French-language
+    // Senegal headline that happens to also mention "l'Algérie" getting
+    // reclassified away from wiwsport's actual home country).
+    const country = source.country === "general" ? (classifyCountry(`${title} ${summary ?? ""}`) ?? "general") : source.country;
+
     items.push({
-      title: fixMojibake(item.title.trim()),
-      summary: item.contentSnippet ? fixMojibake(truncate(item.contentSnippet, SUMMARY_MAX_LENGTH)) : null,
+      title,
+      summary,
       contentUrl: link,
       imageUrl,
       author: item.creator?.trim() ? fixMojibake(item.creator.trim()) : null,
       sourceName: source.name,
-      country: source.country,
+      country,
       language: source.language,
       publishedAt: item.isoDate ?? (item.pubDate ? new Date(item.pubDate).toISOString() : null),
     });
