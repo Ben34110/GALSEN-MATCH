@@ -28,6 +28,8 @@ export const NEWS_SOURCES: NewsSource[] = [
   { id: "lesiteinfo", name: "Le Site Info", feedUrl: "https://www.lesiteinfo.com/sport/feed", country: "maroc", language: "fr" },
   { id: "actucameroun", name: "Actu Cameroun", feedUrl: "https://actucameroun.com/category/sport/feed/", country: "cameroun", language: "fr" },
   { id: "afrikfoot", name: "Afrik-Foot", feedUrl: "https://www.afrik-foot.com/feed", country: "general", language: "fr" },
+  { id: "journaldumali", name: "Journal du Mali", feedUrl: "https://journaldumali.com/category/sport/feed/", country: "mali", language: "fr" },
+  { id: "rfi", name: "RFI", feedUrl: "https://www.rfi.fr/fr/afrique-foot/rss", country: "general", language: "fr" },
 
   // Sport News Africa doesn't currently publish a public RSS/XML feed —
   // checked /feed, /feed/, /feed.xml, /rss, /rss.xml, /?feed=rss2 and
@@ -37,13 +39,28 @@ export const NEWS_SOURCES: NewsSource[] = [
   // parsing, dedup, country tagging and the UI all already support it.
   // { id: "sportnewsafrica", name: "Sport News Africa", feedUrl: "https://sportnewsafrica.com/feed/", country: "general", language: "fr" },
 
-  // Côte d'Ivoire: no working sports feed found after trying ~15
-  // candidates (Fratmat, Abidjan.net, Koaci, Linfodrome, Soir Info, and
-  // several guessed football-specific domains that don't resolve at all).
-  // Linfodrome is real and Ivorian but general-news only — its "sport"
-  // paths (/rss/sport, /rss?rubrique=sport) return the exact same
-  // unfiltered 101-item feed as the homepage, not sport-only. Revisit if a
-  // dedicated Ivorian sports outlet with a real feed turns up.
+  // Côte d'Ivoire: no working sports feed found after trying ~25
+  // candidates across two rounds (Fratmat, Abidjan.net/news.abidjan.net,
+  // Koaci, Linfodrome, Soir Info, AIP, Alerte Info, Notre Voie, Le
+  // Patriote, and several guessed football-specific domains that don't
+  // resolve at all — 225football.com, sport225.com, footivoiresport.com,
+  // eburnietoday.com, footballivoire.net, ivoirefoot.net). Linfodrome and
+  // Connectionivoirienne are both real, working, Ivorian feeds — but
+  // general-news only: Linfodrome's "sport" paths (/rss/sport,
+  // /rss?rubrique=sport) return the exact same unfiltered feed as the
+  // homepage, and Connectionivoirienne's genuine "Sports" section
+  // (connectionivoirienne.net/sports/) has no RSS at all (only the
+  // site-wide feed is declared; /sports/feed/ 301s straight past "feed"
+  // back to the plain HTML archive page). AfrikMag has a real feed and
+  // does cover Côte d'Ivoire (including football), but it's a general
+  // panafrican magazine (politics, entertainment, tech, sport mixed
+  // together) — wiring it in would flood Actu with non-sport content just
+  // to catch a few Ivorian articles via the country classifier. Revisit if
+  // a dedicated Ivorian sports outlet with a real feed turns up. In the
+  // meantime, RFI (added above, also "general") does regularly cover
+  // Côte d'Ivoire specifically (Yan Diomandé, Hervé Renard...) and gets
+  // correctly classified as "cotedivoire" per-article by the same
+  // classifier, so it's not a total gap.
 
   // Add one entry per country's sports outlet as you find a working feed,
   // e.g.:
