@@ -61,9 +61,11 @@ self.addEventListener("fetch", (event) => {
 // { title, body, url, icon? } — url is where notificationclick below
 // navigates to (a match detail page, e.g. "/live/match/12345"). News
 // notifications (api/cron/fetch-news/route.ts) additionally send `image` —
-// the article's cover photo, shown in the *expanded* notification (press
-// and hold on iOS, or the "big picture" style on Android) below the title/
-// body, distinct from `icon`'s small avatar-style image.
+// the article's cover photo, shown in the expanded/"big picture"
+// notification below the title/body, distinct from `icon`'s small avatar-
+// style image. Android/desktop Chrome only — iOS Safari's push
+// implementation doesn't honor `image` at all regardless of what's sent
+// here (confirmed: https://github.com/mdn/browser-compat-data/issues/19318).
 self.addEventListener("push", (event) => {
   if (!event.data) return;
 

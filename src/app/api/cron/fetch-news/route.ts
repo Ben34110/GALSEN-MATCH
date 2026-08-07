@@ -20,9 +20,11 @@ interface CountryBatch {
   // First article in the batch that actually has one (some sources, or a
   // Cloudflare-blocked CDN caught by rss-sync's reachability check, come
   // through with none) — shown as the notification's expandable cover
-  // image (the `image` field the Notification API defines for exactly
-  // this: on iOS 16.4+ and Android, it's what appears when you press and
-  // hold / expand the notification, not the small icon).
+  // image via the Notification API's `image` field. Android/desktop
+  // Chrome only: iOS Safari's push implementation doesn't actually honor
+  // `image` at all (confirmed: https://github.com/mdn/browser-compat-data/issues/19318),
+  // no workaround exists there today. Sent regardless since it's free and
+  // works everywhere else.
   imageUrl: string | null;
 }
 
