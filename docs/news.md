@@ -47,4 +47,6 @@ Add one entry to `NEWS_SOURCES` in `src/lib/news/sources.ts`:
 
 **Sport News Africa** was requested but doesn't currently publish a public RSS/XML feed — checked `/feed`, `/feed/`, `/feed.xml`, `/rss`, `/rss.xml`, `/?feed=rss2`, and `robots.txt`/`sitemap.xml` for a pointer to one. It's a Laravel/Filament app (not WordPress, which is where the default `/feed/` convention comes from) and only exposes page/article sitemaps, not a syndication feed. It's left as a commented-out placeholder in `sources.ts` — add it for real the moment they ship one.
 
-Two sources are live today: **wiwsport** (Senegal) and **GHANAsoccernet** (Ghana), both verified working WordPress RSS feeds.
+Six sources are live today, all verified working WordPress RSS feeds: **wiwsport** (Senegal), **GHANAsoccernet** (Ghana), **DZfoot** (Algeria), **Complete Sports** and **Brila FM Sports** (Nigeria — two independent outlets), and **Kawowo Sports** (Uganda).
+
+**Morocco** has no source wired in — its major outlets (Hespress, Le360, mapsport.ma) all block automated requests behind Cloudflare, and Yabiladi's `/rss/sport/` path returns the same unfiltered general-news feed as its homepage rather than sport-only content, so none of them qualify as a clean, sport-specific source yet.

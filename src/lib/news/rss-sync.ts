@@ -58,11 +58,22 @@ async function fetchFeedXml(url: string): Promise<string> {
 // pipeline, not a decode issue on ours, since fetching the raw bytes and
 // decoding as UTF-8 still yields the corrupted text). Reinterpreting the
 // string as Latin-1 bytes and re-decoding as UTF-8 reverses exactly that
-// pattern. Guarded so it's a no-op on already-correct text: re-encoding a
-// genuine accented character (e.g. "Krépin") as Latin-1 then as UTF-8
-// produces an invalid byte sequence (U+FFFD), which is the signal to leave
-// the original string alone.
+// pattern.
+//
+// Only safe to attempt when every character in the input is already within
+// the Latin-1 range (<= U+00FF) — that's the only way a string can be the
+// result of misreading UTF-8 bytes as Latin-1 in the first place. Skipping
+// this check bit once: checking only for a U+FFFD replacement character
+// afterwards isn't enough, because Buffer.from(str, "latin1") *silently
+// truncates* any character above U+00FF to its low byte instead of
+// failing — e.g. a genuine curly quote U+2019 (’) truncates to 0x19,
+// re-decodes as the *valid* control character U+0019, and slips past a
+// replacement-character check while quietly destroying real text (this
+// broke Brila's real curly quotes/en-dashes on the first version of this
+// function). Bailing out whenever the input has any character above
+// U+00FF avoids that path entirely.
 function fixMojibake(text: string): string {
+  if ([...text].some((ch) => ch.codePointAt(0)! > 0xff)) return text;
   try {
     const reversed = Buffer.from(text, "latin1").toString("utf8");
     return reversed.includes("�") ? text : reversed;
@@ -78,10 +89,27 @@ function truncate(text: string, max: number): string {
   return clean.length > max ? `${clean.slice(0, max - 1).trimEnd()}…` : clean;
 }
 
+// The <img> tag is embedded HTML source (e.g. inside <content:encoded>),
+// so its src attribute is HTML-entity-escaped like any other HTML text —
+// a WordPress/Jetpack CDN URL routinely contains "&amp;" for a literal
+// "&" query-string separator. Left undecoded, the resulting URL is wrong
+// (kawowo.com images came through as ".../uploads/x.jpg?fit=1024%2C683
+// &amp;ssl=1" instead of "...&ssl=1").
+function decodeHtmlEntities(text: string): string {
+  return text
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;|&apos;/g, "'")
+    .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCodePoint(parseInt(hex, 16)));
+}
+
 function firstImageInHtml(html: string | undefined): string | null {
   if (!html) return null;
   const match = html.match(/<img[^>]+src="([^"]+)"/i);
-  return match?.[1] ?? null;
+  return match?.[1] ? decodeHtmlEntities(match[1]) : null;
 }
 
 // Open Graph fallback — only reached when the feed item itself has no
