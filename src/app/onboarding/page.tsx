@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Check, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { Bell, Check, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { accentThemes } from "@/lib/mock/accent-themes";
 import { getAfricanPlayers, searchAfricanPlayers } from "@/lib/data/african-players";
@@ -11,6 +11,9 @@ import { applyAccentTheme } from "@/components/theme/accent-theme-provider";
 import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
 import { COUNTRY_LOGOS, NATIONALITY_BY_THEME_ID, ONBOARDING_STORAGE_KEY } from "@/lib/onboarding";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
+import { getOrCreateDeviceId } from "@/lib/device-id";
+import { ensurePushSubscription } from "@/hooks/use-push-subscription";
+import { saveNewsNotificationPref } from "@/app/actions/notifications";
 
 const COUNTRIES = accentThemes.filter((theme) => theme.id !== "default");
 
@@ -38,6 +41,8 @@ export default function OnboardingPage() {
   const [username, setUsername] = useState("");
   const [playerSearch, setPlayerSearch] = useState("");
   const [countrySearch, setCountrySearch] = useState("");
+  const [newsNotifStatus, setNewsNotifStatus] = useState<"idle" | "pending" | "enabled">("idle");
+  const [newsNotifCountryId, setNewsNotifCountryId] = useState<string | null>(null);
 
   const visibleCountries = useMemo(() => {
     const query = countrySearch.trim().toLowerCase();
@@ -68,6 +73,24 @@ export default function OnboardingPage() {
     (step === "country" && countryId !== null) ||
     (step === "players" && playerIds.length === 3) ||
     (step === "username" && username.trim().length >= 2);
+
+  // Opt-in, not automatic — tapping "Continuer" without touching this is
+  // the normal path, same as skipping a favorite club's notification
+  // toggles. Independent of the ONBOARDING_STORAGE_KEY profile write in
+  // finish(): the device id / push subscription / news_notification_prefs
+  // row aren't part of that local profile, so this can be saved the moment
+  // the user asks for it, before "Terminer" is even tapped.
+  async function enableNewsNotifications(selectedCountryId: string) {
+    setNewsNotifStatus("pending");
+    const granted = await ensurePushSubscription();
+    if (!granted) {
+      setNewsNotifStatus("idle");
+      return;
+    }
+    await saveNewsNotificationPref(getOrCreateDeviceId(), selectedCountryId);
+    setNewsNotifCountryId(selectedCountryId);
+    setNewsNotifStatus("enabled");
+  }
 
   function togglePlayer(id: string) {
     setPlayerIds((current) => {
@@ -177,6 +200,36 @@ export default function OnboardingPage() {
                 <p className="col-span-2 py-6 text-center text-sm text-muted">Aucun pays trouvé.</p>
               )}
             </div>
+
+            {countryId && (
+              <div className="mt-4 flex items-center gap-3 rounded-2xl border border-accent/30 bg-accent/5 p-3.5">
+                <span className="grid size-10 shrink-0 place-items-center rounded-full bg-accent/10 text-accent">
+                  <Bell size={18} aria-hidden />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold text-foreground">Reçois les actus de ton pays</p>
+                  <p className="text-xs leading-snug text-muted">Une notification dès qu&apos;un nouvel article sort.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => enableNewsNotifications(countryId)}
+                  disabled={newsNotifStatus === "pending" || (newsNotifStatus === "enabled" && newsNotifCountryId === countryId)}
+                  className={cn(
+                    "min-h-9 shrink-0 rounded-full px-3.5 text-xs font-bold",
+                    "transition-transform duration-[var(--duration-fast)] active:scale-95 disabled:active:scale-100",
+                    newsNotifStatus === "enabled" && newsNotifCountryId === countryId
+                      ? "bg-accent/15 text-accent"
+                      : "bg-accent text-accent-ink"
+                  )}
+                >
+                  {newsNotifStatus === "pending"
+                    ? "…"
+                    : newsNotifStatus === "enabled" && newsNotifCountryId === countryId
+                      ? "Activé"
+                      : "Activer"}
+                </button>
+              </div>
+            )}
           </>
         )}
 

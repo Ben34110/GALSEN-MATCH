@@ -35,11 +35,12 @@ export function ActuPageClient({ articles }: { articles: Article[] | null }) {
   // A "new articles for <country>" push notification (see
   // app/actions/notifications.ts + api/cron/fetch-news/route.ts) links
   // here with ?country=<id> — land straight on that filter instead of
-  // "Tout" once mounted, so tapping the notification actually shows what
-  // it announced. Reading the URL only client-side (not as the initial
-  // useState value) avoids a server/client hydration mismatch — SSR always
-  // renders "Tout" active, then this corrects it right after mount, same
-  // as every other localStorage/URL-derived client state in this app.
+  // "Dernières news" once mounted, so tapping the notification actually
+  // shows what it announced. Reading the URL only client-side (not as the
+  // initial useState value) avoids a server/client hydration mismatch —
+  // SSR always renders "Dernières news" active, then this corrects it
+  // right after mount, same as every other localStorage/URL-derived
+  // client state in this app.
   const countryParam = useSearchParams().get("country");
   useEffect(() => {
     if (countryParam) Promise.resolve(countryParam).then(setFilter);
@@ -243,7 +244,7 @@ export function ActuPageClient({ articles }: { articles: Article[] | null }) {
                   : "border-border bg-surface text-muted hover:text-foreground"
               )}
             >
-              Tout
+              Dernières news
             </button>
             {countryFilters.map((item) => (
               <button
