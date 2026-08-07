@@ -1,14 +1,14 @@
 import { FantasyGameSwitcher } from "@/components/fantasy/fantasy-game-switcher";
-import { FantasyView } from "@/components/fantasy/fantasy-view";
+import { BallonDorView } from "@/components/fantasy/ballon-dor-view";
 import { getAfricanPlayers } from "@/lib/data/african-players";
 
-export default function FantasyPage() {
+export default function BallonDorPage() {
   const pool = getAfricanPlayers();
 
   return (
     <div>
       <FantasyGameSwitcher />
-      <FantasyView pool={pool} />
+      <BallonDorView pool={pool} />
     </div>
   );
 }

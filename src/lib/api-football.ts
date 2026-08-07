@@ -147,3 +147,77 @@ export interface ApiFixturePlayerStats {
 export function getFixturePlayerStats(fixtureId: number) {
   return apiFootballGet<ApiFixturePlayerStats>("/fixtures/players", { fixture: fixtureId }, 60 * 60);
 }
+
+// --- CAN 2027 qualifiers (see lib/data/can-qualifiers.ts) ---
+// Restored/adapted from the pre-"À venir" version of this file (git show
+// 0a10eab~1) — the old live-scores tab used the same /standings and
+// /fixtures?league=&round= shapes for domestic leagues; only the extended
+// ApiStandingRow fields (group, goals for/against, goalsDiff) are new,
+// needed for the Pts/J/G/N/P/BP/BC/Diff column spec this feature asks for
+// but the old single-table competition never needed to surface.
+
+// "Africa Cup of Nations - Qualification" — confirmed live via API-Football
+// (checked by hand): 156 fixtures across a Preliminary Round + 6 Group
+// Stage rounds, 12 groups of 4, current season resolves to "2027".
+export const CAN_2027_QUALIFIERS_LEAGUE_ID = 36;
+
+interface ApiLeagueSeason {
+  year: number;
+  start: string;
+  current: boolean;
+}
+
+interface ApiLeagueInfo {
+  seasons: ApiLeagueSeason[];
+}
+
+export interface LeagueSeasonInfo {
+  // The season number API-Football itself uses internally — pass this to
+  // every other endpoint's `season` param.
+  querySeason: number;
+  // The calendar year the season actually started in, for display.
+  displayYear: number;
+}
+
+// The season API-Football itself considers "current" for a given league
+// right now — every competition runs on its own numbering convention (CAN
+// 2027 qualifiers' current season is literally the number "2027", not a
+// calendar year), so this is resolved dynamically instead of guessed.
+// Cached a day; a league's current season only flips a couple of times a
+// year.
+export async function getLeagueCurrentSeason(leagueId: number): Promise<LeagueSeasonInfo | null> {
+  const result = await apiFootballGet<ApiLeagueInfo>("/leagues", { id: leagueId, current: "true" }, 24 * 60 * 60);
+  if (result.error) return null;
+  const season = result.data[0]?.seasons.find((s) => s.current);
+  if (!season) return null;
+  return { querySeason: season.year, displayYear: Number(season.start.slice(0, 4)) };
+}
+
+// Every fixture in one named round (e.g. "Group Stage - 1") — a whole
+// matchday at once, rather than a flat "next N" count that cuts a round in
+// half for any competition with fewer than N fixtures per round.
+export function getFixturesForRound(leagueId: number, season: number, round: string) {
+  return apiFootballGet<ApiFixture>("/fixtures", { league: leagueId, season, round }, 6 * 60 * 60);
+}
+
+export interface ApiStandingRow {
+  rank: number;
+  team: { id: number; name: string; logo: string };
+  points: number;
+  goalsDiff: number;
+  group: string; // e.g. "Group A" — grouped competitions only
+  all: { played: number; win: number; draw: number; lose: number; goals: { for: number; against: number } };
+  description: string | null;
+}
+
+interface ApiStandingsResponse {
+  league: { standings: ApiStandingRow[][] };
+}
+
+// A grouped competition's standings come back as one array of rows per
+// group already (API-Football groups them server-side) — cached half an
+// hour, frequent enough to feel current during an active matchday without
+// hammering quota between them.
+export function getStandingsForSeason(leagueId: number, season: number) {
+  return apiFootballGet<ApiStandingsResponse>("/standings", { league: leagueId, season }, 30 * 60);
+}

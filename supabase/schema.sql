@@ -155,6 +155,43 @@ create table if not exists news_notification_prefs (
 
 create index if not exists news_notification_prefs_country_idx on news_notification_prefs (country);
 
+-- Best score per device per quiz theme (src/lib/data/quiz-questions.ts's
+-- QUIZ_THEMES ids, e.g. "senegal", "can"). The questions themselves live in
+-- a bundled static JSON file, not here — fixed content that never changes
+-- from a user action, same reasoning as african-players.json, and a 60s
+-- timed sprint can't afford a network round-trip per question. Only the
+-- *result* of playing (best_score) is real user-generated data, so only
+-- that goes to Supabase — written by the client only when it already knows
+-- locally that a run beat its previous best, no server-side compare needed.
+create table if not exists quiz_scores (
+  id uuid primary key default gen_random_uuid(),
+  device_id text not null,
+  theme text not null,
+  username text not null,
+  best_score integer not null,
+  updated_at timestamptz not null default now(),
+  unique (device_id, theme)
+);
+
+create index if not exists quiz_scores_theme_idx on quiz_scores (theme);
+
+-- One row per device, holding its current Ballon d'Or Africain top-10
+-- prediction (ranked, index 0 = predicted winner). True 1-row-per-device
+-- (device_id itself is unique, not a composite key like fantasy_squads'
+-- device_id+journée) — there's exactly one live prediction at a time,
+-- always overwritable. Never read back to hydrate the UI: local storage is
+-- the source of truth for what a device sees, same reason fantasy_squads
+-- is never read back into the pitch builder — there's no server-side
+-- device identity to query by on first load, only device_id itself, which
+-- the client already has.
+create table if not exists ballon_dor_predictions (
+  id uuid primary key default gen_random_uuid(),
+  device_id text not null unique,
+  username text not null,
+  rankings jsonb not null,
+  updated_at timestamptz not null default now()
+);
+
 -- No RLS policies: every read/write goes through server-only code using the
 -- service_role key (see lib/supabase.ts) — the anon key is never used, so
 -- there's no client-side access path to lock down.
@@ -165,3 +202,5 @@ alter table notified_events enable row level security;
 alter table fantasy_squads enable row level security;
 alter table news enable row level security;
 alter table news_notification_prefs enable row level security;
+alter table quiz_scores enable row level security;
+alter table ballon_dor_predictions enable row level security;

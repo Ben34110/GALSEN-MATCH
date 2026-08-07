@@ -104,6 +104,14 @@ export function getAfricanNation(id: string): AfricanNation | undefined {
   return AFRICAN_NATIONS.find((nation) => nation.id === id);
 }
 
+// For consumers that only have the English nationality string on hand
+// (e.g. fifa-ranking-table.tsx's scraped FifaRankingRow.country, already
+// normalized to match this exact field by the sync script) rather than a
+// theme/onboarding id.
+export function getAfricanNationByNationality(nationality: string): AfricanNation | undefined {
+  return AFRICAN_NATIONS.find((nation) => nation.nationality === nationality);
+}
+
 // Deterministic accent/accent2/accent3 hex triple from a nation's hue
 // anchors — accent stays fairly dark/saturated (readable with white ink),
 // accent2/accent3 lighter, echoing the hand-picked originals' pattern.

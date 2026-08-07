@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "sync:players": "node scripts/sync-african-players.mjs",
-    "sync:teams": "node scripts/sync-teams.mjs"
+    "sync:teams": "node scripts/sync-teams.mjs",
+    "sync:fifa-ranking": "node scripts/sync-fifa-ranking.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.1",

@@ -78,6 +78,56 @@ export interface AfricanPlayer {
   assists: number;
 }
 
+// The 9 Quiz Foot Africain categories (see lib/data/quiz-questions.ts's
+// QUIZ_THEMES for the French labels). "global" is its own independent
+// question pool — general football knowledge (continent-wide and beyond),
+// not a combination of the other 8 themes' questions.
+export type QuizTheme =
+  | "global"
+  | "senegal"
+  | "maroc"
+  | "algerie"
+  | "cameroun"
+  | "cote-ivoire"
+  | "egypte"
+  | "coupe-du-monde"
+  | "can";
+
+// One hand-authored trivia question, from the bundled
+// lib/data/quiz-questions.json — fixed content, never user-generated (see
+// supabase/schema.sql's quiz_scores for the part that IS user data: each
+// device's best score per theme).
+export interface QuizQuestion {
+  id: string;
+  theme: QuizTheme;
+  question: string;
+  choices: [string, string, string];
+  correctIndex: 0 | 1 | 2;
+}
+
+// One CAF nation's FIFA World Ranking row, pre-scraped via
+// scripts/sync-fifa-ranking.mjs into
+// lib/data/generated/fifa-ranking.json — no live API exposes this.
+// `country` is normalized to match african-nations.ts's `nationality`
+// field where a mapping exists (see the sync script's NATION_NAME_ALIASES)
+// so fifa-ranking-table.tsx can look up the matching crest/French label
+// directly; a couple of CAF members (currently just São Tomé and
+// Príncipe) have no african-nations.ts entry at all and render with a
+// generic icon instead of a missing crest.
+export interface FifaRankingRow {
+  africanRank: number;
+  worldRank: number;
+  country: string;
+  points: number;
+  previousPoints: number;
+  delta: number;
+  movement: "up" | "down" | "same";
+  // How many world-rank places moved since last month (0 when movement is
+  // "same") — what "progression de places par rapport au mois précédent"
+  // literally asked for, distinct from `delta`'s points change.
+  placesMoved: number;
+}
+
 // A real club, pre-crawled via scripts/sync-teams.mjs into
 // lib/data/generated/teams.json — powers the favorite-club search in Profil
 // (see components/profil/preferences-editor.tsx).
