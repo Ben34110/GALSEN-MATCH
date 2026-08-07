@@ -5,6 +5,19 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// Plain `.toLowerCase().includes()` search is accent-sensitive — a search
+// haystack containing "Díaz" or "Côte d'Ivoire" doesn't match a query typed
+// as "diaz" or "cote d'ivoire", which is how most people actually type
+// (no accent keys, or just typing fast). Every text search in the app
+// (players, teams, countries) should normalize both sides through this
+// before comparing, e.g. `normalizeForSearch(haystack).includes(normalizeForSearch(query))`.
+export function normalizeForSearch(text: string): string {
+  return text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
 export function formatRelativeTime(iso: string): string {
   const diffMs = Date.now() - new Date(iso).getTime();
   const diffMin = Math.round(diffMs / 60000);

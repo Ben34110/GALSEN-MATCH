@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Bell, Check, ChevronLeft, ChevronRight, Search } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, normalizeForSearch } from "@/lib/utils";
 import { accentThemes } from "@/lib/mock/accent-themes";
 import { getAfricanPlayers, searchAfricanPlayers } from "@/lib/data/african-players";
 import { applyAccentTheme } from "@/components/theme/accent-theme-provider";
@@ -45,9 +45,9 @@ export default function OnboardingPage() {
   const [newsNotifCountryId, setNewsNotifCountryId] = useState<string | null>(null);
 
   const visibleCountries = useMemo(() => {
-    const query = countrySearch.trim().toLowerCase();
+    const query = normalizeForSearch(countrySearch.trim());
     if (!query) return COUNTRIES;
-    return COUNTRIES.filter((country) => country.label.toLowerCase().includes(query));
+    return COUNTRIES.filter((country) => normalizeForSearch(country.label).includes(query));
   }, [countrySearch]);
 
   const visiblePlayers = useMemo(() => {

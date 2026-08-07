@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { Bell, Check, Search, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, normalizeForSearch } from "@/lib/utils";
 import { accentThemes } from "@/lib/mock/accent-themes";
 import { applyAccentTheme } from "@/components/theme/accent-theme-provider";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
@@ -64,7 +64,7 @@ export function PreferencesEditor() {
   if (!profile) return null;
 
   const visibleCountries = countrySearch.trim()
-    ? COUNTRIES.filter((country) => country.label.toLowerCase().includes(countrySearch.trim().toLowerCase()))
+    ? COUNTRIES.filter((country) => normalizeForSearch(country.label).includes(normalizeForSearch(countrySearch.trim())))
     : COUNTRIES;
 
   const selectedPlayers = profile.playerIds

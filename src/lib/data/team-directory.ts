@@ -1,4 +1,5 @@
 import data from "@/lib/data/generated/teams.json";
+import { normalizeForSearch } from "@/lib/utils";
 import type { LeagueTeam } from "@/types";
 
 // Real data, pre-crawled (see scripts/sync-teams.mjs) — a static, instantly
@@ -10,12 +11,12 @@ export function getTeamDirectory(): LeagueTeam[] {
 }
 
 export function searchTeams(teamList: LeagueTeam[], query: string): LeagueTeam[] {
-  const q = query.trim().toLowerCase();
+  const q = normalizeForSearch(query.trim());
   if (!q) return teamList;
   return teamList.filter(
     (team) =>
-      team.name.toLowerCase().includes(q) ||
-      team.leagueName.toLowerCase().includes(q) ||
-      team.country.toLowerCase().includes(q)
+      normalizeForSearch(team.name).includes(q) ||
+      normalizeForSearch(team.leagueName).includes(q) ||
+      normalizeForSearch(team.country).includes(q)
   );
 }

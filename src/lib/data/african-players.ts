@@ -1,4 +1,5 @@
 import data from "@/lib/data/generated/african-players.json";
+import { normalizeForSearch } from "@/lib/utils";
 import type { AfricanPlayer, PlayerPosition } from "@/types";
 
 // API-Football's free-text position ("Goalkeeper", "Defender", ...) mapped
@@ -30,15 +31,17 @@ export function getAfricanPlayers(): AfricanPlayer[] {
 // combined into one haystack and tokenized so a two-word query like "habib
 // diarra" matches even though "habib" only appears in firstname and
 // "diarra" only in lastname — neither field alone contains the full phrase.
+// normalizeForSearch also strips accents from both sides, so typing "diaz"
+// (no accent key, or just typing fast) still finds "Brahim Díaz" — plain
+// .toLowerCase() alone left him unfindable by his own name.
 export function searchAfricanPlayers(players: AfricanPlayer[], query: string): AfricanPlayer[] {
-  const tokens = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const tokens = normalizeForSearch(query.trim()).split(/\s+/).filter(Boolean);
   if (tokens.length === 0) return players;
 
   return players.filter((player) => {
-    const haystack = [player.name, player.firstname, player.lastname, player.nationality, player.teamName]
-      .filter(Boolean)
-      .join(" ")
-      .toLowerCase();
+    const haystack = normalizeForSearch(
+      [player.name, player.firstname, player.lastname, player.nationality, player.teamName].filter(Boolean).join(" ")
+    );
     return tokens.every((token) => haystack.includes(token));
   });
 }

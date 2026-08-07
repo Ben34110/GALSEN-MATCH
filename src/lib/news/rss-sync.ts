@@ -165,9 +165,21 @@ async function verifyImageReachable(url: string): Promise<boolean> {
 // endpoint. Only ever called for articles not already stored (see
 // syncAllNewsSources), so volume stays proportional to genuinely new
 // articles per sync, not the full feed every 30 minutes.
+//
+// Anonymous use is capped at 5,000 words/day (shared across every request
+// from this server's IP) — MyMemory's own docs double that to 10,000/day
+// when a contact email is attached via `de=`, no signup needed. Set
+// MYMEMORY_CONTACT_EMAIL to opt into that; without it, requests still work,
+// just against the smaller anonymous quota. When the quota's fully spent,
+// the API returns responseStatus 429 with a warning string instead of a
+// translation — treated as "no translation available yet" the same as any
+// other failure, not thrown, so a quota day never breaks the sync.
 async function translateText(text: string, from: "fr" | "en", to: "fr" | "en"): Promise<string | null> {
   try {
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`;
+    const contactEmail = process.env.MYMEMORY_CONTACT_EMAIL;
+    const url =
+      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}` +
+      (contactEmail ? `&de=${encodeURIComponent(contactEmail)}` : "");
     const res = await fetch(url, { signal: AbortSignal.timeout(10_000) });
     if (!res.ok) return null;
     const json = (await res.json()) as { responseStatus?: number; responseData?: { translatedText?: string } };
@@ -259,16 +271,26 @@ export interface SourceSyncResult {
   insertedArticles: { title: string; country: string; imageUrl: string | null }[];
 }
 
+// A quota day (mymemory.translated.net's free tier is small — see
+// translateText) can leave a batch of already-inserted articles with
+// title_translated still null. Without a retry path those are stuck
+// showing the original language forever, since the normal "new article"
+// path only ever looks at content_urls it hasn't seen before. Capped per
+// source per sync so a large backlog is caught up gradually over several
+// runs instead of one sync attempting hundreds of calls (and the request
+// duration that implies) all at once.
+const MAX_TRANSLATION_RETRIES_PER_SOURCE = 20;
+
 // Called by GET /api/cron/fetch-news. Upserts on content_url (the news
 // table's unique key — see supabase/schema.sql) with ignoreDuplicates, so
 // re-running against the same feed every 30 minutes only ever inserts the
 // articles it hasn't seen yet.
 //
 // Translation happens here, BEFORE the upsert, and only for articles whose
-// content_url isn't already in the table — translating on every sync
-// regardless would re-translate the same already-stored articles every 30
-// minutes for no reason, burning through mymemory.translated.net's free
-// daily quota for nothing new.
+// content_url isn't already in the table (plus a capped retry pass for
+// existing rows still missing a translation — see above) — translating
+// every already-stored article on every sync regardless would burn through
+// mymemory.translated.net's free daily quota for nothing new.
 export async function syncAllNewsSources(): Promise<SourceSyncResult[]> {
   const supabase = getSupabaseAdmin();
   if (!supabase) {
@@ -292,14 +314,31 @@ export async function syncAllNewsSources(): Promise<SourceSyncResult[]> {
 
       const { data: existing, error: selectError } = await supabase
         .from("news")
-        .select("content_url")
+        .select("id, content_url, title_translated")
         .in(
           "content_url",
           articles.map((a) => a.contentUrl)
         );
       if (selectError) throw new Error(selectError.message);
-      const existingUrls = new Set((existing ?? []).map((row) => row.content_url as string));
-      const newArticles = articles.filter((a) => !existingUrls.has(a.contentUrl));
+      const existingByUrl = new Map((existing ?? []).map((row) => [row.content_url as string, row]));
+      const newArticles = articles.filter((a) => !existingByUrl.has(a.contentUrl));
+      const retryArticles = articles
+        .filter((a) => existingByUrl.get(a.contentUrl)?.title_translated == null && existingByUrl.has(a.contentUrl))
+        .slice(0, MAX_TRANSLATION_RETRIES_PER_SOURCE);
+
+      if (retryArticles.length > 0) {
+        await Promise.all(
+          retryArticles.map(async (article) => {
+            const { titleTranslated, summaryTranslated } = await translateArticle(article);
+            if (!titleTranslated) return; // still no luck — leave it for the next sync to retry
+            const row = existingByUrl.get(article.contentUrl)!;
+            await supabase
+              .from("news")
+              .update({ title_translated: titleTranslated, summary_translated: summaryTranslated })
+              .eq("id", row.id);
+          })
+        );
+      }
 
       const rows = await Promise.all(
         newArticles.map(async (article) => {

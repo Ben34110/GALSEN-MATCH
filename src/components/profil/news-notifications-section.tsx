@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Bell, BellOff, Globe2, Search } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, normalizeForSearch } from "@/lib/utils";
 import { AFRICAN_NATIONS } from "@/lib/data/african-nations";
 import { getOrCreateDeviceId } from "@/lib/device-id";
 import { ensurePushSubscription } from "@/hooks/use-push-subscription";
@@ -32,6 +32,7 @@ export function NewsNotificationsSection() {
   const [search, setSearch] = useState("");
   const [subscribed, setSubscribed] = useState<Set<string>>(new Set());
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [failedId, setFailedId] = useState<string | null>(null);
 
   useEffect(() => {
     const deviceId = getOrCreateDeviceId();
@@ -39,14 +40,15 @@ export function NewsNotificationsSection() {
   }, []);
 
   const visibleOptions = useMemo(() => {
-    const query = search.trim().toLowerCase();
+    const query = normalizeForSearch(search.trim());
     if (!query) return ALL_OPTIONS.filter((option) => subscribed.has(option.id));
-    return ALL_OPTIONS.filter((option) => option.label.toLowerCase().includes(query));
+    return ALL_OPTIONS.filter((option) => normalizeForSearch(option.label).includes(query));
   }, [search, subscribed]);
 
   async function toggle(countryId: string) {
     if (pendingId) return;
     setPendingId(countryId);
+    setFailedId(null);
     const deviceId = getOrCreateDeviceId();
     const active = subscribed.has(countryId);
 
@@ -58,7 +60,18 @@ export function NewsNotificationsSection() {
         return next;
       });
     } else {
-      await ensurePushSubscription();
+      // ensurePushSubscription()'s result must gate the save — skipping this
+      // check previously saved a news_notification_prefs row (and showed
+      // "Activé") even when no push subscription actually got created (no
+      // permission granted, no service worker in dev, etc.), leaving a
+      // preference with nothing in push_subscriptions to match it at send
+      // time — the toggle looked successful but nothing was ever delivered.
+      const granted = await ensurePushSubscription();
+      if (!granted) {
+        setFailedId(countryId);
+        setPendingId(null);
+        return;
+      }
       await saveNewsNotificationPref(deviceId, countryId);
       setSubscribed((current) => new Set(current).add(countryId));
     }
@@ -129,6 +142,13 @@ export function NewsNotificationsSection() {
           </p>
         )}
       </div>
+
+      {failedId && (
+        <p className="mt-2.5 text-xs leading-relaxed text-accent-3">
+          Impossible d&apos;activer les notifications — vérifie que tu as autorisé les notifications pour Galsen Match
+          dans les réglages de ton téléphone/navigateur, puis réessaie.
+        </p>
+      )}
     </section>
   );
 }
