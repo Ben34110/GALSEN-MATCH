@@ -142,3 +142,34 @@ export async function deletePlayerNotificationPrefs(deviceId: string, playerId: 
     .eq("player_id", playerId);
   return { ok: !error };
 }
+
+// A device subscribes to a country's news the same on/off way it favorites
+// a club — no sub-options like club/player notifications have, a country
+// either pushes new articles to this device or it doesn't. Delivery
+// happens in api/cron/fetch-news/route.ts, right after a sync inserts new
+// rows for that country.
+export async function saveNewsNotificationPref(deviceId: string, country: string): Promise<{ ok: boolean }> {
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return { ok: false };
+
+  const { error } = await supabase
+    .from("news_notification_prefs")
+    .upsert({ device_id: deviceId, country }, { onConflict: "device_id,country" });
+  return { ok: !error };
+}
+
+export async function deleteNewsNotificationPref(deviceId: string, country: string): Promise<{ ok: boolean }> {
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return { ok: false };
+
+  const { error } = await supabase.from("news_notification_prefs").delete().eq("device_id", deviceId).eq("country", country);
+  return { ok: !error };
+}
+
+export async function getNewsNotificationCountries(deviceId: string): Promise<string[]> {
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return [];
+
+  const { data } = await supabase.from("news_notification_prefs").select("country").eq("device_id", deviceId);
+  return (data ?? []).map((row) => row.country as string);
+}

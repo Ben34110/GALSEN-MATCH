@@ -251,6 +251,12 @@ export interface SourceSyncResult {
   fetched: number;
   inserted: number;
   error?: string;
+  // The articles that actually got a new row this run (empty on a source
+  // with nothing new, or an error) — api/cron/fetch-news/route.ts uses
+  // this to notify devices subscribed to that country via
+  // news_notification_prefs, without needing a second DB round-trip to
+  // figure out what's new.
+  insertedArticles: { title: string; country: string }[];
 }
 
 // Called by GET /api/cron/fetch-news. Upserts on content_url (the news
@@ -266,7 +272,13 @@ export interface SourceSyncResult {
 export async function syncAllNewsSources(): Promise<SourceSyncResult[]> {
   const supabase = getSupabaseAdmin();
   if (!supabase) {
-    return NEWS_SOURCES.map((source) => ({ source: source.id, fetched: 0, inserted: 0, error: "Supabase not configured" }));
+    return NEWS_SOURCES.map((source) => ({
+      source: source.id,
+      fetched: 0,
+      inserted: 0,
+      error: "Supabase not configured",
+      insertedArticles: [],
+    }));
   }
 
   const results: SourceSyncResult[] = [];
@@ -274,7 +286,7 @@ export async function syncAllNewsSources(): Promise<SourceSyncResult[]> {
     try {
       const articles = await fetchSourceArticles(source);
       if (articles.length === 0) {
-        results.push({ source: source.id, fetched: 0, inserted: 0 });
+        results.push({ source: source.id, fetched: 0, inserted: 0, insertedArticles: [] });
         continue;
       }
 
@@ -309,18 +321,30 @@ export async function syncAllNewsSources(): Promise<SourceSyncResult[]> {
       );
 
       if (rows.length === 0) {
-        results.push({ source: source.id, fetched: articles.length, inserted: 0 });
+        results.push({ source: source.id, fetched: articles.length, inserted: 0, insertedArticles: [] });
         continue;
       }
 
       const { data, error } = await supabase
         .from("news")
         .upsert(rows, { onConflict: "content_url", ignoreDuplicates: true })
-        .select("id");
+        .select("id, title, country");
 
-      results.push({ source: source.id, fetched: articles.length, inserted: data?.length ?? 0, error: error?.message });
+      results.push({
+        source: source.id,
+        fetched: articles.length,
+        inserted: data?.length ?? 0,
+        error: error?.message,
+        insertedArticles: (data ?? []).map((row) => ({ title: row.title as string, country: row.country as string })),
+      });
     } catch (err) {
-      results.push({ source: source.id, fetched: 0, inserted: 0, error: err instanceof Error ? err.message : "unknown error" });
+      results.push({
+        source: source.id,
+        fetched: 0,
+        inserted: 0,
+        error: err instanceof Error ? err.message : "unknown error",
+        insertedArticles: [],
+      });
     }
   }
   return results;

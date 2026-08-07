@@ -120,6 +120,24 @@ alter table news add column if not exists summary_translated text;
 create index if not exists news_country_idx on news (country);
 create index if not exists news_published_at_idx on news (published_at desc);
 
+-- One row per device per country the device wants a push notification for
+-- when a new article lands (see app/actions/notifications.ts's
+-- save/deleteNewsNotificationPref and api/cron/fetch-news/route.ts, which
+-- sends after every sync). `country` is either an id from
+-- lib/data/african-nations.ts or "general" — same values news.country
+-- uses, so a lookup is a plain equality match. Deleting the row is how
+-- turning a country's notifications off works, same model as
+-- favorite_club_notifications above.
+create table if not exists news_notification_prefs (
+  id uuid primary key default gen_random_uuid(),
+  device_id text not null,
+  country text not null,
+  created_at timestamptz not null default now(),
+  unique (device_id, country)
+);
+
+create index if not exists news_notification_prefs_country_idx on news_notification_prefs (country);
+
 -- No RLS policies: every read/write goes through server-only code using the
 -- service_role key (see lib/supabase.ts) — the anon key is never used, so
 -- there's no client-side access path to lock down.
@@ -129,3 +147,4 @@ alter table favorite_player_notifications enable row level security;
 alter table notified_events enable row level security;
 alter table fantasy_squads enable row level security;
 alter table news enable row level security;
+alter table news_notification_prefs enable row level security;

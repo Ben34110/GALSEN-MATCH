@@ -1,6 +1,7 @@
 import { BadgesSection } from "@/components/profil/badges-section";
 import { LocalePicker } from "@/components/profil/locale-picker";
 import { LogoutButton } from "@/components/profil/logout-button";
+import { NewsNotificationsSection } from "@/components/profil/news-notifications-section";
 import { PreferencesEditor } from "@/components/profil/preferences-editor";
 import { ProfileIdentityCard } from "@/components/profil/profile-identity-card";
 import { SectionHeader } from "@/components/ui/section-header";
@@ -18,6 +19,10 @@ export default function ProfilPage() {
 
       <div className="mb-8">
         <PreferencesEditor />
+      </div>
+
+      <div className="mb-8">
+        <NewsNotificationsSection />
       </div>
 
       <section className="mb-8">

@@ -69,3 +69,9 @@ Add one entry to `NEWS_SOURCES` in `src/lib/news/sources.ts`:
 **Sport News Africa** was requested but doesn't currently publish a public RSS/XML feed — checked `/feed`, `/feed/`, `/feed.xml`, `/rss`, `/rss.xml`, `/?feed=rss2`, and `robots.txt`/`sitemap.xml` for a pointer to one. It's a Laravel/Filament app (not WordPress), so no default `/feed/` route exists. Left as a commented-out placeholder — add it for real the moment they ship one. Afrik-Foot (added above) covers similar pan-African ground in the meantime.
 
 **Côte d'Ivoire** has no source wired in after trying ~15 candidates (Fratmat, Abidjan.net, Koaci, Linfodrome, Soir Info, and several guessed football-specific domains that don't resolve). Linfodrome is real and Ivorian but general-news only — its `/rss/sport` and `/rss?rubrique=sport` paths return the exact same unfiltered 101-item feed as the homepage, not sport-only content. Revisit if a dedicated Ivorian sports outlet with a real feed turns up.
+
+## Per-country push notifications
+
+Profil → "Notifications actu" lets a device subscribe to any country (or "Actu Afrique" for pan-African articles) — same on/off model as favoriting a club, stored in the `news_notification_prefs` table (also added via `supabase/schema.sql`, so re-running it picks this up too). No separate scheduler needed: `GET /api/cron/fetch-news` sends the notifications itself, right after syncing, reusing the same VAPID env vars already configured for `/api/cron/poll` (see `docs/notifications.md`) — nothing new to set up there.
+
+One push per (country, device) per sync, not one per article — five new Sénégal articles in the same run produce a single "5 nouveaux articles disponibles" notification instead of five separate ones. Tapping it opens `/actu?country=<id>`, which the Actu page reads on mount to land straight on that filter instead of "Tout".

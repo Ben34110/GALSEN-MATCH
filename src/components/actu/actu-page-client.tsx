@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { ArrowLeftRight, CalendarClock, ChevronRight, Newspaper, Star, Trophy } from "lucide-react";
 import { ArticleCard } from "@/components/actu/article-card";
@@ -30,6 +31,19 @@ const QUICK_LINKS = [
 export function ActuPageClient({ articles }: { articles: Article[] | null }) {
   const [filter, setFilter] = useState<string>("all");
   const articlesRef = useRef<HTMLDivElement>(null);
+
+  // A "new articles for <country>" push notification (see
+  // app/actions/notifications.ts + api/cron/fetch-news/route.ts) links
+  // here with ?country=<id> — land straight on that filter instead of
+  // "Tout" once mounted, so tapping the notification actually shows what
+  // it announced. Reading the URL only client-side (not as the initial
+  // useState value) avoids a server/client hydration mismatch — SSR always
+  // renders "Tout" active, then this corrects it right after mount, same
+  // as every other localStorage/URL-derived client state in this app.
+  const countryParam = useSearchParams().get("country");
+  useEffect(() => {
+    if (countryParam) Promise.resolve(countryParam).then(setFilter);
+  }, [countryParam]);
 
   // Every article not already written in the app's current locale gets
   // swapped for its precomputed translation (see lib/news/localize.ts) —
