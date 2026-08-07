@@ -21,8 +21,11 @@ export const COUNTRY_CODE_BY_THEME_ID: Record<string, string> = Object.fromEntri
   AFRICAN_NATIONS.map((nation) => [nation.id, nation.countryCode])
 );
 
-export const COUNTRY_FLAGS: Record<string, string> = Object.fromEntries(
-  AFRICAN_NATIONS.map((nation) => [nation.id, nation.flag])
+// National team crest — used everywhere a country is represented in the UI
+// except the fantasy squad/lineup views (player-picker-sheet, pitch-view),
+// which keep flags by design.
+export const COUNTRY_LOGOS: Record<string, string> = Object.fromEntries(
+  AFRICAN_NATIONS.map((nation) => [nation.id, nation.logo])
 );
 
 // Maps a country's theme/onboarding id to the exact nationality string used

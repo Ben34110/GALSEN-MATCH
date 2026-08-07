@@ -9,7 +9,7 @@ import { accentThemes } from "@/lib/mock/accent-themes";
 import { getAfricanPlayers, searchAfricanPlayers } from "@/lib/data/african-players";
 import { applyAccentTheme } from "@/components/theme/accent-theme-provider";
 import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
-import { COUNTRY_FLAGS, NATIONALITY_BY_THEME_ID, ONBOARDING_STORAGE_KEY } from "@/lib/onboarding";
+import { COUNTRY_LOGOS, NATIONALITY_BY_THEME_ID, ONBOARDING_STORAGE_KEY } from "@/lib/onboarding";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 
 const COUNTRIES = accentThemes.filter((theme) => theme.id !== "default");
@@ -160,9 +160,14 @@ export default function OnboardingPage() {
                       active ? "border-accent bg-accent/10" : "border-border bg-surface hover:border-accent/30"
                     )}
                   >
-                    <span className="text-3xl" aria-hidden>
-                      {COUNTRY_FLAGS[country.id]}
-                    </span>
+                    <Image
+                      src={COUNTRY_LOGOS[country.id]}
+                      alt=""
+                      width={40}
+                      height={40}
+                      className="size-10 object-contain"
+                      unoptimized
+                    />
                     <span className="text-sm font-semibold text-foreground">{country.label}</span>
                     {active && <Check size={16} className="text-accent" aria-hidden />}
                   </button>
@@ -188,8 +193,11 @@ export default function OnboardingPage() {
                 {playerIds.length}/3 sélectionnés
               </p>
               {!playerSearch && (
-                <p className="text-[11px] text-muted">
-                  {countryId ? COUNTRY_FLAGS[countryId] : ""} Joueurs de ta nation d&apos;abord
+                <p className="flex items-center gap-1 text-[11px] text-muted">
+                  {countryId && (
+                    <Image src={COUNTRY_LOGOS[countryId]} alt="" width={14} height={14} className="size-3.5 object-contain" unoptimized />
+                  )}
+                  Joueurs de ta nation d&apos;abord
                 </p>
               )}
             </div>

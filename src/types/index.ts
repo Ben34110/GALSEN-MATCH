@@ -100,6 +100,9 @@ export interface ChatRoom {
   countryCode?: string;
   name: string;
   flag: string;
+  // National team crest URL — undefined for the "general" room, which has
+  // no single nation to represent (falls back to the flag emoji there).
+  logo?: string;
 }
 
 export interface ChatMessage {

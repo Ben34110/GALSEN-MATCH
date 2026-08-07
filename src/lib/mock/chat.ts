@@ -19,6 +19,7 @@ export const chatRooms: ChatRoom[] = [
       countryCode: nation.countryCode,
       name: nation.label,
       flag: nation.flag,
+      logo: nation.logo,
     })
   ),
 ];

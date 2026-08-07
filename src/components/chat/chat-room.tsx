@@ -1,11 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import { Send } from "lucide-react";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { getInitialMessages } from "@/lib/data/chat";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
-import { COUNTRY_CODE_BY_THEME_ID, COUNTRY_FLAGS, initialsFromUsername } from "@/lib/onboarding";
+import { COUNTRY_CODE_BY_THEME_ID, COUNTRY_LOGOS, initialsFromUsername } from "@/lib/onboarding";
 import { CountryAvatar } from "@/components/ui/country-avatar";
 import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
 import { HAS_CHATTED_KEY } from "@/lib/badges";
@@ -77,7 +78,11 @@ export function ChatRoom({ rooms }: { rooms: ChatRoomType[] }) {
                 : "border-border bg-surface text-muted hover:text-foreground"
             )}
           >
-            <span aria-hidden>{room.flag}</span>
+            {room.logo ? (
+              <Image src={room.logo} alt="" width={16} height={16} className="size-4 shrink-0 object-contain" unoptimized />
+            ) : (
+              <span aria-hidden>{room.flag}</span>
+            )}
             {room.name}
           </button>
         ))}
@@ -97,9 +102,16 @@ export function ChatRoom({ rooms }: { rooms: ChatRoomType[] }) {
             {message.authorName === "Toi" && profile && (
               <div className="mb-1 flex items-center justify-end gap-1.5">
                 <span className="text-xs font-semibold text-foreground">{profile.username}</span>
-                <span aria-hidden className="text-sm leading-none">
-                  {COUNTRY_FLAGS[profile.countryId] ?? "🌍"}
-                </span>
+                {COUNTRY_LOGOS[profile.countryId] && (
+                  <Image
+                    src={COUNTRY_LOGOS[profile.countryId]}
+                    alt=""
+                    width={14}
+                    height={14}
+                    className="size-3.5 shrink-0 object-contain"
+                    unoptimized
+                  />
+                )}
                 <CountryAvatar initials={initialsFromUsername(profile.username)} size={10} />
               </div>
             )}

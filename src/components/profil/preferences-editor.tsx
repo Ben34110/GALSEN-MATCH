@@ -10,7 +10,7 @@ import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { useFavoriteTeamIds, addFavoriteTeam, removeFavoriteTeam } from "@/hooks/use-favorite-teams";
 import { ensurePushSubscription } from "@/hooks/use-push-subscription";
 import { getOrCreateDeviceId } from "@/lib/device-id";
-import { COUNTRY_FLAGS, updateOnboardingProfile } from "@/lib/onboarding";
+import { COUNTRY_LOGOS, updateOnboardingProfile } from "@/lib/onboarding";
 import { getAfricanPlayers, searchAfricanPlayers } from "@/lib/data/african-players";
 import { getTeamDirectory, searchTeams } from "@/lib/data/team-directory";
 import { NotificationPrefsPanel, type NotificationOption } from "@/components/notifications/notification-prefs-panel";
@@ -171,9 +171,7 @@ export function PreferencesEditor() {
           if (!current) return null;
           return (
             <div className="mb-2.5 flex min-h-11 items-center gap-2.5 rounded-xl border border-accent bg-accent/10 px-2.5 py-2">
-              <span className="text-2xl" aria-hidden>
-                {COUNTRY_FLAGS[current.id]}
-              </span>
+              <Image src={COUNTRY_LOGOS[current.id]} alt="" width={24} height={24} className="size-6 shrink-0 object-contain" unoptimized />
               <span className="flex-1 text-sm font-semibold text-foreground">{current.label}</span>
               <Check size={16} className="shrink-0 text-accent" aria-hidden />
             </div>
@@ -212,9 +210,7 @@ export function PreferencesEditor() {
                     active ? "border-accent bg-accent/10" : "border-border bg-surface hover:border-accent/30"
                   )}
                 >
-                  <span className="text-2xl" aria-hidden>
-                    {COUNTRY_FLAGS[country.id]}
-                  </span>
+                  <Image src={COUNTRY_LOGOS[country.id]} alt="" width={24} height={24} className="size-6 object-contain" unoptimized />
                   <span className="text-[11px] font-semibold text-foreground">{country.label}</span>
                 </button>
               );
