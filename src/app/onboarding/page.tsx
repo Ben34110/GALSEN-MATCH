@@ -12,7 +12,7 @@ import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
 import { COUNTRY_LOGOS, NATIONALITY_BY_THEME_ID, ONBOARDING_STORAGE_KEY } from "@/lib/onboarding";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { getOrCreateDeviceId } from "@/lib/device-id";
-import { ensurePushSubscription } from "@/hooks/use-push-subscription";
+import { ensurePushSubscription, PUSH_FAILURE_MESSAGES } from "@/hooks/use-push-subscription";
 import { saveNewsNotificationPref } from "@/app/actions/notifications";
 
 const COUNTRIES = accentThemes.filter((theme) => theme.id !== "default");
@@ -43,6 +43,7 @@ export default function OnboardingPage() {
   const [countrySearch, setCountrySearch] = useState("");
   const [newsNotifStatus, setNewsNotifStatus] = useState<"idle" | "pending" | "enabled">("idle");
   const [newsNotifCountryId, setNewsNotifCountryId] = useState<string | null>(null);
+  const [newsNotifFailReason, setNewsNotifFailReason] = useState<keyof typeof PUSH_FAILURE_MESSAGES | null>(null);
 
   const visibleCountries = useMemo(() => {
     const query = normalizeForSearch(countrySearch.trim());
@@ -82,9 +83,11 @@ export default function OnboardingPage() {
   // the user asks for it, before "Terminer" is even tapped.
   async function enableNewsNotifications(selectedCountryId: string) {
     setNewsNotifStatus("pending");
-    const granted = await ensurePushSubscription();
-    if (!granted) {
+    setNewsNotifFailReason(null);
+    const result = await ensurePushSubscription();
+    if (!result.ok) {
       setNewsNotifStatus("idle");
+      setNewsNotifFailReason(result.reason);
       return;
     }
     await saveNewsNotificationPref(getOrCreateDeviceId(), selectedCountryId);
@@ -229,6 +232,9 @@ export default function OnboardingPage() {
                       : "Activer"}
                 </button>
               </div>
+            )}
+            {newsNotifFailReason && (
+              <p className="mt-2 text-xs leading-relaxed text-accent-3">{PUSH_FAILURE_MESSAGES[newsNotifFailReason]}</p>
             )}
           </>
         )}

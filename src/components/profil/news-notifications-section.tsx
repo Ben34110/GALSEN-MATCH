@@ -5,7 +5,7 @@ import { Bell, BellOff, Globe2, Search } from "lucide-react";
 import { cn, normalizeForSearch } from "@/lib/utils";
 import { AFRICAN_NATIONS } from "@/lib/data/african-nations";
 import { getOrCreateDeviceId } from "@/lib/device-id";
-import { ensurePushSubscription } from "@/hooks/use-push-subscription";
+import { ensurePushSubscription, PUSH_FAILURE_MESSAGES } from "@/hooks/use-push-subscription";
 import {
   deleteNewsNotificationPref,
   getNewsNotificationCountries,
@@ -32,7 +32,7 @@ export function NewsNotificationsSection() {
   const [search, setSearch] = useState("");
   const [subscribed, setSubscribed] = useState<Set<string>>(new Set());
   const [pendingId, setPendingId] = useState<string | null>(null);
-  const [failedId, setFailedId] = useState<string | null>(null);
+  const [failure, setFailure] = useState<{ countryId: string; reason: keyof typeof PUSH_FAILURE_MESSAGES } | null>(null);
 
   useEffect(() => {
     const deviceId = getOrCreateDeviceId();
@@ -48,7 +48,7 @@ export function NewsNotificationsSection() {
   async function toggle(countryId: string) {
     if (pendingId) return;
     setPendingId(countryId);
-    setFailedId(null);
+    setFailure(null);
     const deviceId = getOrCreateDeviceId();
     const active = subscribed.has(countryId);
 
@@ -66,9 +66,9 @@ export function NewsNotificationsSection() {
       // permission granted, no service worker in dev, etc.), leaving a
       // preference with nothing in push_subscriptions to match it at send
       // time — the toggle looked successful but nothing was ever delivered.
-      const granted = await ensurePushSubscription();
-      if (!granted) {
-        setFailedId(countryId);
+      const result = await ensurePushSubscription();
+      if (!result.ok) {
+        setFailure({ countryId, reason: result.reason });
         setPendingId(null);
         return;
       }
@@ -143,11 +143,8 @@ export function NewsNotificationsSection() {
         )}
       </div>
 
-      {failedId && (
-        <p className="mt-2.5 text-xs leading-relaxed text-accent-3">
-          Impossible d&apos;activer les notifications — vérifie que tu as autorisé les notifications pour Galsen Match
-          dans les réglages de ton téléphone/navigateur, puis réessaie.
-        </p>
+      {failure && (
+        <p className="mt-2.5 text-xs leading-relaxed text-accent-3">{PUSH_FAILURE_MESSAGES[failure.reason]}</p>
       )}
     </section>
   );
