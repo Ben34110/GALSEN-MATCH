@@ -65,12 +65,21 @@ async function notifySubscribers(insertedByCountry: Map<string, CountryBatch>): 
       const batch = insertedByCountry.get(pref.country);
       if (!sub || !batch || batch.titles.length === 0) return;
 
-      const body = batch.titles.length === 1 ? batch.titles[0] : `${batch.titles.length} nouveaux articles disponibles`;
+      // iOS/Safari always renders web push notifications as [bold title] /
+      // "from <manifest app name>" / [body] — that "from" line is native
+      // Safari chrome tied to the manifest name and isn't something the
+      // payload can remove or replace. What IS ours to control is the bold
+      // title, so it's the app's own name ("Galsen Match") rather than a
+      // country name — which used to leave "from Galsen Match" as the only
+      // place the app's identity showed up at all, with "Sénégal" reading
+      // as if it were the sender. The country now lives in the body instead.
+      const articleSummary = batch.titles.length === 1 ? batch.titles[0] : `${batch.titles.length} nouveaux articles disponibles`;
+      const body = `📰 ${countryLabel(pref.country)} · ${articleSummary}`;
       try {
         await webpush.sendNotification(
           { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
           JSON.stringify({
-            title: `📰 ${countryLabel(pref.country)}`,
+            title: "Galsen Match",
             body,
             url: `/actu?country=${pref.country}`,
             image: batch.imageUrl ?? undefined,
