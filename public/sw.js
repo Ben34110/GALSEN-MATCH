@@ -59,7 +59,11 @@ self.addEventListener("fetch", (event) => {
 
 // Push payload shape sent by the poller (see app/api/cron/poll/route.ts):
 // { title, body, url, icon? } — url is where notificationclick below
-// navigates to (a match detail page, e.g. "/live/match/12345").
+// navigates to (a match detail page, e.g. "/live/match/12345"). News
+// notifications (api/cron/fetch-news/route.ts) additionally send `image` —
+// the article's cover photo, shown in the *expanded* notification (press
+// and hold on iOS, or the "big picture" style on Android) below the title/
+// body, distinct from `icon`'s small avatar-style image.
 self.addEventListener("push", (event) => {
   if (!event.data) return;
 
@@ -75,6 +79,7 @@ self.addEventListener("push", (event) => {
       body: payload.body,
       icon: payload.icon || "/icon.svg",
       badge: "/icon.svg",
+      image: payload.image || undefined,
       data: { url: payload.url || "/fantasy" },
     })
   );

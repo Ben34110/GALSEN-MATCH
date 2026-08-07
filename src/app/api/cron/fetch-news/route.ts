@@ -15,11 +15,22 @@ function countryLabel(country: string): string {
   return getAfricanNation(country)?.label ?? country;
 }
 
+interface CountryBatch {
+  titles: string[];
+  // First article in the batch that actually has one (some sources, or a
+  // Cloudflare-blocked CDN caught by rss-sync's reachability check, come
+  // through with none) — shown as the notification's expandable cover
+  // image (the `image` field the Notification API defines for exactly
+  // this: on iOS 16.4+ and Android, it's what appears when you press and
+  // hold / expand the notification, not the small icon).
+  imageUrl: string | null;
+}
+
 // Sends one push per (country, device) — not one per article — so five new
 // Sénégal articles in the same sync produce a single "5 nouveaux articles"
 // notification instead of spamming five. Same web-push/stale-subscription-
 // cleanup pattern as api/cron/poll/route.ts.
-async function notifySubscribers(insertedByCountry: Map<string, string[]>): Promise<number> {
+async function notifySubscribers(insertedByCountry: Map<string, CountryBatch>): Promise<number> {
   if (insertedByCountry.size === 0) return 0;
 
   const supabase = getSupabaseAdmin();
@@ -51,14 +62,19 @@ async function notifySubscribers(insertedByCountry: Map<string, string[]>): Prom
   await Promise.allSettled(
     prefs.map(async (pref) => {
       const sub = subsByDevice.get(pref.device_id);
-      const titles = insertedByCountry.get(pref.country);
-      if (!sub || !titles || titles.length === 0) return;
+      const batch = insertedByCountry.get(pref.country);
+      if (!sub || !batch || batch.titles.length === 0) return;
 
-      const body = titles.length === 1 ? titles[0] : `${titles.length} nouveaux articles disponibles`;
+      const body = batch.titles.length === 1 ? batch.titles[0] : `${batch.titles.length} nouveaux articles disponibles`;
       try {
         await webpush.sendNotification(
           { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
-          JSON.stringify({ title: `📰 ${countryLabel(pref.country)}`, body, url: `/actu?country=${pref.country}` })
+          JSON.stringify({
+            title: `📰 ${countryLabel(pref.country)}`,
+            body,
+            url: `/actu?country=${pref.country}`,
+            image: batch.imageUrl ?? undefined,
+          })
         );
         sent += 1;
       } catch (err) {
@@ -85,12 +101,13 @@ export async function GET(request: Request) {
   const fetched = results.reduce((sum, r) => sum + r.fetched, 0);
   const inserted = results.reduce((sum, r) => sum + r.inserted, 0);
 
-  const insertedByCountry = new Map<string, string[]>();
+  const insertedByCountry = new Map<string, CountryBatch>();
   for (const result of results) {
     for (const article of result.insertedArticles) {
-      const list = insertedByCountry.get(article.country) ?? [];
-      list.push(article.title);
-      insertedByCountry.set(article.country, list);
+      const batch = insertedByCountry.get(article.country) ?? { titles: [], imageUrl: null };
+      batch.titles.push(article.title);
+      if (!batch.imageUrl && article.imageUrl) batch.imageUrl = article.imageUrl;
+      insertedByCountry.set(article.country, batch);
     }
   }
   const notified = await notifySubscribers(insertedByCountry);

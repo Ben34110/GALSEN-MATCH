@@ -256,7 +256,7 @@ export interface SourceSyncResult {
   // this to notify devices subscribed to that country via
   // news_notification_prefs, without needing a second DB round-trip to
   // figure out what's new.
-  insertedArticles: { title: string; country: string }[];
+  insertedArticles: { title: string; country: string; imageUrl: string | null }[];
 }
 
 // Called by GET /api/cron/fetch-news. Upserts on content_url (the news
@@ -328,14 +328,18 @@ export async function syncAllNewsSources(): Promise<SourceSyncResult[]> {
       const { data, error } = await supabase
         .from("news")
         .upsert(rows, { onConflict: "content_url", ignoreDuplicates: true })
-        .select("id, title, country");
+        .select("id, title, country, image_url");
 
       results.push({
         source: source.id,
         fetched: articles.length,
         inserted: data?.length ?? 0,
         error: error?.message,
-        insertedArticles: (data ?? []).map((row) => ({ title: row.title as string, country: row.country as string })),
+        insertedArticles: (data ?? []).map((row) => ({
+          title: row.title as string,
+          country: row.country as string,
+          imageUrl: row.image_url as string | null,
+        })),
       });
     } catch (err) {
       results.push({
