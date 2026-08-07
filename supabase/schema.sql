@@ -104,6 +104,19 @@ create table if not exists news (
   created_at timestamptz not null default now()
 );
 
+-- Added after the table's first release — `create table if not exists`
+-- above is a no-op once the table already exists, so these columns need
+-- their own explicit, idempotent migration to reach an existing project.
+-- The language the source actually publishes `title`/`summary` in ("fr" or
+-- "en"). title_translated/summary_translated hold a machine translation
+-- into whichever of the two `language` ISN'T, computed once at sync time
+-- (see lib/news/rss-sync.ts's translateArticle) — the Actu page picks
+-- whichever pair matches the reader's locale (lib/news/localize.ts),
+-- falling back to the original if a translation call ever fails.
+alter table news add column if not exists language text not null default 'fr';
+alter table news add column if not exists title_translated text;
+alter table news add column if not exists summary_translated text;
+
 create index if not exists news_country_idx on news (country);
 create index if not exists news_published_at_idx on news (published_at desc);
 

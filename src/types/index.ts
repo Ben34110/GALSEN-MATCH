@@ -10,6 +10,14 @@ export interface Article {
   id: string;
   title: string;
   summary: string | null;
+  // The language `title`/`summary` are actually written in (the source's
+  // own language) — titleTranslated/summaryTranslated hold a precomputed
+  // translation into whichever of "fr"/"en" this ISN'T. See
+  // lib/news/localize.ts, which picks the right pair for the reader's
+  // locale, falling back to the original if a translation is missing.
+  language: "fr" | "en";
+  titleTranslated: string | null;
+  summaryTranslated: string | null;
   contentUrl: string;
   imageUrl: string | null;
   author: string | null;

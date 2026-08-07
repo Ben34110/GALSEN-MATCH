@@ -15,6 +15,9 @@ import { getGameweekInfo } from "@/lib/fantasy-gameweek";
 import { filledCount, isSquadComplete } from "@/lib/fantasy-lineup";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { initialsFromUsername } from "@/lib/onboarding";
+import { useLocalStorageValue } from "@/hooks/use-local-storage-value";
+import { LOCALE_STORAGE_KEY, resolveLocale } from "@/lib/locale";
+import { localizeArticle } from "@/lib/news/localize";
 import type { AfricanPlayer, Article, PlayerPosition } from "@/types";
 
 const QUICK_LINKS = [
@@ -28,21 +31,35 @@ export function ActuPageClient({ articles }: { articles: Article[] | null }) {
   const [filter, setFilter] = useState<string>("all");
   const articlesRef = useRef<HTMLDivElement>(null);
 
+  // Every article not already written in the app's current locale gets
+  // swapped for its precomputed translation (see lib/news/localize.ts) —
+  // an English source under a French locale, or vice versa, never shows
+  // raw untranslated text.
+  const locale = resolveLocale(useLocalStorageValue(LOCALE_STORAGE_KEY));
+  const localizedArticles = useMemo(
+    () => (articles ? articles.map((article) => localizeArticle(article, locale)) : null),
+    [articles, locale]
+  );
+
   // Country pills only show up for countries a currently-synced article
   // actually belongs to — with two sources live today that's "Sénégal" and
   // "Ghana", growing automatically as lib/news/sources.ts gains entries.
   const countryFilters = useMemo(() => {
-    if (!articles) return [];
-    const present = new Set(articles.map((article) => article.country));
+    if (!localizedArticles) return [];
+    const present = new Set(localizedArticles.map((article) => article.country));
     const ordered: { id: string; label: string }[] = [];
     if (present.has("general")) ordered.push({ id: "general", label: "Général" });
     for (const nation of AFRICAN_NATIONS) {
       if (present.has(nation.id)) ordered.push({ id: nation.id, label: nation.label });
     }
     return ordered;
-  }, [articles]);
+  }, [localizedArticles]);
 
-  const filtered = !articles ? [] : filter === "all" ? articles : articles.filter((article) => article.country === filter);
+  const filtered = !localizedArticles
+    ? []
+    : filter === "all"
+      ? localizedArticles
+      : localizedArticles.filter((article) => article.country === filter);
 
   const profile = useOnboardingProfile();
   const pool = useMemo(() => getAfricanPlayers(), []);

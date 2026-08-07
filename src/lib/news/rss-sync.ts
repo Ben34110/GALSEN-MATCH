@@ -141,6 +141,56 @@ function resolveFeedImage(item: RawFeedItem): string | null {
   return firstImageInHtml(item.content) ?? firstImageInHtml(item["content:encoded"]);
 }
 
+// Some sources' image CDN sits behind a Cloudflare bot challenge that
+// blocks any non-browser request (confirmed on ghanasoccernet's
+// cms.ghanasoccernet.com — 403 on a plain fetch, and a real browser's
+// cross-origin <img> request can't solve a JS challenge either, so this
+// isn't a header/user-agent problem, it's genuinely unloadable for anyone
+// hotlinking it). A HEAD check at sync time catches this generically for
+// any current or future source, instead of hardcoding a per-domain
+// exception — an unreachable image is stored as null so the card renders
+// cleanly without one, rather than a broken-image icon.
+async function verifyImageReachable(url: string): Promise<boolean> {
+  try {
+    const res = await fetch(url, { method: "HEAD", signal: AbortSignal.timeout(6000) });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+// Free, keyless translation API (mymemory.translated.net) — meant for
+// exactly this kind of light, occasional use, unlike scraping an unofficial
+// endpoint. Only ever called for articles not already stored (see
+// syncAllNewsSources), so volume stays proportional to genuinely new
+// articles per sync, not the full feed every 30 minutes.
+async function translateText(text: string, from: "fr" | "en", to: "fr" | "en"): Promise<string | null> {
+  try {
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(10_000) });
+    if (!res.ok) return null;
+    const json = (await res.json()) as { responseStatus?: number; responseData?: { translatedText?: string } };
+    const translated = json.responseData?.translatedText;
+    if (json.responseStatus !== 200 || typeof translated !== "string" || !translated.trim()) return null;
+    return translated;
+  } catch {
+    return null;
+  }
+}
+
+const OTHER_LANGUAGE: Record<"fr" | "en", "fr" | "en"> = { fr: "en", en: "fr" };
+
+async function translateArticle(
+  article: ParsedNewsItem
+): Promise<{ titleTranslated: string | null; summaryTranslated: string | null }> {
+  const target = OTHER_LANGUAGE[article.language];
+  const [titleTranslated, summaryTranslated] = await Promise.all([
+    translateText(article.title, article.language, target),
+    article.summary ? translateText(article.summary, article.language, target) : Promise.resolve(null),
+  ]);
+  return { titleTranslated, summaryTranslated };
+}
+
 export interface ParsedNewsItem {
   title: string;
   summary: string | null;
@@ -149,6 +199,7 @@ export interface ParsedNewsItem {
   author: string | null;
   sourceName: string;
   country: string;
+  language: "fr" | "en";
   publishedAt: string | null;
 }
 
@@ -161,7 +212,8 @@ export async function fetchSourceArticles(source: NewsSource): Promise<ParsedNew
     const link = item.link?.trim();
     if (!link || !item.title) continue;
 
-    const imageUrl = resolveFeedImage(item) ?? (await fetchOgImage(link));
+    let imageUrl = resolveFeedImage(item) ?? (await fetchOgImage(link));
+    if (imageUrl && !(await verifyImageReachable(imageUrl))) imageUrl = null;
 
     items.push({
       title: fixMojibake(item.title.trim()),
@@ -171,6 +223,7 @@ export async function fetchSourceArticles(source: NewsSource): Promise<ParsedNew
       author: item.creator?.trim() ? fixMojibake(item.creator.trim()) : null,
       sourceName: source.name,
       country: source.country,
+      language: source.language,
       publishedAt: item.isoDate ?? (item.pubDate ? new Date(item.pubDate).toISOString() : null),
     });
   }
@@ -189,6 +242,12 @@ export interface SourceSyncResult {
 // table's unique key — see supabase/schema.sql) with ignoreDuplicates, so
 // re-running against the same feed every 30 minutes only ever inserts the
 // articles it hasn't seen yet.
+//
+// Translation happens here, BEFORE the upsert, and only for articles whose
+// content_url isn't already in the table — translating on every sync
+// regardless would re-translate the same already-stored articles every 30
+// minutes for no reason, burning through mymemory.translated.net's free
+// daily quota for nothing new.
 export async function syncAllNewsSources(): Promise<SourceSyncResult[]> {
   const supabase = getSupabaseAdmin();
   if (!supabase) {
@@ -204,10 +263,21 @@ export async function syncAllNewsSources(): Promise<SourceSyncResult[]> {
         continue;
       }
 
-      const { data, error } = await supabase
+      const { data: existing, error: selectError } = await supabase
         .from("news")
-        .upsert(
-          articles.map((article) => ({
+        .select("content_url")
+        .in(
+          "content_url",
+          articles.map((a) => a.contentUrl)
+        );
+      if (selectError) throw new Error(selectError.message);
+      const existingUrls = new Set((existing ?? []).map((row) => row.content_url as string));
+      const newArticles = articles.filter((a) => !existingUrls.has(a.contentUrl));
+
+      const rows = await Promise.all(
+        newArticles.map(async (article) => {
+          const { titleTranslated, summaryTranslated } = await translateArticle(article);
+          return {
             title: article.title,
             summary: article.summary,
             content_url: article.contentUrl,
@@ -215,10 +285,22 @@ export async function syncAllNewsSources(): Promise<SourceSyncResult[]> {
             author: article.author,
             source_name: article.sourceName,
             country: article.country,
+            language: article.language,
+            title_translated: titleTranslated,
+            summary_translated: summaryTranslated,
             published_at: article.publishedAt,
-          })),
-          { onConflict: "content_url", ignoreDuplicates: true }
-        )
+          };
+        })
+      );
+
+      if (rows.length === 0) {
+        results.push({ source: source.id, fetched: articles.length, inserted: 0 });
+        continue;
+      }
+
+      const { data, error } = await supabase
+        .from("news")
+        .upsert(rows, { onConflict: "content_url", ignoreDuplicates: true })
         .select("id");
 
       results.push({ source: source.id, fetched: articles.length, inserted: data?.length ?? 0, error: error?.message });

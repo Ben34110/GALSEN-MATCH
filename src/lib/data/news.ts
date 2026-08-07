@@ -13,7 +13,9 @@ export async function getArticles(): Promise<Article[] | null> {
 
   const { data, error } = await supabase
     .from("news")
-    .select("id, title, summary, content_url, image_url, author, source_name, country, published_at")
+    .select(
+      "id, title, summary, language, title_translated, summary_translated, content_url, image_url, author, source_name, country, published_at"
+    )
     .order("published_at", { ascending: false, nullsFirst: false })
     .limit(NEWS_LIMIT);
   if (error || !data) return null;
@@ -23,6 +25,9 @@ export async function getArticles(): Promise<Article[] | null> {
       id: row.id,
       title: row.title,
       summary: row.summary,
+      language: row.language === "en" ? "en" : "fr",
+      titleTranslated: row.title_translated,
+      summaryTranslated: row.summary_translated,
       contentUrl: row.content_url,
       imageUrl: row.image_url,
       author: row.author,

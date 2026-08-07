@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { useLocalStorageValue, writeLocalStorageValue } from "@/hooks/use-local-storage-value";
+import { LOCALE_STORAGE_KEY, resolveLocale } from "@/lib/locale";
 
 const LOCALES = [
   { id: "fr", label: "Français" },
@@ -9,21 +10,21 @@ const LOCALES = [
   { id: "ar", label: "العربية" },
 ] as const;
 
-const STORAGE_KEY = "galsen-match:locale";
-
 // Sélection persistée localement — le rendu multilingue effectif (next-intl,
 // RTL pour l'arabe) arrive en phase 5 de la roadmap ; ce contrôle prépare le
-// terrain côté UI et côté préférence utilisateur.
+// terrain côté UI et côté préférence utilisateur. Les articles Actualités
+// (lib/news/localize.ts) sont la première brique à réagir à ce réglage —
+// traduits fr<->en à la volée depuis leur langue source.
 export function LocalePicker() {
-  const saved = useLocalStorageValue(STORAGE_KEY);
-  const locale = saved === "en" || saved === "ar" ? saved : "fr";
+  const saved = useLocalStorageValue(LOCALE_STORAGE_KEY);
+  const locale = resolveLocale(saved);
 
   return (
     <div className="flex gap-2">
       {LOCALES.map((item) => (
         <button
           key={item.id}
-          onClick={() => writeLocalStorageValue(STORAGE_KEY, item.id)}
+          onClick={() => writeLocalStorageValue(LOCALE_STORAGE_KEY, item.id)}
           aria-pressed={locale === item.id}
           className={cn(
             "min-h-11 flex-1 rounded-xl border px-3 py-2.5 text-sm font-semibold",
