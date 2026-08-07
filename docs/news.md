@@ -33,7 +33,7 @@ Same approach as `/api/cron/poll` (see `docs/notifications.md`) — Vercel's fre
 3. Upserts every parsed article into the `news` table, keyed on `content_url` with `ignoreDuplicates`, so a re-run only ever inserts genuinely new articles.
 4. Returns a per-source breakdown: `{ ok, fetched, inserted, sources: [{ source, fetched, inserted, error? }] }`.
 
-The Actu page (`src/app/(app)/actu/page.tsx`) reads the table via `getArticles()` (`src/lib/data/news.ts`) with `revalidate = 1800`, matching the sync cadence — a fresh article shows up within 30 minutes without needing a redeploy. Country filter pills are generated dynamically from whatever countries are actually present in the fetched articles (see `ActuPageClient`), so they grow automatically as sources are added.
+The Actu page (`src/app/(app)/actu/page.tsx`) reads the table via `getArticles()` (`src/lib/data/news.ts`) on every request (`force-dynamic`) — a newly-synced article shows up on the very next page load, no redeploy or cache window to wait out. Country filter pills are generated dynamically from whatever countries are actually present in the fetched articles (see `ActuPageClient`), so they grow automatically as sources are added.
 
 ### Adding a new source
 

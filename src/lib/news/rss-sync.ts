@@ -31,6 +31,46 @@ const parser: Parser<object, RawFeedItem> = new Parser({
   },
 });
 
+// rss-parser's own URL fetching mis-detects charset for feeds whose XML
+// prolog omits an explicit `encoding="UTF-8"` (e.g. GHANAsoccernet's
+// `<?xml version="1.0"?>`, vs. wiwsport's `<?xml version="1.0"
+// encoding="UTF-8"?>`) — it silently fell back to a single-byte encoding,
+// producing mojibake like "BjÃ¶rkegren" instead of "Björkegren" for every
+// non-ASCII character. Fetching and decoding the bytes ourselves, using the
+// HTTP response's real Content-Type charset (which every RSS server sends
+// correctly, prolog or not), sidesteps that heuristic entirely.
+async function fetchFeedXml(url: string): Promise<string> {
+  const res = await fetch(url, { signal: AbortSignal.timeout(15_000) });
+  if (!res.ok) throw new Error(`Feed request failed: ${res.status}`);
+  const contentType = res.headers.get("content-type") ?? "";
+  const charset = contentType.match(/charset=([^;]+)/i)?.[1]?.trim().toLowerCase() || "utf-8";
+  const buffer = await res.arrayBuffer();
+  try {
+    return new TextDecoder(charset).decode(buffer);
+  } catch {
+    return new TextDecoder("utf-8").decode(buffer);
+  }
+}
+
+// Some sources' own backends double-encode non-ASCII text before it ever
+// reaches us (confirmed on ghanasoccernet: its feed serves the literal
+// bytes for "BjÃ¶rkegren" on the wire, already-mojibake'd — a bug in their
+// pipeline, not a decode issue on ours, since fetching the raw bytes and
+// decoding as UTF-8 still yields the corrupted text). Reinterpreting the
+// string as Latin-1 bytes and re-decoding as UTF-8 reverses exactly that
+// pattern. Guarded so it's a no-op on already-correct text: re-encoding a
+// genuine accented character (e.g. "Krépin") as Latin-1 then as UTF-8
+// produces an invalid byte sequence (U+FFFD), which is the signal to leave
+// the original string alone.
+function fixMojibake(text: string): string {
+  try {
+    const reversed = Buffer.from(text, "latin1").toString("utf8");
+    return reversed.includes("�") ? text : reversed;
+  } catch {
+    return text;
+  }
+}
+
 const SUMMARY_MAX_LENGTH = 220;
 
 function truncate(text: string, max: number): string {
@@ -85,7 +125,8 @@ export interface ParsedNewsItem {
 }
 
 export async function fetchSourceArticles(source: NewsSource): Promise<ParsedNewsItem[]> {
-  const feed = await parser.parseURL(source.feedUrl);
+  const xml = await fetchFeedXml(source.feedUrl);
+  const feed = await parser.parseString(xml);
   const items: ParsedNewsItem[] = [];
 
   for (const item of feed.items) {
@@ -95,11 +136,11 @@ export async function fetchSourceArticles(source: NewsSource): Promise<ParsedNew
     const imageUrl = resolveFeedImage(item) ?? (await fetchOgImage(link));
 
     items.push({
-      title: item.title.trim(),
-      summary: item.contentSnippet ? truncate(item.contentSnippet, SUMMARY_MAX_LENGTH) : null,
+      title: fixMojibake(item.title.trim()),
+      summary: item.contentSnippet ? fixMojibake(truncate(item.contentSnippet, SUMMARY_MAX_LENGTH)) : null,
       contentUrl: link,
       imageUrl,
-      author: item.creator?.trim() || null,
+      author: item.creator?.trim() ? fixMojibake(item.creator.trim()) : null,
       sourceName: source.name,
       country: source.country,
       publishedAt: item.isoDate ?? (item.pubDate ? new Date(item.pubDate).toISOString() : null),
