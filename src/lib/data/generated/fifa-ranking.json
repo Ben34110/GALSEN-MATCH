@@ -1,542 +1,545 @@
-[
-  {
-    "africanRank": 1,
-    "worldRank": 6,
-    "country": "Morocco",
-    "points": 1803.99,
-    "previousPoints": 1755.1,
-    "delta": 48.89,
-    "movement": "up",
-    "placesMoved": 1
-  },
-  {
-    "africanRank": 2,
-    "worldRank": 18,
-    "country": "Senegal",
-    "points": 1653.43,
-    "previousPoints": 1684.07,
-    "delta": -30.64,
-    "movement": "down",
-    "placesMoved": 3
-  },
-  {
-    "africanRank": 3,
-    "worldRank": 24,
-    "country": "Egypt",
-    "points": 1597.04,
-    "previousPoints": 1562.37,
-    "delta": 34.68,
-    "movement": "up",
-    "placesMoved": 5
-  },
-  {
-    "africanRank": 4,
-    "worldRank": 26,
-    "country": "Nigeria",
-    "points": 1585.02,
-    "previousPoints": 1585.02,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 5,
-    "worldRank": 29,
-    "country": "Algeria",
-    "points": 1576.8,
-    "previousPoints": 1571.03,
-    "delta": 5.77,
-    "movement": "down",
-    "placesMoved": 1
-  },
-  {
-    "africanRank": 6,
-    "worldRank": 31,
-    "country": "Ivory Coast",
-    "points": 1565.47,
-    "previousPoints": 1540.87,
-    "delta": 24.6,
-    "movement": "up",
-    "placesMoved": 2
-  },
-  {
-    "africanRank": 7,
-    "worldRank": 41,
-    "country": "DR Congo",
-    "points": 1495.48,
-    "previousPoints": 1474.43,
-    "delta": 21.05,
-    "movement": "up",
-    "placesMoved": 5
-  },
-  {
-    "africanRank": 8,
-    "worldRank": 43,
-    "country": "Cameroon",
-    "points": 1481.24,
-    "previousPoints": 1481.24,
-    "delta": 0,
-    "movement": "up",
-    "placesMoved": 1
-  },
-  {
-    "africanRank": 9,
-    "worldRank": 53,
-    "country": "Mali",
-    "points": 1455.59,
-    "previousPoints": 1455.59,
-    "delta": 0,
-    "movement": "up",
-    "placesMoved": 2
-  },
-  {
-    "africanRank": 10,
-    "worldRank": 54,
-    "country": "South Africa",
-    "points": 1451.24,
-    "previousPoints": 1428.38,
-    "delta": 22.86,
-    "movement": "up",
-    "placesMoved": 6
-  },
-  {
-    "africanRank": 11,
-    "worldRank": 57,
-    "country": "Tunisia",
-    "points": 1426.58,
-    "previousPoints": 1476.41,
-    "delta": -49.82,
-    "movement": "down",
-    "placesMoved": 12
-  },
-  {
-    "africanRank": 12,
-    "worldRank": 62,
-    "country": "Burkina Faso",
-    "points": 1406.99,
-    "previousPoints": 1406.99,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 13,
-    "worldRank": 64,
-    "country": "Cape Verde",
-    "points": 1402.97,
-    "previousPoints": 1371.11,
-    "delta": 31.86,
-    "movement": "up",
-    "placesMoved": 3
-  },
-  {
-    "africanRank": 14,
-    "worldRank": 65,
-    "country": "Ghana",
-    "points": 1387,
-    "previousPoints": 1346.88,
-    "delta": 40.12,
-    "movement": "up",
-    "placesMoved": 8
-  },
-  {
-    "africanRank": 15,
-    "worldRank": 81,
-    "country": "Guinea",
-    "points": 1295.6,
-    "previousPoints": 1295.6,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 16,
-    "worldRank": 84,
-    "country": "Gabon",
-    "points": 1272.51,
-    "previousPoints": 1272.51,
-    "delta": 0,
-    "movement": "up",
-    "placesMoved": 2
-  },
-  {
-    "africanRank": 17,
-    "worldRank": 87,
-    "country": "Angola",
-    "points": 1265.58,
-    "previousPoints": 1265.58,
-    "delta": 0,
-    "movement": "up",
-    "placesMoved": 1
-  },
-  {
-    "africanRank": 18,
-    "worldRank": 89,
-    "country": "Uganda",
-    "points": 1264.09,
-    "previousPoints": 1264.09,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 19,
-    "worldRank": 90,
-    "country": "Zambia",
-    "points": 1255.82,
-    "previousPoints": 1255.82,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 20,
-    "worldRank": 93,
-    "country": "Benin",
-    "points": 1252.17,
-    "previousPoints": 1252.17,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 21,
-    "worldRank": 103,
-    "country": "Mozambique",
-    "points": 1218.62,
-    "previousPoints": 1218.62,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 22,
-    "worldRank": 104,
-    "country": "Madagascar",
-    "points": 1202.69,
-    "previousPoints": 1202.69,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 23,
-    "worldRank": 105,
-    "country": "Equatorial Guinea",
-    "points": 1195.2,
-    "previousPoints": 1195.2,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 24,
-    "worldRank": 108,
-    "country": "Comoros",
-    "points": 1187.91,
-    "previousPoints": 1187.91,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 25,
-    "worldRank": 109,
-    "country": "Kenya",
-    "points": 1185.08,
-    "previousPoints": 1185.08,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 26,
-    "worldRank": 110,
-    "country": "Libya",
-    "points": 1182.08,
-    "previousPoints": 1182.08,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 27,
-    "worldRank": 112,
-    "country": "Tanzania",
-    "points": 1180.27,
-    "previousPoints": 1180.27,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 28,
-    "worldRank": 113,
-    "country": "Mauritania",
-    "points": 1176.68,
-    "previousPoints": 1176.68,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 29,
-    "worldRank": 114,
-    "country": "Niger",
-    "points": 1175.33,
-    "previousPoints": 1175.33,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 30,
-    "worldRank": 116,
-    "country": "Gambia",
-    "points": 1159.64,
-    "previousPoints": 1159.64,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 31,
-    "worldRank": 117,
-    "country": "Sudan",
-    "points": 1157.22,
-    "previousPoints": 1157.22,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 32,
-    "worldRank": 119,
-    "country": "Togo",
-    "points": 1152.76,
-    "previousPoints": 1152.76,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 33,
-    "worldRank": 121,
-    "country": "Namibia",
-    "points": 1148.84,
-    "previousPoints": 1148.84,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 34,
-    "worldRank": 122,
-    "country": "Sierra Leone",
-    "points": 1147.56,
-    "previousPoints": 1147.56,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 35,
-    "worldRank": 128,
-    "country": "Rwanda",
-    "points": 1126.62,
-    "previousPoints": 1126.62,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 36,
-    "worldRank": 129,
-    "country": "Malawi",
-    "points": 1122.05,
-    "previousPoints": 1122.05,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 37,
-    "worldRank": 130,
-    "country": "Zimbabwe",
-    "points": 1119.78,
-    "previousPoints": 1119.78,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 38,
-    "worldRank": 132,
-    "country": "Guinea-Bissau",
-    "points": 1108.38,
-    "previousPoints": 1108.38,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 39,
-    "worldRank": 134,
-    "country": "Congo",
-    "points": 1105.96,
-    "previousPoints": 1105.96,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 40,
-    "worldRank": 139,
-    "country": "Central African Republic",
-    "points": 1080.82,
-    "previousPoints": 1080.82,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 41,
-    "worldRank": 140,
-    "country": "Liberia",
-    "points": 1080.44,
-    "previousPoints": 1080.44,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 42,
-    "worldRank": 142,
-    "country": "Burundi",
-    "points": 1078.01,
-    "previousPoints": 1078.01,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 43,
-    "worldRank": 143,
-    "country": "Ethiopia",
-    "points": 1077.52,
-    "previousPoints": 1077.52,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 44,
-    "worldRank": 146,
-    "country": "Lesotho",
-    "points": 1064.29,
-    "previousPoints": 1064.29,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 45,
-    "worldRank": 147,
-    "country": "Botswana",
-    "points": 1063.63,
-    "previousPoints": 1063.63,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 46,
-    "worldRank": 165,
-    "country": "Eswatini",
-    "points": 979.01,
-    "previousPoints": 979.01,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 47,
-    "worldRank": 169,
-    "country": "South Sudan",
-    "points": 970.94,
-    "previousPoints": 970.94,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 48,
-    "worldRank": 178,
-    "country": "Mauritius",
-    "points": 911.49,
-    "previousPoints": 911.49,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 49,
-    "worldRank": 183,
-    "country": "Chad",
-    "points": 896.85,
-    "previousPoints": 896.85,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 50,
-    "worldRank": 184,
-    "country": "Eritrea",
-    "points": 887.06,
-    "previousPoints": 887.06,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 51,
-    "worldRank": 195,
-    "country": "São Tomé and Príncipe",
-    "points": 855.44,
-    "previousPoints": 855.44,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 52,
-    "worldRank": 196,
-    "country": "Djibouti",
-    "points": 853.58,
-    "previousPoints": 853.58,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 53,
-    "worldRank": 199,
-    "country": "Somalia",
-    "points": 839.17,
-    "previousPoints": 839.17,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  },
-  {
-    "africanRank": 54,
-    "worldRank": 204,
-    "country": "Seychelles",
-    "points": 804.16,
-    "previousPoints": 804.16,
-    "delta": 0,
-    "movement": "same",
-    "placesMoved": 0
-  }
-]
+{
+  "rankingDate": "2026-07-20",
+  "rows": [
+    {
+      "africanRank": 1,
+      "worldRank": 6,
+      "country": "Morocco",
+      "points": 1803.99,
+      "previousPoints": 1755.1,
+      "delta": 48.89,
+      "movement": "up",
+      "placesMoved": 1
+    },
+    {
+      "africanRank": 2,
+      "worldRank": 18,
+      "country": "Senegal",
+      "points": 1653.43,
+      "previousPoints": 1684.07,
+      "delta": -30.64,
+      "movement": "down",
+      "placesMoved": 3
+    },
+    {
+      "africanRank": 3,
+      "worldRank": 24,
+      "country": "Egypt",
+      "points": 1597.04,
+      "previousPoints": 1562.37,
+      "delta": 34.68,
+      "movement": "up",
+      "placesMoved": 5
+    },
+    {
+      "africanRank": 4,
+      "worldRank": 26,
+      "country": "Nigeria",
+      "points": 1585.02,
+      "previousPoints": 1585.02,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 5,
+      "worldRank": 29,
+      "country": "Algeria",
+      "points": 1576.8,
+      "previousPoints": 1571.03,
+      "delta": 5.77,
+      "movement": "down",
+      "placesMoved": 1
+    },
+    {
+      "africanRank": 6,
+      "worldRank": 31,
+      "country": "Ivory Coast",
+      "points": 1565.47,
+      "previousPoints": 1540.87,
+      "delta": 24.6,
+      "movement": "up",
+      "placesMoved": 2
+    },
+    {
+      "africanRank": 7,
+      "worldRank": 41,
+      "country": "DR Congo",
+      "points": 1495.48,
+      "previousPoints": 1474.43,
+      "delta": 21.05,
+      "movement": "up",
+      "placesMoved": 5
+    },
+    {
+      "africanRank": 8,
+      "worldRank": 43,
+      "country": "Cameroon",
+      "points": 1481.24,
+      "previousPoints": 1481.24,
+      "delta": 0,
+      "movement": "up",
+      "placesMoved": 1
+    },
+    {
+      "africanRank": 9,
+      "worldRank": 53,
+      "country": "Mali",
+      "points": 1455.59,
+      "previousPoints": 1455.59,
+      "delta": 0,
+      "movement": "up",
+      "placesMoved": 2
+    },
+    {
+      "africanRank": 10,
+      "worldRank": 54,
+      "country": "South Africa",
+      "points": 1451.24,
+      "previousPoints": 1428.38,
+      "delta": 22.86,
+      "movement": "up",
+      "placesMoved": 6
+    },
+    {
+      "africanRank": 11,
+      "worldRank": 57,
+      "country": "Tunisia",
+      "points": 1426.58,
+      "previousPoints": 1476.41,
+      "delta": -49.82,
+      "movement": "down",
+      "placesMoved": 12
+    },
+    {
+      "africanRank": 12,
+      "worldRank": 62,
+      "country": "Burkina Faso",
+      "points": 1406.99,
+      "previousPoints": 1406.99,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 13,
+      "worldRank": 64,
+      "country": "Cape Verde",
+      "points": 1402.97,
+      "previousPoints": 1371.11,
+      "delta": 31.86,
+      "movement": "up",
+      "placesMoved": 3
+    },
+    {
+      "africanRank": 14,
+      "worldRank": 65,
+      "country": "Ghana",
+      "points": 1387,
+      "previousPoints": 1346.88,
+      "delta": 40.12,
+      "movement": "up",
+      "placesMoved": 8
+    },
+    {
+      "africanRank": 15,
+      "worldRank": 81,
+      "country": "Guinea",
+      "points": 1295.6,
+      "previousPoints": 1295.6,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 16,
+      "worldRank": 84,
+      "country": "Gabon",
+      "points": 1272.51,
+      "previousPoints": 1272.51,
+      "delta": 0,
+      "movement": "up",
+      "placesMoved": 2
+    },
+    {
+      "africanRank": 17,
+      "worldRank": 87,
+      "country": "Angola",
+      "points": 1265.58,
+      "previousPoints": 1265.58,
+      "delta": 0,
+      "movement": "up",
+      "placesMoved": 1
+    },
+    {
+      "africanRank": 18,
+      "worldRank": 89,
+      "country": "Uganda",
+      "points": 1264.09,
+      "previousPoints": 1264.09,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 19,
+      "worldRank": 90,
+      "country": "Zambia",
+      "points": 1255.82,
+      "previousPoints": 1255.82,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 20,
+      "worldRank": 93,
+      "country": "Benin",
+      "points": 1252.17,
+      "previousPoints": 1252.17,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 21,
+      "worldRank": 103,
+      "country": "Mozambique",
+      "points": 1218.62,
+      "previousPoints": 1218.62,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 22,
+      "worldRank": 104,
+      "country": "Madagascar",
+      "points": 1202.69,
+      "previousPoints": 1202.69,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 23,
+      "worldRank": 105,
+      "country": "Equatorial Guinea",
+      "points": 1195.2,
+      "previousPoints": 1195.2,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 24,
+      "worldRank": 108,
+      "country": "Comoros",
+      "points": 1187.91,
+      "previousPoints": 1187.91,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 25,
+      "worldRank": 109,
+      "country": "Kenya",
+      "points": 1185.08,
+      "previousPoints": 1185.08,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 26,
+      "worldRank": 110,
+      "country": "Libya",
+      "points": 1182.08,
+      "previousPoints": 1182.08,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 27,
+      "worldRank": 112,
+      "country": "Tanzania",
+      "points": 1180.27,
+      "previousPoints": 1180.27,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 28,
+      "worldRank": 113,
+      "country": "Mauritania",
+      "points": 1176.68,
+      "previousPoints": 1176.68,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 29,
+      "worldRank": 114,
+      "country": "Niger",
+      "points": 1175.33,
+      "previousPoints": 1175.33,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 30,
+      "worldRank": 116,
+      "country": "Gambia",
+      "points": 1159.64,
+      "previousPoints": 1159.64,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 31,
+      "worldRank": 117,
+      "country": "Sudan",
+      "points": 1157.22,
+      "previousPoints": 1157.22,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 32,
+      "worldRank": 119,
+      "country": "Togo",
+      "points": 1152.76,
+      "previousPoints": 1152.76,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 33,
+      "worldRank": 121,
+      "country": "Namibia",
+      "points": 1148.84,
+      "previousPoints": 1148.84,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 34,
+      "worldRank": 122,
+      "country": "Sierra Leone",
+      "points": 1147.56,
+      "previousPoints": 1147.56,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 35,
+      "worldRank": 128,
+      "country": "Rwanda",
+      "points": 1126.62,
+      "previousPoints": 1126.62,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 36,
+      "worldRank": 129,
+      "country": "Malawi",
+      "points": 1122.05,
+      "previousPoints": 1122.05,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 37,
+      "worldRank": 130,
+      "country": "Zimbabwe",
+      "points": 1119.78,
+      "previousPoints": 1119.78,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 38,
+      "worldRank": 132,
+      "country": "Guinea-Bissau",
+      "points": 1108.38,
+      "previousPoints": 1108.38,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 39,
+      "worldRank": 134,
+      "country": "Congo",
+      "points": 1105.96,
+      "previousPoints": 1105.96,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 40,
+      "worldRank": 139,
+      "country": "Central African Republic",
+      "points": 1080.82,
+      "previousPoints": 1080.82,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 41,
+      "worldRank": 140,
+      "country": "Liberia",
+      "points": 1080.44,
+      "previousPoints": 1080.44,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 42,
+      "worldRank": 142,
+      "country": "Burundi",
+      "points": 1078.01,
+      "previousPoints": 1078.01,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 43,
+      "worldRank": 143,
+      "country": "Ethiopia",
+      "points": 1077.52,
+      "previousPoints": 1077.52,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 44,
+      "worldRank": 146,
+      "country": "Lesotho",
+      "points": 1064.29,
+      "previousPoints": 1064.29,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 45,
+      "worldRank": 147,
+      "country": "Botswana",
+      "points": 1063.63,
+      "previousPoints": 1063.63,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 46,
+      "worldRank": 165,
+      "country": "Eswatini",
+      "points": 979.01,
+      "previousPoints": 979.01,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 47,
+      "worldRank": 169,
+      "country": "South Sudan",
+      "points": 970.94,
+      "previousPoints": 970.94,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 48,
+      "worldRank": 178,
+      "country": "Mauritius",
+      "points": 911.49,
+      "previousPoints": 911.49,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 49,
+      "worldRank": 183,
+      "country": "Chad",
+      "points": 896.85,
+      "previousPoints": 896.85,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 50,
+      "worldRank": 184,
+      "country": "Eritrea",
+      "points": 887.06,
+      "previousPoints": 887.06,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 51,
+      "worldRank": 195,
+      "country": "São Tomé and Príncipe",
+      "points": 855.44,
+      "previousPoints": 855.44,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 52,
+      "worldRank": 196,
+      "country": "Djibouti",
+      "points": 853.58,
+      "previousPoints": 853.58,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 53,
+      "worldRank": 199,
+      "country": "Somalia",
+      "points": 839.17,
+      "previousPoints": 839.17,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    },
+    {
+      "africanRank": 54,
+      "worldRank": 204,
+      "country": "Seychelles",
+      "points": 804.16,
+      "previousPoints": 804.16,
+      "delta": 0,
+      "movement": "same",
+      "placesMoved": 0
+    }
+  ]
+}

@@ -23,6 +23,38 @@ interface QuizSessionViewProps {
   onRestart: () => void;
 }
 
+interface ShuffledQuestion {
+  id: string;
+  question: string;
+  choices: [string, string, string];
+  correctIndex: 0 | 1 | 2;
+}
+
+// The question bank's correctIndex is heavily skewed toward 0 (however
+// each question happened to be authored), so rendering `choices` in their
+// stored order made the first option the giveaway most of the time.
+// Shuffled once per question here instead of touching the data — Math.random
+// is impure, so this (like pickAndShuffle below) must only ever be called
+// from an event handler or a useState lazy initializer, never during render.
+function shuffleChoices(q: QuizQuestion): ShuffledQuestion {
+  const order = [0, 1, 2];
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+  return {
+    id: q.id,
+    question: q.question,
+    choices: order.map((i) => q.choices[i]) as [string, string, string],
+    correctIndex: order.indexOf(q.correctIndex) as 0 | 1 | 2,
+  };
+}
+
+function pickAndShuffle(pool: QuizQuestion[], recentIds: string[]): ShuffledQuestion | null {
+  const next = pickNextQuestion(pool, recentIds);
+  return next ? shuffleChoices(next) : null;
+}
+
 // One 60-second sprint. Pure client state throughout the run — no
 // precedent anywhere in this app for persisting mid-session progress
 // (fantasy only syncs on discrete commits, not intermediate state), and a
@@ -53,7 +85,7 @@ export function QuizSessionView({ theme, onClose, onRestart }: QuizSessionViewPr
 
   const [score, setScore] = useState(0);
   const [recentIds, setRecentIds] = useState<string[]>([]);
-  const [current, setCurrent] = useState<QuizQuestion | null>(() => pickNextQuestion(pool, []));
+  const [current, setCurrent] = useState<ShuffledQuestion | null>(() => pickAndShuffle(pool, []));
   const [selected, setSelected] = useState<number | null>(null);
   const [improved, setImproved] = useState(false);
   const hasSubmittedScore = useRef(false);
@@ -84,7 +116,7 @@ export function QuizSessionView({ theme, onClose, onRestart }: QuizSessionViewPr
       const nextRecent = [...recentIds, current.id];
       setRecentIds(nextRecent);
       setSelected(null);
-      setCurrent(pickNextQuestion(pool, nextRecent));
+      setCurrent(pickAndShuffle(pool, nextRecent));
     }, ANSWER_REVEAL_MS);
   }
 

@@ -99,6 +99,33 @@ async function main() {
   }
   const html = await res.text();
 
+  // futbor's sidebar states the ranking's effective date in English even
+  // on the French page (e.g. "July 20, 2026") — captured so the app can
+  // tell readers which month's ranking they're looking at, since FIFA only
+  // republishes this roughly monthly and the data can lag by a few weeks.
+  // Parsed by hand rather than `new Date(...).toISOString()`: that route
+  // parses "July 20, 2026" as LOCAL midnight, then converts to UTC — which
+  // silently rolls the date back a day whenever the sync runs in a
+  // timezone ahead of UTC (confirmed: CEST turned "July 20" into
+  // "2026-07-19"). This is a plain calendar date, not an instant, so it
+  // must never pass through a timezone conversion at all.
+  const MONTHS = [
+    "january", "february", "march", "april", "may", "june",
+    "july", "august", "september", "october", "november", "december",
+  ];
+  const dateMatch = html.match(/Date du classement<\/span>\s*<strong>([^<]+)<\/strong>/);
+  if (!dateMatch) {
+    console.error("Could not find the ranking's effective date — page structure may have changed.");
+    process.exit(1);
+  }
+  const parts = dateMatch[1].trim().match(/^([A-Za-z]+)\s+(\d{1,2}),\s+(\d{4})$/);
+  const monthIndex = parts ? MONTHS.indexOf(parts[1].toLowerCase()) : -1;
+  if (!parts || monthIndex === -1) {
+    console.error(`Could not parse the ranking date "${dateMatch[1]}" — page structure may have changed.`);
+    process.exit(1);
+  }
+  const rankingDate = `${parts[3]}-${String(monthIndex + 1).padStart(2, "0")}-${parts[2].padStart(2, "0")}`;
+
   const tbodyStart = html.indexOf("<tbody");
   const tbodyEnd = html.indexOf("</tbody>", tbodyStart);
   if (tbodyStart === -1 || tbodyEnd === -1) {
@@ -127,13 +154,13 @@ async function main() {
   // African rank is simply the 1-based row position.
   const rows = parsed.map((row, index) => ({ africanRank: index + 1, ...row }));
 
-  console.log(`Parsed ${rows.length} African nations from the FIFA World Ranking.`);
+  console.log(`Parsed ${rows.length} African nations from the FIFA World Ranking (${rankingDate}).`);
   console.log(`#1: ${rows[0].country} (world rank ${rows[0].worldRank}, ${rows[0].points} pts)`);
 
   const outDir = path.join(ROOT, "src/lib/data/generated");
   mkdirSync(outDir, { recursive: true });
   const outPath = path.join(outDir, "fifa-ranking.json");
-  writeFileSync(outPath, JSON.stringify(rows, null, 2));
+  writeFileSync(outPath, JSON.stringify({ rankingDate, rows }, null, 2));
   console.log(`Wrote ${rows.length} rows to ${path.relative(ROOT, outPath)}`);
 }
 

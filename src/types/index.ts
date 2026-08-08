@@ -128,6 +128,15 @@ export interface FifaRankingRow {
   placesMoved: number;
 }
 
+// The full scrape: rows plus the ranking's own effective date (FIFA
+// republishes roughly monthly — this is how the app tells readers which
+// month's ranking they're looking at, since the data can lag by a few
+// weeks between real updates).
+export interface FifaRankingSnapshot {
+  rankingDate: string; // ISO date, e.g. "2026-07-20"
+  rows: FifaRankingRow[];
+}
+
 // A recent African player transfer, derived from API-Football's
 // /transfers?player={id} data already fetched by
 // scripts/sync-african-players.mjs (fetchLatestTransferRecord) — reuses
