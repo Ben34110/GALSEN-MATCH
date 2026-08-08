@@ -201,6 +201,11 @@ export interface ChatRoom {
 export interface ChatMessage {
   id: string;
   roomId: string;
+  // The sender's device_id — resolves back to their user_profiles row when
+  // a message is clicked (see app/actions/chat-profile.ts), and is how the
+  // UI tells "your own message" apart from everyone else's now that real
+  // devices exist (replaces the old mock's authorName === "Toi" hack).
+  deviceId: string;
   authorName: string;
   content: string;
   createdAt: string; // ISO date

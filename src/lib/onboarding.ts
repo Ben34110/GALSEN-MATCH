@@ -12,6 +12,17 @@ export interface OnboardingProfile {
   playerIds: string[]; // exactly 3 once onboarded; can transiently be 0-2 while editing in Profil
   username: string;
   favoriteClubId: number | null; // real API-Football team id (lib/data/team-directory.ts), editable from Profil
+  tiktokHandle: string | null; // no "@", editable from Profil — shown on the chat profile sheet (components/chat/chat-profile-sheet.tsx)
+}
+
+// Accepts a bare handle ("tonpseudo"), one with a leading "@", or a pasted
+// full profile URL ("https://www.tiktok.com/@tonpseudo") and normalizes all
+// three to the bare handle stored on the profile — the link is rebuilt at
+// display time (see chat-profile-sheet.tsx), so only the handle itself is
+// worth keeping around.
+export function normalizeTiktokHandle(input: string): string | null {
+  const trimmed = input.trim().replace(/^https?:\/\/(www\.)?tiktok\.com\//i, "").replace(/^@/, "");
+  return trimmed || null;
 }
 
 // Maps a country's theme/onboarding id to the chat rooms' ISO country code
@@ -68,6 +79,7 @@ export function parseOnboardingProfile(raw: string | null): OnboardingProfile | 
       // Added after the initial onboarding shipped — older saved profiles
       // simply won't have it yet, default to null rather than invalidating them.
       favoriteClubId: typeof parsed.favoriteClubId === "number" ? parsed.favoriteClubId : null,
+      tiktokHandle: typeof parsed.tiktokHandle === "string" ? parsed.tiktokHandle : null,
     };
   } catch {
     return null;
@@ -80,7 +92,7 @@ export function parseOnboardingProfile(raw: string | null): OnboardingProfile | 
 // dashboard greeting, chat room order, nav theming etc. all update at once.
 export function updateOnboardingProfile(
   current: OnboardingProfile,
-  updates: Partial<Pick<OnboardingProfile, "countryId" | "playerIds" | "username" | "favoriteClubId">>
+  updates: Partial<Pick<OnboardingProfile, "countryId" | "playerIds" | "username" | "favoriteClubId" | "tiktokHandle">>
 ): void {
   const next: OnboardingProfile = { ...current, ...updates };
   writeLocalStorageValue(ONBOARDING_STORAGE_KEY, JSON.stringify(next));

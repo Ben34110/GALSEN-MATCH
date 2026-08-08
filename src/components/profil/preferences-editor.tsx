@@ -10,7 +10,7 @@ import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { useFavoriteTeamIds, addFavoriteTeam, removeFavoriteTeam } from "@/hooks/use-favorite-teams";
 import { ensurePushSubscription } from "@/hooks/use-push-subscription";
 import { getOrCreateDeviceId } from "@/lib/device-id";
-import { COUNTRY_LOGOS, updateOnboardingProfile } from "@/lib/onboarding";
+import { COUNTRY_LOGOS, normalizeTiktokHandle, updateOnboardingProfile } from "@/lib/onboarding";
 import { getAfricanPlayers, searchAfricanPlayers } from "@/lib/data/african-players";
 import { getTeamDirectory, searchTeams } from "@/lib/data/team-directory";
 import { NotificationPrefsPanel, type NotificationOption } from "@/components/notifications/notification-prefs-panel";
@@ -429,6 +429,23 @@ export function PreferencesEditor() {
             )}
           </div>
         )}
+      </section>
+
+      <section>
+        <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">TikTok</h2>
+        <p className="mb-3 text-sm leading-relaxed text-muted">
+          Affiché sur ton profil dans le chat — les autres pourront y accéder en un clic.
+        </p>
+        <input
+          key={profile.tiktokHandle ?? ""}
+          defaultValue={profile.tiktokHandle ?? ""}
+          onBlur={(event) => updateOnboardingProfile(profile, { tiktokHandle: normalizeTiktokHandle(event.target.value) })}
+          placeholder="@tonpseudo"
+          className={cn(
+            "min-h-11 w-full rounded-xl border border-border bg-surface px-3 text-base text-foreground",
+            "placeholder:text-muted focus:border-accent focus:outline-none"
+          )}
+        />
       </section>
     </div>
   );

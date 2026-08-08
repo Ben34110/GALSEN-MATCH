@@ -211,6 +211,41 @@ create table if not exists mercato_transfers (
 );
 create index if not exists mercato_transfers_date_idx on mercato_transfers (transfer_date desc);
 
+-- One row per chat message. room_id = ChatRoom.id (lowercase ISO code or
+-- "general" — see lib/mock/chat.ts; rooms stay a static/derived list, no
+-- chat_rooms table needed since nothing about a room is user-editable).
+-- author_name is a snapshot at send time (same denormalization as
+-- fantasy_squads/quiz_scores/ballon_dor_predictions' username column).
+-- device_id lets a click on a message resolve back to that sender's
+-- user_profiles row. Capped at 100 most recent rows per room_id, pruned in
+-- TypeScript right after each insert (see app/actions/chat.ts) — not a
+-- trigger, no stored procedures exist anywhere in this schema.
+create table if not exists chat_messages (
+  id uuid primary key default gen_random_uuid(),
+  room_id text not null,
+  device_id text not null,
+  author_name text not null,
+  content text not null,
+  created_at timestamptz not null default now()
+);
+create index if not exists chat_messages_room_created_idx on chat_messages (room_id, created_at desc);
+
+-- One row per device — a server-side mirror of the onboarding profile that
+-- otherwise only lives in localStorage (see lib/onboarding.ts's own "point
+-- de bascule" comment). Unlike ballon_dor_predictions, this table IS read
+-- back for devices other than the caller's own: clicking a chat message
+-- needs to show *that* device's profile.
+create table if not exists user_profiles (
+  id uuid primary key default gen_random_uuid(),
+  device_id text not null unique,
+  username text not null,
+  country_id text not null,
+  player_ids jsonb not null default '[]'::jsonb,
+  favorite_club_id integer,
+  tiktok_handle text,
+  updated_at timestamptz not null default now()
+);
+
 -- No RLS policies: every read/write goes through server-only code using the
 -- service_role key (see lib/supabase.ts) — the anon key is never used, so
 -- there's no client-side access path to lock down.
@@ -224,3 +259,5 @@ alter table news_notification_prefs enable row level security;
 alter table quiz_scores enable row level security;
 alter table ballon_dor_predictions enable row level security;
 alter table mercato_transfers enable row level security;
+alter table chat_messages enable row level security;
+alter table user_profiles enable row level security;

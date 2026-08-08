@@ -1,23 +1,35 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { Send } from "lucide-react";
 import { cn, formatRelativeTime } from "@/lib/utils";
-import { getInitialMessages } from "@/lib/data/chat";
+import { getRecentChatMessages, getChatMessagesSince, sendChatMessage } from "@/app/actions/chat";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { COUNTRY_CODE_BY_THEME_ID, COUNTRY_LOGOS, initialsFromUsername } from "@/lib/onboarding";
 import { CountryAvatar } from "@/components/ui/country-avatar";
+import { ChatProfileSheet } from "@/components/chat/chat-profile-sheet";
+import { getOrCreateDeviceId } from "@/lib/device-id";
 import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
 import { HAS_CHATTED_KEY } from "@/lib/badges";
-import type { ChatMessage, ChatRoom as ChatRoomType } from "@/types";
+import type { AfricanPlayer, ChatMessage, ChatRoom as ChatRoomType } from "@/types";
 
-// Les messages vivent en mémoire côté client pour cette démo. Le passage à
-// Supabase Realtime remplacera useState par un canal souscrit sur
-// `chat_messages` filtré par room_id (insert émis en direct à tous les membres).
-export function ChatRoom({ rooms }: { rooms: ChatRoomType[] }) {
+// How often an open room re-checks for new messages while mounted — a
+// plain client-side setInterval, not Supabase Realtime (which would need
+// an anon key + RLS policies that don't exist anywhere in this app; see
+// lib/supabase.ts's "no client ever talks to Supabase directly" rule) and
+// not the external-scheduler poller either (that's for push notifications
+// when the app is closed — this only runs while a room is actually open).
+const POLL_INTERVAL_MS = 3000;
+
+export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerPool: AfricanPlayer[] }) {
   const profile = useOnboardingProfile();
   const countryCode = profile ? COUNTRY_CODE_BY_THEME_ID[profile.countryId] : undefined;
+
+  const [deviceId, setDeviceId] = useState<string | null>(null);
+  useEffect(() => {
+    Promise.resolve(getOrCreateDeviceId()).then(setDeviceId);
+  }, []);
 
   // Surface the user's own country room right after "Général" — the room
   // they're most likely to want, per the onboarding country selection.
@@ -34,31 +46,52 @@ export function ChatRoom({ rooms }: { rooms: ChatRoomType[] }) {
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
   const activeRoomId = selectedRoomId ?? homeRoomId ?? rooms[0]?.id ?? "";
 
-  const [messagesByRoom, setMessagesByRoom] = useState<Record<string, ChatMessage[]>>(() =>
-    Object.fromEntries(rooms.map((room) => [room.id, getInitialMessages(room.id)]))
-  );
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
+  const [openProfileDeviceId, setOpenProfileDeviceId] = useState<string | null>(null);
+  const lastCreatedAtRef = useRef<string | null>(null);
 
   const activeRoom = rooms.find((room) => room.id === activeRoomId);
-  const messages = messagesByRoom[activeRoomId] ?? [];
 
-  function sendMessage() {
-    const content = draft.trim();
-    if (!content) return;
+  // Full reload on mount and every room switch; a lightweight cursor poll
+  // the rest of the time (cleared whenever the room changes or the
+  // component unmounts).
+  useEffect(() => {
+    if (!activeRoomId) return;
+    let cancelled = false;
 
-    const message: ChatMessage = {
-      id: `local-${Date.now()}`,
-      roomId: activeRoomId,
-      authorName: "Toi",
-      content,
-      createdAt: new Date().toISOString(),
+    getRecentChatMessages(activeRoomId).then((initial) => {
+      if (cancelled) return;
+      setMessages(initial);
+      lastCreatedAtRef.current = initial.at(-1)?.createdAt ?? null;
+    });
+
+    const interval = setInterval(async () => {
+      const fresh = await getChatMessagesSince(activeRoomId, lastCreatedAtRef.current);
+      if (cancelled || fresh.length === 0) return;
+      lastCreatedAtRef.current = fresh.at(-1)?.createdAt ?? lastCreatedAtRef.current;
+      setMessages((current) => {
+        const seen = new Set(current.map((message) => message.id));
+        return [...current, ...fresh.filter((message) => !seen.has(message.id))];
+      });
+    }, POLL_INTERVAL_MS);
+
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
     };
+  }, [activeRoomId]);
 
-    setMessagesByRoom((current) => ({
-      ...current,
-      [activeRoomId]: [...(current[activeRoomId] ?? []), message],
-    }));
+  async function sendMessage() {
+    const content = draft.trim();
+    if (!content || !profile || !deviceId) return;
     setDraft("");
+
+    const { message } = await sendChatMessage(deviceId, activeRoomId, profile.username, content);
+    if (message) {
+      lastCreatedAtRef.current = message.createdAt;
+      setMessages((current) => [...current, message]);
+    }
     writeLocalStorageValue(HAS_CHATTED_KEY, "true");
   }
 
@@ -97,49 +130,41 @@ export function ChatRoom({ rooms }: { rooms: ChatRoomType[] }) {
         {messages.length === 0 && (
           <p className="py-8 text-center text-sm text-muted">Aucun message pour l&apos;instant dans {activeRoom?.name}.</p>
         )}
-        {messages.map((message) => (
-          <div key={message.id} className={cn("max-w-[85%] sm:max-w-[70%]", message.authorName === "Toi" && "self-end")}>
-            {message.authorName === "Toi" && profile && (
-              <div className="mb-1 flex items-center justify-end gap-1.5">
-                <span className="text-xs font-semibold text-foreground">{profile.username}</span>
-                {COUNTRY_LOGOS[profile.countryId] && (
-                  <Image
-                    src={COUNTRY_LOGOS[profile.countryId]}
-                    alt=""
-                    width={14}
-                    height={14}
-                    className="size-3.5 shrink-0 object-contain"
-                    unoptimized
-                  />
-                )}
-                <CountryAvatar initials={initialsFromUsername(profile.username)} size={10} />
+        {messages.map((message) => {
+          const isOwn = message.deviceId === deviceId;
+          return (
+            <button
+              key={message.id}
+              type="button"
+              onClick={() => setOpenProfileDeviceId(message.deviceId)}
+              className={cn("max-w-[85%] text-left sm:max-w-[70%]", isOwn && "self-end")}
+            >
+              {isOwn && profile && (
+                <div className="mb-1 flex items-center justify-end gap-1.5">
+                  <span className="text-xs font-semibold text-foreground">{profile.username}</span>
+                  {COUNTRY_LOGOS[profile.countryId] && (
+                    <Image
+                      src={COUNTRY_LOGOS[profile.countryId]}
+                      alt=""
+                      width={14}
+                      height={14}
+                      className="size-3.5 shrink-0 object-contain"
+                      unoptimized
+                    />
+                  )}
+                  <CountryAvatar initials={initialsFromUsername(profile.username)} size={10} />
+                </div>
+              )}
+              <div className={cn("rounded-2xl px-3 py-2 text-sm", isOwn ? "bg-accent text-accent-ink" : "bg-surface-2 text-foreground")}>
+                {!isOwn && <p className="mb-0.5 text-[11px] font-bold opacity-70">{message.authorName}</p>}
+                <p className="leading-snug">{message.content}</p>
               </div>
-            )}
-            <div
-              className={cn(
-                "rounded-2xl px-3 py-2 text-sm",
-                message.authorName === "Toi" ? "bg-accent text-accent-ink" : "bg-surface-2 text-foreground"
-              )}
-            >
-              {message.authorName !== "Toi" && (
-                <p className="mb-0.5 text-[11px] font-bold opacity-70">{message.authorName}</p>
-              )}
-              <p className="leading-snug">{message.content}</p>
-            </div>
-            <p
-              className={cn(
-                "mt-0.5 px-1 text-[10px] text-muted",
-                message.authorName === "Toi" && "text-right"
-              )}
-              // Le mock génère createdAt relatif à Date.now() : le rendu serveur et
-              // l'hydratation client tombent parfois de part et d'autre d'une minute,
-              // ce qui ferait dévier ce texte d'un cran sans affecter le contenu réel.
-              suppressHydrationWarning
-            >
-              {formatRelativeTime(message.createdAt)}
-            </p>
-          </div>
-        ))}
+              <p className={cn("mt-0.5 px-1 text-[10px] text-muted", isOwn && "text-right")} suppressHydrationWarning>
+                {formatRelativeTime(message.createdAt)}
+              </p>
+            </button>
+          );
+        })}
       </div>
 
       <form
@@ -173,6 +198,10 @@ export function ChatRoom({ rooms }: { rooms: ChatRoomType[] }) {
           <Send size={17} aria-hidden />
         </button>
       </form>
+
+      {openProfileDeviceId && (
+        <ChatProfileSheet deviceId={openProfileDeviceId} playerPool={playerPool} onClose={() => setOpenProfileDeviceId(null)} />
+      )}
     </div>
   );
 }
