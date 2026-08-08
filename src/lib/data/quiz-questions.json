@@ -1,190 +1,2862 @@
 [
-  { "id": "global-1", "theme": "global", "question": "Combien de joueurs une équipe aligne-t-elle sur le terrain (hors remplaçants) ?", "choices": ["10", "11", "12"], "correctIndex": 1 },
-  { "id": "global-2", "theme": "global", "question": "Quelle confédération gère le football en Afrique ?", "choices": ["CAF", "UEFA", "CONMEBOL"], "correctIndex": 0 },
-  { "id": "global-3", "theme": "global", "question": "Combien de nations participent à la phase finale de la CAN depuis 2019 ?", "choices": ["16", "24", "32"], "correctIndex": 1 },
-  { "id": "global-4", "theme": "global", "question": "Quel pays a remporté le plus de Coupes du Monde ?", "choices": ["Allemagne", "Brésil", "Italie"], "correctIndex": 1 },
-  { "id": "global-5", "theme": "global", "question": "Quelle est la durée réglementaire d'un match de football (hors prolongations) ?", "choices": ["80 minutes", "90 minutes", "100 minutes"], "correctIndex": 1 },
-  { "id": "global-6", "theme": "global", "question": "Quel continent organise la Copa America ?", "choices": ["Afrique", "Amérique du Sud", "Asie"], "correctIndex": 1 },
-  { "id": "global-7", "theme": "global", "question": "Quel trophée récompense le meilleur joueur du monde selon France Football ?", "choices": ["Ballon d'Or", "Soulier d'Or", "Bota de Oro"], "correctIndex": 0 },
-  { "id": "global-8", "theme": "global", "question": "Quelle compétition continentale des clubs équivaut à la Ligue des champions, mais en Afrique ?", "choices": ["Coupe CAF", "Ligue des champions de la CAF", "Coupe du Monde des clubs"], "correctIndex": 1 },
-  { "id": "global-9", "theme": "global", "question": "Combien de points rapporte une victoire en championnat ?", "choices": ["1", "2", "3"], "correctIndex": 2 },
-  { "id": "global-10", "theme": "global", "question": "Quel organisme régit le football mondial ?", "choices": ["FIFA", "ONU", "CIO"], "correctIndex": 0 },
-  { "id": "global-11", "theme": "global", "question": "Quelle couleur de carton entraîne l'exclusion immédiate d'un joueur ?", "choices": ["Jaune", "Rouge", "Bleu"], "correctIndex": 1 },
-  { "id": "global-12", "theme": "global", "question": "Quel pays africain a été le premier à atteindre les quarts de finale d'une Coupe du Monde ?", "choices": ["Cameroun", "Sénégal", "Ghana"], "correctIndex": 0 },
-  { "id": "global-13", "theme": "global", "question": "Quelle nation africaine a atteint les demi-finales de la Coupe du Monde 2022, une première pour le continent ?", "choices": ["Sénégal", "Maroc", "Tunisie"], "correctIndex": 1 },
-  { "id": "global-14", "theme": "global", "question": "Tous les combien d'années le titre de meilleur joueur africain (CAF) est-il décerné ?", "choices": ["Chaque année", "Tous les 2 ans", "Tous les 4 ans"], "correctIndex": 0 },
-  { "id": "global-15", "theme": "global", "question": "Quel joueur camerounais a remporté 4 fois le titre de meilleur joueur africain de l'année (CAF) ?", "choices": ["Samuel Eto'o", "Roger Milla", "Rigobert Song"], "correctIndex": 0 },
-  { "id": "global-16", "theme": "global", "question": "Quel pays a inventé le football moderne au XIXe siècle ?", "choices": ["France", "Angleterre", "Espagne"], "correctIndex": 1 },
-  { "id": "global-17", "theme": "global", "question": "Le célèbre stade de Wembley se trouve dans quelle ville ?", "choices": ["Manchester", "Londres", "Liverpool"], "correctIndex": 1 },
-  { "id": "global-18", "theme": "global", "question": "Combien de temps dure généralement la pause de mi-temps ?", "choices": ["10 minutes", "15 minutes", "20 minutes"], "correctIndex": 1 },
-  { "id": "global-19", "theme": "global", "question": "Quel pays africain a organisé la toute première CAN, en 1957 ?", "choices": ["Soudan", "Égypte", "Éthiopie"], "correctIndex": 0 },
-  { "id": "global-20", "theme": "global", "question": "Combien de fois l'Égypte a-t-elle été championne du monde en football ?", "choices": ["0", "1", "2"], "correctIndex": 0 },
-
-  { "id": "senegal-1", "theme": "senegal", "question": "Quel est le surnom de l'équipe nationale du Sénégal ?", "choices": ["Les Lions de la Teranga", "Les Éléphants", "Les Pharaons"], "correctIndex": 0 },
-  { "id": "senegal-2", "theme": "senegal", "question": "En quelle année le Sénégal a-t-il remporté sa première CAN ?", "choices": ["2019", "2021", "2023"], "correctIndex": 1 },
-  { "id": "senegal-3", "theme": "senegal", "question": "Qui était le sélectionneur du Sénégal lors du sacre en CAN 2021 ?", "choices": ["Aliou Cissé", "Bruno Metsu", "Claude Le Roy"], "correctIndex": 0 },
-  { "id": "senegal-4", "theme": "senegal", "question": "Quel club Sadio Mané a-t-il rejoint après avoir quitté Liverpool ?", "choices": ["Real Madrid", "Bayern Munich", "Al-Nassr"], "correctIndex": 1 },
-  { "id": "senegal-5", "theme": "senegal", "question": "En 2002, à quel stade le Sénégal a-t-il été éliminé de sa toute première Coupe du Monde ?", "choices": ["8es de finale", "Quarts de finale", "Demi-finales"], "correctIndex": 1 },
-  { "id": "senegal-6", "theme": "senegal", "question": "Comment se nomme le stade principal du Sénégal, à Diamniadio ?", "choices": ["Stade Léopold Sédar Senghor", "Stade Abdoulaye Wade", "Stade Iba Mar Diop"], "correctIndex": 1 },
-  { "id": "senegal-7", "theme": "senegal", "question": "Quel gardien sénégalais a été élu meilleur gardien de la CAN 2021 ?", "choices": ["Édouard Mendy", "Alfred Gomis", "Seny Dieng"], "correctIndex": 0 },
-  { "id": "senegal-8", "theme": "senegal", "question": "Sadio Mané a inscrit le tir au but décisif en finale de la CAN 2021 contre quel pays ?", "choices": ["Tunisie", "Égypte", "Cameroun"], "correctIndex": 1 },
-  { "id": "senegal-9", "theme": "senegal", "question": "En quelle année le Sénégal a-t-il disputé sa toute première Coupe du Monde ?", "choices": ["1998", "2002", "2006"], "correctIndex": 1 },
-  { "id": "senegal-10", "theme": "senegal", "question": "Quel pays le Sénégal a-t-il battu lors du match d'ouverture de la Coupe du Monde 2002, créant l'exploit ?", "choices": ["Brésil", "France", "Argentine"], "correctIndex": 1 },
-  { "id": "senegal-11", "theme": "senegal", "question": "Quel joueur est le meilleur buteur historique de l'équipe nationale du Sénégal ?", "choices": ["Sadio Mané", "El Hadji Diouf", "Henri Camara"], "correctIndex": 0 },
-  { "id": "senegal-12", "theme": "senegal", "question": "Quelle est la couleur dominante du maillot domicile du Sénégal ?", "choices": ["Bleu", "Vert", "Rouge"], "correctIndex": 1 },
-  { "id": "senegal-13", "theme": "senegal", "question": "Avant 2021, à quelle édition de la CAN le Sénégal avait-il perdu une première finale ?", "choices": ["CAN 2000", "CAN 2002", "CAN 2019"], "correctIndex": 2 },
-  { "id": "senegal-14", "theme": "senegal", "question": "Qui a remporté la CAN 2019, battant le Sénégal en finale ?", "choices": ["Tunisie", "Algérie", "Nigeria"], "correctIndex": 1 },
-  { "id": "senegal-15", "theme": "senegal", "question": "En 2018-2019, Sadio Mané a partagé le titre de meilleur buteur de Premier League avec Mohamed Salah et quel autre joueur ?", "choices": ["Pierre-Emerick Aubameyang", "Harry Kane", "Raheem Sterling"], "correctIndex": 0 },
-  { "id": "senegal-16", "theme": "senegal", "question": "Quel gardien sénégalais, champion de la CAN 2021, a ensuite été élu meilleur gardien du monde par la FIFA ?", "choices": ["Édouard Mendy", "Bouna Coundoul", "Tony Sylva"], "correctIndex": 0 },
-  { "id": "senegal-17", "theme": "senegal", "question": "En 2002, Aliou Cissé était joueur du Sénégal ; à quel stade l'équipe a-t-elle été éliminée de la Coupe du Monde ?", "choices": ["8es de finale", "Quarts de finale", "Finale"], "correctIndex": 1 },
-  { "id": "senegal-18", "theme": "senegal", "question": "Qui portait le brassard de capitaine du Sénégal lors du sacre de la CAN 2021 ?", "choices": ["Kalidou Koulibaly", "Sadio Mané", "Cheikhou Kouyaté"], "correctIndex": 0 },
-  { "id": "senegal-19", "theme": "senegal", "question": "Dans quel pays s'est déroulée la CAN 2021, remportée par le Sénégal ?", "choices": ["Gabon", "Cameroun", "Égypte"], "correctIndex": 1 },
-  { "id": "senegal-20", "theme": "senegal", "question": "Combien de titres de CAN le Sénégal a-t-il remportés à ce jour ?", "choices": ["1", "2", "3"], "correctIndex": 0 },
-
-  { "id": "maroc-1", "theme": "maroc", "question": "Quel est le surnom de l'équipe nationale du Maroc ?", "choices": ["Les Lions de l'Atlas", "Les Aigles", "Les Éperviers"], "correctIndex": 0 },
-  { "id": "maroc-2", "theme": "maroc", "question": "À quelle place inédite le Maroc a-t-il terminé la Coupe du Monde 2022 ?", "choices": ["2e", "3e", "4e"], "correctIndex": 2 },
-  { "id": "maroc-3", "theme": "maroc", "question": "Quel sélectionneur a mené le Maroc en demi-finale de la Coupe du Monde 2022 ?", "choices": ["Vahid Halilhodžić", "Walid Regragui", "Hervé Renard"], "correctIndex": 1 },
-  { "id": "maroc-4", "theme": "maroc", "question": "Contre quelle équipe le Maroc a-t-il perdu en demi-finale de la Coupe du Monde 2022 ?", "choices": ["Argentine", "France", "Croatie"], "correctIndex": 1 },
-  { "id": "maroc-5", "theme": "maroc", "question": "Quel gardien marocain a brillé lors du Mondial 2022, notamment sur les tirs au but ?", "choices": ["Yassine Bounou", "Munir Mohamedi", "Ahmed Reda Tagnaouti"], "correctIndex": 0 },
-  { "id": "maroc-6", "theme": "maroc", "question": "En 8es de finale du Mondial 2022, le Maroc a éliminé quelle nation européenne ?", "choices": ["Espagne", "Portugal", "Belgique"], "correctIndex": 0 },
-  { "id": "maroc-7", "theme": "maroc", "question": "En quarts de finale du Mondial 2022, le Maroc a ensuite éliminé quelle équipe ?", "choices": ["Portugal", "Angleterre", "Pays-Bas"], "correctIndex": 0 },
-  { "id": "maroc-8", "theme": "maroc", "question": "Quelle est la première nation africaine et arabe à avoir atteint les demi-finales d'une Coupe du Monde ?", "choices": ["Maroc", "Cameroun", "Ghana"], "correctIndex": 0 },
-  { "id": "maroc-9", "theme": "maroc", "question": "En quelle année le Maroc a-t-il remporté sa seule CAN à ce jour ?", "choices": ["1976", "1988", "1998"], "correctIndex": 0 },
-  { "id": "maroc-10", "theme": "maroc", "question": "En 2015, le Maroc a renoncé à organiser la CAN par crainte d'Ebola ; quel pays a repris l'organisation en urgence ?", "choices": ["Guinée équatoriale", "Gabon", "Congo"], "correctIndex": 0 },
-  { "id": "maroc-11", "theme": "maroc", "question": "Quel défenseur marocain, capitaine emblématique passé par le Paris Saint-Germain, incarne les Lions de l'Atlas ?", "choices": ["Achraf Hakimi", "Romain Saïss", "Noussair Mazraoui"], "correctIndex": 0 },
-  { "id": "maroc-12", "theme": "maroc", "question": "Quel milieu marocain de la Fiorentina a été essentiel au parcours du Maroc en 2022 ?", "choices": ["Sofyan Amrabat", "Selim Amallah", "Azzedine Ounahi"], "correctIndex": 0 },
-  { "id": "maroc-13", "theme": "maroc", "question": "Quel attaquant marocain a marqué le but décisif en quart de finale contre le Portugal en 2022 ?", "choices": ["Youssef En-Nesyri", "Ayoub El Kaabi", "Abderrazak Hamdallah"], "correctIndex": 0 },
-  { "id": "maroc-14", "theme": "maroc", "question": "Quelle est la couleur principale du maillot domicile du Maroc ?", "choices": ["Rouge", "Bleu", "Vert"], "correctIndex": 0 },
-  { "id": "maroc-15", "theme": "maroc", "question": "Le Maroc a terminé 4e du Mondial 2022 après avoir perdu le match pour la 3e place contre quel pays ?", "choices": ["Croatie", "Argentine", "Angleterre"], "correctIndex": 0 },
-  { "id": "maroc-16", "theme": "maroc", "question": "Quels sont les deux grands clubs rivaux de Casablanca, dont le derby est l'un des plus suivis d'Afrique ?", "choices": ["Raja et Wydad", "FAR et Moghreb", "Renaissance et Olympique"], "correctIndex": 0 },
-  { "id": "maroc-17", "theme": "maroc", "question": "Quel entraîneur français, également passé par le banc du Maroc, a remporté la CAN avec la Zambie (2012) et la Côte d'Ivoire (2015) ?", "choices": ["Hervé Renard", "Claude Le Roy", "Henri Michel"], "correctIndex": 0 },
-  { "id": "maroc-18", "theme": "maroc", "question": "Quel score le Maroc a-t-il réalisé face à la Belgique en phase de groupes du Mondial 2022 ?", "choices": ["1-0", "2-0", "2-1"], "correctIndex": 1 },
-  { "id": "maroc-19", "theme": "maroc", "question": "Quel est le plus grand stade du Maroc, situé à Casablanca ?", "choices": ["Stade Mohammed V", "Grand Stade de Marrakech", "Stade Ibn Batouta"], "correctIndex": 0 },
-  { "id": "maroc-20", "theme": "maroc", "question": "Le Maroc a-t-il déjà remporté la Coupe du Monde ?", "choices": ["Oui", "Non", "Une fois"], "correctIndex": 1 },
-
-  { "id": "algerie-1", "theme": "algerie", "question": "Quel est le surnom de l'équipe nationale d'Algérie ?", "choices": ["Les Fennecs", "Les Lions", "Les Panthères"], "correctIndex": 0 },
-  { "id": "algerie-2", "theme": "algerie", "question": "En quelle année l'Algérie a-t-elle remporté sa 2e CAN ?", "choices": ["2017", "2019", "2021"], "correctIndex": 1 },
-  { "id": "algerie-3", "theme": "algerie", "question": "En quelle année l'Algérie a-t-elle remporté sa toute première CAN ?", "choices": ["1980", "1990", "2000"], "correctIndex": 1 },
-  { "id": "algerie-4", "theme": "algerie", "question": "En 1990, l'Algérie a remporté la CAN à domicile en battant qui en finale ?", "choices": ["Nigeria", "Cameroun", "Zambie"], "correctIndex": 0 },
-  { "id": "algerie-5", "theme": "algerie", "question": "Qui était le sélectionneur de l'Algérie lors du sacre de la CAN 2019 ?", "choices": ["Djamel Belmadi", "Rabah Madjer", "Vahid Halilhodžić"], "correctIndex": 0 },
-  { "id": "algerie-6", "theme": "algerie", "question": "L'Algérie a battu quel pays en finale de la CAN 2019 ?", "choices": ["Sénégal", "Tunisie", "Nigeria"], "correctIndex": 0 },
-  { "id": "algerie-7", "theme": "algerie", "question": "Quel joueur algérien a été élu meilleur joueur de la CAN 2019 ?", "choices": ["Riyad Mahrez", "Baghdad Bounedjah", "Youcef Belaïli"], "correctIndex": 0 },
-  { "id": "algerie-8", "theme": "algerie", "question": "Riyad Mahrez a remporté la Ligue des champions de l'UEFA en 2023 avec quel club ?", "choices": ["Manchester City", "Chelsea", "Liverpool"], "correctIndex": 0 },
-  { "id": "algerie-9", "theme": "algerie", "question": "En Coupe du Monde 1982, l'Algérie a créé la surprise en battant quelle grande nation européenne ?", "choices": ["Allemagne de l'Ouest", "Espagne", "Italie"], "correctIndex": 0 },
-  { "id": "algerie-10", "theme": "algerie", "question": "Quel est le stade principal de l'équipe nationale d'Algérie ?", "choices": ["Stade Mustapha Tchaker", "Stade 5 Juillet 1962", "Stade Chahid Hamlaoui"], "correctIndex": 1 },
-  { "id": "algerie-11", "theme": "algerie", "question": "Quel milieu algérien, plusieurs fois élu Ballon d'Or africain, évolue aujourd'hui à Al-Ahli ?", "choices": ["Riyad Mahrez", "Islam Slimani", "Sofiane Feghouli"], "correctIndex": 0 },
-  { "id": "algerie-12", "theme": "algerie", "question": "Combien de fois l'Algérie a-t-elle remporté la CAN à ce jour ?", "choices": ["1", "2", "3"], "correctIndex": 1 },
-  { "id": "algerie-13", "theme": "algerie", "question": "Quelle est la couleur principale du maillot domicile de l'Algérie ?", "choices": ["Vert", "Blanc", "Rouge"], "correctIndex": 1 },
-  { "id": "algerie-14", "theme": "algerie", "question": "En Coupe du Monde 2014, à quel stade l'Algérie a-t-elle été éliminée par l'Allemagne ?", "choices": ["8es de finale", "Quarts de finale", "Phase de groupes"], "correctIndex": 0 },
-  { "id": "algerie-15", "theme": "algerie", "question": "Quel gardien algérien a cumulé plus de 100 sélections dans les buts des Fennecs dans les années 2010 ?", "choices": ["Raïs M'Bolhi", "Alexandre Oukidja", "Mohamed Lamine Zemmamouche"], "correctIndex": 0 },
-  { "id": "algerie-16", "theme": "algerie", "question": "En quelle année l'Algérie a-t-elle disputé sa toute première Coupe du Monde ?", "choices": ["1982", "1986", "1990"], "correctIndex": 0 },
-  { "id": "algerie-17", "theme": "algerie", "question": "Quel ancien international algérien, auteur d'un but de talonnade resté célèbre en finale de la Coupe d'Europe 1987, est devenu sélectionneur national par la suite ?", "choices": ["Rabah Madjer", "Lakhdar Belloumi", "Djamel Belmadi"], "correctIndex": 0 },
-  { "id": "algerie-18", "theme": "algerie", "question": "Quel joueur algérien porte le brassard de capitaine et évolue à Al-Ahli après un long passage à Manchester City ?", "choices": ["Riyad Mahrez", "Ismaël Bennacer", "Youcef Atal"], "correctIndex": 0 },
-  { "id": "algerie-19", "theme": "algerie", "question": "Quel milieu algérien de l'AC Milan a remporté le Scudetto en 2022 ?", "choices": ["Ismaël Bennacer", "Adam Ounas", "Nabil Bentaleb"], "correctIndex": 0 },
-  { "id": "algerie-20", "theme": "algerie", "question": "Quel joueur algérien a inscrit le but victorieux en finale de la CAN 2019 face au Sénégal ?", "choices": ["Baghdad Bounedjah", "Riyad Mahrez", "Youcef Belaïli"], "correctIndex": 0 },
-
-  { "id": "cameroun-1", "theme": "cameroun", "question": "Quel est le surnom de l'équipe nationale du Cameroun ?", "choices": ["Les Lions Indomptables", "Les Éléphants", "Les Aigles"], "correctIndex": 0 },
-  { "id": "cameroun-2", "theme": "cameroun", "question": "Combien de fois le Cameroun a-t-il remporté la CAN ?", "choices": ["3", "5", "7"], "correctIndex": 1 },
-  { "id": "cameroun-3", "theme": "cameroun", "question": "En 1990, le Cameroun a éliminé quel pays en 8es de finale pour devenir la 1ère nation africaine en quarts de finale de Coupe du Monde ?", "choices": ["Colombie", "Argentine", "Roumanie"], "correctIndex": 0 },
-  { "id": "cameroun-4", "theme": "cameroun", "question": "Quel joueur camerounais est devenu célèbre pour sa danse au poteau de corner lors du Mondial 1990 ?", "choices": ["Roger Milla", "François Omam-Biyik", "Thomas N'Kono"], "correctIndex": 0 },
-  { "id": "cameroun-5", "theme": "cameroun", "question": "Quel gardien camerounais a été élu meilleur gardien africain du XXe siècle ?", "choices": ["Thomas N'Kono", "Joseph-Antoine Bell", "Idriss Kameni"], "correctIndex": 0 },
-  { "id": "cameroun-6", "theme": "cameroun", "question": "En quelle année le Cameroun a-t-il remporté l'or olympique de football, à Sydney ?", "choices": ["1996", "2000", "2004"], "correctIndex": 1 },
-  { "id": "cameroun-7", "theme": "cameroun", "question": "Quel attaquant camerounais, ancien de Barcelone et Chelsea, a été triple champion d'Afrique du buteur ?", "choices": ["Samuel Eto'o", "Patrick Mboma", "Achille Emana"], "correctIndex": 0 },
-  { "id": "cameroun-8", "theme": "cameroun", "question": "Combien de fois Samuel Eto'o a-t-il remporté la Ligue des champions de l'UEFA ?", "choices": ["2", "3", "4"], "correctIndex": 1 },
-  { "id": "cameroun-9", "theme": "cameroun", "question": "Quel est le stade historique de l'équipe du Cameroun, situé à Yaoundé ?", "choices": ["Stade Ahmadou Ahidjo", "Stade de la Réunification", "Stade Roumdé Adjia"], "correctIndex": 0 },
-  { "id": "cameroun-10", "theme": "cameroun", "question": "Le Cameroun a organisé et remporté quelle édition de la CAN sur ses terres ?", "choices": ["CAN 1972", "CAN 2000", "CAN 2021"], "correctIndex": 2 },
-  { "id": "cameroun-11", "theme": "cameroun", "question": "Le Cameroun a remporté la finale de la CAN 2017 contre quel pays ?", "choices": ["Égypte", "Sénégal", "Ghana"], "correctIndex": 0 },
-  { "id": "cameroun-12", "theme": "cameroun", "question": "Quel joueur camerounais a été élu meilleur joueur africain (CAF) en 2003 et 2004 ?", "choices": ["Samuel Eto'o", "Rigobert Song", "Geremi Njitap"], "correctIndex": 0 },
-  { "id": "cameroun-13", "theme": "cameroun", "question": "Quel défenseur camerounais détient le record de participations à des phases finales de Coupe du Monde pour un joueur africain (4 tournois) ?", "choices": ["Rigobert Song", "Stephen Tataw", "Raymond Kalla"], "correctIndex": 0 },
-  { "id": "cameroun-14", "theme": "cameroun", "question": "Quelle est la couleur principale du maillot du Cameroun ?", "choices": ["Vert", "Jaune", "Rouge"], "correctIndex": 0 },
-  { "id": "cameroun-15", "theme": "cameroun", "question": "Le Cameroun a atteint les quarts de finale du Mondial 1990 en s'inclinant face à quel pays ?", "choices": ["Angleterre", "Italie", "Argentine"], "correctIndex": 0 },
-  { "id": "cameroun-16", "theme": "cameroun", "question": "En quelle année le Cameroun a-t-il disputé sa toute première Coupe du Monde ?", "choices": ["1982", "1990", "1994"], "correctIndex": 0 },
-  { "id": "cameroun-17", "theme": "cameroun", "question": "Quel entraîneur a mené le Cameroun jusqu'aux quarts de finale du Mondial 1990 ?", "choices": ["Valeri Nepomniachtchi", "Claude Le Roy", "Philippe Troussier"], "correctIndex": 0 },
-  { "id": "cameroun-18", "theme": "cameroun", "question": "Quel milieu camerounais, capitaine des Lions Indomptables dans les années 2000, a longtemps évolué au Real Madrid ?", "choices": ["Geremi Njitap", "Marc-Vivien Foé", "Rigobert Song"], "correctIndex": 0 },
-  { "id": "cameroun-19", "theme": "cameroun", "question": "Marc-Vivien Foé est décédé en plein match en 2003, lors de quelle compétition ?", "choices": ["Coupe des Confédérations", "CAN", "Coupe du Monde"], "correctIndex": 0 },
-  { "id": "cameroun-20", "theme": "cameroun", "question": "Combien de fois le Cameroun a-t-il été sacré champion olympique de football ?", "choices": ["0", "1", "2"], "correctIndex": 1 },
-
-  { "id": "cote-ivoire-1", "theme": "cote-ivoire", "question": "Quel est le surnom de l'équipe nationale de Côte d'Ivoire ?", "choices": ["Les Éléphants", "Les Lions", "Les Étalons"], "correctIndex": 0 },
-  { "id": "cote-ivoire-2", "theme": "cote-ivoire", "question": "La Côte d'Ivoire a remporté la CAN 2023 en tant que pays...", "choices": ["voisin", "hôte", "invité"], "correctIndex": 1 },
-  { "id": "cote-ivoire-3", "theme": "cote-ivoire", "question": "Qui a remporté le plus de titres de meilleur joueur africain (CAF) parmi les Ivoiriens ?", "choices": ["Didier Drogba", "Yaya Touré", "Salomon Kalou"], "correctIndex": 1 },
-  { "id": "cote-ivoire-4", "theme": "cote-ivoire", "question": "La Côte d'Ivoire a remporté la CAN 2023 en battant quel pays en finale ?", "choices": ["Nigeria", "Maroc", "Sénégal"], "correctIndex": 0 },
-  { "id": "cote-ivoire-5", "theme": "cote-ivoire", "question": "Quel entraîneur a mené la Côte d'Ivoire au titre de la CAN 2023, après avoir remplacé le sélectionneur en cours de compétition ?", "choices": ["Jean-Louis Gasset", "Emerse Faé", "Hervé Renard"], "correctIndex": 1 },
-  { "id": "cote-ivoire-6", "theme": "cote-ivoire", "question": "Combien de titres de CAN la Côte d'Ivoire avait-elle remportés jusqu'en 2023 inclus ?", "choices": ["2", "3", "4"], "correctIndex": 1 },
-  { "id": "cote-ivoire-7", "theme": "cote-ivoire", "question": "En quelle année la Côte d'Ivoire a-t-elle remporté sa toute première CAN ?", "choices": ["1992", "2015", "2023"], "correctIndex": 0 },
-  { "id": "cote-ivoire-8", "theme": "cote-ivoire", "question": "La CAN 2015 a été remportée par la Côte d'Ivoire face à quel pays, aux tirs au but ?", "choices": ["Ghana", "Zambie", "Mali"], "correctIndex": 0 },
-  { "id": "cote-ivoire-9", "theme": "cote-ivoire", "question": "Quel attaquant ivoirien, meilleur buteur historique de Chelsea, a longtemps porté le brassard des Éléphants ?", "choices": ["Didier Drogba", "Gervinho", "Wilfried Bony"], "correctIndex": 0 },
-  { "id": "cote-ivoire-10", "theme": "cote-ivoire", "question": "Quel est le stade principal de la Côte d'Ivoire, rénové pour la CAN 2023 ?", "choices": ["Stade Félix Houphouët-Boigny", "Stade Alassane Ouattara", "Stade de la Paix"], "correctIndex": 1 },
-  { "id": "cote-ivoire-11", "theme": "cote-ivoire", "question": "Quel duo de frères, l'un défenseur central et l'autre milieu, a marqué le football ivoirien ?", "choices": ["Les frères Zokora", "Kolo et Yaya Touré", "Les frères Kalou"], "correctIndex": 1 },
-  { "id": "cote-ivoire-12", "theme": "cote-ivoire", "question": "Yaya Touré a remporté la Ligue des champions de l'UEFA en 2009 avec quel club ?", "choices": ["Real Madrid", "FC Barcelone", "Atlético Madrid"], "correctIndex": 1 },
-  { "id": "cote-ivoire-13", "theme": "cote-ivoire", "question": "Quelle est la couleur principale du maillot domicile de la Côte d'Ivoire ?", "choices": ["Orange", "Vert", "Blanc"], "correctIndex": 0 },
-  { "id": "cote-ivoire-14", "theme": "cote-ivoire", "question": "La Côte d'Ivoire a-t-elle déjà atteint les quarts de finale d'une Coupe du Monde ?", "choices": ["Oui", "Non", "Une seule fois"], "correctIndex": 1 },
-  { "id": "cote-ivoire-15", "theme": "cote-ivoire", "question": "Quel gardien ivoirien a été le héros de la séance de tirs au but en finale de la CAN 2015 ?", "choices": ["Boubacar Barry", "Sylvain Gbohouo", "Badra Sangaré"], "correctIndex": 0 },
-  { "id": "cote-ivoire-16", "theme": "cote-ivoire", "question": "Quel a été le score de la finale de la CAN 2023 entre la Côte d'Ivoire et le Nigeria ?", "choices": ["1-0", "2-1", "2-0"], "correctIndex": 1 },
-  { "id": "cote-ivoire-17", "theme": "cote-ivoire", "question": "Quel sélectionneur français a été démis de ses fonctions en pleine CAN 2023 ?", "choices": ["Jean-Louis Gasset", "Hervé Renard", "Patrice Beaumelle"], "correctIndex": 0 },
-  { "id": "cote-ivoire-18", "theme": "cote-ivoire", "question": "À quelle place la Côte d'Ivoire a-t-elle terminé son groupe lors de la phase de poules de la CAN 2023 ?", "choices": ["1re", "2e", "3e"], "correctIndex": 2 },
-  { "id": "cote-ivoire-19", "theme": "cote-ivoire", "question": "Combien d'années se sont écoulées entre les titres de CAN de la Côte d'Ivoire en 1992 et 2015 ?", "choices": ["15 ans", "23 ans", "30 ans"], "correctIndex": 1 },
-  { "id": "cote-ivoire-20", "theme": "cote-ivoire", "question": "La Côte d'Ivoire a battu quel pays en demi-finale de la CAN 2023 ?", "choices": ["RD Congo", "Mali", "Sénégal"], "correctIndex": 0 },
-
-  { "id": "egypte-1", "theme": "egypte", "question": "Quel est le surnom de l'équipe nationale d'Égypte ?", "choices": ["Les Pharaons", "Les Sphinx", "Les Nubiens"], "correctIndex": 0 },
-  { "id": "egypte-2", "theme": "egypte", "question": "L'Égypte est le pays qui a remporté le plus de CAN. Combien ?", "choices": ["5", "6", "7"], "correctIndex": 2 },
-  { "id": "egypte-3", "theme": "egypte", "question": "Quel gardien égyptien, légende d'Al Ahly, est considéré comme l'un des meilleurs portiers d'Afrique ?", "choices": ["Essam El-Hadary", "Mohamed El-Shenawy", "Ahmed El Shenawi"], "correctIndex": 0 },
-  { "id": "egypte-4", "theme": "egypte", "question": "Essam El-Hadary a été élu meilleur gardien de la CAN 2017 à quel âge, un record ?", "choices": ["40 ans", "44 ans", "48 ans"], "correctIndex": 1 },
-  { "id": "egypte-5", "theme": "egypte", "question": "Quel attaquant égyptien, star de Liverpool, est surnommé « le Roi » par les supporters ?", "choices": ["Mohamed Salah", "Mahmoud Trezeguet", "Mostafa Mohamed"], "correctIndex": 0 },
-  { "id": "egypte-6", "theme": "egypte", "question": "Mohamed Salah a remporté la Ligue des champions de l'UEFA en 2019 avec quel club ?", "choices": ["Liverpool", "Chelsea", "Roma"], "correctIndex": 0 },
-  { "id": "egypte-7", "theme": "egypte", "question": "Quel pays suit l'Égypte au classement des nations les plus titrées en CAN ?", "choices": ["Cameroun", "Ghana", "Nigeria"], "correctIndex": 0 },
-  { "id": "egypte-8", "theme": "egypte", "question": "En quelle année l'Égypte a-t-elle remporté la toute première édition de la CAN ?", "choices": ["1957", "1959", "1962"], "correctIndex": 0 },
-  { "id": "egypte-9", "theme": "egypte", "question": "L'Égypte a réalisé un triplé historique de titres CAN consécutifs entre quelles éditions ?", "choices": ["2006-2008-2010", "2004-2006-2008", "2008-2010-2012"], "correctIndex": 0 },
-  { "id": "egypte-10", "theme": "egypte", "question": "L'Égypte s'est qualifiée pour la Coupe du Monde 2018 après combien d'années d'absence ?", "choices": ["12 ans", "28 ans", "20 ans"], "correctIndex": 1 },
-  { "id": "egypte-11", "theme": "egypte", "question": "Quel est le stade principal de la sélection égyptienne, situé au Caire ?", "choices": ["Stade International du Caire", "Stade Borg El Arab", "Stade Al Salam"], "correctIndex": 0 },
-  { "id": "egypte-12", "theme": "egypte", "question": "Quel club égyptien est le plus titré d'Afrique en Ligue des champions de la CAF ?", "choices": ["Al Ahly", "Zamalek", "Ismaily"], "correctIndex": 0 },
-  { "id": "egypte-13", "theme": "egypte", "question": "Quelle est la couleur principale du maillot domicile de l'Égypte ?", "choices": ["Rouge", "Blanc", "Noir"], "correctIndex": 0 },
-  { "id": "egypte-14", "theme": "egypte", "question": "Quel entraîneur portugais a dirigé l'équipe d'Égypte dans les années 2020 ?", "choices": ["Carlos Queiroz", "Rui Vitória", "Hossam Hassan"], "correctIndex": 1 },
-  { "id": "egypte-15", "theme": "egypte", "question": "En finale de la CAN 2021 (jouée en 2022), l'Égypte s'est inclinée aux tirs au but face à quel pays ?", "choices": ["Sénégal", "Cameroun", "Maroc"], "correctIndex": 0 },
-  { "id": "egypte-16", "theme": "egypte", "question": "Quel milieu égyptien détient le record du plus grand nombre de sélections en équipe nationale, en Afrique ?", "choices": ["Ahmed Hassan", "Mohamed Aboutrika", "Ahmed Fathy"], "correctIndex": 0 },
-  { "id": "egypte-17", "theme": "egypte", "question": "Quel joueur égyptien, longtemps à Al Ahly, est surnommé « le Magicien » ?", "choices": ["Mohamed Aboutrika", "Ahmed Hassan", "Mohamed Salah"], "correctIndex": 0 },
-  { "id": "egypte-18", "theme": "egypte", "question": "En Coupe du Monde 2018, l'Égypte partageait son groupe avec l'Uruguay, l'Arabie Saoudite et quel pays ?", "choices": ["Russie", "Espagne", "Portugal"], "correctIndex": 0 },
-  { "id": "egypte-19", "theme": "egypte", "question": "Comment est surnommé le célèbre derby opposant Al Ahly et Zamalek au Caire ?", "choices": ["Le Choc des Titans", "Le Derby du Caire", "Le Clásico égyptien"], "correctIndex": 1 },
-  { "id": "egypte-20", "theme": "egypte", "question": "Combien de fois l'Égypte a-t-elle atteint la finale de la CAN sans la remporter, entre 2017 et 2021 ?", "choices": ["1 fois", "2 fois", "3 fois"], "correctIndex": 1 },
-
-  { "id": "coupe-du-monde-1", "theme": "coupe-du-monde", "question": "Quelle équipe africaine a atteint les demi-finales du Mondial 2022 ?", "choices": ["Sénégal", "Maroc", "Tunisie"], "correctIndex": 1 },
-  { "id": "coupe-du-monde-2", "theme": "coupe-du-monde", "question": "Tous les combien d'années la Coupe du Monde a-t-elle lieu ?", "choices": ["2", "4", "6"], "correctIndex": 1 },
-  { "id": "coupe-du-monde-3", "theme": "coupe-du-monde", "question": "Quelle est la première nation africaine à s'être qualifiée pour une Coupe du Monde ?", "choices": ["Égypte", "Maroc", "Tunisie"], "correctIndex": 0 },
-  { "id": "coupe-du-monde-4", "theme": "coupe-du-monde", "question": "En quelle année l'Égypte a-t-elle disputé sa toute première Coupe du Monde, une grande première pour l'Afrique ?", "choices": ["1930", "1934", "1938"], "correctIndex": 1 },
-  { "id": "coupe-du-monde-5", "theme": "coupe-du-monde", "question": "Quelle nation africaine a atteint les quarts de finale du Mondial 1990, une grande première pour le continent ?", "choices": ["Cameroun", "Maroc", "Algérie"], "correctIndex": 0 },
-  { "id": "coupe-du-monde-6", "theme": "coupe-du-monde", "question": "Roger Milla, star camerounaise du Mondial 1990, a marqué combien de buts lors de cette édition ?", "choices": ["2", "4", "6"], "correctIndex": 1 },
-  { "id": "coupe-du-monde-7", "theme": "coupe-du-monde", "question": "Quelle nation africaine a atteint les quarts de finale du Mondial 2002 ?", "choices": ["Sénégal", "Nigeria", "Cameroun"], "correctIndex": 0 },
-  { "id": "coupe-du-monde-8", "theme": "coupe-du-monde", "question": "Quelle nation africaine a atteint les 8es de finale du Mondial 2010, organisé sur le sol africain ?", "choices": ["Ghana", "Nigeria", "Côte d'Ivoire"], "correctIndex": 0 },
-  { "id": "coupe-du-monde-9", "theme": "coupe-du-monde", "question": "Le Ghana a été à un tir au but près des demi-finales en 2010 ; quel pays l'a éliminé en quarts ?", "choices": ["Uruguay", "Argentine", "Brésil"], "correctIndex": 0 },
-  { "id": "coupe-du-monde-10", "theme": "coupe-du-monde", "question": "Qui a manqué le tir au but décisif du Ghana face à l'Uruguay en 2010 ?", "choices": ["Asamoah Gyan", "André Ayew", "Michael Essien"], "correctIndex": 0 },
-  { "id": "coupe-du-monde-11", "theme": "coupe-du-monde", "question": "Combien de nations africaines participaient habituellement à la phase finale de la Coupe du Monde à 32 équipes ?", "choices": ["4", "5", "6"], "correctIndex": 1 },
-  { "id": "coupe-du-monde-12", "theme": "coupe-du-monde", "question": "À partir de quelle édition la Coupe du Monde passe-t-elle à 48 équipes, augmentant les places africaines ?", "choices": ["2026", "2030", "2034"], "correctIndex": 0 },
-  { "id": "coupe-du-monde-13", "theme": "coupe-du-monde", "question": "Quel pays a été le premier et, à ce jour, le seul pays africain à organiser la Coupe du Monde ?", "choices": ["Égypte", "Maroc", "Afrique du Sud"], "correctIndex": 2 },
-  { "id": "coupe-du-monde-14", "theme": "coupe-du-monde", "question": "En quelle année l'Afrique du Sud a-t-elle organisé la Coupe du Monde ?", "choices": ["2006", "2010", "2014"], "correctIndex": 1 },
-  { "id": "coupe-du-monde-15", "theme": "coupe-du-monde", "question": "Quel instrument bruyant est resté emblématique du Mondial 2010 en Afrique du Sud ?", "choices": ["Le djembé", "La vuvuzela", "Le tam-tam"], "correctIndex": 1 },
-  { "id": "coupe-du-monde-16", "theme": "coupe-du-monde", "question": "En 2018, combien d'équipes africaines se sont qualifiées pour les 8es de finale de la Coupe du Monde ?", "choices": ["0", "1", "2"], "correctIndex": 0 },
-  { "id": "coupe-du-monde-17", "theme": "coupe-du-monde", "question": "La Tunisie a créé la surprise à la Coupe du Monde 2022 en battant quel champion du monde en titre ?", "choices": ["Allemagne", "France", "Argentine"], "correctIndex": 1 },
-  { "id": "coupe-du-monde-18", "theme": "coupe-du-monde", "question": "Quelle nation africaine a atteint les 8es de finale de la Coupe du Monde 1994 ?", "choices": ["Nigeria", "Maroc", "Cameroun"], "correctIndex": 0 },
-  { "id": "coupe-du-monde-19", "theme": "coupe-du-monde", "question": "Le Nigeria, éliminé en 8es de finale du Mondial 1998, s'est incliné face à quel pays ?", "choices": ["Danemark", "Brésil", "France"], "correctIndex": 0 },
-  { "id": "coupe-du-monde-20", "theme": "coupe-du-monde", "question": "En 2014, le Nigeria a de nouveau atteint les 8es de finale ; il a été éliminé par quel pays ?", "choices": ["France", "Allemagne", "Argentine"], "correctIndex": 0 },
-
-  { "id": "can-1", "theme": "can", "question": "Que signifie le sigle CAN ?", "choices": ["Coupe d'Afrique des Nations", "Championnat Africain National", "Coupe Africaine Nationale"], "correctIndex": 0 },
-  { "id": "can-2", "theme": "can", "question": "Quel pays a organisé la CAN 2025 ?", "choices": ["Côte d'Ivoire", "Maroc", "Guinée"], "correctIndex": 1 },
-  { "id": "can-3", "theme": "can", "question": "En quelle année a eu lieu la toute première CAN ?", "choices": ["1956", "1957", "1958"], "correctIndex": 1 },
-  { "id": "can-4", "theme": "can", "question": "Combien de pays ont participé à la toute première CAN, en 1957 ?", "choices": ["3", "4", "5"], "correctIndex": 0 },
-  { "id": "can-5", "theme": "can", "question": "Depuis quelle édition la CAN réunit-elle 24 équipes en phase finale ?", "choices": ["CAN 2017", "CAN 2019", "CAN 2021"], "correctIndex": 1 },
-  { "id": "can-6", "theme": "can", "question": "Quel pays détient le record du plus grand nombre de titres de CAN ?", "choices": ["Cameroun", "Égypte", "Ghana"], "correctIndex": 1 },
-  { "id": "can-7", "theme": "can", "question": "Quel pays a remporté la CAN 2023, disputée en janvier-février 2024 ?", "choices": ["Nigeria", "Côte d'Ivoire", "Maroc"], "correctIndex": 1 },
-  { "id": "can-8", "theme": "can", "question": "Quel pays a organisé la CAN 2019 ?", "choices": ["Égypte", "Cameroun", "Gabon"], "correctIndex": 0 },
-  { "id": "can-9", "theme": "can", "question": "Quel pays a remporté la CAN 2019 ?", "choices": ["Sénégal", "Algérie", "Tunisie"], "correctIndex": 1 },
-  { "id": "can-10", "theme": "can", "question": "Quel pays a organisé la CAN 2021, disputée début 2022 ?", "choices": ["Cameroun", "Gabon", "Guinée"], "correctIndex": 0 },
-  { "id": "can-11", "theme": "can", "question": "Quel pays a remporté la CAN 2021 ?", "choices": ["Sénégal", "Égypte", "Cameroun"], "correctIndex": 0 },
-  { "id": "can-12", "theme": "can", "question": "Quel pays a organisé la CAN 2017 ?", "choices": ["Gabon", "Congo", "Guinée équatoriale"], "correctIndex": 0 },
-  { "id": "can-13", "theme": "can", "question": "Quel pays a remporté la CAN 2017 ?", "choices": ["Cameroun", "Égypte", "Burkina Faso"], "correctIndex": 0 },
-  { "id": "can-14", "theme": "can", "question": "Quel pays a définitivement conservé le premier trophée de la CAN après l'avoir remporté trois fois ?", "choices": ["Ghana", "Égypte", "Cameroun"], "correctIndex": 0 },
-  { "id": "can-15", "theme": "can", "question": "Quelle est la périodicité habituelle de la CAN ?", "choices": ["Tous les 2 ans", "Tous les 3 ans", "Tous les 4 ans"], "correctIndex": 0 },
-  { "id": "can-16", "theme": "can", "question": "Quel pays a remporté la CAN à trois reprises en tant que pays organisateur (1959, 1986, 2006) ?", "choices": ["Égypte", "Ghana", "Cameroun"], "correctIndex": 0 },
-  { "id": "can-17", "theme": "can", "question": "Quel pays a remporté la CAN 2013 ?", "choices": ["Nigeria", "Burkina Faso", "Ghana"], "correctIndex": 0 },
-  { "id": "can-18", "theme": "can", "question": "Quel pays a remporté la CAN 2015, disputée en Guinée équatoriale ?", "choices": ["Côte d'Ivoire", "Ghana", "RD Congo"], "correctIndex": 0 },
-  { "id": "can-19", "theme": "can", "question": "La CAN 2015 devait initialement être organisée par quel pays, avant un changement d'hôte lié à Ebola ?", "choices": ["Le Maroc", "Le Sénégal", "La Libye"], "correctIndex": 0 },
-  { "id": "can-20", "theme": "can", "question": "Combien d'équipes participent à la phase finale de la CAN depuis 2019 ?", "choices": ["16", "24", "32"], "correctIndex": 1 }
+  {
+    "id": "global-1",
+    "theme": "global",
+    "question": "Combien de joueurs une équipe aligne-t-elle sur le terrain (hors remplaçants) ?",
+    "choices": [
+      "10",
+      "11",
+      "12"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "global-2",
+    "theme": "global",
+    "question": "Quelle confédération gère le football en Afrique ?",
+    "choices": [
+      "CAF",
+      "UEFA",
+      "CONMEBOL"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "global-3",
+    "theme": "global",
+    "question": "Combien de nations participent à la phase finale de la CAN depuis 2019 ?",
+    "choices": [
+      "16",
+      "24",
+      "32"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "global-4",
+    "theme": "global",
+    "question": "Quel pays a remporté le plus de Coupes du Monde ?",
+    "choices": [
+      "Allemagne",
+      "Brésil",
+      "Italie"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "global-5",
+    "theme": "global",
+    "question": "Quelle est la durée réglementaire d'un match de football (hors prolongations) ?",
+    "choices": [
+      "80 minutes",
+      "90 minutes",
+      "100 minutes"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "global-6",
+    "theme": "global",
+    "question": "Quel continent organise la Copa America ?",
+    "choices": [
+      "Afrique",
+      "Amérique du Sud",
+      "Asie"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "global-7",
+    "theme": "global",
+    "question": "Quel trophée récompense le meilleur joueur du monde selon France Football ?",
+    "choices": [
+      "Ballon d'Or",
+      "Soulier d'Or",
+      "Bota de Oro"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "global-8",
+    "theme": "global",
+    "question": "Quelle compétition continentale des clubs équivaut à la Ligue des champions, mais en Afrique ?",
+    "choices": [
+      "Coupe CAF",
+      "Ligue des champions de la CAF",
+      "Coupe du Monde des clubs"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "global-9",
+    "theme": "global",
+    "question": "Combien de points rapporte une victoire en championnat ?",
+    "choices": [
+      "1",
+      "2",
+      "3"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": "global-10",
+    "theme": "global",
+    "question": "Quel organisme régit le football mondial ?",
+    "choices": [
+      "FIFA",
+      "ONU",
+      "CIO"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "global-11",
+    "theme": "global",
+    "question": "Quelle couleur de carton entraîne l'exclusion immédiate d'un joueur ?",
+    "choices": [
+      "Jaune",
+      "Rouge",
+      "Bleu"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "global-12",
+    "theme": "global",
+    "question": "Quel pays africain a été le premier à atteindre les quarts de finale d'une Coupe du Monde ?",
+    "choices": [
+      "Cameroun",
+      "Sénégal",
+      "Ghana"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "global-13",
+    "theme": "global",
+    "question": "Quelle nation africaine a atteint les demi-finales de la Coupe du Monde 2022, une première pour le continent ?",
+    "choices": [
+      "Sénégal",
+      "Maroc",
+      "Tunisie"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "global-14",
+    "theme": "global",
+    "question": "Tous les combien d'années le titre de meilleur joueur africain (CAF) est-il décerné ?",
+    "choices": [
+      "Chaque année",
+      "Tous les 2 ans",
+      "Tous les 4 ans"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "global-15",
+    "theme": "global",
+    "question": "Quel joueur camerounais a remporté 4 fois le titre de meilleur joueur africain de l'année (CAF) ?",
+    "choices": [
+      "Samuel Eto'o",
+      "Roger Milla",
+      "Rigobert Song"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "global-16",
+    "theme": "global",
+    "question": "Quel pays a inventé le football moderne au XIXe siècle ?",
+    "choices": [
+      "France",
+      "Angleterre",
+      "Espagne"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "global-17",
+    "theme": "global",
+    "question": "Le célèbre stade de Wembley se trouve dans quelle ville ?",
+    "choices": [
+      "Manchester",
+      "Londres",
+      "Liverpool"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "global-18",
+    "theme": "global",
+    "question": "Combien de temps dure généralement la pause de mi-temps ?",
+    "choices": [
+      "10 minutes",
+      "15 minutes",
+      "20 minutes"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "global-19",
+    "theme": "global",
+    "question": "Quel pays africain a organisé la toute première CAN, en 1957 ?",
+    "choices": [
+      "Soudan",
+      "Égypte",
+      "Éthiopie"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "global-20",
+    "theme": "global",
+    "question": "Combien de fois l'Égypte a-t-elle été championne du monde en football ?",
+    "choices": [
+      "0",
+      "1",
+      "2"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "senegal-1",
+    "theme": "senegal",
+    "question": "Quel est le surnom de l'équipe nationale du Sénégal ?",
+    "choices": [
+      "Les Lions de la Teranga",
+      "Les Éléphants",
+      "Les Pharaons"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "senegal-2",
+    "theme": "senegal",
+    "question": "En quelle année le Sénégal a-t-il remporté sa première CAN ?",
+    "choices": [
+      "2019",
+      "2021",
+      "2023"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "senegal-3",
+    "theme": "senegal",
+    "question": "Qui était le sélectionneur du Sénégal lors du sacre en CAN 2021 ?",
+    "choices": [
+      "Aliou Cissé",
+      "Bruno Metsu",
+      "Claude Le Roy"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "senegal-4",
+    "theme": "senegal",
+    "question": "Quel club Sadio Mané a-t-il rejoint après avoir quitté Liverpool ?",
+    "choices": [
+      "Real Madrid",
+      "Bayern Munich",
+      "Al-Nassr"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "senegal-5",
+    "theme": "senegal",
+    "question": "En 2002, à quel stade le Sénégal a-t-il été éliminé de sa toute première Coupe du Monde ?",
+    "choices": [
+      "8es de finale",
+      "Quarts de finale",
+      "Demi-finales"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "senegal-6",
+    "theme": "senegal",
+    "question": "Comment se nomme le stade principal du Sénégal, à Diamniadio ?",
+    "choices": [
+      "Stade Léopold Sédar Senghor",
+      "Stade Abdoulaye Wade",
+      "Stade Iba Mar Diop"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "senegal-7",
+    "theme": "senegal",
+    "question": "Quel gardien sénégalais a été élu meilleur gardien de la CAN 2021 ?",
+    "choices": [
+      "Édouard Mendy",
+      "Alfred Gomis",
+      "Seny Dieng"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "senegal-8",
+    "theme": "senegal",
+    "question": "Sadio Mané a inscrit le tir au but décisif en finale de la CAN 2021 contre quel pays ?",
+    "choices": [
+      "Tunisie",
+      "Égypte",
+      "Cameroun"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "senegal-9",
+    "theme": "senegal",
+    "question": "En quelle année le Sénégal a-t-il disputé sa toute première Coupe du Monde ?",
+    "choices": [
+      "1998",
+      "2002",
+      "2006"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "senegal-10",
+    "theme": "senegal",
+    "question": "Quel pays le Sénégal a-t-il battu lors du match d'ouverture de la Coupe du Monde 2002, créant l'exploit ?",
+    "choices": [
+      "Brésil",
+      "France",
+      "Argentine"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "senegal-11",
+    "theme": "senegal",
+    "question": "Quel joueur est le meilleur buteur historique de l'équipe nationale du Sénégal ?",
+    "choices": [
+      "Sadio Mané",
+      "El Hadji Diouf",
+      "Henri Camara"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "senegal-12",
+    "theme": "senegal",
+    "question": "Quelle est la couleur dominante du maillot domicile du Sénégal ?",
+    "choices": [
+      "Bleu",
+      "Vert",
+      "Rouge"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "senegal-13",
+    "theme": "senegal",
+    "question": "Avant 2021, à quelle édition de la CAN le Sénégal avait-il perdu une première finale ?",
+    "choices": [
+      "CAN 2000",
+      "CAN 2002",
+      "CAN 2019"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": "senegal-14",
+    "theme": "senegal",
+    "question": "Qui a remporté la CAN 2019, battant le Sénégal en finale ?",
+    "choices": [
+      "Tunisie",
+      "Algérie",
+      "Nigeria"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "senegal-15",
+    "theme": "senegal",
+    "question": "En 2018-2019, Sadio Mané a partagé le titre de meilleur buteur de Premier League avec Mohamed Salah et quel autre joueur ?",
+    "choices": [
+      "Pierre-Emerick Aubameyang",
+      "Harry Kane",
+      "Raheem Sterling"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "senegal-16",
+    "theme": "senegal",
+    "question": "Quel gardien sénégalais, champion de la CAN 2021, a ensuite été élu meilleur gardien du monde par la FIFA ?",
+    "choices": [
+      "Édouard Mendy",
+      "Bouna Coundoul",
+      "Tony Sylva"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "senegal-17",
+    "theme": "senegal",
+    "question": "En 2002, Aliou Cissé était joueur du Sénégal ; à quel stade l'équipe a-t-elle été éliminée de la Coupe du Monde ?",
+    "choices": [
+      "8es de finale",
+      "Quarts de finale",
+      "Finale"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "senegal-18",
+    "theme": "senegal",
+    "question": "Qui portait le brassard de capitaine du Sénégal lors du sacre de la CAN 2021 ?",
+    "choices": [
+      "Kalidou Koulibaly",
+      "Sadio Mané",
+      "Cheikhou Kouyaté"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "senegal-19",
+    "theme": "senegal",
+    "question": "Dans quel pays s'est déroulée la CAN 2021, remportée par le Sénégal ?",
+    "choices": [
+      "Gabon",
+      "Cameroun",
+      "Égypte"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "senegal-20",
+    "theme": "senegal",
+    "question": "Combien de titres de CAN le Sénégal a-t-il remportés à ce jour ?",
+    "choices": [
+      "1",
+      "2",
+      "3"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "maroc-1",
+    "theme": "maroc",
+    "question": "Quel est le surnom de l'équipe nationale du Maroc ?",
+    "choices": [
+      "Les Lions de l'Atlas",
+      "Les Aigles",
+      "Les Éperviers"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "maroc-2",
+    "theme": "maroc",
+    "question": "À quelle place inédite le Maroc a-t-il terminé la Coupe du Monde 2022 ?",
+    "choices": [
+      "2e",
+      "3e",
+      "4e"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": "maroc-3",
+    "theme": "maroc",
+    "question": "Quel sélectionneur a mené le Maroc en demi-finale de la Coupe du Monde 2022 ?",
+    "choices": [
+      "Vahid Halilhodžić",
+      "Walid Regragui",
+      "Hervé Renard"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "maroc-4",
+    "theme": "maroc",
+    "question": "Contre quelle équipe le Maroc a-t-il perdu en demi-finale de la Coupe du Monde 2022 ?",
+    "choices": [
+      "Argentine",
+      "France",
+      "Croatie"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "maroc-5",
+    "theme": "maroc",
+    "question": "Quel gardien marocain a brillé lors du Mondial 2022, notamment sur les tirs au but ?",
+    "choices": [
+      "Yassine Bounou",
+      "Munir Mohamedi",
+      "Ahmed Reda Tagnaouti"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "maroc-6",
+    "theme": "maroc",
+    "question": "En 8es de finale du Mondial 2022, le Maroc a éliminé quelle nation européenne ?",
+    "choices": [
+      "Espagne",
+      "Portugal",
+      "Belgique"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "maroc-7",
+    "theme": "maroc",
+    "question": "En quarts de finale du Mondial 2022, le Maroc a ensuite éliminé quelle équipe ?",
+    "choices": [
+      "Portugal",
+      "Angleterre",
+      "Pays-Bas"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "maroc-8",
+    "theme": "maroc",
+    "question": "Quelle est la première nation africaine et arabe à avoir atteint les demi-finales d'une Coupe du Monde ?",
+    "choices": [
+      "Maroc",
+      "Cameroun",
+      "Ghana"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "maroc-9",
+    "theme": "maroc",
+    "question": "En quelle année le Maroc a-t-il remporté sa seule CAN à ce jour ?",
+    "choices": [
+      "1976",
+      "1988",
+      "1998"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "maroc-10",
+    "theme": "maroc",
+    "question": "En 2015, le Maroc a renoncé à organiser la CAN par crainte d'Ebola ; quel pays a repris l'organisation en urgence ?",
+    "choices": [
+      "Guinée équatoriale",
+      "Gabon",
+      "Congo"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "maroc-11",
+    "theme": "maroc",
+    "question": "Quel défenseur marocain, capitaine emblématique passé par le Paris Saint-Germain, incarne les Lions de l'Atlas ?",
+    "choices": [
+      "Achraf Hakimi",
+      "Romain Saïss",
+      "Noussair Mazraoui"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "maroc-12",
+    "theme": "maroc",
+    "question": "Quel milieu marocain de la Fiorentina a été essentiel au parcours du Maroc en 2022 ?",
+    "choices": [
+      "Sofyan Amrabat",
+      "Selim Amallah",
+      "Azzedine Ounahi"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "maroc-13",
+    "theme": "maroc",
+    "question": "Quel attaquant marocain a marqué le but décisif en quart de finale contre le Portugal en 2022 ?",
+    "choices": [
+      "Youssef En-Nesyri",
+      "Ayoub El Kaabi",
+      "Abderrazak Hamdallah"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "maroc-14",
+    "theme": "maroc",
+    "question": "Quelle est la couleur principale du maillot domicile du Maroc ?",
+    "choices": [
+      "Rouge",
+      "Bleu",
+      "Vert"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "maroc-15",
+    "theme": "maroc",
+    "question": "Le Maroc a terminé 4e du Mondial 2022 après avoir perdu le match pour la 3e place contre quel pays ?",
+    "choices": [
+      "Croatie",
+      "Argentine",
+      "Angleterre"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "maroc-16",
+    "theme": "maroc",
+    "question": "Quels sont les deux grands clubs rivaux de Casablanca, dont le derby est l'un des plus suivis d'Afrique ?",
+    "choices": [
+      "Raja et Wydad",
+      "FAR et Moghreb",
+      "Renaissance et Olympique"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "maroc-17",
+    "theme": "maroc",
+    "question": "Quel entraîneur français, également passé par le banc du Maroc, a remporté la CAN avec la Zambie (2012) et la Côte d'Ivoire (2015) ?",
+    "choices": [
+      "Hervé Renard",
+      "Claude Le Roy",
+      "Henri Michel"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "maroc-18",
+    "theme": "maroc",
+    "question": "Quel score le Maroc a-t-il réalisé face à la Belgique en phase de groupes du Mondial 2022 ?",
+    "choices": [
+      "1-0",
+      "2-0",
+      "2-1"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "maroc-19",
+    "theme": "maroc",
+    "question": "Quel est le plus grand stade du Maroc, situé à Casablanca ?",
+    "choices": [
+      "Stade Mohammed V",
+      "Grand Stade de Marrakech",
+      "Stade Ibn Batouta"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "maroc-20",
+    "theme": "maroc",
+    "question": "Le Maroc a-t-il déjà remporté la Coupe du Monde ?",
+    "choices": [
+      "Oui",
+      "Non",
+      "Une fois"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "algerie-1",
+    "theme": "algerie",
+    "question": "Quel est le surnom de l'équipe nationale d'Algérie ?",
+    "choices": [
+      "Les Fennecs",
+      "Les Lions",
+      "Les Panthères"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "algerie-2",
+    "theme": "algerie",
+    "question": "En quelle année l'Algérie a-t-elle remporté sa 2e CAN ?",
+    "choices": [
+      "2017",
+      "2019",
+      "2021"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "algerie-3",
+    "theme": "algerie",
+    "question": "En quelle année l'Algérie a-t-elle remporté sa toute première CAN ?",
+    "choices": [
+      "1980",
+      "1990",
+      "2000"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "algerie-4",
+    "theme": "algerie",
+    "question": "En 1990, l'Algérie a remporté la CAN à domicile en battant qui en finale ?",
+    "choices": [
+      "Nigeria",
+      "Cameroun",
+      "Zambie"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "algerie-5",
+    "theme": "algerie",
+    "question": "Qui était le sélectionneur de l'Algérie lors du sacre de la CAN 2019 ?",
+    "choices": [
+      "Djamel Belmadi",
+      "Rabah Madjer",
+      "Vahid Halilhodžić"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "algerie-6",
+    "theme": "algerie",
+    "question": "L'Algérie a battu quel pays en finale de la CAN 2019 ?",
+    "choices": [
+      "Sénégal",
+      "Tunisie",
+      "Nigeria"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "algerie-7",
+    "theme": "algerie",
+    "question": "Quel joueur algérien a été élu meilleur joueur de la CAN 2019 ?",
+    "choices": [
+      "Riyad Mahrez",
+      "Baghdad Bounedjah",
+      "Youcef Belaïli"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "algerie-8",
+    "theme": "algerie",
+    "question": "Riyad Mahrez a remporté la Ligue des champions de l'UEFA en 2023 avec quel club ?",
+    "choices": [
+      "Manchester City",
+      "Chelsea",
+      "Liverpool"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "algerie-9",
+    "theme": "algerie",
+    "question": "En Coupe du Monde 1982, l'Algérie a créé la surprise en battant quelle grande nation européenne ?",
+    "choices": [
+      "Allemagne de l'Ouest",
+      "Espagne",
+      "Italie"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "algerie-10",
+    "theme": "algerie",
+    "question": "Quel est le stade principal de l'équipe nationale d'Algérie ?",
+    "choices": [
+      "Stade Mustapha Tchaker",
+      "Stade 5 Juillet 1962",
+      "Stade Chahid Hamlaoui"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "algerie-11",
+    "theme": "algerie",
+    "question": "Quel milieu algérien, plusieurs fois élu Ballon d'Or africain, évolue aujourd'hui à Al-Ahli ?",
+    "choices": [
+      "Riyad Mahrez",
+      "Islam Slimani",
+      "Sofiane Feghouli"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "algerie-12",
+    "theme": "algerie",
+    "question": "Combien de fois l'Algérie a-t-elle remporté la CAN à ce jour ?",
+    "choices": [
+      "1",
+      "2",
+      "3"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "algerie-13",
+    "theme": "algerie",
+    "question": "Quelle est la couleur principale du maillot domicile de l'Algérie ?",
+    "choices": [
+      "Vert",
+      "Blanc",
+      "Rouge"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "algerie-14",
+    "theme": "algerie",
+    "question": "En Coupe du Monde 2014, à quel stade l'Algérie a-t-elle été éliminée par l'Allemagne ?",
+    "choices": [
+      "8es de finale",
+      "Quarts de finale",
+      "Phase de groupes"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "algerie-15",
+    "theme": "algerie",
+    "question": "Quel gardien algérien a cumulé plus de 100 sélections dans les buts des Fennecs dans les années 2010 ?",
+    "choices": [
+      "Raïs M'Bolhi",
+      "Alexandre Oukidja",
+      "Mohamed Lamine Zemmamouche"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "algerie-16",
+    "theme": "algerie",
+    "question": "En quelle année l'Algérie a-t-elle disputé sa toute première Coupe du Monde ?",
+    "choices": [
+      "1982",
+      "1986",
+      "1990"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "algerie-17",
+    "theme": "algerie",
+    "question": "Quel ancien international algérien, auteur d'un but de talonnade resté célèbre en finale de la Coupe d'Europe 1987, est devenu sélectionneur national par la suite ?",
+    "choices": [
+      "Rabah Madjer",
+      "Lakhdar Belloumi",
+      "Djamel Belmadi"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "algerie-18",
+    "theme": "algerie",
+    "question": "Quel joueur algérien porte le brassard de capitaine et évolue à Al-Ahli après un long passage à Manchester City ?",
+    "choices": [
+      "Riyad Mahrez",
+      "Ismaël Bennacer",
+      "Youcef Atal"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "algerie-19",
+    "theme": "algerie",
+    "question": "Quel milieu algérien de l'AC Milan a remporté le Scudetto en 2022 ?",
+    "choices": [
+      "Ismaël Bennacer",
+      "Adam Ounas",
+      "Nabil Bentaleb"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "algerie-20",
+    "theme": "algerie",
+    "question": "Quel joueur algérien a inscrit le but victorieux en finale de la CAN 2019 face au Sénégal ?",
+    "choices": [
+      "Baghdad Bounedjah",
+      "Riyad Mahrez",
+      "Youcef Belaïli"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cameroun-1",
+    "theme": "cameroun",
+    "question": "Quel est le surnom de l'équipe nationale du Cameroun ?",
+    "choices": [
+      "Les Lions Indomptables",
+      "Les Éléphants",
+      "Les Aigles"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cameroun-2",
+    "theme": "cameroun",
+    "question": "Combien de fois le Cameroun a-t-il remporté la CAN ?",
+    "choices": [
+      "3",
+      "5",
+      "7"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "cameroun-3",
+    "theme": "cameroun",
+    "question": "En 1990, le Cameroun a éliminé quel pays en 8es de finale pour devenir la 1ère nation africaine en quarts de finale de Coupe du Monde ?",
+    "choices": [
+      "Colombie",
+      "Argentine",
+      "Roumanie"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cameroun-4",
+    "theme": "cameroun",
+    "question": "Quel joueur camerounais est devenu célèbre pour sa danse au poteau de corner lors du Mondial 1990 ?",
+    "choices": [
+      "Roger Milla",
+      "François Omam-Biyik",
+      "Thomas N'Kono"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cameroun-5",
+    "theme": "cameroun",
+    "question": "Quel gardien camerounais a été élu meilleur gardien africain du XXe siècle ?",
+    "choices": [
+      "Thomas N'Kono",
+      "Joseph-Antoine Bell",
+      "Idriss Kameni"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cameroun-6",
+    "theme": "cameroun",
+    "question": "En quelle année le Cameroun a-t-il remporté l'or olympique de football, à Sydney ?",
+    "choices": [
+      "1996",
+      "2000",
+      "2004"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "cameroun-7",
+    "theme": "cameroun",
+    "question": "Quel attaquant camerounais, ancien de Barcelone et Chelsea, a été triple champion d'Afrique du buteur ?",
+    "choices": [
+      "Samuel Eto'o",
+      "Patrick Mboma",
+      "Achille Emana"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cameroun-8",
+    "theme": "cameroun",
+    "question": "Combien de fois Samuel Eto'o a-t-il remporté la Ligue des champions de l'UEFA ?",
+    "choices": [
+      "2",
+      "3",
+      "4"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "cameroun-9",
+    "theme": "cameroun",
+    "question": "Quel est le stade historique de l'équipe du Cameroun, situé à Yaoundé ?",
+    "choices": [
+      "Stade Ahmadou Ahidjo",
+      "Stade de la Réunification",
+      "Stade Roumdé Adjia"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cameroun-10",
+    "theme": "cameroun",
+    "question": "Le Cameroun a organisé et remporté quelle édition de la CAN sur ses terres ?",
+    "choices": [
+      "CAN 1972",
+      "CAN 2000",
+      "CAN 2021"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": "cameroun-11",
+    "theme": "cameroun",
+    "question": "Le Cameroun a remporté la finale de la CAN 2017 contre quel pays ?",
+    "choices": [
+      "Égypte",
+      "Sénégal",
+      "Ghana"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cameroun-12",
+    "theme": "cameroun",
+    "question": "Quel joueur camerounais a été élu meilleur joueur africain (CAF) en 2003 et 2004 ?",
+    "choices": [
+      "Samuel Eto'o",
+      "Rigobert Song",
+      "Geremi Njitap"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cameroun-13",
+    "theme": "cameroun",
+    "question": "Quel défenseur camerounais détient le record de participations à des phases finales de Coupe du Monde pour un joueur africain (4 tournois) ?",
+    "choices": [
+      "Rigobert Song",
+      "Stephen Tataw",
+      "Raymond Kalla"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cameroun-14",
+    "theme": "cameroun",
+    "question": "Quelle est la couleur principale du maillot du Cameroun ?",
+    "choices": [
+      "Vert",
+      "Jaune",
+      "Rouge"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cameroun-15",
+    "theme": "cameroun",
+    "question": "Le Cameroun a atteint les quarts de finale du Mondial 1990 en s'inclinant face à quel pays ?",
+    "choices": [
+      "Angleterre",
+      "Italie",
+      "Argentine"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cameroun-16",
+    "theme": "cameroun",
+    "question": "En quelle année le Cameroun a-t-il disputé sa toute première Coupe du Monde ?",
+    "choices": [
+      "1982",
+      "1990",
+      "1994"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cameroun-17",
+    "theme": "cameroun",
+    "question": "Quel entraîneur a mené le Cameroun jusqu'aux quarts de finale du Mondial 1990 ?",
+    "choices": [
+      "Valeri Nepomniachtchi",
+      "Claude Le Roy",
+      "Philippe Troussier"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cameroun-18",
+    "theme": "cameroun",
+    "question": "Quel milieu camerounais, capitaine des Lions Indomptables dans les années 2000, a longtemps évolué au Real Madrid ?",
+    "choices": [
+      "Geremi Njitap",
+      "Marc-Vivien Foé",
+      "Rigobert Song"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cameroun-19",
+    "theme": "cameroun",
+    "question": "Marc-Vivien Foé est décédé en plein match en 2003, lors de quelle compétition ?",
+    "choices": [
+      "Coupe des Confédérations",
+      "CAN",
+      "Coupe du Monde"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cameroun-20",
+    "theme": "cameroun",
+    "question": "Combien de fois le Cameroun a-t-il été sacré champion olympique de football ?",
+    "choices": [
+      "0",
+      "1",
+      "2"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "cote-ivoire-1",
+    "theme": "cote-ivoire",
+    "question": "Quel est le surnom de l'équipe nationale de Côte d'Ivoire ?",
+    "choices": [
+      "Les Éléphants",
+      "Les Lions",
+      "Les Étalons"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cote-ivoire-2",
+    "theme": "cote-ivoire",
+    "question": "La Côte d'Ivoire a remporté la CAN 2023 en tant que pays...",
+    "choices": [
+      "voisin",
+      "hôte",
+      "invité"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "cote-ivoire-3",
+    "theme": "cote-ivoire",
+    "question": "Qui a remporté le plus de titres de meilleur joueur africain (CAF) parmi les Ivoiriens ?",
+    "choices": [
+      "Didier Drogba",
+      "Yaya Touré",
+      "Salomon Kalou"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "cote-ivoire-4",
+    "theme": "cote-ivoire",
+    "question": "La Côte d'Ivoire a remporté la CAN 2023 en battant quel pays en finale ?",
+    "choices": [
+      "Nigeria",
+      "Maroc",
+      "Sénégal"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cote-ivoire-5",
+    "theme": "cote-ivoire",
+    "question": "Quel entraîneur a mené la Côte d'Ivoire au titre de la CAN 2023, après avoir remplacé le sélectionneur en cours de compétition ?",
+    "choices": [
+      "Jean-Louis Gasset",
+      "Emerse Faé",
+      "Hervé Renard"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "cote-ivoire-6",
+    "theme": "cote-ivoire",
+    "question": "Combien de titres de CAN la Côte d'Ivoire avait-elle remportés jusqu'en 2023 inclus ?",
+    "choices": [
+      "2",
+      "3",
+      "4"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "cote-ivoire-7",
+    "theme": "cote-ivoire",
+    "question": "En quelle année la Côte d'Ivoire a-t-elle remporté sa toute première CAN ?",
+    "choices": [
+      "1992",
+      "2015",
+      "2023"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cote-ivoire-8",
+    "theme": "cote-ivoire",
+    "question": "La CAN 2015 a été remportée par la Côte d'Ivoire face à quel pays, aux tirs au but ?",
+    "choices": [
+      "Ghana",
+      "Zambie",
+      "Mali"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cote-ivoire-9",
+    "theme": "cote-ivoire",
+    "question": "Quel attaquant ivoirien, meilleur buteur historique de Chelsea, a longtemps porté le brassard des Éléphants ?",
+    "choices": [
+      "Didier Drogba",
+      "Gervinho",
+      "Wilfried Bony"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cote-ivoire-10",
+    "theme": "cote-ivoire",
+    "question": "Quel est le stade principal de la Côte d'Ivoire, rénové pour la CAN 2023 ?",
+    "choices": [
+      "Stade Félix Houphouët-Boigny",
+      "Stade Alassane Ouattara",
+      "Stade de la Paix"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "cote-ivoire-11",
+    "theme": "cote-ivoire",
+    "question": "Quel duo de frères, l'un défenseur central et l'autre milieu, a marqué le football ivoirien ?",
+    "choices": [
+      "Les frères Zokora",
+      "Kolo et Yaya Touré",
+      "Les frères Kalou"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "cote-ivoire-12",
+    "theme": "cote-ivoire",
+    "question": "Yaya Touré a remporté la Ligue des champions de l'UEFA en 2009 avec quel club ?",
+    "choices": [
+      "Real Madrid",
+      "FC Barcelone",
+      "Atlético Madrid"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "cote-ivoire-13",
+    "theme": "cote-ivoire",
+    "question": "Quelle est la couleur principale du maillot domicile de la Côte d'Ivoire ?",
+    "choices": [
+      "Orange",
+      "Vert",
+      "Blanc"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cote-ivoire-14",
+    "theme": "cote-ivoire",
+    "question": "La Côte d'Ivoire a-t-elle déjà atteint les quarts de finale d'une Coupe du Monde ?",
+    "choices": [
+      "Oui",
+      "Non",
+      "Une seule fois"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "cote-ivoire-15",
+    "theme": "cote-ivoire",
+    "question": "Quel gardien ivoirien a été le héros de la séance de tirs au but en finale de la CAN 2015 ?",
+    "choices": [
+      "Boubacar Barry",
+      "Sylvain Gbohouo",
+      "Badra Sangaré"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cote-ivoire-16",
+    "theme": "cote-ivoire",
+    "question": "Quel a été le score de la finale de la CAN 2023 entre la Côte d'Ivoire et le Nigeria ?",
+    "choices": [
+      "1-0",
+      "2-1",
+      "2-0"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "cote-ivoire-17",
+    "theme": "cote-ivoire",
+    "question": "Quel sélectionneur français a été démis de ses fonctions en pleine CAN 2023 ?",
+    "choices": [
+      "Jean-Louis Gasset",
+      "Hervé Renard",
+      "Patrice Beaumelle"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "cote-ivoire-18",
+    "theme": "cote-ivoire",
+    "question": "À quelle place la Côte d'Ivoire a-t-elle terminé son groupe lors de la phase de poules de la CAN 2023 ?",
+    "choices": [
+      "1re",
+      "2e",
+      "3e"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": "cote-ivoire-19",
+    "theme": "cote-ivoire",
+    "question": "Combien d'années se sont écoulées entre les titres de CAN de la Côte d'Ivoire en 1992 et 2015 ?",
+    "choices": [
+      "15 ans",
+      "23 ans",
+      "30 ans"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "cote-ivoire-20",
+    "theme": "cote-ivoire",
+    "question": "La Côte d'Ivoire a battu quel pays en demi-finale de la CAN 2023 ?",
+    "choices": [
+      "RD Congo",
+      "Mali",
+      "Sénégal"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-1",
+    "theme": "egypte",
+    "question": "En finale de la toute première CAN, en 1957, l'Égypte a battu l'Éthiopie sur quel score ?",
+    "choices": [
+      "4-0",
+      "3-1",
+      "2-0"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-2",
+    "theme": "egypte",
+    "question": "Dans quel pays s'est déroulée la CAN 1957, remportée par l'Égypte alors qu'elle n'en était pas l'hôte ?",
+    "choices": [
+      "Soudan",
+      "Éthiopie",
+      "Libye"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-3",
+    "theme": "egypte",
+    "question": "Quel attaquant égyptien a inscrit les 4 buts de la finale de la CAN 1957 face à l'Éthiopie ?",
+    "choices": [
+      "Ad-Diba",
+      "Hassan Aziz",
+      "Mohamed Latif"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-4",
+    "theme": "egypte",
+    "question": "Combien d'équipes ont pris part à la toute première CAN en 1957, remportée par l'Égypte ?",
+    "choices": [
+      "3",
+      "6",
+      "8"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-5",
+    "theme": "egypte",
+    "question": "Sous quel nom l'Égypte a-t-elle remporté son 2e titre continental, à la CAN 1959 ?",
+    "choices": [
+      "République Arabe Unie",
+      "Royaume d'Égypte",
+      "République d'Égypte"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-6",
+    "theme": "egypte",
+    "question": "Quelle particularité a marqué le format de la CAN 1959, remportée par l'Égypte, unique dans l'histoire de la compétition ?",
+    "choices": [
+      "Un mini-championnat sans finale",
+      "Un tournoi à élimination directe",
+      "Une phase de groupes suivie de barrages"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-7",
+    "theme": "egypte",
+    "question": "Dans quelle ville s'est jouée la finale de la CAN 1986, remportée par l'Égypte face au Cameroun ?",
+    "choices": [
+      "Le Caire",
+      "Alexandrie",
+      "Ismaïlia"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-8",
+    "theme": "egypte",
+    "question": "Sur quel score aux tirs au but l'Égypte a-t-elle battu le Cameroun en finale de la CAN 1986, après un 0-0 ?",
+    "choices": [
+      "5-4",
+      "4-3",
+      "6-5"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-9",
+    "theme": "egypte",
+    "question": "Dans quel pays s'est déroulée la CAN 1998, remportée par l'Égypte face à l'Afrique du Sud en finale ?",
+    "choices": [
+      "Burkina Faso",
+      "Ghana",
+      "Mali"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-10",
+    "theme": "egypte",
+    "question": "Quel a été le score de la finale de la CAN 1998 entre l'Égypte et l'Afrique du Sud ?",
+    "choices": [
+      "2-0",
+      "1-0",
+      "3-1"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-11",
+    "theme": "egypte",
+    "question": "Avec 7 buts, quel attaquant égyptien a terminé co-meilleur buteur de la CAN 1998, ex-aequo avec le Sud-Africain Benni McCarthy ?",
+    "choices": [
+      "Hossam Hassan",
+      "Mohamed Aboutrika",
+      "Ahmed Hassan"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-12",
+    "theme": "egypte",
+    "question": "Qui a été élu meilleur joueur de la CAN 1998, alors même que son équipe, l'Afrique du Sud, a perdu la finale face à l'Égypte ?",
+    "choices": [
+      "Benni McCarthy",
+      "Lucas Radebe",
+      "Mark Fish"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-13",
+    "theme": "egypte",
+    "question": "En finale de la CAN 2006, disputée au Caire, l'Égypte a battu la Côte d'Ivoire aux tirs au but sur quel score ?",
+    "choices": [
+      "4-2",
+      "5-3",
+      "3-1"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-14",
+    "theme": "egypte",
+    "question": "Sur quel score l'Égypte a-t-elle battu le Sénégal en demi-finale de la CAN 2006 à domicile ?",
+    "choices": [
+      "2-0",
+      "1-0",
+      "3-1"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-15",
+    "theme": "egypte",
+    "question": "Qui a remporté le titre de meilleur buteur de la CAN 2006 avec 5 buts, bien que son équipe n'ait pas été sacrée championne ?",
+    "choices": [
+      "Samuel Eto'o",
+      "Didier Drogba",
+      "Emad Moteab"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-16",
+    "theme": "egypte",
+    "question": "Quel milieu égyptien a été élu meilleur joueur de la CAN 2006, remportée par l'Égypte ?",
+    "choices": [
+      "Ahmed Hassan",
+      "Mohamed Aboutrika",
+      "Mohamed Barakat"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-17",
+    "theme": "egypte",
+    "question": "Quel gardien égyptien a été élu meilleur gardien de la CAN 2006, année du 5e sacre continental des Pharaons ?",
+    "choices": [
+      "Essam El-Hadary",
+      "Ahmed El Shenawi",
+      "Mohamed El-Shenawy"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-18",
+    "theme": "egypte",
+    "question": "À quelle minute Mohamed Aboutrika a-t-il inscrit l'unique but de la finale de la CAN 2008 face au Cameroun ?",
+    "choices": [
+      "77e minute",
+      "89e minute",
+      "45e minute"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-19",
+    "theme": "egypte",
+    "question": "Dans quel pays s'est jouée la CAN 2008, où l'Égypte a battu le Cameroun 1-0 en finale ?",
+    "choices": [
+      "Ghana",
+      "Angola",
+      "Gabon"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-20",
+    "theme": "egypte",
+    "question": "Quel attaquant égyptien a subtilisé le ballon à Rigobert Song avant de servir Aboutrika pour le but vainqueur de la finale CAN 2008 ?",
+    "choices": [
+      "Mohamed Zidan",
+      "Amr Zaki",
+      "Emad Moteab"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-21",
+    "theme": "egypte",
+    "question": "À quelle minute l'attaquant Gedo a-t-il marqué le seul but de la finale de la CAN 2010 face au Ghana ?",
+    "choices": [
+      "85e minute",
+      "70e minute",
+      "90e minute"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-22",
+    "theme": "egypte",
+    "question": "Dans quel pays s'est déroulée la CAN 2010, 7e et dernier sacre continental de l'Égypte à ce jour ?",
+    "choices": [
+      "Angola",
+      "Gabon",
+      "Guinée équatoriale"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-23",
+    "theme": "egypte",
+    "question": "Avec 5 buts, quel attaquant égyptien a été le meilleur buteur de la CAN 2010, tournoi remporté par l'Égypte ?",
+    "choices": [
+      "Gedo",
+      "Emad Moteab",
+      "Amr Zaki"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-24",
+    "theme": "egypte",
+    "question": "Quel sélectionneur égyptien a mené les Pharaons à leur triplé historique de titres CAN consécutifs (2006, 2008, 2010) ?",
+    "choices": [
+      "Hassan Shehata",
+      "Hector Cuper",
+      "Mahmoud El-Gohary"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-25",
+    "theme": "egypte",
+    "question": "De quelle année à quelle année Hassan Shehata a-t-il été sélectionneur de l'Égypte, période de son triplé continental ?",
+    "choices": [
+      "2004 à 2011",
+      "2000 à 2006",
+      "2008 à 2013"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-26",
+    "theme": "egypte",
+    "question": "Avant Hassan Shehata, quel technicien ghanéen était le seul autre entraîneur de l'histoire à avoir remporté 3 CAN consécutives ?",
+    "choices": [
+      "Charles Kumi Gyamfi",
+      "Kwesi Appiah",
+      "Claude Le Roy"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-27",
+    "theme": "egypte",
+    "question": "Sur quel score le Cameroun a-t-il battu l'Égypte en finale de la CAN 2017 à Libreville ?",
+    "choices": [
+      "2-1",
+      "1-0",
+      "3-2"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-28",
+    "theme": "egypte",
+    "question": "À quelle minute Mohamed Elneny a-t-il ouvert le score pour l'Égypte en finale de la CAN 2017 face au Cameroun ?",
+    "choices": [
+      "22e minute",
+      "35e minute",
+      "10e minute"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-29",
+    "theme": "egypte",
+    "question": "Quel attaquant camerounais a inscrit le but vainqueur à la 88e minute de la finale de la CAN 2017 face à l'Égypte ?",
+    "choices": [
+      "Vincent Aboubakar",
+      "Nicolas Nkoulou",
+      "Christian Bassogog"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-30",
+    "theme": "egypte",
+    "question": "Sur quel score aux tirs au but l'Égypte a-t-elle éliminé le Burkina Faso en demi-finale de la CAN 2017 ?",
+    "choices": [
+      "4-3",
+      "5-4",
+      "3-2"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-31",
+    "theme": "egypte",
+    "question": "Quel âge avait le gardien Essam El-Hadary lors de la CAN 2017, où il fut le doyen du tournoi ?",
+    "choices": [
+      "44 ans",
+      "41 ans",
+      "47 ans"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-32",
+    "theme": "egypte",
+    "question": "Hôte de la CAN 2019, l'Égypte a terminé sa phase de groupes avec un bilan parfait de 3 victoires et combien de buts encaissés ?",
+    "choices": [
+      "0",
+      "1",
+      "2"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-33",
+    "theme": "egypte",
+    "question": "Éliminée en huitièmes de finale de la CAN 2019 qu'elle organisait, l'Égypte a perdu 0-1 face à quelle sélection ?",
+    "choices": [
+      "Afrique du Sud",
+      "Ouganda",
+      "Tunisie"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-34",
+    "theme": "egypte",
+    "question": "Quelle équipe a finalement remporté la CAN 2019, organisée par l'Égypte, en battant le Sénégal 1-0 en finale ?",
+    "choices": [
+      "Algérie",
+      "Nigeria",
+      "Tunisie"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-35",
+    "theme": "egypte",
+    "question": "En finale de la CAN 2021 (jouée début 2022) face au Sénégal, quel a été le score après prolongation, avant les tirs au but ?",
+    "choices": [
+      "0-0",
+      "1-1",
+      "0-1"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-36",
+    "theme": "egypte",
+    "question": "Sur quel score aux tirs au but le Sénégal a-t-il battu l'Égypte en finale de la CAN 2021 ?",
+    "choices": [
+      "4-2",
+      "5-3",
+      "3-1"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-37",
+    "theme": "egypte",
+    "question": "Dans quel stade s'est jouée la finale de la CAN 2021 entre le Sénégal et l'Égypte, à Yaoundé ?",
+    "choices": [
+      "Stade Olembe",
+      "Stade Ahmadou-Ahidjo",
+      "Stade de Japoma"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-38",
+    "theme": "egypte",
+    "question": "Quel joueur sénégalais a transformé le tir au but décisif de la finale de la CAN 2021 face à l'Égypte ?",
+    "choices": [
+      "Sadio Mané",
+      "Kalidou Koulibaly",
+      "Idrissa Gueye"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-39",
+    "theme": "egypte",
+    "question": "Quel sélectionneur portugais dirigeait l'Égypte lors de la finale de la CAN 2021 perdue face au Sénégal ?",
+    "choices": [
+      "Carlos Queiroz",
+      "Rui Vitória",
+      "Jorge Jesus"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-40",
+    "theme": "egypte",
+    "question": "En plus de la finale de la CAN 2021, contre quelle même sélection l'Égypte de Carlos Queiroz a-t-elle aussi perdu aux tirs au but lors des barrages qualificatifs pour le Mondial 2022 ?",
+    "choices": [
+      "Sénégal",
+      "Cameroun",
+      "Nigeria"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-41",
+    "theme": "egypte",
+    "question": "En demi-finale de la CAN 2021, l'Égypte a éliminé quel pays hôte du tournoi, aux tirs au but ?",
+    "choices": [
+      "Cameroun",
+      "Côte d'Ivoire",
+      "Guinée"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-42",
+    "theme": "egypte",
+    "question": "Éliminée en huitièmes de finale de la CAN 2023 (disputée début 2024), l'Égypte a été sortie par quelle sélection après prolongation ?",
+    "choices": [
+      "RD Congo",
+      "Cap-Vert",
+      "Guinée équatoriale"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-43",
+    "theme": "egypte",
+    "question": "Sur quel score aux tirs au but la RD Congo a-t-elle éliminé l'Égypte en huitièmes de finale de la CAN 2023 ?",
+    "choices": [
+      "8-7",
+      "6-5",
+      "9-8"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-44",
+    "theme": "egypte",
+    "question": "Sur penalty, dans les arrêts de jeu de la 1re période, quel attaquant a marqué l'unique but égyptien face à la RD Congo en CAN 2023 ?",
+    "choices": [
+      "Mostafa Mohamed",
+      "Trezeguet",
+      "Zizo"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-45",
+    "theme": "egypte",
+    "question": "Quel sélectionneur portugais a été limogé après l'élimination de l'Égypte dès les huitièmes de la CAN 2023, sans la moindre victoire dans le tournoi ?",
+    "choices": [
+      "Rui Vitória",
+      "Carlos Queiroz",
+      "Paulo Bento"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-46",
+    "theme": "egypte",
+    "question": "Quelle sélection, pays hôte, a remporté la CAN 2023 en battant le Nigeria 2-1 en finale ?",
+    "choices": [
+      "Côte d'Ivoire",
+      "Sénégal",
+      "Cameroun"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-47",
+    "theme": "egypte",
+    "question": "En 1934, l'Égypte devient la première nation africaine à disputer une Coupe du monde. Face à qui a-t-elle été éliminée, sur le score de 4-2 ?",
+    "choices": [
+      "Hongrie",
+      "Autriche",
+      "Italie"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-48",
+    "theme": "egypte",
+    "question": "Qui a inscrit un doublé pour l'Égypte lors de sa défaite 4-2 face à la Hongrie au Mondial 1934, les tout premiers buts africains en Coupe du monde ?",
+    "choices": [
+      "Abdulrahman Fawzi",
+      "Ad-Diba",
+      "Hussein Hegazi"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-49",
+    "theme": "egypte",
+    "question": "Lors du Mondial 1990, avec quel pays européen l'Égypte a-t-elle fait match nul 1-1, sur un penalty de Magdi Abdelghani ?",
+    "choices": [
+      "Pays-Bas",
+      "Angleterre",
+      "Irlande"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-50",
+    "theme": "egypte",
+    "question": "Quel but tardif de Mark Wright a offert à l'Angleterre une victoire 1-0 face à l'Égypte lors du Mondial 1990 ?",
+    "choices": [
+      "Un but en fin de match",
+      "Un but sur coup franc direct",
+      "Un but contre son camp égyptien"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-51",
+    "theme": "egypte",
+    "question": "Lors de sa phase de groupes au Mondial 1990, contre quelle sélation l'Égypte a-t-elle fait match nul 0-0 ?",
+    "choices": [
+      "République d'Irlande",
+      "Écosse",
+      "Pays de Galles"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-52",
+    "theme": "egypte",
+    "question": "Lors du Mondial 2018, l'Égypte partageait le groupe A avec la Russie, l'Arabie Saoudite et quel pays sud-américain ?",
+    "choices": [
+      "Uruguay",
+      "Argentine",
+      "Chili"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-53",
+    "theme": "egypte",
+    "question": "L'Égypte s'est inclinée 0-1 face à l'Uruguay lors de son entrée en lice au Mondial 2018 : à quelle minute José Giménez a-t-il marqué ?",
+    "choices": [
+      "89e minute",
+      "45e minute",
+      "60e minute"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-54",
+    "theme": "egypte",
+    "question": "Sur quel score l'Égypte s'est-elle inclinée face à la Russie, pays hôte, lors du Mondial 2018 ?",
+    "choices": [
+      "1-3",
+      "0-2",
+      "2-3"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-55",
+    "theme": "egypte",
+    "question": "Quel défenseur égyptien a marqué contre son camp lors de la défaite 3-1 face à la Russie au Mondial 2018 ?",
+    "choices": [
+      "Ahmed Fathy",
+      "Ali Gabr",
+      "Ahmed Elmohamady"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-56",
+    "theme": "egypte",
+    "question": "À quelle minute Mohamed Salah a-t-il marqué sur penalty face à la Russie lors du Mondial 2018 ?",
+    "choices": [
+      "73e minute",
+      "50e minute",
+      "90e minute"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-57",
+    "theme": "egypte",
+    "question": "Sur quel score l'Arabie Saoudite a-t-elle battu l'Égypte lors du dernier match de groupe du Mondial 2018, malgré un but de Salah ?",
+    "choices": [
+      "2-1",
+      "1-0",
+      "3-1"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-58",
+    "theme": "egypte",
+    "question": "À quel âge exact Essam El-Hadary est-il devenu le doyen de l'histoire des Coupes du monde lors du Mondial 2018 ?",
+    "choices": [
+      "45 ans et 161 jours",
+      "43 ans et 3 jours",
+      "47 ans et 20 jours"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-59",
+    "theme": "egypte",
+    "question": "Le record du plus vieux joueur en Coupe du monde, battu par Essam El-Hadary en 2018, appartenait auparavant à un gardien de quel pays ?",
+    "choices": [
+      "Colombie",
+      "Costa Rica",
+      "Cameroun"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-60",
+    "theme": "egypte",
+    "question": "En phase de qualification pour le Mondial 2026, l'Égypte a terminé sa poule invaincue avec quel bilan sur 10 matchs ?",
+    "choices": [
+      "8 victoires et 2 nuls",
+      "9 victoires et 1 nul",
+      "7 victoires, 2 nuls et 1 défaite"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-61",
+    "theme": "egypte",
+    "question": "Lors des qualifications pour le Mondial 2026, l'Égypte a infligé quel score à Djibouti ?",
+    "choices": [
+      "6-0",
+      "4-0",
+      "8-1"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-62",
+    "theme": "egypte",
+    "question": "L'Égypte a atteint la 4e place du tournoi olympique de football à trois reprises : en 1928, 1964 et lors de quelle édition récente ?",
+    "choices": [
+      "Paris 2024",
+      "Tokyo 2020",
+      "Londres 2012"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-63",
+    "theme": "egypte",
+    "question": "Dans quel club égyptien Mohamed Salah a-t-il fait ses débuts professionnels en 2010, à seulement 17 ans ?",
+    "choices": [
+      "El Mokawloon (Arab Contractors)",
+      "Al Ahly",
+      "Ismaily"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-64",
+    "theme": "egypte",
+    "question": "En 2012, Mohamed Salah a quitté l'Égypte pour rejoindre quel club suisse ?",
+    "choices": [
+      "Bâle",
+      "Zurich",
+      "Young Boys"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-65",
+    "theme": "egypte",
+    "question": "En janvier 2014, Chelsea a recruté Mohamed Salah en provenance de Bâle pour un montant avoisinant quelle somme ?",
+    "choices": [
+      "11 millions de livres",
+      "25 millions de livres",
+      "5 millions de livres"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-66",
+    "theme": "egypte",
+    "question": "En 2015, après son passage raté à Chelsea, Mohamed Salah a été prêté à quel club italien avant de rejoindre l'AS Roma ?",
+    "choices": [
+      "Fiorentina",
+      "Torino",
+      "Sampdoria"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-67",
+    "theme": "egypte",
+    "question": "En 2016, l'AS Roma a levé l'option d'achat de Mohamed Salah pour environ quelle somme ?",
+    "choices": [
+      "15 millions d'euros",
+      "30 millions d'euros",
+      "8 millions d'euros"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-68",
+    "theme": "egypte",
+    "question": "En juin 2017, Liverpool a recruté Mohamed Salah auprès de l'AS Roma, un transfert alors record pour le club, pour environ combien ?",
+    "choices": [
+      "36,9 millions de livres",
+      "60 millions de livres",
+      "20 millions de livres"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-69",
+    "theme": "egypte",
+    "question": "Lors de sa première saison à Liverpool (2017-18), combien de buts Mohamed Salah a-t-il inscrits en Premier League, un record pour une saison à 38 journées ?",
+    "choices": [
+      "32 buts",
+      "28 buts",
+      "36 buts"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-70",
+    "theme": "egypte",
+    "question": "Lors de sa saison record 2017-18, Mohamed Salah a marqué contre combien d'adversaires différents en Premier League, un record de l'ère moderne ?",
+    "choices": [
+      "17",
+      "14",
+      "20"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-71",
+    "theme": "egypte",
+    "question": "En 2018-19, Mohamed Salah a partagé le titre de meilleur buteur de Premier League (22 buts) avec Sadio Mané et quel autre attaquant ?",
+    "choices": [
+      "Pierre-Emerick Aubameyang",
+      "Sergio Agüero",
+      "Harry Kane"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-72",
+    "theme": "egypte",
+    "question": "En 2021-22, Mohamed Salah a partagé son 3e titre de meilleur buteur de Premier League (23 buts) avec quel joueur de Tottenham ?",
+    "choices": [
+      "Heung-min Son",
+      "Harry Kane",
+      "Dele Alli"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-73",
+    "theme": "egypte",
+    "question": "En finale de la Ligue des champions 2019, Liverpool a battu quel club anglais 2-0, avec un but de Salah dès la 2e minute ?",
+    "choices": [
+      "Tottenham Hotspur",
+      "Manchester City",
+      "Chelsea"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-74",
+    "theme": "egypte",
+    "question": "Le but de Salah dès la 2e minute de la finale de C1 2019 sur penalty est le combientième but le plus rapide de l'histoire des finales de Ligue des champions ?",
+    "choices": [
+      "Le 2e plus rapide",
+      "Le plus rapide",
+      "Le 5e plus rapide"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-75",
+    "theme": "egypte",
+    "question": "Malgré sa longévité au sommet, Mohamed Salah reste encore, mi-2026, à un but du record absolu de buteur de la sélection égyptienne détenu par quel joueur, avec 69 réalisations ?",
+    "choices": [
+      "Hossam Hassan",
+      "Ahmed Hassan",
+      "Mohamed Aboutrika"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-76",
+    "theme": "egypte",
+    "question": "Combien de sélections Hossam Hassan, meilleur buteur historique de l'Égypte, a-t-il honorées entre 1985 et 2006 ?",
+    "choices": [
+      "177",
+      "150",
+      "200"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-77",
+    "theme": "egypte",
+    "question": "Combien de CAN Hossam Hassan a-t-il remportées en tant que joueur au cours de sa carrière (1986, 1998, 2006) ?",
+    "choices": [
+      "3",
+      "2",
+      "4"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-78",
+    "theme": "egypte",
+    "question": "Avec 184 sélections entre 1995 et 2012, quel milieu égyptien détient le record du nombre de capes pour les Pharaons ?",
+    "choices": [
+      "Ahmed Hassan",
+      "Hossam Hassan",
+      "Essam El-Hadary"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-79",
+    "theme": "egypte",
+    "question": "Ahmed Hassan détient un record individuel unique en Afrique : celui du nombre de CAN remportées par un même joueur. Combien en a-t-il gagné ?",
+    "choices": [
+      "4",
+      "3",
+      "5"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-80",
+    "theme": "egypte",
+    "question": "Ahmed Hassan a été élu meilleur joueur de la CAN à deux reprises : en 2006 et lors de quelle autre édition ?",
+    "choices": [
+      "2010",
+      "2008",
+      "1998"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-81",
+    "theme": "egypte",
+    "question": "En 2010, Ahmed Hassan a battu le record du nombre de sélections en équipe d'Égypte, jusqu'alors détenu par quel joueur ?",
+    "choices": [
+      "Hossam Hassan",
+      "Ibrahim Youssef",
+      "Rabie Yassine"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-82",
+    "theme": "egypte",
+    "question": "Combien de sélections Essam El-Hadary a-t-il obtenues avec l'Égypte entre 1996 et 2018 ?",
+    "choices": [
+      "159",
+      "140",
+      "175"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-83",
+    "theme": "egypte",
+    "question": "Essam El-Hadary a été élu meilleur gardien de la CAN à trois reprises : en 2006, 2008 et quelle autre année ?",
+    "choices": [
+      "2010",
+      "1998",
+      "2017"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-84",
+    "theme": "egypte",
+    "question": "Combien de penalties Essam El-Hadary a-t-il arrêtés lors de la séance décisive de la demi-finale de la CAN 2017 face au Burkina Faso ?",
+    "choices": [
+      "2",
+      "1",
+      "3"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-85",
+    "theme": "egypte",
+    "question": "Combien de titres de Ligue des champions de la CAF Mohamed Aboutrika a-t-il remportés avec Al Ahly durant sa carrière ?",
+    "choices": [
+      "5",
+      "3",
+      "7"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-86",
+    "theme": "egypte",
+    "question": "Combien de buts Mohamed Aboutrika a-t-il inscrits en 100 sélections avec l'équipe d'Égypte, entre 2001 et 2013 ?",
+    "choices": [
+      "38",
+      "45",
+      "29"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-87",
+    "theme": "egypte",
+    "question": "Avec 14 réalisations, Mohamed Aboutrika est le meilleur buteur de l'histoire égyptienne dans quelle compétition spécifique ?",
+    "choices": [
+      "Les qualifications à la Coupe du monde",
+      "Les qualifications à la CAN",
+      "La Ligue des champions de la CAF"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-88",
+    "theme": "egypte",
+    "question": "En 2008, Mohamed Aboutrika a remporté à la fois le trophée du footballeur africain de la BBC et celui décerné par quelle instance continentale ?",
+    "choices": [
+      "La CAF",
+      "La FIFA",
+      "L'Union arabe de football"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-89",
+    "theme": "egypte",
+    "question": "En quelle année Mohamed Aboutrika a-t-il annoncé sa retraite sportive, après l'échec de l'Égypte à se qualifier pour le Mondial 2014 ?",
+    "choices": [
+      "2013",
+      "2015",
+      "2011"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-90",
+    "theme": "egypte",
+    "question": "Combien de championnats d'Égypte Mohamed Aboutrika a-t-il remportés avec Al Ahly durant sa carrière ?",
+    "choices": [
+      "7",
+      "4",
+      "10"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-91",
+    "theme": "egypte",
+    "question": "En quelle année le club Al Ahly, le plus titré d'Afrique, a-t-il été fondé au Caire ?",
+    "choices": [
+      "1907",
+      "1911",
+      "1919"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-92",
+    "theme": "egypte",
+    "question": "Quel est le surnom du club d'Al Ahly, le club le plus titré du continent africain ?",
+    "choices": [
+      "Les Diables rouges",
+      "Les Lions du Nil",
+      "Les Pharaons rouges"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-93",
+    "theme": "egypte",
+    "question": "Combien de Ligues des champions de la CAF Al Ahly a-t-il remportées, un record continental ?",
+    "choices": [
+      "12",
+      "9",
+      "15"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-94",
+    "theme": "egypte",
+    "question": "Avec 45 sacres, Al Ahly détient le record du nombre de titres de quel championnat national ?",
+    "choices": [
+      "Le championnat d'Égypte",
+      "La Coupe d'Égypte",
+      "La Supercoupe d'Égypte"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-95",
+    "theme": "egypte",
+    "question": "En quelle année le club rival, Zamalek, a-t-il été fondé au Caire ?",
+    "choices": [
+      "1911",
+      "1907",
+      "1923"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-96",
+    "theme": "egypte",
+    "question": "Combien de Ligues des champions de la CAF le Zamalek a-t-il remportées, entre 1984 et 2002 ?",
+    "choices": [
+      "5",
+      "3",
+      "8"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-97",
+    "theme": "egypte",
+    "question": "Combien de titres de champion d'Égypte le Zamalek a-t-il remportés au total ?",
+    "choices": [
+      "15",
+      "20",
+      "10"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-98",
+    "theme": "egypte",
+    "question": "En 1921, en remportant la Coupe Sultan Hussein, le Zamalek est devenu le tout premier club égyptien à faire quoi ?",
+    "choices": [
+      "Remporter un titre officiel",
+      "Disputer une compétition africaine",
+      "Affronter un club européen"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-99",
+    "theme": "egypte",
+    "question": "En 2025, quel club égyptien a remporté sa toute première Ligue des champions de la CAF, mettant fin à une longue domination d'Al Ahly, en battant les Sud-Africains de Mamelodi Sundowns ?",
+    "choices": [
+      "Pyramids FC",
+      "Ismaily",
+      "Al Masry"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "egypte-100",
+    "theme": "egypte",
+    "question": "En demi-finale de la CAN 1974, l'Égypte s'est inclinée 3-2 face à quelle sélection, qui allait remporter le titre continental cette année-là ?",
+    "choices": [
+      "Zaïre (RD Congo)",
+      "Zambie",
+      "Ghana"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "coupe-du-monde-1",
+    "theme": "coupe-du-monde",
+    "question": "Quelle équipe africaine a atteint les demi-finales du Mondial 2022 ?",
+    "choices": [
+      "Sénégal",
+      "Maroc",
+      "Tunisie"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "coupe-du-monde-2",
+    "theme": "coupe-du-monde",
+    "question": "Tous les combien d'années la Coupe du Monde a-t-elle lieu ?",
+    "choices": [
+      "2",
+      "4",
+      "6"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "coupe-du-monde-3",
+    "theme": "coupe-du-monde",
+    "question": "Quelle est la première nation africaine à s'être qualifiée pour une Coupe du Monde ?",
+    "choices": [
+      "Égypte",
+      "Maroc",
+      "Tunisie"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "coupe-du-monde-4",
+    "theme": "coupe-du-monde",
+    "question": "En quelle année l'Égypte a-t-elle disputé sa toute première Coupe du Monde, une grande première pour l'Afrique ?",
+    "choices": [
+      "1930",
+      "1934",
+      "1938"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "coupe-du-monde-5",
+    "theme": "coupe-du-monde",
+    "question": "Quelle nation africaine a atteint les quarts de finale du Mondial 1990, une grande première pour le continent ?",
+    "choices": [
+      "Cameroun",
+      "Maroc",
+      "Algérie"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "coupe-du-monde-6",
+    "theme": "coupe-du-monde",
+    "question": "Roger Milla, star camerounaise du Mondial 1990, a marqué combien de buts lors de cette édition ?",
+    "choices": [
+      "2",
+      "4",
+      "6"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "coupe-du-monde-7",
+    "theme": "coupe-du-monde",
+    "question": "Quelle nation africaine a atteint les quarts de finale du Mondial 2002 ?",
+    "choices": [
+      "Sénégal",
+      "Nigeria",
+      "Cameroun"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "coupe-du-monde-8",
+    "theme": "coupe-du-monde",
+    "question": "Quelle nation africaine a atteint les 8es de finale du Mondial 2010, organisé sur le sol africain ?",
+    "choices": [
+      "Ghana",
+      "Nigeria",
+      "Côte d'Ivoire"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "coupe-du-monde-9",
+    "theme": "coupe-du-monde",
+    "question": "Le Ghana a été à un tir au but près des demi-finales en 2010 ; quel pays l'a éliminé en quarts ?",
+    "choices": [
+      "Uruguay",
+      "Argentine",
+      "Brésil"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "coupe-du-monde-10",
+    "theme": "coupe-du-monde",
+    "question": "Qui a manqué le tir au but décisif du Ghana face à l'Uruguay en 2010 ?",
+    "choices": [
+      "Asamoah Gyan",
+      "André Ayew",
+      "Michael Essien"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "coupe-du-monde-11",
+    "theme": "coupe-du-monde",
+    "question": "Combien de nations africaines participaient habituellement à la phase finale de la Coupe du Monde à 32 équipes ?",
+    "choices": [
+      "4",
+      "5",
+      "6"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "coupe-du-monde-12",
+    "theme": "coupe-du-monde",
+    "question": "À partir de quelle édition la Coupe du Monde passe-t-elle à 48 équipes, augmentant les places africaines ?",
+    "choices": [
+      "2026",
+      "2030",
+      "2034"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "coupe-du-monde-13",
+    "theme": "coupe-du-monde",
+    "question": "Quel pays a été le premier et, à ce jour, le seul pays africain à organiser la Coupe du Monde ?",
+    "choices": [
+      "Égypte",
+      "Maroc",
+      "Afrique du Sud"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": "coupe-du-monde-14",
+    "theme": "coupe-du-monde",
+    "question": "En quelle année l'Afrique du Sud a-t-elle organisé la Coupe du Monde ?",
+    "choices": [
+      "2006",
+      "2010",
+      "2014"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "coupe-du-monde-15",
+    "theme": "coupe-du-monde",
+    "question": "Quel instrument bruyant est resté emblématique du Mondial 2010 en Afrique du Sud ?",
+    "choices": [
+      "Le djembé",
+      "La vuvuzela",
+      "Le tam-tam"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "coupe-du-monde-16",
+    "theme": "coupe-du-monde",
+    "question": "En 2018, combien d'équipes africaines se sont qualifiées pour les 8es de finale de la Coupe du Monde ?",
+    "choices": [
+      "0",
+      "1",
+      "2"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "coupe-du-monde-17",
+    "theme": "coupe-du-monde",
+    "question": "La Tunisie a créé la surprise à la Coupe du Monde 2022 en battant quel champion du monde en titre ?",
+    "choices": [
+      "Allemagne",
+      "France",
+      "Argentine"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "coupe-du-monde-18",
+    "theme": "coupe-du-monde",
+    "question": "Quelle nation africaine a atteint les 8es de finale de la Coupe du Monde 1994 ?",
+    "choices": [
+      "Nigeria",
+      "Maroc",
+      "Cameroun"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "coupe-du-monde-19",
+    "theme": "coupe-du-monde",
+    "question": "Le Nigeria, éliminé en 8es de finale du Mondial 1998, s'est incliné face à quel pays ?",
+    "choices": [
+      "Danemark",
+      "Brésil",
+      "France"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "coupe-du-monde-20",
+    "theme": "coupe-du-monde",
+    "question": "En 2014, le Nigeria a de nouveau atteint les 8es de finale ; il a été éliminé par quel pays ?",
+    "choices": [
+      "France",
+      "Allemagne",
+      "Argentine"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "can-1",
+    "theme": "can",
+    "question": "Que signifie le sigle CAN ?",
+    "choices": [
+      "Coupe d'Afrique des Nations",
+      "Championnat Africain National",
+      "Coupe Africaine Nationale"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "can-2",
+    "theme": "can",
+    "question": "Quel pays a organisé la CAN 2025 ?",
+    "choices": [
+      "Côte d'Ivoire",
+      "Maroc",
+      "Guinée"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "can-3",
+    "theme": "can",
+    "question": "En quelle année a eu lieu la toute première CAN ?",
+    "choices": [
+      "1956",
+      "1957",
+      "1958"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "can-4",
+    "theme": "can",
+    "question": "Combien de pays ont participé à la toute première CAN, en 1957 ?",
+    "choices": [
+      "3",
+      "4",
+      "5"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "can-5",
+    "theme": "can",
+    "question": "Depuis quelle édition la CAN réunit-elle 24 équipes en phase finale ?",
+    "choices": [
+      "CAN 2017",
+      "CAN 2019",
+      "CAN 2021"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "can-6",
+    "theme": "can",
+    "question": "Quel pays détient le record du plus grand nombre de titres de CAN ?",
+    "choices": [
+      "Cameroun",
+      "Égypte",
+      "Ghana"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "can-7",
+    "theme": "can",
+    "question": "Quel pays a remporté la CAN 2023, disputée en janvier-février 2024 ?",
+    "choices": [
+      "Nigeria",
+      "Côte d'Ivoire",
+      "Maroc"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "can-8",
+    "theme": "can",
+    "question": "Quel pays a organisé la CAN 2019 ?",
+    "choices": [
+      "Égypte",
+      "Cameroun",
+      "Gabon"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "can-9",
+    "theme": "can",
+    "question": "Quel pays a remporté la CAN 2019 ?",
+    "choices": [
+      "Sénégal",
+      "Algérie",
+      "Tunisie"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": "can-10",
+    "theme": "can",
+    "question": "Quel pays a organisé la CAN 2021, disputée début 2022 ?",
+    "choices": [
+      "Cameroun",
+      "Gabon",
+      "Guinée"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "can-11",
+    "theme": "can",
+    "question": "Quel pays a remporté la CAN 2021 ?",
+    "choices": [
+      "Sénégal",
+      "Égypte",
+      "Cameroun"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "can-12",
+    "theme": "can",
+    "question": "Quel pays a organisé la CAN 2017 ?",
+    "choices": [
+      "Gabon",
+      "Congo",
+      "Guinée équatoriale"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "can-13",
+    "theme": "can",
+    "question": "Quel pays a remporté la CAN 2017 ?",
+    "choices": [
+      "Cameroun",
+      "Égypte",
+      "Burkina Faso"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "can-14",
+    "theme": "can",
+    "question": "Quel pays a définitivement conservé le premier trophée de la CAN après l'avoir remporté trois fois ?",
+    "choices": [
+      "Ghana",
+      "Égypte",
+      "Cameroun"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "can-15",
+    "theme": "can",
+    "question": "Quelle est la périodicité habituelle de la CAN ?",
+    "choices": [
+      "Tous les 2 ans",
+      "Tous les 3 ans",
+      "Tous les 4 ans"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "can-16",
+    "theme": "can",
+    "question": "Quel pays a remporté la CAN à trois reprises en tant que pays organisateur (1959, 1986, 2006) ?",
+    "choices": [
+      "Égypte",
+      "Ghana",
+      "Cameroun"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "can-17",
+    "theme": "can",
+    "question": "Quel pays a remporté la CAN 2013 ?",
+    "choices": [
+      "Nigeria",
+      "Burkina Faso",
+      "Ghana"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "can-18",
+    "theme": "can",
+    "question": "Quel pays a remporté la CAN 2015, disputée en Guinée équatoriale ?",
+    "choices": [
+      "Côte d'Ivoire",
+      "Ghana",
+      "RD Congo"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "can-19",
+    "theme": "can",
+    "question": "La CAN 2015 devait initialement être organisée par quel pays, avant un changement d'hôte lié à Ebola ?",
+    "choices": [
+      "Le Maroc",
+      "Le Sénégal",
+      "La Libye"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": "can-20",
+    "theme": "can",
+    "question": "Combien d'équipes participent à la phase finale de la CAN depuis 2019 ?",
+    "choices": [
+      "16",
+      "24",
+      "32"
+    ],
+    "correctIndex": 1
+  }
 ]
