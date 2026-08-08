@@ -40,7 +40,7 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ id
   return (
     <div>
       <Link
-        href="/fantasy"
+        href="/fantasy/xi"
         className="mb-4 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-muted transition-colors hover:text-foreground"
       >
         <ChevronLeft size={18} aria-hidden />

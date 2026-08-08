@@ -204,7 +204,13 @@ function bestClubEntry(entry) {
 // authoritative for "who do they play for right now" even when match stats
 // haven't caught up yet (e.g. Nicolas Jackson returning from a Bayern
 // München loan to Chelsea before playing a single game there).
-async function fetchLatestTransferTeam(playerId) {
+//
+// This also doubles as the data source for the Mercato feature (see
+// mercatoTransfers below) — the full record (date/fee/both clubs) is kept
+// here rather than just the incoming team, so that page reuses this exact
+// call instead of re-fetching /transfers for the same ~1400 players a
+// second time.
+async function fetchLatestTransferRecord(playerId) {
   try {
     const result = await apiGet("/transfers", { player: playerId });
     const transfers = result.response[0]?.transfers ?? [];
@@ -214,7 +220,7 @@ async function fetchLatestTransferTeam(playerId) {
     const realMoves = transfers.filter((t) => t.teams?.in?.id != null);
     if (realMoves.length === 0) return null;
     const [latest] = [...realMoves].sort((a, b) => new Date(b.date) - new Date(a.date));
-    return latest?.teams?.in ?? null;
+    return { date: latest.date, type: latest.type ?? null, teamIn: latest.teams.in, teamOut: latest.teams.out ?? null };
   } catch (err) {
     console.warn(`  player ${playerId} transfers failed: ${err.message}`);
     return null;
@@ -238,9 +244,9 @@ async function fetchPlayerClubDetail(playerId) {
     // last season's if the player has no CLUB_SEASON entry yet.
     let clubBest = bestClubEntry(clubSeasonEntry) ?? statsBest;
 
-    const latestTransferTeam = await fetchLatestTransferTeam(playerId);
-    if (latestTransferTeam && latestTransferTeam.id !== clubBest?.team?.id) {
-      clubBest = { team: latestTransferTeam, league: clubBest?.league, games: clubBest?.games };
+    const latestTransfer = await fetchLatestTransferRecord(playerId);
+    if (latestTransfer?.teamIn && latestTransfer.teamIn.id !== clubBest?.team?.id) {
+      clubBest = { team: latestTransfer.teamIn, league: clubBest?.league, games: clubBest?.games };
     }
 
     const source = statsEntry ?? clubSeasonEntry;
@@ -256,6 +262,7 @@ async function fetchPlayerClubDetail(playerId) {
       appearances: statsBest?.games?.appearences ?? 0,
       goals: statsBest?.goals?.total ?? 0,
       assists: statsBest?.goals?.assists ?? 0,
+      latestTransfer,
     };
   } catch (err) {
     console.warn(`  player ${playerId} detail failed: ${err.message}`);
@@ -284,10 +291,23 @@ async function main() {
   console.log(`Unique players: ${uniquePlayers.length}. Fetching club details...`);
 
   let done = 0;
+  const transferRecords = [];
   const detailed = await runPool(uniquePlayers, 2, async (player) => {
     const detail = await fetchPlayerClubDetail(player.id);
     done += 1;
     if (done % 50 === 0) console.log(`  ...${done}/${uniquePlayers.length} player details fetched`);
+    if (detail?.latestTransfer?.teamIn) {
+      transferRecords.push({
+        playerId: player.id,
+        playerName: player.name,
+        playerPhoto: player.photo,
+        nationality: player.nationality,
+        date: detail.latestTransfer.date,
+        type: detail.latestTransfer.type,
+        clubFrom: detail.latestTransfer.teamOut,
+        clubTo: detail.latestTransfer.teamIn,
+      });
+    }
     return {
       id: player.id,
       name: player.name,
@@ -321,6 +341,22 @@ async function main() {
   const outPath = path.join(outDir, "african-players.json");
   writeFileSync(outPath, JSON.stringify(detailed, null, 2));
   console.log(`\nWrote ${detailed.length} players to ${path.relative(ROOT, outPath)}`);
+
+  // Mercato feed: reuses the /transfers records already fetched above for
+  // every player (no extra API calls) — filtered to a recent window so the
+  // page doesn't fill up with years-old moves, and capped so it stays a
+  // skimmable "latest transfers" list rather than a full history dump.
+  const MERCATO_WINDOW_DAYS = 180;
+  const MERCATO_MAX_COUNT = 40;
+  const cutoff = Date.now() - MERCATO_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+  const mercatoTransfers = transferRecords
+    .filter((t) => t.date && new Date(t.date).getTime() >= cutoff)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, MERCATO_MAX_COUNT);
+
+  const mercatoPath = path.join(outDir, "mercato.json");
+  writeFileSync(mercatoPath, JSON.stringify(mercatoTransfers, null, 2));
+  console.log(`Wrote ${mercatoTransfers.length} mercato transfers to ${path.relative(ROOT, mercatoPath)}`);
 }
 
 main().catch((err) => {

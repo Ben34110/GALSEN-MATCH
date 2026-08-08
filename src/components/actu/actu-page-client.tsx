@@ -160,7 +160,7 @@ export function ActuPageClient({ articles }: { articles: Article[] | null }) {
           </div>
 
           <Link
-            href="/fantasy"
+            href="/fantasy/xi"
             className={cn(
               "flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-accent px-4 text-sm font-bold text-accent-ink",
               "transition-transform duration-[var(--duration-fast)] active:scale-[0.98]"
@@ -177,7 +177,7 @@ export function ActuPageClient({ articles }: { articles: Article[] | null }) {
             <p className="text-base font-bold text-foreground">Compose ton équipe de la semaine</p>
           </div>
           <Link
-            href="/fantasy"
+            href="/fantasy/xi"
             className={cn(
               "flex min-h-11 shrink-0 items-center gap-1.5 rounded-full bg-accent px-4 text-sm font-bold text-accent-ink",
               "transition-transform duration-[var(--duration-fast)] active:scale-95"
@@ -214,6 +214,13 @@ export function ActuPageClient({ articles }: { articles: Article[] | null }) {
           if (id === "fantasy") {
             return (
               <Link key={id} href="/fantasy" className={className}>
+                {content}
+              </Link>
+            );
+          }
+          if (id === "mercato") {
+            return (
+              <Link key={id} href="/mercato" className={className}>
                 {content}
               </Link>
             );

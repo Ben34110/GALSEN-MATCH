@@ -78,7 +78,7 @@ export function FantasyView({ pool }: FantasyViewProps) {
         }
         action={
           <Link
-            href={`/fantasy/leaderboard?journee=${activeJournee}`}
+            href={`/fantasy/xi/leaderboard?journee=${activeJournee}`}
             aria-label="Classement général"
             className="grid size-11 shrink-0 place-items-center rounded-full border border-border bg-surface text-foreground transition-transform duration-[var(--duration-fast)] active:scale-90"
           >

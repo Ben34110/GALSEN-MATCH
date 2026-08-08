@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import { BallonDorView } from "@/components/fantasy/ballon-dor-view";
+import { FantasyView } from "@/components/fantasy/fantasy-view";
 import { getAfricanPlayers } from "@/lib/data/african-players";
 
-export default function BallonDorPage() {
+export default function FantasyXiPage() {
   const pool = getAfricanPlayers();
 
   return (
@@ -16,7 +16,7 @@ export default function BallonDorPage() {
         Retour
       </Link>
 
-      <BallonDorView pool={pool} />
+      <FantasyView pool={pool} />
     </div>
   );
 }

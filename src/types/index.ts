@@ -128,6 +128,27 @@ export interface FifaRankingRow {
   placesMoved: number;
 }
 
+// A recent African player transfer, derived from API-Football's
+// /transfers?player={id} data already fetched by
+// scripts/sync-african-players.mjs (fetchLatestTransferRecord) — reuses
+// the same per-player lookup that script already makes to correct each
+// player's current club, no separate API call. Written to
+// lib/data/generated/mercato.json, filtered to the last ~180 days and
+// capped at ~40 entries, most recent first.
+export interface MercatoTransfer {
+  playerId: number;
+  playerName: string;
+  playerPhoto: string;
+  nationality: string;
+  date: string; // ISO date
+  // Raw API-Football fee string — a price ("€ 60M"), "Loan", or sometimes
+  // null/free-agent; render non-price values as a badge/label, never the
+  // literal raw string.
+  type: string | null;
+  clubFrom: { id: number; name: string; logo: string } | null; // null when arriving from free agency
+  clubTo: { id: number; name: string; logo: string };
+}
+
 // A real club, pre-crawled via scripts/sync-teams.mjs into
 // lib/data/generated/teams.json — powers the favorite-club search in Profil
 // (see components/profil/preferences-editor.tsx).

@@ -1,0 +1,722 @@
+[
+  {
+    "playerId": 392387,
+    "playerName": "O. Makhanya",
+    "playerPhoto": "https://media.api-sports.io/football/players/392387.png",
+    "nationality": "South Africa",
+    "date": "2026-07-29",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 1599,
+      "name": "Philadelphia Union",
+      "logo": "https://media.api-sports.io/football/teams/1599.png"
+    },
+    "clubTo": {
+      "id": 257,
+      "name": "Rangers",
+      "logo": "https://media.api-sports.io/football/teams/257.png"
+    }
+  },
+  {
+    "playerId": 174920,
+    "playerName": "Mamadou Fofana II",
+    "playerPhoto": "https://media.api-sports.io/football/players/174920.png",
+    "nationality": "Mauritania",
+    "date": "2026-07-27",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 2177,
+      "name": "FC Aarau",
+      "logo": "https://media.api-sports.io/football/teams/2177.png"
+    },
+    "clubTo": {
+      "id": 102,
+      "name": "Nancy",
+      "logo": "https://media.api-sports.io/football/teams/102.png"
+    }
+  },
+  {
+    "playerId": 15304,
+    "playerName": "Vózinha",
+    "playerPhoto": "https://media.api-sports.io/football/players/15304.png",
+    "nationality": "Cape Verde",
+    "date": "2026-07-23",
+    "type": "Free agent",
+    "clubFrom": {
+      "id": 223,
+      "name": "Chaves",
+      "logo": "https://media.api-sports.io/football/teams/223.png"
+    },
+    "clubTo": {
+      "id": 2315,
+      "name": "Colo Colo",
+      "logo": "https://media.api-sports.io/football/teams/2315.png"
+    }
+  },
+  {
+    "playerId": 535338,
+    "playerName": "I. Mohamed",
+    "playerPhoto": "https://media.api-sports.io/football/players/535338.png",
+    "nationality": "Comoros",
+    "date": "2026-07-23",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 3069,
+      "name": "Le Puy Foot",
+      "logo": "https://media.api-sports.io/football/teams/3069.png"
+    },
+    "clubTo": {
+      "id": 112,
+      "name": "Metz",
+      "logo": "https://media.api-sports.io/football/teams/112.png"
+    }
+  },
+  {
+    "playerId": 571825,
+    "playerName": "G. Nongo",
+    "playerPhoto": "https://media.api-sports.io/football/players/571825.png",
+    "nationality": "Congo",
+    "date": "2026-07-23",
+    "type": "Loan",
+    "clubFrom": {
+      "id": 340,
+      "name": "Gornik Zabrze",
+      "logo": "https://media.api-sports.io/football/teams/340.png"
+    },
+    "clubTo": {
+      "id": 6958,
+      "name": "Stal Stalowa Wola",
+      "logo": "https://media.api-sports.io/football/teams/6958.png"
+    }
+  },
+  {
+    "playerId": 42012,
+    "playerName": "E. Achouri",
+    "playerPhoto": "https://media.api-sports.io/football/players/42012.png",
+    "nationality": "Tunisia",
+    "date": "2026-07-23",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 400,
+      "name": "FC Copenhagen",
+      "logo": "https://media.api-sports.io/football/teams/400.png"
+    },
+    "clubTo": {
+      "id": 25484,
+      "name": "San Diego",
+      "logo": "https://media.api-sports.io/football/teams/25484.png"
+    }
+  },
+  {
+    "playerId": 24028,
+    "playerName": "Y. Roche",
+    "playerPhoto": "https://media.api-sports.io/football/players/24028.png",
+    "nationality": "Benin",
+    "date": "2026-07-22",
+    "type": "Free agent",
+    "clubFrom": {
+      "id": 2598,
+      "name": "Petrolul Ploiesti",
+      "logo": "https://media.api-sports.io/football/teams/2598.png"
+    },
+    "clubTo": {
+      "id": 17991,
+      "name": "Iraklis 1908",
+      "logo": "https://media.api-sports.io/football/teams/17991.png"
+    }
+  },
+  {
+    "playerId": 1494,
+    "playerName": "Jovane Cabral",
+    "playerPhoto": "https://media.api-sports.io/football/players/1494.png",
+    "nationality": "Cape Verde",
+    "date": "2026-07-22",
+    "type": "Free agent",
+    "clubFrom": {
+      "id": 15130,
+      "name": "Estrela",
+      "logo": "https://media.api-sports.io/football/teams/15130.png"
+    },
+    "clubTo": {
+      "id": 130,
+      "name": "Gremio",
+      "logo": "https://media.api-sports.io/football/teams/130.png"
+    }
+  },
+  {
+    "playerId": 341226,
+    "playerName": "R. Durosinmi",
+    "playerPhoto": "https://media.api-sports.io/football/players/341226.png",
+    "nationality": "Nigeria",
+    "date": "2026-07-22",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 801,
+      "name": "Pisa",
+      "logo": "https://media.api-sports.io/football/teams/801.png"
+    },
+    "clubTo": {
+      "id": 742,
+      "name": "Genk",
+      "logo": "https://media.api-sports.io/football/teams/742.png"
+    }
+  },
+  {
+    "playerId": 310196,
+    "playerName": "Ismaël Gharbi",
+    "playerPhoto": "https://media.api-sports.io/football/players/310196.png",
+    "nationality": "Tunisia",
+    "date": "2026-07-22",
+    "type": "Loan",
+    "clubFrom": {
+      "id": 217,
+      "name": "SC Braga",
+      "logo": "https://media.api-sports.io/football/teams/217.png"
+    },
+    "clubTo": {
+      "id": 537,
+      "name": "Leganes",
+      "logo": "https://media.api-sports.io/football/teams/537.png"
+    }
+  },
+  {
+    "playerId": 8445,
+    "playerName": "D. Batubinsika",
+    "playerPhoto": "https://media.api-sports.io/football/players/8445.png",
+    "nationality": "DR Congo",
+    "date": "2026-07-21",
+    "type": "Free agent",
+    "clubFrom": {
+      "id": 953,
+      "name": "Larisa",
+      "logo": "https://media.api-sports.io/football/teams/953.png"
+    },
+    "clubTo": {
+      "id": 559,
+      "name": "FCSB",
+      "logo": "https://media.api-sports.io/football/teams/559.png"
+    }
+  },
+  {
+    "playerId": 104801,
+    "playerName": "M. Ndockyt",
+    "playerPhoto": "https://media.api-sports.io/football/players/104801.png",
+    "nationality": "Congo",
+    "date": "2026-07-21",
+    "type": "Free agent",
+    "clubFrom": {
+      "id": 561,
+      "name": "HNK Rijeka",
+      "logo": "https://media.api-sports.io/football/teams/561.png"
+    },
+    "clubTo": {
+      "id": 969,
+      "name": "FAR Rabat",
+      "logo": "https://media.api-sports.io/football/teams/969.png"
+    }
+  },
+  {
+    "playerId": 414,
+    "playerName": "Omar Mascarell",
+    "playerPhoto": "https://media.api-sports.io/football/players/414.png",
+    "nationality": "Equatorial Guinea",
+    "date": "2026-07-21",
+    "type": "Free agent",
+    "clubFrom": {
+      "id": 798,
+      "name": "Mallorca",
+      "logo": "https://media.api-sports.io/football/teams/798.png"
+    },
+    "clubTo": {
+      "id": 2928,
+      "name": "Al Khaleej Saihat",
+      "logo": "https://media.api-sports.io/football/teams/2928.png"
+    }
+  },
+  {
+    "playerId": 513019,
+    "playerName": "A. Kinteh",
+    "playerPhoto": "https://media.api-sports.io/football/players/513019.png",
+    "nationality": "Gambia",
+    "date": "2026-07-21",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 325,
+      "name": "Tromso",
+      "logo": "https://media.api-sports.io/football/teams/325.png"
+    },
+    "clubTo": {
+      "id": 2929,
+      "name": "Al-Ahli Jeddah",
+      "logo": "https://media.api-sports.io/football/teams/2929.png"
+    }
+  },
+  {
+    "playerId": 302051,
+    "playerName": "S. Cissé",
+    "playerPhoto": "https://media.api-sports.io/football/players/302051.png",
+    "nationality": "Guinea",
+    "date": "2026-07-21",
+    "type": "Free agent",
+    "clubFrom": {
+      "id": 537,
+      "name": "Leganes",
+      "logo": "https://media.api-sports.io/football/teams/537.png"
+    },
+    "clubTo": {
+      "id": 10509,
+      "name": "Al Kholood",
+      "logo": "https://media.api-sports.io/football/teams/10509.png"
+    }
+  },
+  {
+    "playerId": 18814,
+    "playerName": "I. Diop",
+    "playerPhoto": "https://media.api-sports.io/football/players/18814.png",
+    "nationality": "Morocco",
+    "date": "2026-07-21",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 36,
+      "name": "Fulham",
+      "logo": "https://media.api-sports.io/football/teams/36.png"
+    },
+    "clubTo": {
+      "id": 57,
+      "name": "Ipswich",
+      "logo": "https://media.api-sports.io/football/teams/57.png"
+    }
+  },
+  {
+    "playerId": 57446,
+    "playerName": "A. Adams",
+    "playerPhoto": "https://media.api-sports.io/football/players/57446.png",
+    "nationality": "Nigeria",
+    "date": "2026-07-21",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 536,
+      "name": "Sevilla",
+      "logo": "https://media.api-sports.io/football/teams/536.png"
+    },
+    "clubTo": {
+      "id": 517,
+      "name": "Venezia",
+      "logo": "https://media.api-sports.io/football/teams/517.png"
+    }
+  },
+  {
+    "playerId": 8450,
+    "playerName": "A. Seck",
+    "playerPhoto": "https://media.api-sports.io/football/players/8450.png",
+    "nationality": "Senegal",
+    "date": "2026-07-21",
+    "type": "Free agent",
+    "clubFrom": {
+      "id": 4195,
+      "name": "Maccabi Haifa",
+      "logo": "https://media.api-sports.io/football/teams/4195.png"
+    },
+    "clubTo": {
+      "id": 2930,
+      "name": "Al-Faisaly FC",
+      "logo": "https://media.api-sports.io/football/teams/2930.png"
+    }
+  },
+  {
+    "playerId": 1098,
+    "playerName": "P. Daka",
+    "playerPhoto": "https://media.api-sports.io/football/players/1098.png",
+    "nationality": "Zambia",
+    "date": "2026-07-21",
+    "type": "Free agent",
+    "clubFrom": {
+      "id": 46,
+      "name": "Leicester",
+      "logo": "https://media.api-sports.io/football/teams/46.png"
+    },
+    "clubTo": {
+      "id": 175,
+      "name": "Hamburger SV",
+      "logo": "https://media.api-sports.io/football/teams/175.png"
+    }
+  },
+  {
+    "playerId": 438854,
+    "playerName": "Y. Bojang",
+    "playerPhoto": "https://media.api-sports.io/football/players/438854.png",
+    "nationality": "Gambia",
+    "date": "2026-07-20",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 405,
+      "name": "Odense",
+      "logo": "https://media.api-sports.io/football/teams/405.png"
+    },
+    "clubTo": {
+      "id": 4724,
+      "name": "Alverca",
+      "logo": "https://media.api-sports.io/football/teams/4724.png"
+    }
+  },
+  {
+    "playerId": 303467,
+    "playerName": "A. Fatawu",
+    "playerPhoto": "https://media.api-sports.io/football/players/303467.png",
+    "nationality": "Ghana",
+    "date": "2026-07-20",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 46,
+      "name": "Leicester",
+      "logo": "https://media.api-sports.io/football/teams/46.png"
+    },
+    "clubTo": {
+      "id": 57,
+      "name": "Ipswich",
+      "logo": "https://media.api-sports.io/football/teams/57.png"
+    }
+  },
+  {
+    "playerId": 30393,
+    "playerName": "A. Lafont",
+    "playerPhoto": "https://media.api-sports.io/football/players/30393.png",
+    "nationality": "Ivory Coast",
+    "date": "2026-07-20",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 83,
+      "name": "Nantes",
+      "logo": "https://media.api-sports.io/football/teams/83.png"
+    },
+    "clubTo": {
+      "id": 3579,
+      "name": "Amed",
+      "logo": "https://media.api-sports.io/football/teams/3579.png"
+    }
+  },
+  {
+    "playerId": 90617,
+    "playerName": "L. Sinayoko",
+    "playerPhoto": "https://media.api-sports.io/football/players/90617.png",
+    "nationality": "Mali",
+    "date": "2026-07-20",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 108,
+      "name": "Auxerre",
+      "logo": "https://media.api-sports.io/football/teams/108.png"
+    },
+    "clubTo": {
+      "id": 114,
+      "name": "Paris FC",
+      "logo": "https://media.api-sports.io/football/teams/114.png"
+    }
+  },
+  {
+    "playerId": 295223,
+    "playerName": "R. Alhassane",
+    "playerPhoto": "https://media.api-sports.io/football/players/295223.png",
+    "nationality": "Niger",
+    "date": "2026-07-20",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 718,
+      "name": "Oviedo",
+      "logo": "https://media.api-sports.io/football/teams/718.png"
+    },
+    "clubTo": {
+      "id": 500,
+      "name": "Bologna",
+      "logo": "https://media.api-sports.io/football/teams/500.png"
+    }
+  },
+  {
+    "playerId": 129047,
+    "playerName": "R. Zerrouki",
+    "playerPhoto": "https://media.api-sports.io/football/players/129047.png",
+    "nationality": "Algeria",
+    "date": "2026-07-19",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 209,
+      "name": "Feyenoord",
+      "logo": "https://media.api-sports.io/football/teams/209.png"
+    },
+    "clubTo": {
+      "id": 415,
+      "name": "Twente",
+      "logo": "https://media.api-sports.io/football/teams/415.png"
+    }
+  },
+  {
+    "playerId": 122474,
+    "playerName": "Jordan Gutiérrez",
+    "playerPhoto": "https://media.api-sports.io/football/players/122474.png",
+    "nationality": "Equatorial Guinea",
+    "date": "2026-07-19",
+    "type": "Free agent",
+    "clubFrom": {
+      "id": 3377,
+      "name": "Rudar Prijedor",
+      "logo": "https://media.api-sports.io/football/teams/3377.png"
+    },
+    "clubTo": {
+      "id": 2604,
+      "name": "Metaloglobus",
+      "logo": "https://media.api-sports.io/football/teams/2604.png"
+    }
+  },
+  {
+    "playerId": 48527,
+    "playerName": "Mauro Rodrigues",
+    "playerPhoto": "https://media.api-sports.io/football/players/48527.png",
+    "nationality": "Guinea-Bissau",
+    "date": "2026-07-19",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 6653,
+      "name": "Yverdon Sport",
+      "logo": "https://media.api-sports.io/football/teams/6653.png"
+    },
+    "clubTo": {
+      "id": 634,
+      "name": "Botev Plovdiv",
+      "logo": "https://media.api-sports.io/football/teams/634.png"
+    }
+  },
+  {
+    "playerId": 434727,
+    "playerName": "E. Fully",
+    "playerPhoto": "https://media.api-sports.io/football/players/434727.png",
+    "nationality": "Liberia",
+    "date": "2026-07-19",
+    "type": "Loan",
+    "clubFrom": {
+      "id": 560,
+      "name": "Slavia Praha",
+      "logo": "https://media.api-sports.io/football/teams/560.png"
+    },
+    "clubTo": {
+      "id": 4257,
+      "name": "Artis",
+      "logo": "https://media.api-sports.io/football/teams/4257.png"
+    }
+  },
+  {
+    "playerId": 474591,
+    "playerName": "C. Inao Oulai",
+    "playerPhoto": "https://media.api-sports.io/football/players/474591.png",
+    "nationality": "Ivory Coast",
+    "date": "2026-07-18",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 998,
+      "name": "Trabzonspor",
+      "logo": "https://media.api-sports.io/football/teams/998.png"
+    },
+    "clubTo": {
+      "id": 502,
+      "name": "Fiorentina",
+      "logo": "https://media.api-sports.io/football/teams/502.png"
+    }
+  },
+  {
+    "playerId": 3314,
+    "playerName": "Show",
+    "playerPhoto": "https://media.api-sports.io/football/players/3314.png",
+    "nationality": "Angola",
+    "date": "2026-07-17",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 4195,
+      "name": "Maccabi Haifa",
+      "logo": "https://media.api-sports.io/football/teams/4195.png"
+    },
+    "clubTo": {
+      "id": 7411,
+      "name": "Kocaelispor",
+      "logo": "https://media.api-sports.io/football/teams/7411.png"
+    }
+  },
+  {
+    "playerId": 269621,
+    "playerName": "Hossam Abdelmaguid",
+    "playerPhoto": "https://media.api-sports.io/football/players/269621.png",
+    "nationality": "Egypt",
+    "date": "2026-07-17",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 1040,
+      "name": "Zamalek SC",
+      "logo": "https://media.api-sports.io/football/teams/1040.png"
+    },
+    "clubTo": {
+      "id": 566,
+      "name": "Ludogorets",
+      "logo": "https://media.api-sports.io/football/teams/566.png"
+    }
+  },
+  {
+    "playerId": 369059,
+    "playerName": "A. Bojang",
+    "playerPhoto": "https://media.api-sports.io/football/players/369059.png",
+    "nationality": "Gambia",
+    "date": "2026-07-17",
+    "type": "Loan",
+    "clubFrom": {
+      "id": 93,
+      "name": "Reims",
+      "logo": "https://media.api-sports.io/football/teams/93.png"
+    },
+    "clubTo": {
+      "id": 736,
+      "name": "Charleroi",
+      "logo": "https://media.api-sports.io/football/teams/736.png"
+    }
+  },
+  {
+    "playerId": 346259,
+    "playerName": "Nito Gomes",
+    "playerPhoto": "https://media.api-sports.io/football/players/346259.png",
+    "nationality": "Guinea-Bissau",
+    "date": "2026-07-16",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 234,
+      "name": "Pacos Ferreira",
+      "logo": "https://media.api-sports.io/football/teams/234.png"
+    },
+    "clubTo": {
+      "id": 4725,
+      "name": "Amarante",
+      "logo": "https://media.api-sports.io/football/teams/4725.png"
+    }
+  },
+  {
+    "playerId": 152846,
+    "playerName": "A. Danté",
+    "playerPhoto": "https://media.api-sports.io/football/players/152846.png",
+    "nationality": "Mali",
+    "date": "2026-07-16",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 240,
+      "name": "Arouca",
+      "logo": "https://media.api-sports.io/football/teams/240.png"
+    },
+    "clubTo": {
+      "id": 3733,
+      "name": "Zbrojovka Brno",
+      "logo": "https://media.api-sports.io/football/teams/3733.png"
+    }
+  },
+  {
+    "playerId": 1567,
+    "playerName": "A. Mandi",
+    "playerPhoto": "https://media.api-sports.io/football/players/1567.png",
+    "nationality": "Algeria",
+    "date": "2026-07-15",
+    "type": "Free agent",
+    "clubFrom": {
+      "id": 79,
+      "name": "Lille",
+      "logo": "https://media.api-sports.io/football/teams/79.png"
+    },
+    "clubTo": {
+      "id": 539,
+      "name": "Levante",
+      "logo": "https://media.api-sports.io/football/teams/539.png"
+    }
+  },
+  {
+    "playerId": 191194,
+    "playerName": "M. Camara",
+    "playerPhoto": "https://media.api-sports.io/football/players/191194.png",
+    "nationality": "Mali",
+    "date": "2026-07-15",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 433,
+      "name": "Laval",
+      "logo": "https://media.api-sports.io/football/teams/433.png"
+    },
+    "clubTo": {
+      "id": 82,
+      "name": "Montpellier",
+      "logo": "https://media.api-sports.io/football/teams/82.png"
+    }
+  },
+  {
+    "playerId": 323974,
+    "playerName": "E. Saad",
+    "playerPhoto": "https://media.api-sports.io/football/players/323974.png",
+    "nationality": "Tunisia",
+    "date": "2026-07-15",
+    "type": "Loan",
+    "clubFrom": {
+      "id": 170,
+      "name": "FC Augsburg",
+      "logo": "https://media.api-sports.io/football/teams/170.png"
+    },
+    "clubTo": {
+      "id": 9569,
+      "name": "Nashville SC",
+      "logo": "https://media.api-sports.io/football/teams/9569.png"
+    }
+  },
+  {
+    "playerId": 412926,
+    "playerName": "C. Makosso",
+    "playerPhoto": "https://media.api-sports.io/football/players/412926.png",
+    "nationality": "Congo",
+    "date": "2026-07-14",
+    "type": "Transfer",
+    "clubFrom": {
+      "id": 1359,
+      "name": "Luton",
+      "logo": "https://media.api-sports.io/football/teams/1359.png"
+    },
+    "clubTo": {
+      "id": 108,
+      "name": "Auxerre",
+      "logo": "https://media.api-sports.io/football/teams/108.png"
+    }
+  },
+  {
+    "playerId": 140847,
+    "playerName": "E. Colley",
+    "playerPhoto": "https://media.api-sports.io/football/players/140847.png",
+    "nationality": "Gambia",
+    "date": "2026-07-14",
+    "type": "Loan",
+    "clubFrom": {
+      "id": 565,
+      "name": "BSC Young Boys",
+      "logo": "https://media.api-sports.io/football/teams/565.png"
+    },
+    "clubTo": {
+      "id": 607,
+      "name": "Konyaspor",
+      "logo": "https://media.api-sports.io/football/teams/607.png"
+    }
+  },
+  {
+    "playerId": 67195,
+    "playerName": "H. Mahmoud",
+    "playerPhoto": "https://media.api-sports.io/football/players/67195.png",
+    "nationality": "Tunisia",
+    "date": "2026-07-14",
+    "type": "Free agent",
+    "clubFrom": {
+      "id": 606,
+      "name": "FC Lugano",
+      "logo": "https://media.api-sports.io/football/teams/606.png"
+    },
+    "clubTo": {
+      "id": 980,
+      "name": "ES Tunis",
+      "logo": "https://media.api-sports.io/football/teams/980.png"
+    }
+  }
+]
