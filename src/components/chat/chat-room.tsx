@@ -48,6 +48,7 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
+  const [sendError, setSendError] = useState(false);
   const [openProfileDeviceId, setOpenProfileDeviceId] = useState<string | null>(null);
   const lastCreatedAtRef = useRef<string | null>(null);
 
@@ -86,13 +87,22 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
     const content = draft.trim();
     if (!content || !profile || !deviceId) return;
     setDraft("");
+    setSendError(false);
 
     const { message } = await sendChatMessage(deviceId, activeRoomId, profile.username, profile.countryId, content);
     if (message) {
       lastCreatedAtRef.current = message.createdAt;
       setMessages((current) => [...current, message]);
+      writeLocalStorageValue(HAS_CHATTED_KEY, "true");
+    } else {
+      // A failed send (Supabase unreachable, unconfigured, or — as happened
+      // once — a schema mismatch after a code change outran the migration)
+      // used to just vanish with no feedback: the draft was already cleared
+      // and nothing else happened, which looked exactly like chat being
+      // broken. Restore the draft so the message isn't lost, and say so.
+      setDraft(content);
+      setSendError(true);
     }
-    writeLocalStorageValue(HAS_CHATTED_KEY, "true");
   }
 
   return (
@@ -181,6 +191,12 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
         })}
       </div>
 
+      {sendError && (
+        <p className="mt-2 text-center text-xs font-semibold text-accent-3">
+          Le message n&apos;a pas pu être envoyé. Réessaie.
+        </p>
+      )}
+
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -194,7 +210,10 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
         <input
           id="chat-draft"
           value={draft}
-          onChange={(event) => setDraft(event.target.value)}
+          onChange={(event) => {
+            setDraft(event.target.value);
+            setSendError(false);
+          }}
           placeholder={`Écrire dans ${activeRoom?.name ?? ""}…`}
           maxLength={500}
           autoComplete="off"
