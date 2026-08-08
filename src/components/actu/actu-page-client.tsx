@@ -22,7 +22,7 @@ import { localizeArticle } from "@/lib/news/localize";
 import type { AfricanPlayer, Article, PlayerPosition } from "@/types";
 
 const QUICK_LINKS = [
-  { id: "upcoming", label: "Sélections", icon: CalendarClock },
+  { id: "upcoming", label: "Matchs", icon: CalendarClock },
   { id: "mercato", label: "Mercato", icon: ArrowLeftRight },
   { id: "fantasy", label: "Fantasy", icon: Trophy },
   { id: "actu", label: "Actualités", icon: Newspaper },

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { href: "/actu", label: "Accueil", icon: Home },
-  { href: "/upcoming", label: "Sélections", icon: CalendarClock },
+  { href: "/upcoming", label: "Matchs", icon: CalendarClock },
   { href: "/fantasy", label: "Fantasy", icon: Trophy },
   { href: "/chat", label: "Live Chat", icon: MessageCircle },
   { href: "/profil", label: "Profil", icon: User },
