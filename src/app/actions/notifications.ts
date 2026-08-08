@@ -1,12 +1,19 @@
 "use server";
 
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { resolveActor } from "@/lib/auth";
 import { DEFAULT_CLUB_PREFS, DEFAULT_PLAYER_PREFS, type ClubNotificationPrefs, type PlayerNotificationPrefs } from "@/lib/notification-prefs";
 
 // Every action here degrades gracefully (returns { ok: false }) instead of
 // throwing when Supabase isn't configured yet (see lib/supabase.ts) — the
 // rest of the app (favoriting, preferences UI) stays usable without
 // notifications wired up; only the "enable notifications" pieces no-op.
+//
+// Each still takes `deviceId` — the guest identity, used as-is when no
+// account is signed in — but now also resolves a signed-in identity via
+// resolveActor() (see lib/auth.ts), which takes priority when present so a
+// signed-in account's prefs converge across every device it uses instead
+// of forking per browser.
 //
 // A "use server" file may only export async functions — types and the
 // DEFAULT_*_PREFS constants live in lib/notification-prefs.ts instead, and
@@ -20,15 +27,17 @@ export interface PushSubscriptionPayload {
 export async function saveDeviceSubscription(deviceId: string, subscription: PushSubscriptionPayload): Promise<{ ok: boolean }> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return { ok: false };
+  const actor = await resolveActor(deviceId);
 
   const { error } = await supabase.from("push_subscriptions").upsert(
     {
       device_id: deviceId,
+      ...(actor.userId ? { user_id: actor.userId } : {}),
       endpoint: subscription.endpoint,
       p256dh: subscription.keys.p256dh,
       auth: subscription.keys.auth,
     },
-    { onConflict: "device_id" }
+    { onConflict: actor.matchColumn }
   );
   return { ok: !error };
 }
@@ -40,17 +49,19 @@ export async function saveClubNotificationPrefs(
 ): Promise<{ ok: boolean }> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return { ok: false };
+  const actor = await resolveActor(deviceId);
 
   const { error } = await supabase.from("favorite_club_notifications").upsert(
     {
       device_id: deviceId,
+      ...(actor.userId ? { user_id: actor.userId } : {}),
       team_id: teamId,
       notify_lineup: prefs.notifyLineup,
       notify_goals: prefs.notifyGoals,
       notify_kickoff: prefs.notifyKickoff,
       notify_fulltime: prefs.notifyFulltime,
     },
-    { onConflict: "device_id,team_id" }
+    { onConflict: `${actor.matchColumn},team_id` }
   );
   return { ok: !error };
 }
@@ -58,11 +69,12 @@ export async function saveClubNotificationPrefs(
 export async function getClubNotificationPrefs(deviceId: string, teamId: number): Promise<ClubNotificationPrefs> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return DEFAULT_CLUB_PREFS;
+  const actor = await resolveActor(deviceId);
 
   const { data } = await supabase
     .from("favorite_club_notifications")
     .select("notify_lineup, notify_goals, notify_kickoff, notify_fulltime")
-    .eq("device_id", deviceId)
+    .eq(actor.matchColumn, actor.matchValue)
     .eq("team_id", teamId)
     .maybeSingle();
   if (!data) return DEFAULT_CLUB_PREFS;
@@ -78,11 +90,12 @@ export async function getClubNotificationPrefs(deviceId: string, teamId: number)
 export async function deleteClubNotificationPrefs(deviceId: string, teamId: number): Promise<{ ok: boolean }> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return { ok: false };
+  const actor = await resolveActor(deviceId);
 
   const { error } = await supabase
     .from("favorite_club_notifications")
     .delete()
-    .eq("device_id", deviceId)
+    .eq(actor.matchColumn, actor.matchValue)
     .eq("team_id", teamId);
   return { ok: !error };
 }
@@ -94,10 +107,12 @@ export async function savePlayerNotificationPrefs(
 ): Promise<{ ok: boolean }> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return { ok: false };
+  const actor = await resolveActor(deviceId);
 
   const { error } = await supabase.from("favorite_player_notifications").upsert(
     {
       device_id: deviceId,
+      ...(actor.userId ? { user_id: actor.userId } : {}),
       player_id: playerId,
       notify_lineup: prefs.notifyLineup,
       notify_goal: prefs.notifyGoal,
@@ -105,7 +120,7 @@ export async function savePlayerNotificationPrefs(
       notify_card: prefs.notifyCard,
       notify_rating: prefs.notifyRating,
     },
-    { onConflict: "device_id,player_id" }
+    { onConflict: `${actor.matchColumn},player_id` }
   );
   return { ok: !error };
 }
@@ -113,11 +128,12 @@ export async function savePlayerNotificationPrefs(
 export async function getPlayerNotificationPrefs(deviceId: string, playerId: number): Promise<PlayerNotificationPrefs> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return DEFAULT_PLAYER_PREFS;
+  const actor = await resolveActor(deviceId);
 
   const { data } = await supabase
     .from("favorite_player_notifications")
     .select("notify_lineup, notify_goal, notify_assist, notify_card, notify_rating")
-    .eq("device_id", deviceId)
+    .eq(actor.matchColumn, actor.matchValue)
     .eq("player_id", playerId)
     .maybeSingle();
   if (!data) return DEFAULT_PLAYER_PREFS;
@@ -134,11 +150,12 @@ export async function getPlayerNotificationPrefs(deviceId: string, playerId: num
 export async function deletePlayerNotificationPrefs(deviceId: string, playerId: number): Promise<{ ok: boolean }> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return { ok: false };
+  const actor = await resolveActor(deviceId);
 
   const { error } = await supabase
     .from("favorite_player_notifications")
     .delete()
-    .eq("device_id", deviceId)
+    .eq(actor.matchColumn, actor.matchValue)
     .eq("player_id", playerId);
   return { ok: !error };
 }
@@ -151,25 +168,29 @@ export async function deletePlayerNotificationPrefs(deviceId: string, playerId: 
 export async function saveNewsNotificationPref(deviceId: string, country: string): Promise<{ ok: boolean }> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return { ok: false };
+  const actor = await resolveActor(deviceId);
 
-  const { error } = await supabase
-    .from("news_notification_prefs")
-    .upsert({ device_id: deviceId, country }, { onConflict: "device_id,country" });
+  const { error } = await supabase.from("news_notification_prefs").upsert(
+    { device_id: deviceId, ...(actor.userId ? { user_id: actor.userId } : {}), country },
+    { onConflict: `${actor.matchColumn},country` }
+  );
   return { ok: !error };
 }
 
 export async function deleteNewsNotificationPref(deviceId: string, country: string): Promise<{ ok: boolean }> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return { ok: false };
+  const actor = await resolveActor(deviceId);
 
-  const { error } = await supabase.from("news_notification_prefs").delete().eq("device_id", deviceId).eq("country", country);
+  const { error } = await supabase.from("news_notification_prefs").delete().eq(actor.matchColumn, actor.matchValue).eq("country", country);
   return { ok: !error };
 }
 
 export async function getNewsNotificationCountries(deviceId: string): Promise<string[]> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return [];
+  const actor = await resolveActor(deviceId);
 
-  const { data } = await supabase.from("news_notification_prefs").select("country").eq("device_id", deviceId);
+  const { data } = await supabase.from("news_notification_prefs").select("country").eq(actor.matchColumn, actor.matchValue);
   return (data ?? []).map((row) => row.country as string);
 }

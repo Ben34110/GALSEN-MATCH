@@ -13,6 +13,7 @@
     "sync:mercato": "node scripts/sync-mercato.mjs"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.112.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.28.0",

@@ -2,10 +2,13 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 // Server-only — NEVER import this from a "use client" component.
 // SUPABASE_SERVICE_ROLE_KEY bypasses row-level security entirely, which is
-// intentional here (see supabase/schema.sql: no client ever talks to
-// Supabase directly, every read/write goes through a Server Action or API
-// route that already trusts the caller — a device id sent by the client
-// itself, no login system exists in this app).
+// intentional here (see supabase/schema.sql: no client ever queries app
+// data through Supabase directly, every read/write goes through a Server
+// Action or API route). The caller's identity is either a device id the
+// client sends itself (guests) or, when a session exists, the verified
+// signed-in user id (see lib/auth.ts's getAuthenticatedUserId) — this
+// admin client is identity-blind either way, it just executes whichever
+// the caller resolved.
 let cached: SupabaseClient | null = null;
 
 export function getSupabaseAdmin(): SupabaseClient | null {

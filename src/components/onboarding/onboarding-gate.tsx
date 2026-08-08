@@ -2,11 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import type { Session } from "@supabase/supabase-js";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { ONBOARDING_STORAGE_KEY, parseOnboardingProfile } from "@/lib/onboarding";
 import { AppLoadingScreen } from "@/components/ui/app-loading-screen";
 import { getOrCreateDeviceId } from "@/lib/device-id";
-import { syncUserProfile } from "@/app/actions/profile-sync";
+import { syncUserProfile, getProfileByUserId } from "@/app/actions/profile-sync";
+import { linkDeviceData } from "@/app/actions/link-device-data";
+import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
+import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
 
 // Guards every tab (/actu, /live, /fantasy, /chat, /profil): a visitor who
 // hasn't completed onboarding (country + 3 players + username) is bounced to
@@ -24,6 +28,7 @@ export function OnboardingGate({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [confirmedMissing, setConfirmedMissing] = useState(false);
   const lastSynced = useRef<string | null>(null);
+  const linkedRef = useRef(false);
 
   useEffect(() => {
     if (!profile) return;
@@ -40,6 +45,26 @@ export function OnboardingGate({ children }: { children: React.ReactNode }) {
     );
   }, [profile]);
 
+  // Once a session exists (sign-up, sign-in, or already-logged-in on
+  // return), re-key this device's existing guest rows onto the account —
+  // see app/actions/link-device-data.ts. Runs at most once per mount; the
+  // action's own is("user_id", null) guard makes repeat calls (e.g. an
+  // onAuthStateChange firing again) no-ops anyway.
+  useEffect(() => {
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) return;
+    const link = (userId: string | null) => {
+      if (!userId || linkedRef.current) return;
+      linkedRef.current = true;
+      linkDeviceData(getOrCreateDeviceId());
+    };
+    supabase.auth.getUser().then(({ data }: { data: { user: { id: string } | null } }) => link(data.user?.id ?? null));
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event: string, session: Session | null) => link(session?.user.id ?? null));
+    return () => subscription.unsubscribe();
+  }, []);
+
   useEffect(() => {
     if (profile) return;
     // On a hard navigation, useSyncExternalStore's server snapshot (null)
@@ -48,10 +73,31 @@ export function OnboardingGate({ children }: { children: React.ReactNode }) {
     // and bouncing an already-onboarded user out of the app.
     const id = requestAnimationFrame(() => {
       const raw = window.localStorage.getItem(ONBOARDING_STORAGE_KEY);
-      if (!parseOnboardingProfile(raw)) {
+      if (parseOnboardingProfile(raw)) return;
+
+      // No local profile on this device — before assuming this is a brand
+      // new visitor, check for a signed-in session: someone signing into an
+      // existing account on a second device has a profile saved server-side
+      // (see app/actions/profile-sync.ts's getProfileByUserId) that should
+      // be restored instead of re-running the wizard from zero.
+      const supabase = getSupabaseBrowserClient();
+      if (!supabase) {
         setConfirmedMissing(true);
         router.replace("/onboarding");
+        return;
       }
+      supabase.auth.getUser().then(async ({ data }: { data: { user: { id: string } | null } }) => {
+        const userId = data.user?.id ?? null;
+        if (userId) {
+          const restored = await getProfileByUserId(userId);
+          if (restored) {
+            writeLocalStorageValue(ONBOARDING_STORAGE_KEY, JSON.stringify(restored));
+            return;
+          }
+        }
+        setConfirmedMissing(true);
+        router.replace("/onboarding");
+      });
     });
     return () => cancelAnimationFrame(id);
   }, [profile, router]);

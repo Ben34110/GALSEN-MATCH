@@ -9,7 +9,7 @@ import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { COUNTRY_CODE_BY_THEME_ID, COUNTRY_LOGOS, initialsFromUsername } from "@/lib/onboarding";
 import { CountryAvatar } from "@/components/ui/country-avatar";
 import { ChatProfileSheet } from "@/components/chat/chat-profile-sheet";
-import { getOrCreateDeviceId } from "@/lib/device-id";
+import { useCurrentIdentity, isCurrentIdentity } from "@/hooks/use-current-identity";
 import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
 import { HAS_CHATTED_KEY } from "@/lib/badges";
 import type { AfricanPlayer, ChatMessage, ChatRoom as ChatRoomType } from "@/types";
@@ -26,10 +26,8 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
   const profile = useOnboardingProfile();
   const countryCode = profile ? COUNTRY_CODE_BY_THEME_ID[profile.countryId] : undefined;
 
-  const [deviceId, setDeviceId] = useState<string | null>(null);
-  useEffect(() => {
-    Promise.resolve(getOrCreateDeviceId()).then(setDeviceId);
-  }, []);
+  const identity = useCurrentIdentity();
+  const deviceId = identity.deviceId;
 
   // Surface the user's own country room right after "Général" — the room
   // they're most likely to want, per the onboarding country selection.
@@ -49,7 +47,7 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [sendError, setSendError] = useState(false);
-  const [openProfileDeviceId, setOpenProfileDeviceId] = useState<string | null>(null);
+  const [openProfileTarget, setOpenProfileTarget] = useState<{ deviceId: string; userId: string | null } | null>(null);
   const lastCreatedAtRef = useRef<string | null>(null);
 
   const activeRoom = rooms.find((room) => room.id === activeRoomId);
@@ -141,12 +139,12 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
           <p className="py-8 text-center text-sm text-muted">Aucun message pour l&apos;instant dans {activeRoom?.name}.</p>
         )}
         {messages.map((message) => {
-          const isOwn = message.deviceId === deviceId;
+          const isOwn = isCurrentIdentity(message, identity);
           return (
             <button
               key={message.id}
               type="button"
-              onClick={() => setOpenProfileDeviceId(message.deviceId)}
+              onClick={() => setOpenProfileTarget({ deviceId: message.deviceId, userId: message.userId })}
               className={cn("max-w-[85%] text-left sm:max-w-[70%]", isOwn && "self-end")}
             >
               {isOwn && profile && (
@@ -232,8 +230,13 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
         </button>
       </form>
 
-      {openProfileDeviceId && (
-        <ChatProfileSheet deviceId={openProfileDeviceId} playerPool={playerPool} onClose={() => setOpenProfileDeviceId(null)} />
+      {openProfileTarget && (
+        <ChatProfileSheet
+          deviceId={openProfileTarget.deviceId}
+          userId={openProfileTarget.userId}
+          playerPool={playerPool}
+          onClose={() => setOpenProfileTarget(null)}
+        />
       )}
     </div>
   );

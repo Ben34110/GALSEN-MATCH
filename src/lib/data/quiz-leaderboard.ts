@@ -3,6 +3,7 @@ import type { QuizTheme } from "@/types";
 
 export interface QuizLeaderboardEntry {
   deviceId: string;
+  userId: string | null;
   username: string;
   bestScore: number;
 }
@@ -19,7 +20,7 @@ export async function getQuizLeaderboard(theme: QuizTheme): Promise<QuizLeaderbo
 
   const { data, error } = await supabase
     .from("quiz_scores")
-    .select("device_id, username, best_score")
+    .select("device_id, user_id, username, best_score")
     .eq("theme", theme)
     .order("best_score", { ascending: false });
   if (error || !data) return null;
@@ -27,6 +28,7 @@ export async function getQuizLeaderboard(theme: QuizTheme): Promise<QuizLeaderbo
   return data.map(
     (row): QuizLeaderboardEntry => ({
       deviceId: row.device_id,
+      userId: row.user_id,
       username: row.username,
       bestScore: row.best_score,
     })

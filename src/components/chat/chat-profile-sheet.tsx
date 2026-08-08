@@ -13,6 +13,7 @@ import type { AfricanPlayer } from "@/types";
 
 interface ChatProfileSheetProps {
   deviceId: string;
+  userId: string | null;
   playerPool: AfricanPlayer[];
   onClose: () => void;
 }
@@ -42,7 +43,7 @@ function PlayerRow({ player, rank }: { player: AfricanPlayer; rank?: number }) {
 // resolution (playerIds/ballonDorTop3 -> AfricanPlayer) happens here,
 // client-side, against the pool already loaded by the chat page — same
 // convention as ballon-dor-view.tsx/preferences-editor.tsx.
-export function ChatProfileSheet({ deviceId, playerPool, onClose }: ChatProfileSheetProps) {
+export function ChatProfileSheet({ deviceId, userId, playerPool, onClose }: ChatProfileSheetProps) {
   const [bundle, setBundle] = useState<ChatProfileBundle | null | "loading">("loading");
 
   useEffect(() => {
@@ -53,13 +54,13 @@ export function ChatProfileSheet({ deviceId, playerPool, onClose }: ChatProfileS
     Promise.resolve("loading" as const).then((value) => {
       if (!cancelled) setBundle(value);
     });
-    getChatProfile(deviceId).then((result) => {
+    getChatProfile(deviceId, userId).then((result) => {
       if (!cancelled) setBundle(result);
     });
     return () => {
       cancelled = true;
     };
-  }, [deviceId]);
+  }, [deviceId, userId]);
 
   const nation = bundle && bundle !== "loading" && bundle.countryId ? getAfricanNation(bundle.countryId) : undefined;
   const favoritePlayers =

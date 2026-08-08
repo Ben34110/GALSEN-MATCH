@@ -1,10 +1,14 @@
 -- Galsen Match — notifications schema.
 --
--- No user accounts exist in this app (everything else is localStorage-only,
--- device-scoped) — notifications follow the same model: each browser/device
--- generates a stable random id (see lib/device-id.ts), stored alongside its
--- push subscription and per-favorite notification preferences. Run this
--- once against a fresh Supabase project (SQL Editor -> paste -> Run).
+-- No user accounts are required to use this app — every browser/device
+-- generates a stable random id (see lib/device-id.ts), and by default all
+-- data (push subscription, favorites, fantasy squad, chat, etc.) is scoped
+-- to that device_id, guest-style. Real accounts (email/password or Google,
+-- see lib/auth.ts + the "user_id" migration near the end of this file) are
+-- optional, additive, and coexist with guest devices — signing in doesn't
+-- require or replace the device_id model. Run this once against a fresh
+-- Supabase project (SQL Editor -> paste -> Run); safe to re-run any time
+-- something new is added, every statement here is idempotent.
 
 create extension if not exists "pgcrypto";
 
@@ -253,9 +257,48 @@ create table if not exists user_profiles (
   updated_at timestamptz not null default now()
 );
 
+-- Optional real accounts (email/password or Google via Supabase Auth — see
+-- lib/auth.ts, lib/supabase-server.ts, lib/supabase-browser.ts). Additive,
+-- not a migration: device_id is untouched and keeps working exactly as
+-- before for guests. Every device-scoped table gets a nullable user_id
+-- alongside its device_id — a Server Action sets one or the other
+-- depending on whether a session exists when it's called (see
+-- app/actions/*.ts), never both. The partial unique indexes (`where
+-- user_id is not null`) mirror each table's existing device_id constraint,
+-- just for the signed-in side. app/actions/link-device-data.ts is what
+-- moves a guest's existing rows onto their new account's user_id after
+-- they sign up, so signing in doesn't look like losing everything.
+alter table push_subscriptions add column if not exists user_id uuid references auth.users(id) on delete cascade;
+create unique index if not exists push_subscriptions_user_idx on push_subscriptions (user_id) where user_id is not null;
+
+alter table favorite_club_notifications add column if not exists user_id uuid references auth.users(id) on delete cascade;
+create unique index if not exists favorite_club_notifications_user_team_idx on favorite_club_notifications (user_id, team_id) where user_id is not null;
+
+alter table favorite_player_notifications add column if not exists user_id uuid references auth.users(id) on delete cascade;
+create unique index if not exists favorite_player_notifications_user_player_idx on favorite_player_notifications (user_id, player_id) where user_id is not null;
+
+alter table fantasy_squads add column if not exists user_id uuid references auth.users(id) on delete cascade;
+create unique index if not exists fantasy_squads_user_journee_idx on fantasy_squads (user_id, journee) where user_id is not null;
+
+alter table news_notification_prefs add column if not exists user_id uuid references auth.users(id) on delete cascade;
+create unique index if not exists news_notification_prefs_user_country_idx on news_notification_prefs (user_id, country) where user_id is not null;
+
+alter table quiz_scores add column if not exists user_id uuid references auth.users(id) on delete cascade;
+create unique index if not exists quiz_scores_user_theme_idx on quiz_scores (user_id, theme) where user_id is not null;
+
+alter table ballon_dor_predictions add column if not exists user_id uuid references auth.users(id) on delete cascade;
+create unique index if not exists ballon_dor_predictions_user_idx on ballon_dor_predictions (user_id) where user_id is not null;
+
+alter table chat_messages add column if not exists user_id uuid references auth.users(id) on delete cascade;
+create index if not exists chat_messages_user_idx on chat_messages (user_id);
+
+alter table user_profiles add column if not exists user_id uuid references auth.users(id) on delete cascade;
+create unique index if not exists user_profiles_user_idx on user_profiles (user_id) where user_id is not null;
+
 -- No RLS policies: every read/write goes through server-only code using the
--- service_role key (see lib/supabase.ts) — the anon key is never used, so
--- there's no client-side access path to lock down.
+-- service_role key (see lib/supabase.ts) — the anon key is never used to
+-- touch app data (only Supabase Auth's own endpoints, for accounts above),
+-- so there's no client-side data access path to lock down.
 alter table push_subscriptions enable row level security;
 alter table favorite_club_notifications enable row level security;
 alter table favorite_player_notifications enable row level security;

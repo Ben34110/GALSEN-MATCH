@@ -201,11 +201,15 @@ export interface ChatRoom {
 export interface ChatMessage {
   id: string;
   roomId: string;
-  // The sender's device_id — resolves back to their user_profiles row when
-  // a message is clicked (see app/actions/chat-profile.ts), and is how the
-  // UI tells "your own message" apart from everyone else's now that real
-  // devices exist (replaces the old mock's authorName === "Toi" hack).
+  // The sender's device_id — always set (guests and signed-in senders
+  // alike, see app/actions/chat.ts's sendChatMessage), used as the "own
+  // message" / profile-lookup key for guests. Signed-in senders additionally
+  // carry userId below, which takes priority for both purposes.
   deviceId: string;
+  // Set only when the sender was signed in at send time. Resolves back to
+  // their user_profiles row via app/actions/chat-profile.ts, and is how the
+  // UI recognizes "your own message" for a signed-in viewer.
+  userId: string | null;
   authorName: string;
   // Sender's countryId at send time (a lib/data/african-nations.ts id),
   // snapshotted like authorName — powers the flag shown next to every

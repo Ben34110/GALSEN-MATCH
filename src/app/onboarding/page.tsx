@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Bell, Check, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { Bell, Check, ChevronLeft, ChevronRight, Mail, Search, UserRound } from "lucide-react";
 import { cn, normalizeForSearch } from "@/lib/utils";
 import { accentThemes } from "@/lib/mock/accent-themes";
 import { getAfricanPlayers, searchAfricanPlayers } from "@/lib/data/african-players";
@@ -15,10 +15,11 @@ import { getOrCreateDeviceId } from "@/lib/device-id";
 import { ensurePushSubscription, PUSH_FAILURE_MESSAGES } from "@/hooks/use-push-subscription";
 import { saveNewsNotificationPref } from "@/app/actions/notifications";
 import { TiktokIcon } from "@/components/icons/tiktok-icon";
+import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
 
 const COUNTRIES = accentThemes.filter((theme) => theme.id !== "default");
 
-const STEPS = ["country", "players", "username", "tiktok"] as const;
+const STEPS = ["country", "players", "username", "tiktok", "account"] as const;
 
 const POSITION_LABELS: Record<string, string> = {
   Goalkeeper: "Gardien",
@@ -47,6 +48,11 @@ export default function OnboardingPage() {
   const [newsNotifStatus, setNewsNotifStatus] = useState<"idle" | "pending" | "enabled">("idle");
   const [newsNotifCountryId, setNewsNotifCountryId] = useState<string | null>(null);
   const [newsNotifFailReason, setNewsNotifFailReason] = useState<keyof typeof PUSH_FAILURE_MESSAGES | null>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [accountMode, setAccountMode] = useState<"signup" | "signin">("signup");
+  const [accountStatus, setAccountStatus] = useState<"idle" | "pending" | "check-email">("idle");
+  const [accountError, setAccountError] = useState<string | null>(null);
 
   const visibleCountries = useMemo(() => {
     const query = normalizeForSearch(countrySearch.trim());
@@ -77,9 +83,11 @@ export default function OnboardingPage() {
     (step === "country" && countryId !== null) ||
     (step === "players" && playerIds.length === 3) ||
     (step === "username" && username.trim().length >= 2) ||
-    // Optional — never blocks finishing onboarding, same reasoning as
-    // skipping the news-notification opt-in on the country step.
-    step === "tiktok";
+    // Both optional — creating an account is one of three choices on this
+    // step (the other two, email/password and Google, have their own
+    // buttons below); the bottom "Terminer" button is always the guest path.
+    step === "tiktok" ||
+    step === "account";
 
   // Opt-in, not automatic — tapping "Continuer" without touching this is
   // the normal path, same as skipping a favorite club's notification
@@ -118,7 +126,13 @@ export default function OnboardingPage() {
     finish();
   }
 
-  function finish() {
+  // The one write path for the collected wizard state — every ending
+  // (guest, email/password, Google) goes through this first. Separated
+  // from navigation because the Google path needs the profile saved
+  // *before* the OAuth redirect navigates the browser away entirely (see
+  // continueWithGoogle below); it can't wait for a router.push that will
+  // never get to run.
+  function saveLocalProfile() {
     if (!countryId) return;
     writeLocalStorageValue(
       ONBOARDING_STORAGE_KEY,
@@ -131,7 +145,71 @@ export default function OnboardingPage() {
       })
     );
     applyAccentTheme(countryId);
+  }
+
+  // "Continuer en invité" — the guest path, unchanged from before accounts
+  // existed. Bound to the bottom "Terminer" button on every step.
+  function finish() {
+    saveLocalProfile();
     router.push("/actu");
+  }
+
+  // Email/password and Google both end up here once a real session exists —
+  // OnboardingGate (mounted on every tab, including the one we're about to
+  // land on) reacts to the profile+session combination on its own to sync
+  // to the account and link this device's existing data (see
+  // onboarding-gate.tsx and app/actions/link-device-data.ts), so nothing
+  // extra is needed here beyond saving locally and navigating, same as the
+  // guest path.
+  function finishWithAccount() {
+    saveLocalProfile();
+    router.push("/actu");
+  }
+
+  async function submitAccountForm() {
+    if (!countryId) return;
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      setAccountError("Comptes indisponibles pour l'instant — continue en invité.");
+      return;
+    }
+    setAccountStatus("pending");
+    setAccountError(null);
+
+    const { data, error } =
+      accountMode === "signup" ? await supabase.auth.signUp({ email, password }) : await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      setAccountStatus("idle");
+      setAccountError(error.message);
+      return;
+    }
+    if (!data.session) {
+      // Supabase's default: signUp needs an email confirmation click before
+      // a session exists. Nothing to link/sync yet — save the profile
+      // locally now (so it's not lost) and let them keep using the app as
+      // a guest in the meantime; OnboardingGate picks up the real session
+      // and links this device's data automatically once they do confirm
+      // and come back.
+      saveLocalProfile();
+      setAccountStatus("check-email");
+      return;
+    }
+    finishWithAccount();
+  }
+
+  async function continueWithGoogle() {
+    if (!countryId) return;
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      setAccountError("Comptes indisponibles pour l'instant — continue en invité.");
+      return;
+    }
+    saveLocalProfile(); // must happen before the redirect below, see saveLocalProfile's comment
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=/actu` },
+    });
   }
 
   return (
@@ -383,6 +461,113 @@ export default function OnboardingPage() {
             />
           </>
         )}
+
+        {step === "account" && (
+          <>
+            <span className="grid size-11 place-items-center rounded-full bg-accent/10 text-accent">
+              <UserRound size={20} aria-hidden />
+            </span>
+            <h1 className="mt-3 font-serif text-2xl font-bold text-foreground">Sauvegarde ton compte</h1>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted">
+              Facultatif — un compte permet de retrouver ton profil sur un autre appareil. Sans compte, tout reste
+              sur cet appareil, exactement comme avant (bouton &laquo; Continuer en invité &raquo; en bas).
+            </p>
+
+            {accountStatus === "check-email" ? (
+              <div className="mt-6 flex items-center gap-3 rounded-2xl border border-accent/30 bg-accent/5 p-3.5">
+                <Mail size={18} className="shrink-0 text-accent" aria-hidden />
+                <p className="text-sm leading-snug text-foreground">
+                  Vérifie ta boîte mail pour confirmer ton compte. Tu peux continuer en invité en attendant — tes
+                  données te suivront automatiquement dès que tu reviendras connecté.
+                </p>
+              </div>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={continueWithGoogle}
+                  className="mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-border bg-surface text-sm font-semibold text-foreground transition-transform duration-[var(--duration-fast)] active:scale-[0.98]"
+                >
+                  Continuer avec Google
+                </button>
+
+                <div className="my-4 flex items-center gap-3 text-xs font-semibold uppercase tracking-wide text-muted">
+                  <span className="h-px flex-1 bg-border" aria-hidden />
+                  ou
+                  <span className="h-px flex-1 bg-border" aria-hidden />
+                </div>
+
+                <div className="flex gap-1.5 rounded-full border border-border bg-surface p-1">
+                  <button
+                    type="button"
+                    onClick={() => setAccountMode("signup")}
+                    className={cn(
+                      "min-h-9 flex-1 rounded-full text-xs font-bold transition-colors",
+                      accountMode === "signup" ? "bg-accent text-accent-ink" : "text-muted"
+                    )}
+                  >
+                    Créer un compte
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAccountMode("signin")}
+                    className={cn(
+                      "min-h-9 flex-1 rounded-full text-xs font-bold transition-colors",
+                      accountMode === "signin" ? "bg-accent text-accent-ink" : "text-muted"
+                    )}
+                  >
+                    Se connecter
+                  </button>
+                </div>
+
+                <label htmlFor="onboarding-email" className="sr-only">
+                  Email
+                </label>
+                <input
+                  id="onboarding-email"
+                  type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder="ton@email.com"
+                  autoComplete="email"
+                  className={cn(
+                    "mt-3 min-h-12 w-full rounded-xl border border-border bg-surface px-4 text-base text-foreground",
+                    "placeholder:text-muted focus:border-accent focus:outline-none"
+                  )}
+                />
+                <label htmlFor="onboarding-password" className="sr-only">
+                  Mot de passe
+                </label>
+                <input
+                  id="onboarding-password"
+                  type="password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder="Mot de passe"
+                  autoComplete={accountMode === "signup" ? "new-password" : "current-password"}
+                  className={cn(
+                    "mt-2 min-h-12 w-full rounded-xl border border-border bg-surface px-4 text-base text-foreground",
+                    "placeholder:text-muted focus:border-accent focus:outline-none"
+                  )}
+                />
+
+                {accountError && <p className="mt-2 text-xs leading-relaxed text-accent-3">{accountError}</p>}
+
+                <button
+                  type="button"
+                  onClick={submitAccountForm}
+                  disabled={accountStatus === "pending" || !email.trim() || password.length < 6}
+                  className={cn(
+                    "mt-3 flex min-h-12 w-full items-center justify-center rounded-2xl bg-foreground text-base font-semibold text-background",
+                    "transition-transform duration-[var(--duration-fast)] active:scale-[0.98] disabled:opacity-40"
+                  )}
+                >
+                  {accountStatus === "pending" ? "…" : accountMode === "signup" ? "Créer mon compte" : "Se connecter"}
+                </button>
+              </>
+            )}
+          </>
+        )}
       </div>
 
       <div className="mt-4 flex shrink-0 items-center gap-3 border-t border-border pb-[calc(1.25rem+var(--safe-bottom))] pt-4">
@@ -406,7 +591,7 @@ export default function OnboardingPage() {
             canAdvance ? "bg-foreground text-background" : "cursor-not-allowed bg-surface-2 text-muted"
           )}
         >
-          {stepIndex === STEPS.length - 1 ? "Terminer" : "Continuer"}
+          {step === "account" ? "Continuer en invité" : stepIndex === STEPS.length - 1 ? "Terminer" : "Continuer"}
           <ChevronRight size={18} aria-hidden />
         </button>
       </div>

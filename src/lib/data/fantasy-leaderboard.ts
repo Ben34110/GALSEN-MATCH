@@ -6,6 +6,7 @@ import type { PlayerPosition } from "@/types";
 
 export interface LeaderboardEntry {
   deviceId: string;
+  userId: string | null;
   username: string;
   points: number;
   filled: number;
@@ -24,7 +25,7 @@ export async function getLeaderboard(journee: number): Promise<LeaderboardEntry[
 
   const { data, error } = await supabase
     .from("fantasy_squads")
-    .select("device_id, username, seats, captain_id")
+    .select("device_id, user_id, username, seats, captain_id")
     .eq("journee", journee);
   if (error || !data) return null;
 
@@ -40,6 +41,7 @@ export async function getLeaderboard(journee: number): Promise<LeaderboardEntry[
         .map((player) => ({ player, position: positionCode(player.position) ?? ("A" as PlayerPosition) }));
       return {
         deviceId: row.device_id,
+        userId: row.user_id,
         username: row.username,
         points: calculateRealLineupPoints(scoringEntries, row.captain_id),
         filled: playerIds.length,

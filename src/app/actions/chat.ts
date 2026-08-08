@@ -1,6 +1,7 @@
 "use server";
 
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { getAuthenticatedUserId } from "@/lib/auth";
 import type { ChatMessage } from "@/types";
 
 // One room's worth of history never needs to exceed this — older rows are
@@ -13,19 +14,21 @@ interface ChatMessageRow {
   id: string;
   room_id: string;
   device_id: string;
+  user_id: string | null;
   author_name: string;
   country_id: string | null;
   content: string;
   created_at: string;
 }
 
-const MESSAGE_COLUMNS = "id, room_id, device_id, author_name, country_id, content, created_at";
+const MESSAGE_COLUMNS = "id, room_id, device_id, user_id, author_name, country_id, content, created_at";
 
 function toChatMessage(row: ChatMessageRow): ChatMessage {
   return {
     id: row.id,
     roomId: row.room_id,
     deviceId: row.device_id,
+    userId: row.user_id,
     authorName: row.author_name,
     countryId: row.country_id,
     content: row.content,
@@ -84,6 +87,10 @@ async function pruneRoom(supabase: NonNullable<ReturnType<typeof getSupabaseAdmi
   }
 }
 
+// `deviceId` is always recorded (guest identity, or a signed-in sender's
+// "last seen from" breadcrumb); `user_id` is set too when a session exists,
+// and takes priority for the "own message"/profile-lookup purposes (see
+// ChatMessage's userId field and chat-room.tsx).
 export async function sendChatMessage(
   deviceId: string,
   roomId: string,
@@ -93,10 +100,18 @@ export async function sendChatMessage(
 ): Promise<{ ok: boolean; message: ChatMessage | null }> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return { ok: false, message: null };
+  const userId = await getAuthenticatedUserId();
 
   const { data, error } = await supabase
     .from("chat_messages")
-    .insert({ room_id: roomId, device_id: deviceId, author_name: authorName, country_id: countryId, content })
+    .insert({
+      room_id: roomId,
+      device_id: deviceId,
+      ...(userId ? { user_id: userId } : {}),
+      author_name: authorName,
+      country_id: countryId,
+      content,
+    })
     .select(MESSAGE_COLUMNS)
     .single();
   if (error || !data) return { ok: false, message: null };

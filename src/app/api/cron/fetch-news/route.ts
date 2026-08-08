@@ -46,24 +46,25 @@ async function notifySubscribers(insertedByCountry: Map<string, CountryBatch>): 
 
   const { data: prefs } = await supabase
     .from("news_notification_prefs")
-    .select("device_id, country")
+    .select("device_id, user_id, country")
     .in("country", Array.from(insertedByCountry.keys()));
   if (!prefs || prefs.length === 0) return 0;
 
-  const { data: subs } = await supabase
-    .from("push_subscriptions")
-    .select("device_id, endpoint, p256dh, auth")
-    .in(
-      "device_id",
-      prefs.map((p) => p.device_id)
-    );
-  const subsByDevice = new Map((subs ?? []).map((s) => [s.device_id, s]));
+  // Correlated by user_id when present (a signed-in account's pref and push
+  // subscription rows may have been last written from different devices —
+  // see poll/route.ts's targetKey for the same reasoning), device_id
+  // otherwise. Fetches every subscription rather than filtering by the
+  // prefs' device_ids up front, since that list can no longer stand in for
+  // the full set of relevant identities once user_id exists too.
+  const targetKey = (row: { device_id: string; user_id: string | null }) => row.user_id ?? row.device_id;
+  const { data: subs } = await supabase.from("push_subscriptions").select("device_id, user_id, endpoint, p256dh, auth");
+  const subsByTarget = new Map((subs ?? []).map((s) => [targetKey(s), s]));
 
   let sent = 0;
-  const staleDeviceIds = new Set<string>();
+  const staleTargets = new Set<string>();
   await Promise.allSettled(
     prefs.map(async (pref) => {
-      const sub = subsByDevice.get(pref.device_id);
+      const sub = subsByTarget.get(targetKey(pref));
       const batch = insertedByCountry.get(pref.country);
       if (!sub || !batch || batch.titles.length === 0) return;
 
@@ -90,13 +91,16 @@ async function notifySubscribers(insertedByCountry: Map<string, CountryBatch>): 
         sent += 1;
       } catch (err) {
         const statusCode = (err as { statusCode?: number }).statusCode;
-        if (statusCode === 404 || statusCode === 410) staleDeviceIds.add(pref.device_id);
+        if (statusCode === 404 || statusCode === 410) staleTargets.add(targetKey(pref));
       }
     })
   );
 
-  if (staleDeviceIds.size > 0) {
-    await supabase.from("push_subscriptions").delete().in("device_id", Array.from(staleDeviceIds));
+  if (staleTargets.size > 0) {
+    const staleDeviceIds = Array.from(staleTargets).filter((target) => subsByTarget.get(target)?.user_id === null);
+    const staleUserIds = Array.from(staleTargets).filter((target) => subsByTarget.get(target)?.user_id !== null);
+    if (staleDeviceIds.length > 0) await supabase.from("push_subscriptions").delete().in("device_id", staleDeviceIds);
+    if (staleUserIds.length > 0) await supabase.from("push_subscriptions").delete().in("user_id", staleUserIds);
   }
 
   return sent;

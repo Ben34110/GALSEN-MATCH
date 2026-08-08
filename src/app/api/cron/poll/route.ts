@@ -21,6 +21,7 @@ export const dynamic = "force-dynamic";
 
 interface ClubPrefRow {
   device_id: string;
+  user_id: string | null;
   team_id: number;
   notify_lineup: boolean;
   notify_goals: boolean;
@@ -30,6 +31,7 @@ interface ClubPrefRow {
 
 interface PlayerPrefRow {
   device_id: string;
+  user_id: string | null;
   player_id: number;
   notify_lineup: boolean;
   notify_goal: boolean;
@@ -40,9 +42,20 @@ interface PlayerPrefRow {
 
 interface SubscriptionRow {
   device_id: string;
+  user_id: string | null;
   endpoint: string;
   p256dh: string;
   auth: string;
+}
+
+// A signed-in account's favorites/push-subscription rows can each have been
+// last written from a different physical device (that's the whole point of
+// syncing across devices — see lib/auth.ts's resolveActor) — device_id
+// alone can no longer be trusted to correlate "this favorite" with "this
+// push subscription" for them. user_id, when present, is the real identity
+// to correlate on; device_id remains correct as-is for guests (no user_id).
+function targetKey(row: { device_id: string; user_id: string | null }): string {
+  return row.user_id ?? row.device_id;
 }
 
 const STARTED_STATUSES = new Set(["1H", "2H", "HT", "ET", "P", "LIVE", "BT"]);
@@ -138,7 +151,7 @@ export async function GET(request: Request) {
 
   const clubPrefRows = (clubPrefs ?? []) as ClubPrefRow[];
   const playerPrefRows = (playerPrefs ?? []) as PlayerPrefRow[];
-  const subsByDevice = new Map((subs ?? []).map((s) => [s.device_id, s as SubscriptionRow]));
+  const subsByTarget = new Map((subs ?? []).map((s) => [targetKey(s as SubscriptionRow), s as SubscriptionRow]));
 
   if (clubPrefRows.length === 0 && playerPrefRows.length === 0) {
     return NextResponse.json({ ok: true, sent: 0, note: "no favorites with notifications enabled" });
@@ -161,9 +174,12 @@ export async function GET(request: Request) {
 
   // icon: shown as the notification's avatar-style image (player photo or
   // team logo) — see public/sw.js's push handler, which reads payload.icon.
-  const pending: { deviceId: string; title: string; body: string; url: string; icon?: string }[] = [];
-  function queue(deviceId: string, title: string, body: string, fixtureId: number, icon?: string) {
-    pending.push({ deviceId, title, body, url: `/live/match/${fixtureId}`, icon });
+  // `target` is the same key targetKey() would produce for the row this
+  // notification was queued from — a user_id for a signed-in favorite, a
+  // device_id for a guest's.
+  const pending: { target: string; title: string; body: string; url: string; icon?: string }[] = [];
+  function queue(target: string, title: string, body: string, fixtureId: number, icon?: string) {
+    pending.push({ target, title, body, url: `/live/match/${fixtureId}`, icon });
   }
 
   async function notifiedKey(fixtureId: number, eventKey: string): Promise<boolean> {
@@ -217,7 +233,7 @@ export async function GET(request: Request) {
           if (!lineupResult.error && lineupResult.data.length > 0) {
             const { title, body } = pick(LINEUP_TEMPLATES)(matchLabel);
             for (const device of clubDevices.filter((d) => d.notify_lineup)) {
-              queue(device.device_id, title, body, fixtureId, teamLogo);
+              queue(targetKey(device), title, body, fixtureId, teamLogo);
             }
             await markKey(fixtureId, lineupKey);
 
@@ -232,7 +248,7 @@ export async function GET(request: Request) {
                 const player = favoritedPlayerMeta.get(slot.player.id)!;
                 const { title: pTitle, body: pBody } = pick(PLAYER_LINEUP_TEMPLATES)(player.name);
                 for (const device of playerPrefRows.filter((r) => r.player_id === slot.player.id && r.notify_lineup)) {
-                  queue(device.device_id, pTitle, pBody, fixtureId, player.photo);
+                  queue(targetKey(device), pTitle, pBody, fixtureId, player.photo);
                 }
                 await markKey(fixtureId, playerKey);
               }
@@ -246,7 +262,7 @@ export async function GET(request: Request) {
         if (!(await notifiedKey(fixtureId, kickoffKey))) {
           const { title, body } = pick(KICKOFF_TEMPLATES)(matchLabel);
           for (const device of clubDevices.filter((d) => d.notify_kickoff)) {
-            queue(device.device_id, title, body, fixtureId, teamLogo);
+            queue(targetKey(device), title, body, fixtureId, teamLogo);
           }
           await markKey(fixtureId, kickoffKey);
         }
@@ -258,7 +274,7 @@ export async function GET(request: Request) {
           const score = `${fixture.goals.home ?? 0}-${fixture.goals.away ?? 0}`;
           const { title, body } = pick(FULLTIME_TEMPLATES)(matchLabel, score);
           for (const device of clubDevices.filter((d) => d.notify_fulltime)) {
-            queue(device.device_id, title, body, fixtureId, teamLogo);
+            queue(targetKey(device), title, body, fixtureId, teamLogo);
           }
           await markKey(fixtureId, fulltimeKey);
         }
@@ -285,7 +301,7 @@ export async function GET(request: Request) {
             const teamLogo = logoFor(fixture, event.team.id);
             const { title, body } = pick(CLUB_GOAL_TEMPLATES)(event.team.name, scorer, currentScore);
             for (const device of clubPrefRows.filter((r) => r.team_id === event.team.id && r.notify_goals)) {
-              queue(device.device_id, title, body, fixtureId, teamLogo);
+              queue(targetKey(device), title, body, fixtureId, teamLogo);
             }
             await markKey(fixtureId, key);
           }
@@ -296,7 +312,7 @@ export async function GET(request: Request) {
             const player = favoritedPlayerMeta.get(event.player.id)!;
             const { title, body } = pick(PLAYER_GOAL_TEMPLATES)(player.name, currentScore);
             for (const device of playerPrefRows.filter((r) => r.player_id === event.player.id && r.notify_goal)) {
-              queue(device.device_id, title, body, fixtureId, player.photo);
+              queue(targetKey(device), title, body, fixtureId, player.photo);
             }
             await markKey(fixtureId, key);
           }
@@ -307,7 +323,7 @@ export async function GET(request: Request) {
             const player = favoritedPlayerMeta.get(event.assist.id)!;
             const { title, body } = pick(ASSIST_TEMPLATES)(player.name);
             for (const device of playerPrefRows.filter((r) => r.player_id === event.assist.id && r.notify_assist)) {
-              queue(device.device_id, title, body, fixtureId, player.photo);
+              queue(targetKey(device), title, body, fixtureId, player.photo);
             }
             await markKey(fixtureId, key);
           }
@@ -321,7 +337,7 @@ export async function GET(request: Request) {
           const color = event.detail.toLowerCase().includes("red") ? "red" : "yellow";
           const { title, body } = pick(CARD_TEMPLATES[color])(player.name);
           for (const device of playerPrefRows.filter((r) => r.player_id === event.player.id && r.notify_card)) {
-            queue(device.device_id, title, body, fixtureId, player.photo);
+            queue(targetKey(device), title, body, fixtureId, player.photo);
           }
           await markKey(fixtureId, key);
         }
@@ -349,7 +365,7 @@ export async function GET(request: Request) {
         const player = favoritedPlayerMeta.get(entry.player.id)!;
         const { title, body } = pick(RATING_TEMPLATES)(player.name, rating);
         for (const device of playerPrefRows.filter((r) => r.player_id === entry.player.id && r.notify_rating)) {
-          queue(device.device_id, title, body, fixtureId, player.photo);
+          queue(targetKey(device), title, body, fixtureId, player.photo);
         }
       }
     }
@@ -358,10 +374,10 @@ export async function GET(request: Request) {
 
   // --- Send everything, dropping subscriptions the push service reports as gone ---
   let sent = 0;
-  const staleDeviceIds = new Set<string>();
+  const staleTargets = new Set<string>();
   await Promise.allSettled(
     pending.map(async (message) => {
-      const sub = subsByDevice.get(message.deviceId);
+      const sub = subsByTarget.get(message.target);
       if (!sub) return;
       try {
         await webpush.sendNotification(
@@ -371,14 +387,17 @@ export async function GET(request: Request) {
         sent += 1;
       } catch (err) {
         const statusCode = (err as { statusCode?: number }).statusCode;
-        if (statusCode === 404 || statusCode === 410) staleDeviceIds.add(message.deviceId);
+        if (statusCode === 404 || statusCode === 410) staleTargets.add(message.target);
       }
     })
   );
 
-  if (staleDeviceIds.size > 0) {
-    await supabase.from("push_subscriptions").delete().in("device_id", Array.from(staleDeviceIds));
+  if (staleTargets.size > 0) {
+    const staleDeviceIds = Array.from(staleTargets).filter((target) => subsByTarget.get(target)?.user_id === null);
+    const staleUserIds = Array.from(staleTargets).filter((target) => subsByTarget.get(target)?.user_id !== null);
+    if (staleDeviceIds.length > 0) await supabase.from("push_subscriptions").delete().in("device_id", staleDeviceIds);
+    if (staleUserIds.length > 0) await supabase.from("push_subscriptions").delete().in("user_id", staleUserIds);
   }
 
-  return NextResponse.json({ ok: true, sent, queued: pending.length, staleRemoved: staleDeviceIds.size });
+  return NextResponse.json({ ok: true, sent, queued: pending.length, staleRemoved: staleTargets.size });
 }

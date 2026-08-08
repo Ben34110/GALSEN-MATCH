@@ -1,21 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getOrCreateDeviceId } from "@/lib/device-id";
+import { useCurrentIdentity, isCurrentIdentity } from "@/hooks/use-current-identity";
 import type { QuizLeaderboardEntry } from "@/lib/data/quiz-leaderboard";
 
 const RANK_COLORS = ["text-accent-2", "text-muted", "text-accent-3"];
 
 export function QuizLeaderboardView({ entries }: { entries: QuizLeaderboardEntry[] }) {
-  // Read only on the client — see leaderboard-view.tsx's identical
-  // comment: the device id is purely for highlighting "you" in an
-  // already-fetched list, meaningless to the server render.
-  const [deviceId, setDeviceId] = useState<string | null>(null);
-  useEffect(() => {
-    Promise.resolve(getOrCreateDeviceId()).then(setDeviceId);
-  }, []);
+  const identity = useCurrentIdentity();
 
   if (entries.length === 0) {
     return (
@@ -28,7 +21,7 @@ export function QuizLeaderboardView({ entries }: { entries: QuizLeaderboardEntry
   return (
     <ol className="flex flex-col gap-2">
       {entries.map((entry, index) => {
-        const isMe = entry.deviceId === deviceId;
+        const isMe = isCurrentIdentity(entry, identity);
         return (
           <li
             key={entry.deviceId}

@@ -1,14 +1,17 @@
 "use server";
 
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { resolveActor } from "@/lib/auth";
 
 // Best-effort background sync, called whenever the local onboarding profile
 // changes (see components/onboarding/onboarding-gate.tsx) — degrades to a
 // no-op if Supabase isn't configured, same pattern as syncFantasySquad.
-// One row per device, always overwritten (onConflict: "device_id"). Unlike
-// ballon_dor_predictions, this row IS read back for devices other than the
-// caller's own — see app/actions/chat-profile.ts, which powers the "click a
-// chat message to see who sent it" profile sheet.
+// One row per identity, always overwritten. Unlike ballon_dor_predictions,
+// this row IS read back for identities other than the caller's own — see
+// app/actions/chat-profile.ts, which powers the "click a chat message to
+// see who sent it" profile sheet. Converges onto the signed-in account's
+// row when one exists (see lib/auth.ts's resolveActor) — this is what
+// makes the profile actually restorable on a second device.
 export async function syncUserProfile(
   deviceId: string,
   username: string,
@@ -19,10 +22,12 @@ export async function syncUserProfile(
 ): Promise<{ ok: boolean }> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return { ok: false };
+  const actor = await resolveActor(deviceId);
 
   const { error } = await supabase.from("user_profiles").upsert(
     {
       device_id: deviceId,
+      ...(actor.userId ? { user_id: actor.userId } : {}),
       username,
       country_id: countryId,
       player_ids: playerIds,
@@ -30,7 +35,39 @@ export async function syncUserProfile(
       tiktok_handle: tiktokHandle,
       updated_at: new Date().toISOString(),
     },
-    { onConflict: "device_id" }
+    { onConflict: actor.matchColumn }
   );
   return { ok: !error };
+}
+
+// Cross-device restore: called by OnboardingGate when a session exists but
+// this particular browser has no local profile yet (a fresh device signing
+// into an existing account) — fetches the account's previously-synced
+// profile so the wizard can be skipped instead of starting from zero.
+export interface RestoredProfile {
+  countryId: string;
+  playerIds: string[];
+  username: string;
+  favoriteClubId: number | null;
+  tiktokHandle: string | null;
+}
+
+export async function getProfileByUserId(userId: string): Promise<RestoredProfile | null> {
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return null;
+
+  const { data, error } = await supabase
+    .from("user_profiles")
+    .select("country_id, player_ids, username, favorite_club_id, tiktok_handle")
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (error || !data) return null;
+
+  return {
+    countryId: data.country_id,
+    playerIds: Array.isArray(data.player_ids) ? data.player_ids : [],
+    username: data.username,
+    favoriteClubId: data.favorite_club_id ?? null,
+    tiktokHandle: data.tiktok_handle ?? null,
+  };
 }

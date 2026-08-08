@@ -13,33 +13,33 @@ export interface ChatProfileBundle {
   username: string;
   countryId: string | null;
   playerIds: string[];
-  ballonDorTop3: string[]; // rankings.slice(0, 3); [] if that device never predicted
+  ballonDorTop3: string[]; // rankings.slice(0, 3); [] if that identity never predicted
   tiktokHandle: string | null;
 }
 
-// Reads two device-scoped tables for someone else's device_id — the first
-// place in this app that reads back another device's synced data (every
-// other Supabase-backed profile/prediction table is otherwise write-only
-// per device). null only when this device has never synced a profile
-// (hasn't opened the app since Live Chat shipped — see
-// onboarding-gate.tsx's sync effect, which self-heals on their next visit)
-// or Supabase isn't configured.
-export async function getChatProfile(deviceId: string): Promise<ChatProfileBundle | null> {
+// Reads two tables for someone else's identity — the first place in this
+// app that reads back another identity's synced data (every other
+// Supabase-backed profile/prediction table is otherwise write-only per
+// caller). A clicked message carries either a userId (sender was signed in)
+// or just a deviceId (guest sender) — see ChatMessage in types/index.ts —
+// so this looks up by whichever the message actually has, userId taking
+// priority when both happen to be present. null when that identity has
+// never synced a profile, or Supabase isn't configured.
+export async function getChatProfile(deviceId: string, userId: string | null): Promise<ChatProfileBundle | null> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return null;
+
+  const matchColumn = userId ? "user_id" : "device_id";
+  const matchValue = userId ?? deviceId;
 
   const { data: profileRow, error } = await supabase
     .from("user_profiles")
     .select("device_id, username, country_id, player_ids, tiktok_handle")
-    .eq("device_id", deviceId)
+    .eq(matchColumn, matchValue)
     .maybeSingle();
   if (error || !profileRow) return null;
 
-  const { data: ballonDorRow } = await supabase
-    .from("ballon_dor_predictions")
-    .select("rankings")
-    .eq("device_id", deviceId)
-    .maybeSingle();
+  const { data: ballonDorRow } = await supabase.from("ballon_dor_predictions").select("rankings").eq(matchColumn, matchValue).maybeSingle();
 
   return {
     deviceId: profileRow.device_id,
