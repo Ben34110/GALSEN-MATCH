@@ -9,15 +9,16 @@ import { accentThemes } from "@/lib/mock/accent-themes";
 import { getAfricanPlayers, searchAfricanPlayers } from "@/lib/data/african-players";
 import { applyAccentTheme } from "@/components/theme/accent-theme-provider";
 import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
-import { COUNTRY_LOGOS, NATIONALITY_BY_THEME_ID, ONBOARDING_STORAGE_KEY } from "@/lib/onboarding";
+import { COUNTRY_LOGOS, NATIONALITY_BY_THEME_ID, ONBOARDING_STORAGE_KEY, normalizeTiktokHandle } from "@/lib/onboarding";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { getOrCreateDeviceId } from "@/lib/device-id";
 import { ensurePushSubscription, PUSH_FAILURE_MESSAGES } from "@/hooks/use-push-subscription";
 import { saveNewsNotificationPref } from "@/app/actions/notifications";
+import { TiktokIcon } from "@/components/icons/tiktok-icon";
 
 const COUNTRIES = accentThemes.filter((theme) => theme.id !== "default");
 
-const STEPS = ["country", "players", "username"] as const;
+const STEPS = ["country", "players", "username", "tiktok"] as const;
 
 const POSITION_LABELS: Record<string, string> = {
   Goalkeeper: "Gardien",
@@ -26,10 +27,11 @@ const POSITION_LABELS: Record<string, string> = {
   Attacker: "Attaquant",
 };
 
-// First-run wizard: country -> 3 favorite players -> username. Lives outside
-// the (app) route group (full-bleed, no tab bar), same as the splash screen.
-// OnboardingGate (components/onboarding/onboarding-gate.tsx) redirects here
-// from any tab until this profile exists in localStorage.
+// First-run wizard: country -> 3 favorite players -> username -> TikTok
+// (optional). Lives outside the (app) route group (full-bleed, no tab bar),
+// same as the splash screen. OnboardingGate (components/onboarding/
+// onboarding-gate.tsx) redirects here from any tab until this profile
+// exists in localStorage.
 export default function OnboardingPage() {
   const router = useRouter();
   const profile = useOnboardingProfile();
@@ -39,6 +41,7 @@ export default function OnboardingPage() {
   const [countryId, setCountryId] = useState<string | null>(null);
   const [playerIds, setPlayerIds] = useState<string[]>([]);
   const [username, setUsername] = useState("");
+  const [tiktokHandle, setTiktokHandle] = useState("");
   const [playerSearch, setPlayerSearch] = useState("");
   const [countrySearch, setCountrySearch] = useState("");
   const [newsNotifStatus, setNewsNotifStatus] = useState<"idle" | "pending" | "enabled">("idle");
@@ -73,7 +76,10 @@ export default function OnboardingPage() {
   const canAdvance =
     (step === "country" && countryId !== null) ||
     (step === "players" && playerIds.length === 3) ||
-    (step === "username" && username.trim().length >= 2);
+    (step === "username" && username.trim().length >= 2) ||
+    // Optional — never blocks finishing onboarding, same reasoning as
+    // skipping the news-notification opt-in on the country step.
+    step === "tiktok";
 
   // Opt-in, not automatic — tapping "Continuer" without touching this is
   // the normal path, same as skipping a favorite club's notification
@@ -116,7 +122,13 @@ export default function OnboardingPage() {
     if (!countryId) return;
     writeLocalStorageValue(
       ONBOARDING_STORAGE_KEY,
-      JSON.stringify({ countryId, playerIds, username: username.trim(), favoriteClubId: null, tiktokHandle: null })
+      JSON.stringify({
+        countryId,
+        playerIds,
+        username: username.trim(),
+        favoriteClubId: null,
+        tiktokHandle: normalizeTiktokHandle(tiktokHandle),
+      })
     );
     applyAccentTheme(countryId);
     router.push("/actu");
@@ -334,6 +346,34 @@ export default function OnboardingPage() {
               onChange={(event) => setUsername(event.target.value)}
               placeholder="Ex. AminaD"
               maxLength={24}
+              autoComplete="off"
+              autoFocus
+              className={cn(
+                "mt-6 min-h-14 w-full rounded-2xl border border-border bg-surface px-4 text-base text-foreground",
+                "placeholder:text-muted focus:border-accent focus:outline-none"
+              )}
+            />
+          </>
+        )}
+
+        {step === "tiktok" && (
+          <>
+            <span className="grid size-11 place-items-center rounded-full bg-accent/10 text-foreground">
+              <TiktokIcon size={20} />
+            </span>
+            <h1 className="mt-3 font-serif text-2xl font-bold text-foreground">Ton compte TikTok</h1>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted">
+              Facultatif — affiché sur ton profil dans le chat, les autres pourront y accéder en un clic. Tu peux
+              passer cette étape ou le renseigner plus tard depuis Profil.
+            </p>
+            <label htmlFor="onboarding-tiktok" className="sr-only">
+              Compte TikTok
+            </label>
+            <input
+              id="onboarding-tiktok"
+              value={tiktokHandle}
+              onChange={(event) => setTiktokHandle(event.target.value)}
+              placeholder="@tonpseudo"
               autoComplete="off"
               autoFocus
               className={cn(

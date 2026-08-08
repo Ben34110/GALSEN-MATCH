@@ -214,12 +214,14 @@ create index if not exists mercato_transfers_date_idx on mercato_transfers (tran
 -- One row per chat message. room_id = ChatRoom.id (lowercase ISO code or
 -- "general" — see lib/mock/chat.ts; rooms stay a static/derived list, no
 -- chat_rooms table needed since nothing about a room is user-editable).
--- author_name is a snapshot at send time (same denormalization as
--- fantasy_squads/quiz_scores/ballon_dor_predictions' username column).
--- device_id lets a click on a message resolve back to that sender's
--- user_profiles row. Capped at 100 most recent rows per room_id, pruned in
--- TypeScript right after each insert (see app/actions/chat.ts) — not a
--- trigger, no stored procedures exist anywhere in this schema.
+-- author_name/country_id are a snapshot at send time (same denormalization
+-- as fantasy_squads/quiz_scores/ballon_dor_predictions' username column) —
+-- lets the message list render a flag next to every sender without a
+-- profile lookup per message. device_id lets a click on a message resolve
+-- back to that sender's user_profiles row. Capped at 100 most recent rows
+-- per room_id, pruned in TypeScript right after each insert (see
+-- app/actions/chat.ts) — not a trigger, no stored procedures exist
+-- anywhere in this schema.
 create table if not exists chat_messages (
   id uuid primary key default gen_random_uuid(),
   room_id text not null,
@@ -229,6 +231,11 @@ create table if not exists chat_messages (
   created_at timestamptz not null default now()
 );
 create index if not exists chat_messages_room_created_idx on chat_messages (room_id, created_at desc);
+
+-- Added after chat_messages' first release — nullable (not backfillable
+-- for any pre-existing rows) so older messages simply render without a
+-- flag rather than breaking.
+alter table chat_messages add column if not exists country_id text;
 
 -- One row per device — a server-side mirror of the onboarding profile that
 -- otherwise only lives in localStorage (see lib/onboarding.ts's own "point

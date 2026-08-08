@@ -14,9 +14,12 @@ interface ChatMessageRow {
   room_id: string;
   device_id: string;
   author_name: string;
+  country_id: string | null;
   content: string;
   created_at: string;
 }
+
+const MESSAGE_COLUMNS = "id, room_id, device_id, author_name, country_id, content, created_at";
 
 function toChatMessage(row: ChatMessageRow): ChatMessage {
   return {
@@ -24,6 +27,7 @@ function toChatMessage(row: ChatMessageRow): ChatMessage {
     roomId: row.room_id,
     deviceId: row.device_id,
     authorName: row.author_name,
+    countryId: row.country_id,
     content: row.content,
     createdAt: row.created_at,
   };
@@ -37,7 +41,7 @@ export async function getRecentChatMessages(roomId: string): Promise<ChatMessage
 
   const { data, error } = await supabase
     .from("chat_messages")
-    .select("id, room_id, device_id, author_name, content, created_at")
+    .select(MESSAGE_COLUMNS)
     .eq("room_id", roomId)
     .order("created_at", { ascending: false })
     .limit(CHAT_ROOM_MESSAGE_CAP);
@@ -52,11 +56,7 @@ export async function getChatMessagesSince(roomId: string, sinceCreatedAt: strin
   const supabase = getSupabaseAdmin();
   if (!supabase) return [];
 
-  let query = supabase
-    .from("chat_messages")
-    .select("id, room_id, device_id, author_name, content, created_at")
-    .eq("room_id", roomId)
-    .order("created_at", { ascending: true });
+  let query = supabase.from("chat_messages").select(MESSAGE_COLUMNS).eq("room_id", roomId).order("created_at", { ascending: true });
   if (sinceCreatedAt) query = query.gt("created_at", sinceCreatedAt);
 
   const { data, error } = await query.limit(CHAT_ROOM_MESSAGE_CAP);
@@ -88,6 +88,7 @@ export async function sendChatMessage(
   deviceId: string,
   roomId: string,
   authorName: string,
+  countryId: string | null,
   content: string
 ): Promise<{ ok: boolean; message: ChatMessage | null }> {
   const supabase = getSupabaseAdmin();
@@ -95,8 +96,8 @@ export async function sendChatMessage(
 
   const { data, error } = await supabase
     .from("chat_messages")
-    .insert({ room_id: roomId, device_id: deviceId, author_name: authorName, content })
-    .select("id, room_id, device_id, author_name, content, created_at")
+    .insert({ room_id: roomId, device_id: deviceId, author_name: authorName, country_id: countryId, content })
+    .select(MESSAGE_COLUMNS)
     .single();
   if (error || !data) return { ok: false, message: null };
 

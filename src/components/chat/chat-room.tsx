@@ -87,7 +87,7 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
     if (!content || !profile || !deviceId) return;
     setDraft("");
 
-    const { message } = await sendChatMessage(deviceId, activeRoomId, profile.username, content);
+    const { message } = await sendChatMessage(deviceId, activeRoomId, profile.username, profile.countryId, content);
     if (message) {
       lastCreatedAtRef.current = message.createdAt;
       setMessages((current) => [...current, message]);
@@ -156,7 +156,21 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
                 </div>
               )}
               <div className={cn("rounded-2xl px-3 py-2 text-sm", isOwn ? "bg-accent text-accent-ink" : "bg-surface-2 text-foreground")}>
-                {!isOwn && <p className="mb-0.5 text-[11px] font-bold opacity-70">{message.authorName}</p>}
+                {!isOwn && (
+                  <p className="mb-0.5 flex items-center gap-1 text-[11px] font-bold opacity-70">
+                    {message.countryId && COUNTRY_LOGOS[message.countryId] && (
+                      <Image
+                        src={COUNTRY_LOGOS[message.countryId]}
+                        alt=""
+                        width={12}
+                        height={12}
+                        className="size-3 shrink-0 object-contain"
+                        unoptimized
+                      />
+                    )}
+                    {message.authorName}
+                  </p>
+                )}
                 <p className="leading-snug">{message.content}</p>
               </div>
               <p className={cn("mt-0.5 px-1 text-[10px] text-muted", isOwn && "text-right")} suppressHydrationWarning>

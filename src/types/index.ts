@@ -207,6 +207,11 @@ export interface ChatMessage {
   // devices exist (replaces the old mock's authorName === "Toi" hack).
   deviceId: string;
   authorName: string;
+  // Sender's countryId at send time (a lib/data/african-nations.ts id),
+  // snapshotted like authorName — powers the flag shown next to every
+  // message, not just "your own". null for messages sent before this
+  // column existed.
+  countryId: string | null;
   content: string;
   createdAt: string; // ISO date
 }
