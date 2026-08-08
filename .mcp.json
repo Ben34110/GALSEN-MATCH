@@ -4,8 +4,12 @@
       "type": "http",
       "url": "https://21st.dev/api/mcp",
       "headers": {
-        "x-api-key": "${21st_sk_f2b8c67bd7a124e7aa5b48917166511d4338d7fb8be02776d547b39ea0d23f1d}"
+        "x-api-key": "${21st_sk_f2b8c67bd7a124e7aa5b48917166511d4338d}"
       }
+    },
+    "graphify": {
+      "command": "npx",
+      "args": ["-y", "@graphify/mcp-server"]
     }
   }
 }
