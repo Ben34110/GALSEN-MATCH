@@ -2,18 +2,19 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { formatDaysAgo } from "@/lib/utils";
 import type { MercatoTransfer } from "@/types";
 
 const PRICE_RE = /[€$£]|(?:\d\s*[MK])\b/i;
 
+// null (render nothing) when API-Football's fee is undisclosed — most
+// non-headline transfers only get its generic "Transfer" type, with no
+// real figure behind it, so there's nothing honest to show as a price.
 function FeeBadge({ type }: { type: string | null }) {
   if (!type || /n\/a|free|libre/i.test(type)) return <Badge>Libre</Badge>;
   if (/loan|prêt/i.test(type)) return <Badge tone="accent">Prêt</Badge>;
   if (PRICE_RE.test(type)) return <Badge tone="accent">{type}</Badge>;
-  // API-Football records a move happened but leaves the fee undisclosed for
-  // most non-headline transfers (its generic "Transfer" type) — say so
-  // plainly rather than surfacing that internal label as if it meant something.
-  return <Badge>Prix non communiqué</Badge>;
+  return null;
 }
 
 function ClubCrest({ club }: { club: { name: string; logo: string } | null }) {
@@ -51,7 +52,10 @@ export function MercatoTransferList({ transfers }: { transfers: MercatoTransfer[
             unoptimized
           />
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-bold text-foreground">{transfer.playerName}</p>
+            <div className="flex items-baseline gap-1.5">
+              <p className="min-w-0 truncate text-sm font-bold text-foreground">{transfer.playerName}</p>
+              <span className="shrink-0 text-[11px] text-muted">{formatDaysAgo(transfer.date)}</span>
+            </div>
             <div className="mt-1.5 flex items-center gap-2">
               <ClubCrest club={transfer.clubFrom} />
               <ArrowRight size={14} className="shrink-0 text-muted" aria-hidden />

@@ -32,6 +32,17 @@ export function formatRelativeTime(iso: string): string {
   return `il y a ${diffDay} j`;
 }
 
+// Day-granularity relative date, spelled out ("il y a 3 jours") rather than
+// abbreviated — for sources that only carry a date, not a time of day (e.g.
+// a transfer's announcement date), where formatRelativeTime's minutes/hours
+// steps would be meaningless.
+export function formatDaysAgo(iso: string): string {
+  const diffDays = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / (24 * 60 * 60 * 1000)));
+  if (diffDays === 0) return "aujourd'hui";
+  if (diffDays === 1) return "il y a 1 jour";
+  return `il y a ${diffDays} jours`;
+}
+
 export function formatKickoff(iso: string): string {
   const date = new Date(iso);
   return date.toLocaleString("fr-FR", {
