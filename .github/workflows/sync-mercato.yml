@@ -1,0 +1,24 @@
+name: Sync Mercato transfers
+
+on:
+  schedule:
+    # 06:00 UTC daily — transfer news doesn't break minute-by-minute like
+    # live match events, and this keeps API usage sane across ~1400 calls
+    # per run. Adjust the cron expression to change the cadence.
+    - cron: "0 6 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: node scripts/sync-mercato.mjs
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

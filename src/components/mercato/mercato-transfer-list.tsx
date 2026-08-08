@@ -30,7 +30,15 @@ function ClubCrest({ club }: { club: { name: string; logo: string } | null }) {
   );
 }
 
-export function MercatoTransferList({ transfers }: { transfers: MercatoTransfer[] }) {
+export function MercatoTransferList({ transfers }: { transfers: MercatoTransfer[] | null }) {
+  if (transfers === null) {
+    return (
+      <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">
+        Transferts indisponibles pour l&apos;instant.
+      </p>
+    );
+  }
+
   if (transfers.length === 0) {
     return (
       <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">

@@ -192,6 +192,25 @@ create table if not exists ballon_dor_predictions (
   updated_at timestamptz not null default now()
 );
 
+-- One row per player, always their latest known transfer — upserted by
+-- scripts/sync-mercato.mjs on a daily GitHub Actions schedule (see that
+-- script for details). Recency window + result cap are applied at read
+-- time (lib/data/mercato.ts), not here, so a row simply ages out of the
+-- feed on its own once no longer recent, no cleanup job needed.
+create table if not exists mercato_transfers (
+  id uuid primary key default gen_random_uuid(),
+  player_id integer not null unique,
+  player_name text not null,
+  player_photo text not null,
+  nationality text not null,
+  transfer_date date not null,
+  type text,
+  club_from jsonb,
+  club_to jsonb not null,
+  updated_at timestamptz not null default now()
+);
+create index if not exists mercato_transfers_date_idx on mercato_transfers (transfer_date desc);
+
 -- No RLS policies: every read/write goes through server-only code using the
 -- service_role key (see lib/supabase.ts) — the anon key is never used, so
 -- there's no client-side access path to lock down.
@@ -204,3 +223,4 @@ alter table news enable row level security;
 alter table news_notification_prefs enable row level security;
 alter table quiz_scores enable row level security;
 alter table ballon_dor_predictions enable row level security;
+alter table mercato_transfers enable row level security;
