@@ -1,8 +1,10 @@
 // Scheduled sync (NOT part of the Next.js runtime) — writes to Supabase
 // directly instead of a generated JSON file, so the app picks up fresh
-// data on the next request with no rebuild/redeploy needed. Run daily by
-// .github/workflows/sync-mercato.yml (also runnable manually, locally,
-// with `node scripts/sync-mercato.mjs`).
+// data on the next request with no rebuild/redeploy needed. Run every 3
+// days by .github/workflows/sync-mercato.yml — this alone is ~1400
+// API-Football calls, enough to meaningfully eat into a daily quota, so
+// it deliberately isn't daily (also runnable manually, locally, with
+// `node scripts/sync-mercato.mjs`).
 //
 // Deliberately reuses the already-committed src/lib/data/generated/
 // african-players.json for the player-ID list rather than re-fetching all

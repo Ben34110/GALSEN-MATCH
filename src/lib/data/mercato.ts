@@ -4,9 +4,9 @@ import type { MercatoTransfer } from "@/types";
 const MERCATO_WINDOW_DAYS = 180;
 const MERCATO_MAX_COUNT = 40;
 
-// Server-only — reads the `mercato_transfers` table, upserted daily by
-// scripts/sync-mercato.mjs via a GitHub Actions schedule (see that script
-// for details). Returns null (not []) when Supabase isn't configured or
+// Server-only — reads the `mercato_transfers` table, upserted every 3 days
+// by scripts/sync-mercato.mjs via a GitHub Actions schedule (see that
+// script for details). Returns null (not []) when Supabase isn't configured or
 // the read fails, so the page can tell "no recent transfers" apart from
 // "unavailable" — same convention as getArticles/getLeaderboard.
 export async function getMercatoTransfers(): Promise<MercatoTransfer[] | null> {

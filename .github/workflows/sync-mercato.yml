@@ -2,10 +2,15 @@ name: Sync Mercato transfers
 
 on:
   schedule:
-    # 06:00 UTC daily — transfer news doesn't break minute-by-minute like
-    # live match events, and this keeps API usage sane across ~1400 calls
-    # per run. Adjust the cron expression to change the cadence.
-    - cron: "0 6 * * *"
+    # 06:00 UTC every 3rd day-of-month — this run alone makes ~1400
+    # API-Football calls (one /transfers lookup per known player), which
+    # was found to be a major contributor to the account hitting its daily
+    # request quota and starving the rest of the app (CAN qualifiers, live
+    # match features) for the remainder of the day. Transfer news doesn't
+    # need daily freshness the way live match events do, so this trades a
+    # little staleness for headroom. Adjust the cron expression to change
+    # the cadence.
+    - cron: "0 6 */3 * *"
   workflow_dispatch: {}
 
 jobs:
