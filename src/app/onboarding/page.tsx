@@ -16,10 +16,11 @@ import { ensurePushSubscription, PUSH_FAILURE_MESSAGES } from "@/hooks/use-push-
 import { saveNewsNotificationPref } from "@/app/actions/notifications";
 import { TiktokIcon } from "@/components/icons/tiktok-icon";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
+import { getProfileByUserId } from "@/app/actions/profile-sync";
 
 const COUNTRIES = accentThemes.filter((theme) => theme.id !== "default");
 
-const STEPS = ["country", "players", "username", "tiktok", "account"] as const;
+const STEPS = ["account", "country", "players", "username", "tiktok"] as const;
 
 const POSITION_LABELS: Record<string, string> = {
   Goalkeeper: "Gardien",
@@ -28,11 +29,16 @@ const POSITION_LABELS: Record<string, string> = {
   Attacker: "Attaquant",
 };
 
-// First-run wizard: country -> 3 favorite players -> username -> TikTok
-// (optional). Lives outside the (app) route group (full-bleed, no tab bar),
-// same as the splash screen. OnboardingGate (components/onboarding/
-// onboarding-gate.tsx) redirects here from any tab until this profile
-// exists in localStorage.
+// First-run wizard: sign-in/restore (optional) -> country -> 3 favorite
+// players -> username -> TikTok (optional). Lives outside the (app) route
+// group (full-bleed, no tab bar), same as the splash screen. OnboardingGate
+// (components/onboarding/onboarding-gate.tsx) redirects here from any tab
+// until this profile exists in localStorage — and already handles restoring
+// an existing account's profile before that redirect ever happens, so
+// landing here signed-in with no local profile means this account has none
+// saved either; the account step is skipped straight to "country" in that
+// case (see the mount effect below) since re-authenticating would be
+// redundant.
 export default function OnboardingPage() {
   const router = useRouter();
   const profile = useOnboardingProfile();
@@ -75,6 +81,19 @@ export default function OnboardingPage() {
   useEffect(() => {
     if (profile) router.replace("/actu");
   }, [profile, router]);
+
+  // Landing here already signed in (OnboardingGate redirects here when a
+  // session exists but restoring found no saved profile for it — see the
+  // comment above) means there's nothing to authenticate: skip the account
+  // step straight to "country" so the wizard just builds this account's
+  // first profile instead of asking them to sign in again.
+  useEffect(() => {
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) return;
+    supabase.auth.getUser().then(({ data }: { data: { user: { id: string } | null } }) => {
+      if (data.user) setStepIndex((i) => (i === 0 ? 1 : i));
+    });
+  }, []);
 
   if (profile) return null;
 
@@ -154,20 +173,27 @@ export default function OnboardingPage() {
     router.push("/actu");
   }
 
-  // Email/password and Google both end up here once a real session exists —
-  // OnboardingGate (mounted on every tab, including the one we're about to
-  // land on) reacts to the profile+session combination on its own to sync
-  // to the account and link this device's existing data (see
-  // onboarding-gate.tsx and app/actions/link-device-data.ts), so nothing
-  // extra is needed here beyond saving locally and navigating, same as the
-  // guest path.
-  function finishWithAccount() {
-    saveLocalProfile();
-    router.push("/actu");
+  // Called right after a successful sign-up/sign-in, at the "account" step
+  // — before any of country/players/username has been collected yet, so
+  // there's nothing local to merge: either this account already has a
+  // saved profile (a returning user restoring on a new device) and we
+  // hydrate + skip straight to the app, or it doesn't (brand new account)
+  // and the wizard continues normally from "country" to build one, which
+  // will sync to this account automatically once finish() runs (see
+  // lib/auth.ts's resolveActor).
+  async function proceedAfterSignIn(userId: string) {
+    const restored = await getProfileByUserId(userId);
+    if (restored) {
+      writeLocalStorageValue(ONBOARDING_STORAGE_KEY, JSON.stringify(restored));
+      applyAccentTheme(restored.countryId);
+      router.push("/actu");
+      return;
+    }
+    setAccountStatus("idle");
+    setStepIndex(1);
   }
 
   async function submitAccountForm() {
-    if (!countryId) return;
     const supabase = getSupabaseBrowserClient();
     if (!supabase) {
       setAccountError("Comptes indisponibles pour l'instant — continue en invité.");
@@ -184,28 +210,23 @@ export default function OnboardingPage() {
       setAccountError(error.message);
       return;
     }
-    if (!data.session) {
+    if (!data.session || !data.user) {
       // Supabase's default: signUp needs an email confirmation click before
-      // a session exists. Nothing to link/sync yet — save the profile
-      // locally now (so it's not lost) and let them keep using the app as
-      // a guest in the meantime; OnboardingGate picks up the real session
-      // and links this device's data automatically once they do confirm
-      // and come back.
-      saveLocalProfile();
+      // a session exists — nothing to restore/link yet. Let them keep going
+      // as a guest in the meantime; OnboardingGate links this device's data
+      // to the account automatically once they do confirm and come back.
       setAccountStatus("check-email");
       return;
     }
-    finishWithAccount();
+    await proceedAfterSignIn(data.user.id);
   }
 
   async function continueWithGoogle() {
-    if (!countryId) return;
     const supabase = getSupabaseBrowserClient();
     if (!supabase) {
       setAccountError("Comptes indisponibles pour l'instant — continue en invité.");
       return;
     }
-    saveLocalProfile(); // must happen before the redirect below, see saveLocalProfile's comment
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: `${window.location.origin}/auth/callback?next=/actu` },
@@ -240,6 +261,114 @@ export default function OnboardingPage() {
       </div>
 
       <div className="mt-8 flex-1 overflow-y-auto pb-4">
+        {step === "account" && (
+          <>
+            <span className="grid size-11 place-items-center rounded-full bg-accent/10 text-accent">
+              <UserRound size={20} aria-hidden />
+            </span>
+            <h1 className="mt-3 font-serif text-2xl font-bold text-foreground">Connecte-toi</h1>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted">
+              Facultatif — si tu as déjà un compte, on retrouve direct ton profil. Sinon, crée-en un pour le
+              sauvegarder au fil des prochaines étapes, ou continue sans compte : tout reste alors sur cet appareil,
+              comme avant.
+            </p>
+
+            {accountStatus === "check-email" ? (
+              <div className="mt-6 flex items-center gap-3 rounded-2xl border border-accent/30 bg-accent/5 p-3.5">
+                <Mail size={18} className="shrink-0 text-accent" aria-hidden />
+                <p className="text-sm leading-snug text-foreground">
+                  Vérifie ta boîte mail pour confirmer ton compte. Continue en attendant — tes données te suivront
+                  automatiquement dès que tu reviendras connecté.
+                </p>
+              </div>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={continueWithGoogle}
+                  className="mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-border bg-surface text-sm font-semibold text-foreground transition-transform duration-[var(--duration-fast)] active:scale-[0.98]"
+                >
+                  Continuer avec Google
+                </button>
+
+                <div className="my-4 flex items-center gap-3 text-xs font-semibold uppercase tracking-wide text-muted">
+                  <span className="h-px flex-1 bg-border" aria-hidden />
+                  ou
+                  <span className="h-px flex-1 bg-border" aria-hidden />
+                </div>
+
+                <div className="flex gap-1.5 rounded-full border border-border bg-surface p-1">
+                  <button
+                    type="button"
+                    onClick={() => setAccountMode("signup")}
+                    className={cn(
+                      "min-h-9 flex-1 rounded-full text-xs font-bold transition-colors",
+                      accountMode === "signup" ? "bg-accent text-accent-ink" : "text-muted"
+                    )}
+                  >
+                    Créer un compte
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAccountMode("signin")}
+                    className={cn(
+                      "min-h-9 flex-1 rounded-full text-xs font-bold transition-colors",
+                      accountMode === "signin" ? "bg-accent text-accent-ink" : "text-muted"
+                    )}
+                  >
+                    Se connecter
+                  </button>
+                </div>
+
+                <label htmlFor="onboarding-email" className="sr-only">
+                  Email
+                </label>
+                <input
+                  id="onboarding-email"
+                  type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder="ton@email.com"
+                  autoComplete="email"
+                  className={cn(
+                    "mt-3 min-h-12 w-full rounded-xl border border-border bg-surface px-4 text-base text-foreground",
+                    "placeholder:text-muted focus:border-accent focus:outline-none"
+                  )}
+                />
+                <label htmlFor="onboarding-password" className="sr-only">
+                  Mot de passe
+                </label>
+                <input
+                  id="onboarding-password"
+                  type="password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder="Mot de passe"
+                  autoComplete={accountMode === "signup" ? "new-password" : "current-password"}
+                  className={cn(
+                    "mt-2 min-h-12 w-full rounded-xl border border-border bg-surface px-4 text-base text-foreground",
+                    "placeholder:text-muted focus:border-accent focus:outline-none"
+                  )}
+                />
+
+                {accountError && <p className="mt-2 text-xs leading-relaxed text-accent-3">{accountError}</p>}
+
+                <button
+                  type="button"
+                  onClick={submitAccountForm}
+                  disabled={accountStatus === "pending" || !email.trim() || password.length < 6}
+                  className={cn(
+                    "mt-3 flex min-h-12 w-full items-center justify-center rounded-2xl bg-foreground text-base font-semibold text-background",
+                    "transition-transform duration-[var(--duration-fast)] active:scale-[0.98] disabled:opacity-40"
+                  )}
+                >
+                  {accountStatus === "pending" ? "…" : accountMode === "signup" ? "Créer mon compte" : "Se connecter"}
+                </button>
+              </>
+            )}
+          </>
+        )}
+
         {step === "country" && (
           <>
             <h1 className="font-serif text-2xl font-bold text-foreground">Ton pays</h1>
@@ -461,113 +590,6 @@ export default function OnboardingPage() {
             />
           </>
         )}
-
-        {step === "account" && (
-          <>
-            <span className="grid size-11 place-items-center rounded-full bg-accent/10 text-accent">
-              <UserRound size={20} aria-hidden />
-            </span>
-            <h1 className="mt-3 font-serif text-2xl font-bold text-foreground">Sauvegarde ton compte</h1>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted">
-              Facultatif — un compte permet de retrouver ton profil sur un autre appareil. Sans compte, tout reste
-              sur cet appareil, exactement comme avant (bouton &laquo; Continuer en invité &raquo; en bas).
-            </p>
-
-            {accountStatus === "check-email" ? (
-              <div className="mt-6 flex items-center gap-3 rounded-2xl border border-accent/30 bg-accent/5 p-3.5">
-                <Mail size={18} className="shrink-0 text-accent" aria-hidden />
-                <p className="text-sm leading-snug text-foreground">
-                  Vérifie ta boîte mail pour confirmer ton compte. Tu peux continuer en invité en attendant — tes
-                  données te suivront automatiquement dès que tu reviendras connecté.
-                </p>
-              </div>
-            ) : (
-              <>
-                <button
-                  type="button"
-                  onClick={continueWithGoogle}
-                  className="mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-border bg-surface text-sm font-semibold text-foreground transition-transform duration-[var(--duration-fast)] active:scale-[0.98]"
-                >
-                  Continuer avec Google
-                </button>
-
-                <div className="my-4 flex items-center gap-3 text-xs font-semibold uppercase tracking-wide text-muted">
-                  <span className="h-px flex-1 bg-border" aria-hidden />
-                  ou
-                  <span className="h-px flex-1 bg-border" aria-hidden />
-                </div>
-
-                <div className="flex gap-1.5 rounded-full border border-border bg-surface p-1">
-                  <button
-                    type="button"
-                    onClick={() => setAccountMode("signup")}
-                    className={cn(
-                      "min-h-9 flex-1 rounded-full text-xs font-bold transition-colors",
-                      accountMode === "signup" ? "bg-accent text-accent-ink" : "text-muted"
-                    )}
-                  >
-                    Créer un compte
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setAccountMode("signin")}
-                    className={cn(
-                      "min-h-9 flex-1 rounded-full text-xs font-bold transition-colors",
-                      accountMode === "signin" ? "bg-accent text-accent-ink" : "text-muted"
-                    )}
-                  >
-                    Se connecter
-                  </button>
-                </div>
-
-                <label htmlFor="onboarding-email" className="sr-only">
-                  Email
-                </label>
-                <input
-                  id="onboarding-email"
-                  type="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  placeholder="ton@email.com"
-                  autoComplete="email"
-                  className={cn(
-                    "mt-3 min-h-12 w-full rounded-xl border border-border bg-surface px-4 text-base text-foreground",
-                    "placeholder:text-muted focus:border-accent focus:outline-none"
-                  )}
-                />
-                <label htmlFor="onboarding-password" className="sr-only">
-                  Mot de passe
-                </label>
-                <input
-                  id="onboarding-password"
-                  type="password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  placeholder="Mot de passe"
-                  autoComplete={accountMode === "signup" ? "new-password" : "current-password"}
-                  className={cn(
-                    "mt-2 min-h-12 w-full rounded-xl border border-border bg-surface px-4 text-base text-foreground",
-                    "placeholder:text-muted focus:border-accent focus:outline-none"
-                  )}
-                />
-
-                {accountError && <p className="mt-2 text-xs leading-relaxed text-accent-3">{accountError}</p>}
-
-                <button
-                  type="button"
-                  onClick={submitAccountForm}
-                  disabled={accountStatus === "pending" || !email.trim() || password.length < 6}
-                  className={cn(
-                    "mt-3 flex min-h-12 w-full items-center justify-center rounded-2xl bg-foreground text-base font-semibold text-background",
-                    "transition-transform duration-[var(--duration-fast)] active:scale-[0.98] disabled:opacity-40"
-                  )}
-                >
-                  {accountStatus === "pending" ? "…" : accountMode === "signup" ? "Créer mon compte" : "Se connecter"}
-                </button>
-              </>
-            )}
-          </>
-        )}
       </div>
 
       <div className="mt-4 flex shrink-0 items-center gap-3 border-t border-border pb-[calc(1.25rem+var(--safe-bottom))] pt-4">
@@ -591,7 +613,7 @@ export default function OnboardingPage() {
             canAdvance ? "bg-foreground text-background" : "cursor-not-allowed bg-surface-2 text-muted"
           )}
         >
-          {step === "account" ? "Continuer en invité" : stepIndex === STEPS.length - 1 ? "Terminer" : "Continuer"}
+          {stepIndex === STEPS.length - 1 ? "Terminer" : "Continuer"}
           <ChevronRight size={18} aria-hidden />
         </button>
       </div>
