@@ -149,6 +149,16 @@ const JOURNEE_LAUNCH_TEMPLATES = [
   (journee: number) => ({ title: `⚡️ La journée ${journee} a commencé !`, body: "Surveille tes joueurs, leurs notes s'affichent dès leur match terminé." }),
 ];
 
+// Sent once, 4h before a journée's deadline, to anyone with a squad for it
+// that's still unlocked — see the reminder block below for why "has a
+// squad row" is the bar rather than "used Fantasy at all this week".
+const LOCK_REMINDER_TEMPLATES = [
+  (journee: number) => ({ title: "⏰ Plus que 4h !", body: `Verrouille ton équipe pour la journée ${journee} avant le coup d'envoi.` }),
+  (journee: number) => ({ title: "🚨 N'oublie pas ton XI !", body: `Ta compo pour la journée ${journee} n'est pas encore verrouillée.` }),
+  (journee: number) => ({ title: "⌛️ Dernière ligne droite", body: `Il te reste 4h pour valider ton équipe de la journée ${journee}.` }),
+  (journee: number) => ({ title: "📢 Pense à verrouiller !", body: `Ta sélection pour la journée ${journee} attend d'être enregistrée.` }),
+];
+
 export async function GET(request: Request) {
   const auth = request.headers.get("authorization");
   if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -240,7 +250,7 @@ export async function GET(request: Request) {
   // squad row's own device_id/user_id directly rather than resolveActor
   // (lib/auth.ts) — that helper reads the *current request's* session
   // cookies, which don't exist in this batch/cron context.
-  const { activeJournee } = getGameweekInfo();
+  const { activeJournee, editableJournee, editableDeadline } = getGameweekInfo();
   const activationFixtureId = -activeJournee;
   const activationEventKey = "journee-activated";
   if (!(await notifiedKey(activationFixtureId, activationEventKey))) {
@@ -275,6 +285,33 @@ export async function GET(request: Request) {
     }
 
     await markKey(activationFixtureId, activationEventKey);
+  }
+
+  // Reminds anyone who's started but not locked their squad for the
+  // upcoming journée, once its deadline is within 4h. "Has an unlocked
+  // fantasy_squads row" is the bar — not "hasn't opened Fantasy at all this
+  // week" — since a user who never touched it this journée has no row and
+  // no way to identify/target here anyway; this only catches the "forgot to
+  // finish" case, which is what was actually asked for.
+  const LOCK_REMINDER_WINDOW_MS = 4 * 60 * 60 * 1000;
+  const msUntilEditableDeadline = editableDeadline.getTime() - Date.now();
+  if (msUntilEditableDeadline > 0 && msUntilEditableDeadline <= LOCK_REMINDER_WINDOW_MS) {
+    const reminderFixtureId = -editableJournee;
+    const reminderEventKey = "lock-reminder";
+    if (!(await notifiedKey(reminderFixtureId, reminderEventKey))) {
+      const { data: unlockedSquads } = await supabase
+        .from("fantasy_squads")
+        .select("device_id, user_id")
+        .eq("journee", editableJournee)
+        .eq("locked", false);
+
+      for (const row of (unlockedSquads ?? []) as { device_id: string; user_id: string | null }[]) {
+        const { title, body } = pick(LOCK_REMINDER_TEMPLATES)(editableJournee);
+        pending.push({ target: targetKey(row), title, body, url: "/fantasy/xi" });
+      }
+
+      await markKey(reminderFixtureId, reminderEventKey);
+    }
   }
 
   const today = new Date().toISOString().slice(0, 10);
