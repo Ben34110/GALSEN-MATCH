@@ -16,15 +16,20 @@
 // Reads API_FOOTBALL_KEY from .env.local (parsed manually — this script
 // runs outside Next.js).
 
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 
+// Must not crash without .env.local — see sync-mercato.mjs's identical
+// guard, needed the moment this runs somewhere .env.local is guaranteed
+// not to exist: GitHub Actions (env vars come from the workflow's `env:`
+// block, sourced from repo secrets).
 function loadEnvLocal() {
   const envPath = path.join(ROOT, ".env.local");
+  if (!existsSync(envPath)) return;
   const raw = readFileSync(envPath, "utf-8");
   for (const line of raw.split("\n")) {
     const trimmed = line.trim();

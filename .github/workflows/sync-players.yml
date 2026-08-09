@@ -1,0 +1,45 @@
+name: Sync African players
+
+on:
+  schedule:
+    # Weekly, offset an hour from sync-mercato's every-3-days 06:00 UTC slot
+    # so the two rarely land in the exact same run even on days they
+    # coincide. ~54 national-squad calls + ~1 detail call per player (see
+    # scripts/sync-african-players.mjs) is comparable in cost to mercato's
+    # sync — weekly trades a little club-change staleness for quota
+    # headroom, same reasoning as mercato's cadence. Adjust the cron
+    # expression to change it.
+    - cron: "0 7 * * 0"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: node scripts/sync-african-players.mjs
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+      # Unlike sync-mercato.mjs (writes straight to Supabase), this script's
+      # output is the static src/lib/data/generated/african-players.json
+      # file the app imports at build time — nothing changes for the
+      # deployed app until that file is committed, which is what triggers
+      # Vercel's auto-deploy from main.
+      - name: Commit updated player data if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- src/lib/data/generated/african-players.json; then
+            echo "No player data changes."
+          else
+            git add src/lib/data/generated/african-players.json
+            git commit -m "chore: sync African players data"
+            git push
+          fi
