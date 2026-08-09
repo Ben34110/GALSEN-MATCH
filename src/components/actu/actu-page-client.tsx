@@ -7,6 +7,7 @@ import Image from "next/image";
 import { ArrowLeftRight, CalendarClock, ChevronRight, Newspaper, Star, Trophy } from "lucide-react";
 import { ArticleCard } from "@/components/actu/article-card";
 import { Card } from "@/components/ui/card";
+import { CustomAvatar } from "@/components/ui/custom-avatar";
 import { cn } from "@/lib/utils";
 import { AFRICAN_NATIONS } from "@/lib/data/african-nations";
 import { getAfricanPlayers } from "@/lib/data/african-players";
@@ -119,12 +120,14 @@ export function ActuPageClient({
             {profile?.username ?? "Amina Diop"}
           </h1>
         </div>
-        <Link
-          href="/profil"
-          aria-label="Voir le profil"
-          className="grid size-12 shrink-0 place-items-center rounded-full bg-accent text-base font-extrabold text-accent-ink shadow-sm transition-transform active:scale-95"
-        >
-          {profile ? initialsFromUsername(profile.username) : "AD"}
+        <Link href="/profil" aria-label="Voir le profil" className="shrink-0 transition-transform active:scale-95">
+          {profile?.avatar ? (
+            <CustomAvatar config={profile.avatar} size={10} />
+          ) : (
+            <span className="grid size-12 place-items-center rounded-full bg-accent text-base font-extrabold text-accent-ink shadow-sm">
+              {profile ? initialsFromUsername(profile.username) : "AD"}
+            </span>
+          )}
         </Link>
       </header>
 

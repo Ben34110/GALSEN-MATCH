@@ -1,5 +1,6 @@
 import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
 import { AFRICAN_NATIONS } from "@/lib/data/african-nations";
+import { parseAvatarConfig, type AvatarConfig } from "@/lib/avatar-options";
 
 // Point de bascule : le profil d'onboarding (pays, joueurs favoris, pseudo,
 // club favori) sera écrit sur `users` (Supabase) au lieu du localStorage —
@@ -13,6 +14,7 @@ export interface OnboardingProfile {
   username: string;
   favoriteClubId: number | null; // real API-Football team id (lib/data/team-directory.ts), editable from Profil
   tiktokHandle: string | null; // no "@", editable from Profil — shown on the chat profile sheet (components/chat/chat-profile-sheet.tsx)
+  avatar: AvatarConfig | null; // null until the user customizes one in Profil — falls back to initials (ProfileIdentityCard)
 }
 
 // Accepts a bare handle ("tonpseudo"), one with a leading "@", or a pasted
@@ -80,6 +82,7 @@ export function parseOnboardingProfile(raw: string | null): OnboardingProfile | 
       // simply won't have it yet, default to null rather than invalidating them.
       favoriteClubId: typeof parsed.favoriteClubId === "number" ? parsed.favoriteClubId : null,
       tiktokHandle: typeof parsed.tiktokHandle === "string" ? parsed.tiktokHandle : null,
+      avatar: parseAvatarConfig(parsed.avatar),
     };
   } catch {
     return null;
@@ -92,7 +95,7 @@ export function parseOnboardingProfile(raw: string | null): OnboardingProfile | 
 // dashboard greeting, chat room order, nav theming etc. all update at once.
 export function updateOnboardingProfile(
   current: OnboardingProfile,
-  updates: Partial<Pick<OnboardingProfile, "countryId" | "playerIds" | "username" | "favoriteClubId" | "tiktokHandle">>
+  updates: Partial<Pick<OnboardingProfile, "countryId" | "playerIds" | "username" | "favoriteClubId" | "tiktokHandle" | "avatar">>
 ): void {
   const next: OnboardingProfile = { ...current, ...updates };
   writeLocalStorageValue(ONBOARDING_STORAGE_KEY, JSON.stringify(next));

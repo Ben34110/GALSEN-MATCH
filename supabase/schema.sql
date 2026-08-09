@@ -319,6 +319,13 @@ alter table user_profiles add column if not exists user_id uuid references auth.
 drop index if exists user_profiles_user_idx;
 create unique index user_profiles_user_idx on user_profiles (user_id);
 
+-- Custom avatar (face shape, skin tone, eye style, hair style/color — see
+-- lib/avatar-options.ts). Nullable: null means "no custom avatar yet",
+-- falls back to initials (ProfileIdentityCard). The country-colored ring
+-- around it isn't stored here — it's derived live from country_id via the
+-- existing accent-theme system, same as everywhere else that ring appears.
+alter table user_profiles add column if not exists avatar_config jsonb;
+
 -- No RLS policies: every read/write goes through server-only code using the
 -- service_role key (see lib/supabase.ts) — the anon key is never used to
 -- touch app data (only Supabase Auth's own endpoints, for accounts above),
