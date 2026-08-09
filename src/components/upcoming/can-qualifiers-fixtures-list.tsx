@@ -60,7 +60,7 @@ export function CanQualifiersFixturesList({
                       isUserMatch && "border-accent bg-accent/5 ring-1 ring-inset ring-accent/30"
                     )}
                   >
-                    <Link href={`/live/match/${fixture.id}`} className="flex flex-1 items-center gap-3">
+                    <Link href={`/live/match/${fixture.id}?from=/upcoming`} className="flex flex-1 items-center gap-3">
                       <div className="flex flex-1 items-center justify-end gap-2 text-right">
                         <span className="truncate text-sm font-semibold text-foreground">{fixture.homeTeam.name}</span>
                         <Image

@@ -29,10 +29,25 @@ function TeamBlock({ team, score }: { team?: TeamRef; score: number | null }) {
   );
 }
 
-export default async function MatchDetailPage({ params }: { params: Promise<{ id: string }> }) {
+// Reachable from more than one tab now (Fantasy XI's countdown, the
+// Upcoming CAN qualifiers calendar, and push-notification deep links from
+// api/cron/poll/route.ts) — `from` lets each caller say where "Retour"
+// should actually go instead of a single tab winning by default. Falls back
+// to /fantasy/xi (the original, still-correct behavior for notification taps
+// and any caller that doesn't pass it) when absent or not an internal path.
+export default async function MatchDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ from?: string }>;
+}) {
   const { id } = await params;
+  const { from } = await searchParams;
   const fixtureId = Number(id);
   if (!Number.isFinite(fixtureId)) notFound();
+
+  const backHref = from && from.startsWith("/") && !from.startsWith("//") ? from : "/fantasy/xi";
 
   const [match, lineups] = await Promise.all([getFixtureDetail(fixtureId), getMatchLineups(fixtureId)]);
   if (!match) notFound();
@@ -40,7 +55,7 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ id
   return (
     <div>
       <Link
-        href="/fantasy/xi"
+        href={backHref}
         className="mb-4 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-muted transition-colors hover:text-foreground"
       >
         <ChevronLeft size={18} aria-hidden />
