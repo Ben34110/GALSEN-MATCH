@@ -61,6 +61,21 @@ const BASE_URL = "https://v3.football.api-sports.io";
 const STATS_SEASON = 2025;
 const CLUB_SEASON = 2026;
 
+// API-Football's `games.position` is derived per-competition from lineup
+// data, and disagrees with itself across competitions for the same player
+// in the same season — e.g. El Hadji Malick Diouf (409303) is tagged
+// "Defender" in West Ham's FA Cup and Senegal's AFCON entries, but
+// "Midfielder" in the Premier League entry (the one bestClubEntry() picks,
+// since it has the most appearances). Even a majority vote across every
+// competition entry still leans "Midfielder" 4-3, so no selection
+// heuristic fixes this — only a manual correction does. Add an entry here
+// (player id -> known-correct position) when a report like this is
+// confirmed against reality (he's West Ham's starting left-back), applied
+// as the final word after every API-derived guess.
+const POSITION_OVERRIDES = {
+  409303: "Defender", // El Hadji Malick Diouf — West Ham left-back
+};
+
 // All 54 CAF member nations' senior national team ids, found via
 // GET /teams?search=<country name> and taking the `national: true` entry.
 const NATIONAL_TEAMS = [
@@ -307,7 +322,7 @@ async function main() {
       age: detail?.age ?? player.age,
       nationality: player.nationality,
       photo: player.photo,
-      position: detail?.position ?? player.position,
+      position: POSITION_OVERRIDES[player.id] ?? detail?.position ?? player.position,
       teamId: detail?.teamId ?? null,
       teamName: detail?.teamName ?? null,
       teamLogo: detail?.teamLogo ?? null,
