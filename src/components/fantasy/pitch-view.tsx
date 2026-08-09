@@ -71,7 +71,7 @@ function FilledSeatToken({
           )}
         >
           <Image src={player.photo} alt="" width={56} height={56} className="size-full object-cover" unoptimized />
-          {isCaptain && !editable && (
+          {isCaptain && (
             <Star
               size={13}
               className="absolute -right-0.5 -top-0.5 rounded-full bg-accent-2 p-0.5 text-foreground"
