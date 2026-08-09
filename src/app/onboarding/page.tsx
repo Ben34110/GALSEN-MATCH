@@ -610,14 +610,14 @@ export default function OnboardingPage() {
         <button
           type="button"
           onClick={next}
-          disabled={!canAdvance}
+          disabled={!canAdvance || (step === "account" && accountStatus === "pending")}
           className={cn(
             "flex min-h-14 flex-1 items-center justify-center gap-2 rounded-full px-6 text-base font-semibold",
             "transition-transform duration-[var(--duration-fast)] active:scale-[0.98]",
             canAdvance ? "bg-foreground text-background" : "cursor-not-allowed bg-surface-2 text-muted"
           )}
         >
-          {stepIndex === STEPS.length - 1 ? "Terminer" : "Continuer"}
+          {stepIndex === STEPS.length - 1 ? "Terminer" : step === "account" ? "Continuer sans compte" : "Continuer"}
           <ChevronRight size={18} aria-hidden />
         </button>
       </div>
