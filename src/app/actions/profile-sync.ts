@@ -40,6 +40,30 @@ export async function syncUserProfile(
   return { ok: !error };
 }
 
+// Case-insensitive uniqueness check for the "rename in Profil" flow
+// (components/profil/username-editor.tsx). Enforced here at the
+// application level, not a DB constraint — user_profiles.username has no
+// unique index, and real duplicates already exist in production data
+// (multiple guest rows named the same thing before this feature existed),
+// so a blind unique index would fail to create without a separate cleanup
+// pass first. "Taken" means some OTHER identity (not this device, and not
+// this account if signed in) already has it — renaming to your own current
+// name, or an account restoring its own name on a new device, must not
+// trip this.
+export async function isUsernameTaken(username: string, deviceId: string): Promise<boolean> {
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return false;
+  const actor = await resolveActor(deviceId);
+
+  const { data, error } = await supabase.from("user_profiles").select("device_id, user_id").ilike("username", username);
+  if (error || !data) return false;
+
+  return data.some((row) => {
+    const isMine = row.device_id === deviceId || (actor.userId != null && row.user_id === actor.userId);
+    return !isMine;
+  });
+}
+
 // Cross-device restore: called by OnboardingGate when a session exists but
 // this particular browser has no local profile yet (a fresh device signing
 // into an existing account) — fetches the account's previously-synced

@@ -14,6 +14,7 @@ import { COUNTRY_LOGOS, normalizeTiktokHandle, updateOnboardingProfile } from "@
 import { getAfricanPlayers, searchAfricanPlayers } from "@/lib/data/african-players";
 import { getTeamDirectory, searchTeams } from "@/lib/data/team-directory";
 import { NotificationPrefsPanel, type NotificationOption } from "@/components/notifications/notification-prefs-panel";
+import { UsernameEditor } from "@/components/profil/username-editor";
 import {
   deleteClubNotificationPrefs,
   deletePlayerNotificationPrefs,
@@ -159,6 +160,8 @@ export function PreferencesEditor() {
 
   return (
     <div className="flex flex-col gap-8">
+      <UsernameEditor />
+
       <section>
         <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">Pays favori</h2>
         <p className="mb-3 text-sm leading-relaxed text-muted">
