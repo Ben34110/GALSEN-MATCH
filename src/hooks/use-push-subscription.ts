@@ -38,9 +38,9 @@ export type PushSubscriptionResult =
 // matter what Settings says.
 export const PUSH_FAILURE_MESSAGES: Record<Exclude<PushSubscriptionResult, { ok: true }>["reason"], string> = {
   unsupported:
-    "Ce navigateur ne supporte pas les notifications ici. Sur iPhone : ouvre Galsen Match depuis l'icône ajoutée à l'écran d'accueil (pas depuis Safari) — les notifications web ne marchent que depuis l'app installée.",
+    "Ce navigateur ne supporte pas les notifications ici. Sur iPhone : ouvre AfroLive depuis l'icône ajoutée à l'écran d'accueil (pas depuis Safari) — les notifications web ne marchent que depuis l'app installée.",
   "permission-denied":
-    "La demande d'autorisation a été refusée ou ignorée. Va dans les réglages de notifications de ton téléphone pour Galsen Match, active-les, puis réessaie.",
+    "La demande d'autorisation a été refusée ou ignorée. Va dans les réglages de notifications de ton téléphone pour AfroLive, active-les, puis réessaie.",
   "not-configured": "Les notifications ne sont pas encore configurées côté serveur — réessaie plus tard.",
   "subscribe-failed": "Un problème technique a empêché l'activation. Réessaie dans quelques secondes.",
   "save-failed": "Impossible d'enregistrer ta préférence — vérifie ta connexion et réessaie.",

@@ -28,7 +28,7 @@ function buildICS(event: KeyEvent): string {
   return [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Galsen Match//FR",
+    "PRODID:-//AfroLive//FR",
     "BEGIN:VEVENT",
     `UID:${event.id}@galsenmatch.app`,
     `DTSTAMP:${dtstamp}`,

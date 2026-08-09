@@ -272,10 +272,8 @@ export default function OnboardingPage() {
   return (
     <div className="mx-auto flex h-dvh w-full max-w-md flex-col overflow-hidden px-6 pt-[calc(1.5rem+var(--safe-top))]">
       <div className="flex shrink-0 items-center gap-2">
-        <span className="gradient-accent grid size-9 place-items-center rounded-xl text-sm font-extrabold text-accent-ink">
-          GM
-        </span>
-        <span className="font-serif text-lg font-bold tracking-tight text-foreground">Galsen Match</span>
+        <Image src="/icon-512.png" alt="" width={36} height={36} className="size-9 object-contain" unoptimized />
+        <span className="font-serif text-lg font-bold tracking-tight text-foreground">AfroLive</span>
       </div>
 
       <div

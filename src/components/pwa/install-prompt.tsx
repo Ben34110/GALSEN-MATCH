@@ -48,17 +48,17 @@ export function InstallPrompt() {
         "animate-rise-in"
       )}
       role="dialog"
-      aria-label="Installer Galsen Match"
+      aria-label="Installer AfroLive"
     >
       <Download size={18} className="shrink-0 text-accent" aria-hidden />
       <div className="flex-1 text-xs leading-snug text-foreground">
         {isIOS ? (
           <span>
-            Installe Galsen Match : appuie sur <strong>Partager</strong> puis{" "}
+            Installe AfroLive : appuie sur <strong>Partager</strong> puis{" "}
             <strong>Sur l&apos;écran d&apos;accueil</strong>.
           </span>
         ) : (
-          <span>Installe Galsen Match sur ton écran d&apos;accueil pour un accès rapide.</span>
+          <span>Installe AfroLive sur ton écran d&apos;accueil pour un accès rapide.</span>
         )}
       </div>
       {!isIOS && deferredPrompt && (

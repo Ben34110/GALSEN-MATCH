@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -10,10 +11,8 @@ export default function SplashPage() {
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 pb-[calc(2rem+var(--safe-bottom))] pt-[calc(1.5rem+var(--safe-top))]">
       <div className="flex items-center gap-2">
-        <span className="gradient-accent glow-accent grid size-9 place-items-center rounded-xl text-sm font-extrabold text-accent-ink">
-          GM
-        </span>
-        <span className="font-serif text-lg font-bold tracking-tight text-foreground">Galsen Match</span>
+        <Image src="/icon-512.png" alt="" width={36} height={36} className="size-9 object-contain" unoptimized />
+        <span className="font-serif text-lg font-bold tracking-tight text-foreground">AfroLive</span>
       </div>
 
       <div className="relative mx-auto mt-10 w-full max-w-[17rem] flex-1 sm:mt-14 sm:max-w-xs">
@@ -45,7 +44,7 @@ export default function SplashPage() {
           Suivez le football africain autrement
         </h1>
         <p className="mx-auto mt-4 max-w-sm text-balance text-base leading-relaxed text-muted">
-          Actu, scores en direct, ton Starting 6 et le chat de la communauté — tout Galsen Match dans ta poche.
+          Actu, scores en direct, ton Starting 6 et le chat de la communauté — tout AfroLive dans ta poche.
         </p>
       </div>
 

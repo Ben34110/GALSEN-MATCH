@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLayoutEffect, useRef, useState, type RefObject } from "react";
@@ -111,10 +112,8 @@ export function FloatingNav() {
         aria-label="Navigation principale"
       >
         <Link href="/actu" className="flex items-center gap-2 rounded-lg px-2 focus-visible:outline-offset-4">
-          <span className="gradient-accent glow-accent grid size-9 shrink-0 place-items-center rounded-xl text-sm font-extrabold text-accent-ink">
-            GM
-          </span>
-          <span className="font-serif text-base font-bold tracking-tight text-foreground">Galsen Match</span>
+          <Image src="/icon-512.png" alt="" width={36} height={36} className="size-9 shrink-0 object-contain" unoptimized />
+          <span className="font-serif text-base font-bold tracking-tight text-foreground">AfroLive</span>
         </Link>
 
         <ul ref={desktopContainerRef} className="relative flex flex-col gap-1">

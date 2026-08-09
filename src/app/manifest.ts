@@ -1,11 +1,9 @@
 import type { MetadataRoute } from "next";
 
-// Icônes de démonstration en SVG — à remplacer par un set PNG complet
-// (192/512 + maskable) via un générateur de favicons avant mise en production.
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Galsen Match",
-    short_name: "Galsen Match",
+    name: "AfroLive",
+    short_name: "AfroLive",
     description:
       "Actu, livescore, jeu fantasy Starting 6 et chat communautaire pour la communauté footballistique africaine.",
     start_url: "/actu",
@@ -16,15 +14,27 @@ export default function manifest(): MetadataRoute.Manifest {
     lang: "fr",
     icons: [
       {
-        src: "/icon.svg",
-        sizes: "any",
-        type: "image/svg+xml",
+        src: "/icon-192.png",
+        sizes: "192x192",
+        type: "image/png",
         purpose: "any",
       },
       {
-        src: "/icon-maskable.svg",
-        sizes: "any",
-        type: "image/svg+xml",
+        src: "/icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/icon-maskable-192.png",
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "maskable",
+      },
+      {
+        src: "/icon-maskable-512.png",
+        sizes: "512x512",
+        type: "image/png",
         purpose: "maskable",
       },
     ],

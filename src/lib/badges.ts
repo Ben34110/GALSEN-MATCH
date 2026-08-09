@@ -18,7 +18,7 @@ export interface Badge {
 }
 
 export const BADGES: Badge[] = [
-  { id: "welcome", label: "Bienvenue", description: "Ton profil Galsen Match est prêt.", emoji: "👋" },
+  { id: "welcome", label: "Bienvenue", description: "Ton profil AfroLive est prêt.", emoji: "👋" },
   { id: "supporter", label: "Supporter", description: "Choisis un club préféré dans ton profil.", emoji: "🧣" },
   { id: "titulaire", label: "Titulaire", description: "Complète un Starting XI (11 joueurs) pour une journée.", emoji: "⚽️" },
   { id: "capitaine", label: "Capitaine", description: "Désigne un capitaine dans ton équipe.", emoji: "🅲" },
