@@ -13,7 +13,7 @@ import { useCountdown } from "@/hooks/use-countdown";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { getOrCreateDeviceId } from "@/lib/device-id";
 import { syncFantasySquad } from "@/app/actions/fantasy-sync";
-import { ensurePlayerNotificationSubscription } from "@/app/actions/notifications";
+import { ensurePlayerNotificationSubscription, pruneStalePlayerNotifications } from "@/app/actions/notifications";
 import { ensurePushSubscription } from "@/hooks/use-push-subscription";
 import { getGameweekInfo } from "@/lib/fantasy-gameweek";
 import { formatCountdown } from "@/lib/countdown-format";
@@ -62,11 +62,37 @@ export function FantasyView({ pool }: FantasyViewProps) {
   // already use (see app/actions/notifications.ts's ensurePlayerNotificationSubscription)
   // — asking for push permission here, not on every single player pick
   // while composing, since this is the moment the squad becomes "final".
+  //
+  // Also prunes the *other* direction: a player dropped from this journée
+  // (swapped out, or simply absent from next week's squad) stops
+  // generating notifications, unless they're still needed — still in
+  // another current-or-future journée's squad, or an explicit Profil
+  // favorite. `storage` here can be one save behind for viewingJournee
+  // itself (this render's closure, captured before the write that's about
+  // to happen), so `seats` — the squad actually being locked right now —
+  // is used for that one journée instead of the stale storage entry.
   function subscribeSquadToNotifications(seats: SeatMap) {
-    const playerIds = Object.values(seats).filter((id): id is string => id !== null);
+    const currentSquadPlayerIds = Object.values(seats)
+      .filter((id): id is string => id !== null)
+      .map(Number);
+
+    const relevantPlayerIds = new Set<number>(currentSquadPlayerIds);
+    for (const [journeeKey, squadState] of Object.entries(storage)) {
+      const journeeNum = Number(journeeKey);
+      if (journeeNum < activeJournee || journeeNum === viewingJournee) continue;
+      for (const id of Object.values(squadState.seats)) {
+        if (id !== null) relevantPlayerIds.add(Number(id));
+      }
+    }
+    if (profile) {
+      for (const id of profile.playerIds) relevantPlayerIds.add(Number(id));
+    }
+
+    const deviceId = getOrCreateDeviceId();
     ensurePushSubscription().then((result) => {
       if (!result.ok) return;
-      for (const id of playerIds) ensurePlayerNotificationSubscription(getOrCreateDeviceId(), Number(id));
+      for (const id of currentSquadPlayerIds) ensurePlayerNotificationSubscription(deviceId, id);
+      pruneStalePlayerNotifications(deviceId, Array.from(relevantPlayerIds));
     });
   }
 

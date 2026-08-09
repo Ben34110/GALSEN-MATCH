@@ -190,6 +190,32 @@ export async function deletePlayerNotificationPrefs(deviceId: string, playerId: 
   return { ok: !error };
 }
 
+// Called every time a Fantasy squad locks (fantasy-view.tsx) with the full
+// set of players still worth notifying about right now — every player in
+// any current-or-future journée's squad, plus Profil's explicit "joueurs
+// préférés" — so a player dropped from this week's XI (and not needed
+// anywhere else) stops generating notifications instead of accumulating
+// forever. There's no "why does this row exist" flag on
+// favorite_player_notifications (Fantasy-lock and Profil-favorite share the
+// one table), so this can only be a *set difference*: keepPlayerIds must
+// already include every reason to keep a subscription, computed by the
+// caller, not just the current squad — passing only the current squad's
+// players here would wrongly delete an explicit Profil favorite the moment
+// they're benched from Fantasy.
+export async function pruneStalePlayerNotifications(deviceId: string, keepPlayerIds: number[]): Promise<{ ok: boolean }> {
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return { ok: false };
+  const actor = await resolveActor(deviceId);
+
+  let query = supabase.from("favorite_player_notifications").delete().eq(actor.matchColumn, actor.matchValue);
+  // An empty `not(...in.())` filter matches nothing in Postgres either way,
+  // but being explicit here avoids relying on that for something as
+  // destructive as "delete everything".
+  query = keepPlayerIds.length > 0 ? query.not("player_id", "in", `(${keepPlayerIds.join(",")})`) : query;
+  const { error } = await query;
+  return { ok: !error };
+}
+
 // A device subscribes to a country's news the same on/off way it favorites
 // a club — no sub-options like club/player notifications have, a country
 // either pushes new articles to this device or it doesn't. Delivery
