@@ -38,7 +38,6 @@ function FilledSeatToken({
   isOpen,
   onToggle,
   onSetCaptain,
-  nextMatch,
 }: {
   player: AfricanPlayer;
   isCaptain: boolean;
@@ -46,7 +45,6 @@ function FilledSeatToken({
   isOpen: boolean;
   onToggle: () => void;
   onSetCaptain: () => void;
-  nextMatch: NextMatchState[string] | undefined;
 }) {
   return (
     <div className="relative flex flex-col items-center gap-1">
@@ -98,28 +96,56 @@ function FilledSeatToken({
           <Star size={11} fill={isCaptain ? "currentColor" : "none"} aria-hidden />
         </button>
       )}
+    </div>
+  );
+}
 
-      {isOpen && !editable && (
-        <div
-          role="tooltip"
-          className="absolute top-full z-20 mt-1.5 w-48 rounded-xl border border-border bg-surface p-2.5 text-left shadow-lg left-1/2 -translate-x-1/2"
-        >
-          {nextMatch === undefined && <p className="text-xs text-muted">Chargement…</p>}
-          {nextMatch === "error" && <p className="text-xs text-muted">Prochain match indisponible.</p>}
-          {Array.isArray(nextMatch) &&
-            (nextMatch[0] ? (
-              <>
-                <p className="text-[10px] font-bold uppercase tracking-wide text-accent">Prochain match</p>
-                <p className="mt-0.5 text-xs font-semibold text-foreground">
-                  {player.name} · {nextMatch[0].homeTeam?.name} vs {nextMatch[0].awayTeam?.name}
-                </p>
-                <p className="mt-0.5 text-[11px] text-muted">{formatKickoff(nextMatch[0].kickoffAt)}</p>
-              </>
-            ) : (
-              <p className="text-xs text-muted">Aucun match à venir programmé.</p>
-            ))}
-        </div>
-      )}
+// Rendered once, outside the per-seat loop, instead of nested inside each
+// seat's own absolutely-positioned wrapper — nesting it there meant its
+// z-index only won within that seat's own div, and a *later* seat in
+// FORMATION_SEATS (no z-index of its own, so plain DOM-order stacking)
+// still painted over it whenever their absolute positions visually
+// overlapped. Being the pitch container's last child (plus an explicit
+// z-index) puts it above every seat unconditionally.
+function NextMatchTooltip({
+  seat,
+  player,
+  nextMatch,
+}: {
+  seat: SeatDef;
+  player: AfricanPlayer;
+  nextMatch: NextMatchState[string] | undefined;
+}) {
+  const match = Array.isArray(nextMatch) ? nextMatch[0] : undefined;
+  const isHome = match ? match.homeTeamId === String(player.teamId) : false;
+  const opponent = match ? (isHome ? match.awayTeam : match.homeTeam) : undefined;
+
+  return (
+    <div
+      role="tooltip"
+      className="absolute z-30 w-44 -translate-x-1/2 rounded-xl border border-border bg-surface p-2.5 text-left shadow-lg"
+      // Clears the token stack below it (flag + photo + name label, ~92-100px
+      // depending on the sm: breakpoint's larger photo) — sized to the
+      // desktop dimensions so mobile, with its smaller photo, only ever gets
+      // *extra* clearance rather than risking an overlap.
+      style={{ top: `calc(${seat.topPercent}% + 106px)`, left: `${seat.leftPercent}%` }}
+    >
+      {nextMatch === undefined && <p className="text-xs text-muted">Chargement…</p>}
+      {nextMatch === "error" && <p className="text-xs text-muted">Prochain match indisponible.</p>}
+      {Array.isArray(nextMatch) &&
+        (match && opponent ? (
+          <div className="flex items-center gap-2">
+            {opponent.logo && (
+              <Image src={opponent.logo} alt="" width={24} height={24} className="size-6 shrink-0 object-contain" unoptimized />
+            )}
+            <div className="min-w-0">
+              <p className="truncate text-xs font-semibold text-foreground">vs {opponent.name}</p>
+              <p className="text-[10px] text-muted">{formatKickoff(match.kickoffAt)}</p>
+            </div>
+          </div>
+        ) : (
+          <p className="text-xs text-muted">Aucun match à venir programmé.</p>
+        ))}
     </div>
   );
 }
@@ -158,6 +184,9 @@ export function PitchView({ pool, seats, captainId, editable, onAssign, onRemove
   }, [editable, filledPlayers.map((p) => p.id).join(",")]);
 
   const pickerSeat = pickerSeatId ? FORMATION_SEATS.find((s) => s.id === pickerSeatId) : undefined;
+  const openSeat = openKey ? FORMATION_SEATS.find((s) => s.id === openKey) : undefined;
+  const openPlayerId = openSeat ? seats[openSeat.id] : null;
+  const openPlayer = openPlayerId ? pool.find((p) => String(p.id) === openPlayerId) : undefined;
 
   return (
     <>
@@ -205,7 +234,6 @@ export function PitchView({ pool, seats, captainId, editable, onAssign, onRemove
                     }
                   }}
                   onSetCaptain={() => onSetCaptain?.(String(player.id))}
-                  nextMatch={nextMatches[String(player.id)]}
                 />
               ) : editable ? (
                 <EmptySeatToken seat={seat} onTap={() => setPickerSeatId(seat.id)} />
@@ -215,6 +243,10 @@ export function PitchView({ pool, seats, captainId, editable, onAssign, onRemove
             </div>
           );
         })}
+
+        {openSeat && openPlayer && (
+          <NextMatchTooltip seat={openSeat} player={openPlayer} nextMatch={nextMatches[String(openPlayer.id)]} />
+        )}
       </div>
 
       {editable && pickerSeat && (
