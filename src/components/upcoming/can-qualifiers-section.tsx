@@ -9,7 +9,9 @@ import type { CanQualifierFixture, CanQualifierGroup } from "@/lib/data/can-qual
 
 interface CanQualifiersSectionProps {
   fixtures: CanQualifierFixture[];
+  fixturesError: string | null;
   groups: CanQualifierGroup[] | null;
+  groupsError: string | null;
 }
 
 const VIEWS = [
@@ -17,7 +19,7 @@ const VIEWS = [
   { id: "classement", label: "Classement" },
 ];
 
-export function CanQualifiersSection({ fixtures, groups }: CanQualifiersSectionProps) {
+export function CanQualifiersSection({ fixtures, fixturesError, groups, groupsError }: CanQualifiersSectionProps) {
   const [view, setView] = useState<string>("matchs");
 
   return (
@@ -29,9 +31,9 @@ export function CanQualifiersSection({ fixtures, groups }: CanQualifiersSectionP
         action={<SegmentedControl items={VIEWS} activeId={view} onChange={setView} />}
       />
       {view === "matchs" ? (
-        <CanQualifiersFixturesList fixtures={fixtures} />
+        <CanQualifiersFixturesList fixtures={fixtures} error={fixturesError} />
       ) : (
-        <CanQualifiersStandings groups={groups} />
+        <CanQualifiersStandings groups={groups} error={groupsError} />
       )}
     </div>
   );

@@ -8,11 +8,18 @@ const ROUND_LABELS: Record<string, string> = {
   "Group Stage - 2": "2e journée — 27 septembre 2026",
 };
 
-export function CanQualifiersFixturesList({ fixtures }: { fixtures: CanQualifierFixture[] }) {
+export function CanQualifiersFixturesList({
+  fixtures,
+  error,
+}: {
+  fixtures: CanQualifierFixture[];
+  error: string | null;
+}) {
   if (fixtures.length === 0) {
     return (
       <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">
         Calendrier indisponible pour l&apos;instant.
+        {error && <span className="mt-1 block text-xs text-muted/70">({error})</span>}
       </p>
     );
   }

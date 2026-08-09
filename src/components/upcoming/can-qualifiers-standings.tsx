@@ -7,11 +7,18 @@ import type { CanQualifierGroup } from "@/lib/data/can-qualifiers";
 // every row shows 0 played means the qualifiers genuinely haven't kicked off
 // yet (first matchday is 2026-09-23) — that's not an error and shouldn't
 // read as an empty table.
-export function CanQualifiersStandings({ groups }: { groups: CanQualifierGroup[] | null }) {
+export function CanQualifiersStandings({
+  groups,
+  error,
+}: {
+  groups: CanQualifierGroup[] | null;
+  error: string | null;
+}) {
   if (groups === null) {
     return (
       <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">
         Classement indisponible pour l&apos;instant.
+        {error && <span className="mt-1 block text-xs text-muted/70">({error})</span>}
       </p>
     );
   }

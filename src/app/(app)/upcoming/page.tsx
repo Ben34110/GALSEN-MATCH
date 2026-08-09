@@ -22,7 +22,7 @@ function formatRankingMonth(iso: string): string {
 }
 
 export default async function UpcomingPage() {
-  const [fifaRanking, canFixtures, canGroups] = await Promise.all([
+  const [fifaRanking, canFixturesResult, canStandingsResult] = await Promise.all([
     getFifaRanking(),
     getCanQualifiersFixtures(),
     getCanQualifiersStandings(),
@@ -38,7 +38,12 @@ export default async function UpcomingPage() {
         />
         <FifaRankingTable rows={fifaRanking.rows} />
       </div>
-      <CanQualifiersSection fixtures={canFixtures} groups={canGroups} />
+      <CanQualifiersSection
+        fixtures={canFixturesResult.fixtures}
+        fixturesError={canFixturesResult.error}
+        groups={canStandingsResult.groups}
+        groupsError={canStandingsResult.error}
+      />
       <UpcomingEventsView />
     </div>
   );
