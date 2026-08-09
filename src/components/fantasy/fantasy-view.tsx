@@ -2,11 +2,12 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Check, ListOrdered, Trophy } from "lucide-react";
+import { Check, Info, ListOrdered, Trophy } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { SectionHeader } from "@/components/ui/section-header";
 import { cn } from "@/lib/utils";
 import { PitchView } from "@/components/fantasy/pitch-view";
+import { GameRulesSheet } from "@/components/fantasy/game-rules-sheet";
 import { useFantasyStorage, saveSquadForJournee } from "@/hooks/use-saved-lineup";
 import { useCountdown } from "@/hooks/use-countdown";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
@@ -29,6 +30,7 @@ export function FantasyView({ pool }: FantasyViewProps) {
   const storage = useFantasyStorage();
   const profile = useOnboardingProfile();
   const [justSaved, setJustSaved] = useState(false);
+  const [showRules, setShowRules] = useState(false);
 
   // Defaults to the active (locked-once-started) journée; a button switches
   // to preparing the next one instead of the two ever being conflated.
@@ -77,13 +79,23 @@ export function FantasyView({ pool }: FantasyViewProps) {
             : `La journée ${viewingJournee} a commencé — composition verrouillée.`
         }
         action={
-          <Link
-            href={`/fantasy/xi/leaderboard?journee=${activeJournee}`}
-            aria-label="Classement général"
-            className="grid size-11 shrink-0 place-items-center rounded-full border border-border bg-surface text-foreground transition-transform duration-[var(--duration-fast)] active:scale-90"
-          >
-            <ListOrdered size={20} aria-hidden />
-          </Link>
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setShowRules(true)}
+              aria-label="Comment ça marche"
+              className="grid size-11 shrink-0 place-items-center rounded-full border border-border bg-surface text-foreground transition-transform duration-[var(--duration-fast)] active:scale-90"
+            >
+              <Info size={20} aria-hidden />
+            </button>
+            <Link
+              href={`/fantasy/xi/leaderboard?journee=${activeJournee}`}
+              aria-label="Classement général"
+              className="grid size-11 shrink-0 place-items-center rounded-full border border-border bg-surface text-foreground transition-transform duration-[var(--duration-fast)] active:scale-90"
+            >
+              <ListOrdered size={20} aria-hidden />
+            </Link>
+          </div>
         }
       />
 
@@ -167,6 +179,8 @@ export function FantasyView({ pool }: FantasyViewProps) {
           </button>
         )}
       </div>
+
+      {showRules && <GameRulesSheet onClose={() => setShowRules(false)} />}
     </div>
   );
 }

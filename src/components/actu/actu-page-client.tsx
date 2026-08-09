@@ -9,8 +9,7 @@ import { ArticleCard } from "@/components/actu/article-card";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { AFRICAN_NATIONS } from "@/lib/data/african-nations";
-import { getAfricanPlayers, positionCode } from "@/lib/data/african-players";
-import { calculateRealLineupPoints } from "@/services/real-player-scoring";
+import { getAfricanPlayers } from "@/lib/data/african-players";
 import { useFantasyStorage } from "@/hooks/use-saved-lineup";
 import { getGameweekInfo } from "@/lib/fantasy-gameweek";
 import { filledCount, isSquadComplete } from "@/lib/fantasy-lineup";
@@ -19,7 +18,9 @@ import { initialsFromUsername } from "@/lib/onboarding";
 import { useLocalStorageValue } from "@/hooks/use-local-storage-value";
 import { LOCALE_STORAGE_KEY, resolveLocale } from "@/lib/locale";
 import { localizeArticle } from "@/lib/news/localize";
-import type { AfricanPlayer, Article, PlayerPosition } from "@/types";
+import { getOrCreateDeviceId } from "@/lib/device-id";
+import type { LeaderboardEntry } from "@/lib/data/fantasy-leaderboard";
+import type { AfricanPlayer, Article } from "@/types";
 
 const QUICK_LINKS = [
   { id: "upcoming", label: "Matchs", icon: CalendarClock },
@@ -28,7 +29,13 @@ const QUICK_LINKS = [
   { id: "actu", label: "Actualités", icon: Newspaper },
 ] as const;
 
-export function ActuPageClient({ articles }: { articles: Article[] | null }) {
+export function ActuPageClient({
+  articles,
+  leaderboard,
+}: {
+  articles: Article[] | null;
+  leaderboard: LeaderboardEntry[] | null;
+}) {
   const [filter, setFilter] = useState<string>("all");
   const articlesRef = useRef<HTMLDivElement>(null);
 
@@ -91,13 +98,12 @@ export function ActuPageClient({ articles }: { articles: Article[] | null }) {
         .filter((player): player is AfricanPlayer => Boolean(player))
     : [];
   const squadComplete = Boolean(squad && isSquadComplete(squad.seats));
-  const lineupPoints =
-    squad && squadComplete
-      ? calculateRealLineupPoints(
-          lineupPlayers.map((player) => ({ player, position: (positionCode(player.position) ?? "A") as PlayerPosition })),
-          squad.captainId
-        )
-      : null;
+  // Rank within this journée's leaderboard (see app/actions/fantasy-sync.ts
+  // — every synced squad row always carries device_id, signed in or not,
+  // so matching on it finds "this device's" entry either way). 0 means not
+  // ranked yet (leaderboard unavailable, or nothing synced for this device).
+  const deviceId = useMemo(() => getOrCreateDeviceId(), []);
+  const myRank = leaderboard ? leaderboard.findIndex((entry) => entry.deviceId === deviceId) + 1 : 0;
 
   function goToArticles(nextFilter: string) {
     setFilter(nextFilter);
@@ -129,7 +135,7 @@ export function ActuPageClient({ articles }: { articles: Article[] | null }) {
               Ton équipe · Journée {previewJournee}
             </span>
             <span className="rounded-full bg-accent/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-accent">
-              {squadComplete ? `${lineupPoints} pts est.` : `${lineupPlayers.length}/11`}
+              {squadComplete ? (myRank > 0 ? `#${myRank} au classement` : "En attente du classement") : `${lineupPlayers.length}/11`}
             </span>
           </div>
 

@@ -1,5 +1,7 @@
 import { ActuPageClient } from "@/components/actu/actu-page-client";
 import { getArticles } from "@/lib/data/news";
+import { getLeaderboard } from "@/lib/data/fantasy-leaderboard";
+import { getGameweekInfo } from "@/lib/fantasy-gameweek";
 
 // Always read the news table fresh. ISR (a timed revalidate) sounded like a
 // good match for the cron's 30-minute cadence, but Next's stale-while-
@@ -13,6 +15,7 @@ import { getArticles } from "@/lib/data/news";
 export const dynamic = "force-dynamic";
 
 export default async function ActuPage() {
-  const articles = await getArticles();
-  return <ActuPageClient articles={articles} />;
+  const { activeJournee } = getGameweekInfo();
+  const [articles, leaderboard] = await Promise.all([getArticles(), getLeaderboard(activeJournee)]);
+  return <ActuPageClient articles={articles} leaderboard={leaderboard} />;
 }

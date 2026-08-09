@@ -28,7 +28,7 @@ export default async function FantasyLeaderboardPage({
       <SectionHeader
         eyebrow="Fantasy"
         title={`Classement — Journée ${journee}`}
-        subtitle="Tous les joueurs AfroLive, classés par points estimés sur leur Starting XI."
+        subtitle="Tous les joueurs AfroLive, classés sur leur Starting XI. Points à 0 en attendant les vraies notes de la journée."
       />
 
       {entries === null ? (

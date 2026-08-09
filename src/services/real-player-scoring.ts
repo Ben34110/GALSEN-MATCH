@@ -1,27 +1,19 @@
 import type { AfricanPlayer, PlayerPosition } from "@/types";
 
-// Fantasy scoring for real players, based on their real season aggregate
-// stats (goals/assists/appearances from API-Football) — there's no
-// per-gameweek stat feed for these players the way the old Senegal mock
-// data had, so this is a season-level estimate rather than a single
-// matchday score. Goal bonus decreases from keeper to attacker, same
-// relative shape as the old per-matchday formula in fantasy-scoring.ts.
-const GOAL_POINTS: Record<PlayerPosition, number> = { G: 10, D: 6, M: 5, A: 4 };
-const ASSIST_POINTS = 3;
-const APPEARANCE_POINTS = 1;
-const CAPTAIN_MULTIPLIER = 2;
-
-export function computeSeasonPoints(player: AfricanPlayer, position: PlayerPosition): number {
-  const goalPoints = GOAL_POINTS[position] * player.goals;
-  return Math.round(player.appearances * APPEARANCE_POINTS + goalPoints + player.assists * ASSIST_POINTS);
+// Reset to 0, temporarily: the real intended scoring (see GameRulesSheet)
+// is each player's per-journée API rating x10, summed across the XI —
+// there's no per-gameweek rating feed wired up yet to compute that from,
+// and this season-aggregate estimate (goals/assists/appearances) it used
+// to fall back to was confusing enough to be reported as a bug ("why does
+// my team have points already, nothing's been played"). Every score is 0
+// until the real per-journée rating pipeline replaces this.
+export function computeSeasonPoints(_player: AfricanPlayer, _position: PlayerPosition): number {
+  return 0;
 }
 
 export function calculateRealLineupPoints(
-  entries: { player: AfricanPlayer; position: PlayerPosition }[],
-  captainId: string | null
+  _entries: { player: AfricanPlayer; position: PlayerPosition }[],
+  _captainId: string | null
 ): number {
-  return entries.reduce((total, { player, position }) => {
-    const points = computeSeasonPoints(player, position);
-    return total + (String(player.id) === captainId ? points * CAPTAIN_MULTIPLIER : points);
-  }, 0);
+  return 0;
 }
