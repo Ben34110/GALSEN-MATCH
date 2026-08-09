@@ -32,7 +32,9 @@ export function GameRulesSheet({ onClose }: { onClose: () => void }) {
             70 points.
           </p>
           <p>
-            Le score de ton équipe est l&apos;addition des scores de tes 11 joueurs. Ton capitaine compte double.
+            Le score de ton équipe est l&apos;addition des scores de tes 11 joueurs. Ton capitaine reçoit un bonus
+            de +0,5 sur sa note — un capitaine noté 7/10 rapporte donc 75 points au lieu de 70. Désigne-le en
+            appuyant sur l&apos;étoile à côté d&apos;un joueur pendant que tu composes ton équipe.
           </p>
           <p>
             Si un joueur ne joue pas lors de la journée, il reçoit automatiquement la note de 5/10, soit 50 points.
