@@ -632,7 +632,18 @@ export default function OnboardingPage() {
           className={cn(
             "flex min-h-14 flex-1 items-center justify-center gap-2 rounded-full px-6 text-base font-semibold",
             "transition-transform duration-[var(--duration-fast)] active:scale-[0.98]",
-            canAdvance ? "bg-foreground text-background" : "cursor-not-allowed bg-surface-2 text-muted"
+            !canAdvance
+              ? "cursor-not-allowed bg-surface-2 text-muted"
+              : // On the account step, the real action is the in-form Créer/Se
+                // connecter button above (bg-foreground, same as this button used
+                // to be) — styling this one identically made it read as "the same
+                // next action," and it's always enabled regardless of what's typed
+                // above, so it kept getting tapped instead of actually submitting
+                // the form. Outlined/secondary here makes the two unmistakably
+                // different weights.
+                step === "account"
+                ? "border border-border bg-surface text-muted hover:text-foreground"
+                : "bg-foreground text-background"
           )}
         >
           {stepIndex === STEPS.length - 1 ? "Terminer" : step === "account" ? "Continuer sans compte" : "Continuer"}
