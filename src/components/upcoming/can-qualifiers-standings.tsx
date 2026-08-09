@@ -1,18 +1,20 @@
 import Image from "next/image";
 import type { CanQualifierGroup } from "@/lib/data/can-qualifiers";
 
-// Three honest states, decided here (not in the data layer — see
+// Two honest states, decided here (not in the data layer — see
 // can-qualifiers.ts's comment on getCanQualifiersStandings): `groups===null`
-// means the fetch itself failed/is unconfigured; a successful fetch where
-// every row shows 0 played means the qualifiers genuinely haven't kicked off
-// yet (first matchday is 2026-09-23) — that's not an error and shouldn't
-// read as an empty table.
+// means the fetch itself failed/is unconfigured. Otherwise the table always
+// renders, even pre-season — `isProvisional` (0-point rows built from the
+// fixture pairings, see deriveGroups) just adds a note above it instead of
+// hiding the groups behind a placeholder message.
 export function CanQualifiersStandings({
   groups,
   error,
+  isProvisional,
 }: {
   groups: CanQualifierGroup[] | null;
   error: string | null;
+  isProvisional: boolean;
 }) {
   if (groups === null) {
     return (
@@ -23,17 +25,15 @@ export function CanQualifiersStandings({
     );
   }
 
-  const hasStarted = groups.some((group) => group.rows.some((row) => row.played > 0));
-  if (!hasStarted) {
-    return (
-      <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">
-        Les qualifications n&apos;ont pas encore commencé — rendez-vous le 23 septembre 2026.
-      </p>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-5">
+      {isProvisional && (
+        <p className="text-xs text-muted">
+          Groupes reconstitués à partir du calendrier — les qualifications n&apos;ont pas encore commencé (1ère
+          journée le 23 septembre 2026), le classement officiel remplacera ces groupes dès qu&apos;API-Football le
+          publiera.
+        </p>
+      )}
       {groups.map((group) => (
         <div key={group.groupLabel} className="overflow-hidden rounded-2xl border border-border">
           <div className="bg-surface-2 px-3 py-2 text-xs font-bold uppercase tracking-wide text-muted">

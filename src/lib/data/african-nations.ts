@@ -104,6 +104,15 @@ export function getAfricanNation(id: string): AfricanNation | undefined {
   return AFRICAN_NATIONS.find((nation) => nation.id === id);
 }
 
+// The real API-Football team id, parsed out of `logo` (media.api-sports.io/
+// football/teams/{id}.png) rather than duplicated as its own field — lets
+// UI that only has a nation (e.g. onboarding's countryId) match it against
+// ApiFixtureTeam.id from lib/api-football.ts without a second lookup table.
+export function nationTeamId(nation: AfricanNation | undefined): number | null {
+  const match = nation?.logo.match(/\/teams\/(\d+)\.png$/);
+  return match ? Number(match[1]) : null;
+}
+
 // For consumers that only have the English nationality string on hand
 // (e.g. fifa-ranking-table.tsx's scraped FifaRankingRow.country, already
 // normalized to match this exact field by the sync script) rather than a

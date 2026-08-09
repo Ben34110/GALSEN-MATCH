@@ -12,6 +12,7 @@ interface CanQualifiersSectionProps {
   fixturesError: string | null;
   groups: CanQualifierGroup[] | null;
   groupsError: string | null;
+  groupsProvisional: boolean;
 }
 
 const VIEWS = [
@@ -19,7 +20,13 @@ const VIEWS = [
   { id: "classement", label: "Classement" },
 ];
 
-export function CanQualifiersSection({ fixtures, fixturesError, groups, groupsError }: CanQualifiersSectionProps) {
+export function CanQualifiersSection({
+  fixtures,
+  fixturesError,
+  groups,
+  groupsError,
+  groupsProvisional,
+}: CanQualifiersSectionProps) {
   const [view, setView] = useState<string>("matchs");
 
   return (
@@ -33,7 +40,7 @@ export function CanQualifiersSection({ fixtures, fixturesError, groups, groupsEr
       {view === "matchs" ? (
         <CanQualifiersFixturesList fixtures={fixtures} error={fixturesError} />
       ) : (
-        <CanQualifiersStandings groups={groups} error={groupsError} />
+        <CanQualifiersStandings groups={groups} error={groupsError} isProvisional={groupsProvisional} />
       )}
     </div>
   );

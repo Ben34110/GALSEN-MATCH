@@ -43,6 +43,7 @@ export default async function UpcomingPage() {
         fixturesError={canFixturesResult.error}
         groups={canStandingsResult.groups}
         groupsError={canStandingsResult.error}
+        groupsProvisional={canStandingsResult.isProvisional}
       />
       <UpcomingEventsView />
     </div>
