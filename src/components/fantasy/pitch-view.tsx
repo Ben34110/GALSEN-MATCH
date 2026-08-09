@@ -4,16 +4,20 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Plus, Star } from "lucide-react";
 import { cn, formatKickoff } from "@/lib/utils";
-import { fetchTeamUpcomingMatches } from "@/app/(app)/live/actions";
+import { fetchTeamUpcomingMatches, fetchPlayerJourneeRating } from "@/app/(app)/live/actions";
 import { getNationalityFlag } from "@/lib/data/nationality-flags";
 import { positionCode } from "@/lib/data/african-players";
 import { FORMATION_SEATS, type SeatDef, type SeatId } from "@/lib/fantasy-formation";
+import { getJourneeWeekRange } from "@/lib/fantasy-gameweek";
+import { ratingColor } from "@/lib/rating-color";
 import { PlayerPickerSheet } from "@/components/fantasy/player-picker-sheet";
 import type { AfricanPlayer, Match } from "@/types";
 import type { SeatMap } from "@/lib/fantasy-lineup";
+import type { PlayerJourneeRating } from "@/lib/data/fantasy-ratings";
 
 // A player id absent from this map means "not fetched yet" (loading).
 type NextMatchState = Record<string, Match[] | "error">;
+type RatingState = Record<string, PlayerJourneeRating>;
 
 function EmptySeatToken({ seat, onTap }: { seat: SeatDef; onTap: () => void }) {
   return (
@@ -38,6 +42,7 @@ function FilledSeatToken({
   isOpen,
   onToggle,
   onSetCaptain,
+  rating,
 }: {
   player: AfricanPlayer;
   isCaptain: boolean;
@@ -45,6 +50,7 @@ function FilledSeatToken({
   isOpen: boolean;
   onToggle: () => void;
   onSetCaptain: () => void;
+  rating: PlayerJourneeRating | undefined;
 }) {
   return (
     <div className="relative flex flex-col items-center gap-1">
@@ -72,6 +78,15 @@ function FilledSeatToken({
               fill="currentColor"
               aria-hidden
             />
+          )}
+          {rating?.status === "rated" && rating.rating !== null && (
+            <span
+              className="absolute -right-1 -bottom-1 grid size-5 place-items-center rounded-full border-2 border-white text-[9px] font-extrabold text-white shadow-sm"
+              style={{ backgroundColor: ratingColor(rating.rating) }}
+              aria-label={`Note : ${rating.rating.toFixed(1)} sur 10`}
+            >
+              {rating.rating.toFixed(1).replace(".", ",")}
+            </span>
           )}
         </span>
         <span className="max-w-16 truncate rounded-full bg-black/55 px-1.5 py-0.5 text-[10px] font-semibold text-white sm:max-w-20">
@@ -155,15 +170,20 @@ interface PitchViewProps {
   seats: SeatMap;
   captainId: string | null;
   editable: boolean;
+  // Which journée's week to check for a finished match/rating — only
+  // meaningful (and only fetched) once !editable, i.e. this squad is
+  // locked. Optional since some callers (e.g. a bare preview) never lock.
+  journee?: number;
   onAssign?: (seatId: SeatId, playerId: string) => void;
   onRemove?: (seatId: SeatId) => void;
   onSetCaptain?: (playerId: string) => void;
 }
 
-export function PitchView({ pool, seats, captainId, editable, onAssign, onRemove, onSetCaptain }: PitchViewProps) {
+export function PitchView({ pool, seats, captainId, editable, journee, onAssign, onRemove, onSetCaptain }: PitchViewProps) {
   const [openKey, setOpenKey] = useState<string | null>(null);
   const [pickerSeatId, setPickerSeatId] = useState<SeatId | null>(null);
   const [nextMatches, setNextMatches] = useState<NextMatchState>({});
+  const [ratings, setRatings] = useState<RatingState>({});
 
   const filledPlayerIds = Object.values(seats).filter((id): id is string => id !== null);
   const filledPlayers = filledPlayerIds
@@ -182,6 +202,19 @@ export function PitchView({ pool, seats, captainId, editable, onAssign, onRemove
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only re-fetch when the actual set of players changes
   }, [editable, filledPlayers.map((p) => p.id).join(",")]);
+
+  useEffect(() => {
+    if (editable || journee === undefined) return; // only meaningful once locked
+    const { start, end } = getJourneeWeekRange(journee);
+    for (const player of filledPlayers) {
+      const id = String(player.id);
+      if (ratings[id] !== undefined || !player.teamId) continue;
+      fetchPlayerJourneeRating(player.id, player.teamId, start.toISOString(), end.toISOString())
+        .then((result) => setRatings((current) => ({ ...current, [id]: result })))
+        .catch(() => setRatings((current) => ({ ...current, [id]: { status: "pending", rating: null } })));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only re-fetch when the journée or player set changes
+  }, [editable, journee, filledPlayers.map((p) => p.id).join(",")]);
 
   const pickerSeat = pickerSeatId ? FORMATION_SEATS.find((s) => s.id === pickerSeatId) : undefined;
   const openSeat = openKey ? FORMATION_SEATS.find((s) => s.id === openKey) : undefined;
@@ -234,6 +267,7 @@ export function PitchView({ pool, seats, captainId, editable, onAssign, onRemove
                     }
                   }}
                   onSetCaptain={() => onSetCaptain?.(String(player.id))}
+                  rating={ratings[String(player.id)]}
                 />
               ) : editable ? (
                 <EmptySeatToken seat={seat} onTap={() => setPickerSeatId(seat.id)} />

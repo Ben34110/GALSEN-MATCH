@@ -105,6 +105,15 @@ export function getUpcomingFixturesForTeam(teamId: number, count = 10) {
   return apiFootballGet<ApiFixture>("/fixtures", { team: teamId, next: count }, 15 * 60);
 }
 
+// Recently played fixtures for one team — the counterpart to
+// getUpcomingFixturesForTeam, used to find *this* journée's already-played
+// match for a Fantasy player (see lib/data/fantasy-ratings.ts) once it's
+// no longer "upcoming". Cached briefly: once a match is FT its own data
+// won't change, but this same endpoint is how we notice it just finished.
+export function getRecentFixturesForTeam(teamId: number, count = 5) {
+  return apiFootballGet<ApiFixture>("/fixtures", { team: teamId, last: count }, 15 * 60);
+}
+
 // Every fixture live right now, across every league in the world — one
 // request instead of one per favorited team, used by the notification
 // poller (see app/api/cron/poll/route.ts) to find goals/cards for

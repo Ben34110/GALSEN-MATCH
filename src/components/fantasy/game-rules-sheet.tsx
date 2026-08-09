@@ -2,10 +2,13 @@
 
 import { X } from "lucide-react";
 
-// Explains the Starting XI scoring rules — see real-player-scoring.ts's
-// comment for why every score is 0 for now (no per-journée rating feed
-// wired up yet); this describes the *intended* rules regardless, so
-// players know what to expect once real scoring lands.
+// Explains the Starting XI scoring rules. The per-player rating badge
+// (pitch-view.tsx, once a journée is locked and a player's match finishes)
+// is real and live — but real-player-scoring.ts's team/leaderboard *total*
+// still returns 0 for everyone (see its own comment): aggregating 11
+// players' real ratings into the leaderboard is separate follow-up work,
+// not wired up yet. This describes the intended full rules regardless, so
+// players know what to expect.
 export function GameRulesSheet({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex flex-col justify-end bg-foreground/40" onClick={onClose}>
@@ -43,6 +46,11 @@ export function GameRulesSheet({ onClose }: { onClose: () => void }) {
             Une fois ton équipe enregistrée, elle est verrouillée : appuie sur un joueur pour voir son prochain
             match (date, heure, adversaire) au lieu de le changer. Un bouton « Modifier l&apos;équipe » reste
             disponible pour la déverrouiller et faire des changements jusqu&apos;au coup d&apos;envoi.
+          </p>
+          <p>
+            Dès qu&apos;un match de la journée se termine, la note du joueur apparaît dans un petit rond en bas à
+            droite de sa photo — rouge foncé proche de 0/10, orange à 5/10, vert clair à 7/10, vert foncé proche de
+            10/10.
           </p>
         </div>
       </div>

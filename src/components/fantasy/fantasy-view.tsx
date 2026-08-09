@@ -123,6 +123,7 @@ export function FantasyView({ pool }: FantasyViewProps) {
           seats={squad.seats}
           captainId={squad.captainId}
           editable={isEditableView}
+          journee={viewingJournee}
           onAssign={assign}
           onRemove={remove}
           onSetCaptain={(playerId) => {

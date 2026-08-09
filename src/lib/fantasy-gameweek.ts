@@ -4,10 +4,12 @@ export type { CountdownParts } from "@/lib/countdown";
 // for N are played *during* that week, so the squad for N must be locked in
 // *before* it starts, not at the end of it (the earlier model locked at the
 // end of N's own week, which meant you could still edit a journée's team
-// after that week's matches had already happened — backwards). 2026-08-17
-// is the Monday the big European leagues resume on average, so that's
-// Journée 1's start.
-const EPOCH_MONDAY_UTC = Date.UTC(2026, 7, 17); // 2026-08-17 is a Monday
+// after that week's matches had already happened — backwards). Moved up one
+// week from the original 2026-08-17 (the Monday the big European leagues
+// resume on average) to 2026-08-10 for real-world testing of Journée 1's
+// lock/rating flow starting immediately — move back to -17, or further out,
+// once testing is done.
+const EPOCH_MONDAY_UTC = Date.UTC(2026, 7, 10); // 2026-08-10 is a Monday
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
 export interface GameweekInfo {
@@ -20,6 +22,14 @@ export interface GameweekInfo {
   // activeJournee before Journée 1 starts, otherwise the next one.
   editableJournee: number;
   editableDeadline: Date;
+}
+
+// The calendar week a given journée's matches are played in — used to find
+// "this journée's fixture" for a team (see fantasy-ratings.ts) without
+// duplicating the epoch/week-length math wherever that's needed.
+export function getJourneeWeekRange(journee: number): { start: Date; end: Date } {
+  const start = EPOCH_MONDAY_UTC + (journee - 1) * WEEK_MS;
+  return { start: new Date(start), end: new Date(start + WEEK_MS) };
 }
 
 export function getGameweekInfo(now: Date = new Date()): GameweekInfo {
