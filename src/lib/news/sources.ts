@@ -31,6 +31,17 @@ export const NEWS_SOURCES: NewsSource[] = [
   { id: "journaldumali", name: "Journal du Mali", feedUrl: "https://journaldumali.com/category/sport/feed/", country: "mali", language: "fr" },
   { id: "rfi", name: "RFI", feedUrl: "https://www.rfi.fr/fr/afrique-foot/rss", country: "general", language: "fr" },
 
+  // FootMercato itself has no public RSS/XML feed — checked /rss, /feed,
+  // /rss.xml, /?feed=rss2, several guessed paths, robots.txt (only lists
+  // sitemaps, no feed), and the homepage's own <link rel="alternate"> tags
+  // (none declared). Its old Feedburner alias (feeds.feedburner.com/
+  // footmercato) is dead — redirects to a Sedo domain-parking page for an
+  // unrelated expired domain, not usable. RMC Sport's football feed is a
+  // real, working, actively-updating substitute for the same goal (French-
+  // language European club football/mercato news) — verified live: 30
+  // items, today's date, major European clubs/transfers.
+  { id: "rmcsport", name: "RMC Sport", feedUrl: "https://rmcsport.bfmtv.com/rss/football/", country: "general", language: "fr" },
+
   // Sport News Africa doesn't currently publish a public RSS/XML feed —
   // checked /feed, /feed/, /feed.xml, /rss, /rss.xml, /?feed=rss2 and
   // robots.txt/sitemap.xml for a pointer to one; the site only exposes
