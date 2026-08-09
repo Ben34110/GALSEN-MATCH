@@ -55,7 +55,9 @@ export function GameRulesSheet({ onClose }: { onClose: () => void }) {
           </p>
           <p>
             Enregistrer ton équipe active aussi les notifications pour tes 11 joueurs : titulaire ou non au coup
-            d&apos;envoi, but, passe décisive, carton, et note de fin de match.
+            d&apos;envoi, but, passe décisive, carton, et note de fin de match. Si tu prépares déjà la journée
+            suivante à l&apos;avance, ses notifications restent en attente et s&apos;activent automatiquement dès
+            que cette journée démarre — inutile de rouvrir l&apos;appli.
           </p>
         </div>
       </div>

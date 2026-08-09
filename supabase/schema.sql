@@ -100,6 +100,12 @@ create table if not exists fantasy_squads (
   username text not null,
   seats jsonb not null,
   captain_id text,
+  -- Mirrors the local squad's voluntary lock (see fantasy-lineup.ts's
+  -- SquadState.locked) so the poll cron (api/cron/poll/route.ts) can tell
+  -- "this is someone's final XI for the now-active journée" from "still
+  -- being drafted" when it activates that journée's player notifications —
+  -- a client-only flag until now had no server-visible equivalent.
+  locked boolean not null default false,
   updated_at timestamptz not null default now(),
   unique (device_id, journee)
 );
@@ -299,6 +305,11 @@ create unique index favorite_player_notifications_user_player_idx on favorite_pl
 alter table fantasy_squads add column if not exists user_id uuid references auth.users(id) on delete cascade;
 drop index if exists fantasy_squads_user_journee_idx;
 create unique index fantasy_squads_user_journee_idx on fantasy_squads (user_id, journee);
+
+-- create table if not exists above is a no-op once the table already
+-- exists — this needs its own explicit migration to reach it, same as
+-- every other column added after this table's first release.
+alter table fantasy_squads add column if not exists locked boolean not null default false;
 
 alter table news_notification_prefs add column if not exists user_id uuid references auth.users(id) on delete cascade;
 drop index if exists news_notification_prefs_user_country_idx;

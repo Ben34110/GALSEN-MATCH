@@ -10,6 +10,7 @@ import {
   type ApiFixture,
 } from "@/lib/api-football";
 import { getAfricanPlayers } from "@/lib/data/african-players";
+import { getGameweekInfo } from "@/lib/fantasy-gameweek";
 
 // Called every 1-2 minutes by an external scheduler (cron-job.org / GitHub
 // Actions — see docs/notifications.md), protected by CRON_SECRET so it
@@ -46,6 +47,12 @@ interface SubscriptionRow {
   endpoint: string;
   p256dh: string;
   auth: string;
+}
+
+interface FantasySquadRow {
+  device_id: string;
+  user_id: string | null;
+  seats: Record<string, string | null>;
 }
 
 // A signed-in account's favorites/push-subscription rows can each have been
@@ -194,6 +201,58 @@ export async function GET(request: Request) {
 
   async function markKey(fixtureId: number, eventKey: string) {
     await supabase!.from("notified_events").insert({ fixture_id: fixtureId, event_key: eventKey });
+  }
+
+  // Auto-activates notifications for the journée that just became active
+  // (Sunday night, on this cron's own next 1-2 min poll — see
+  // docs/notifications.md) for anyone who already locked their squad for it
+  // in advance via "Préparer la journée N+1" (fantasy-view.tsx). Without
+  // this, a squad locked ahead of time would never get its players
+  // subscribed unless the user happened to reopen the app after the
+  // rollover — fantasy-view.tsx deliberately skips subscribing at lock time
+  // for any journée that isn't the active one yet, specifically so this is
+  // the only place activation happens once it goes live.
+  //
+  // notified_events is keyed on (fixture_id, event_key); real fixture ids
+  // are always positive, so a negative synthetic id namespaces this
+  // per-journée "have we activated yet" flag without colliding with any
+  // real fixture, and via the same table already used for idempotency
+  // everywhere else in this route (see notifiedKey/markKey above). Uses the
+  // squad row's own device_id/user_id directly rather than resolveActor
+  // (lib/auth.ts) — that helper reads the *current request's* session
+  // cookies, which don't exist in this batch/cron context.
+  const { activeJournee } = getGameweekInfo();
+  const activationFixtureId = -activeJournee;
+  const activationEventKey = "journee-activated";
+  if (!(await notifiedKey(activationFixtureId, activationEventKey))) {
+    const { data: squadsToActivate } = await supabase
+      .from("fantasy_squads")
+      .select("device_id, user_id, seats")
+      .eq("journee", activeJournee)
+      .eq("locked", true);
+
+    for (const row of (squadsToActivate ?? []) as FantasySquadRow[]) {
+      const playerIds = Object.values(row.seats ?? {})
+        .filter((id): id is string => id !== null)
+        .map(Number);
+      if (playerIds.length === 0) continue;
+
+      await supabase.from("favorite_player_notifications").upsert(
+        playerIds.map((playerId) => ({
+          device_id: row.device_id,
+          ...(row.user_id ? { user_id: row.user_id } : {}),
+          player_id: playerId,
+          notify_lineup: true,
+          notify_goal: true,
+          notify_assist: true,
+          notify_card: true,
+          notify_rating: true,
+        })),
+        { onConflict: row.user_id ? "user_id,player_id" : "device_id,player_id", ignoreDuplicates: true }
+      );
+    }
+
+    await markKey(activationFixtureId, activationEventKey);
   }
 
   const today = new Date().toISOString().slice(0, 10);

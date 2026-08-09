@@ -15,7 +15,8 @@ export async function syncFantasySquad(
   journee: number,
   username: string,
   seats: SeatMap,
-  captainId: string | null
+  captainId: string | null,
+  locked: boolean
 ): Promise<{ ok: boolean }> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return { ok: false };
@@ -29,6 +30,7 @@ export async function syncFantasySquad(
       username,
       seats,
       captain_id: captainId,
+      locked,
       updated_at: new Date().toISOString(),
     },
     { onConflict: `${actor.matchColumn},journee` }

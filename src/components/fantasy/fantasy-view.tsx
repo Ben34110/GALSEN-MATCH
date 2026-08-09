@@ -50,40 +50,41 @@ export function FantasyView({ pool }: FantasyViewProps) {
   // Best-effort background sync to Supabase so the leaderboard sees this
   // squad — never blocks the local save/UI (see docs/notifications.md's
   // same pattern for why: local state is the source of truth, the remote
-  // copy is just for cross-device ranking).
-  function syncRemote(seats: SeatMap, captainId: string | null) {
+  // copy is just for cross-device ranking). `locked` also mirrors onto
+  // fantasy_squads so the poll cron can tell "this is someone's final XI
+  // for the now-active journée" from "still being drafted" (see its own
+  // comment on activating next week's notifications automatically).
+  function syncRemote(seats: SeatMap, captainId: string | null, locked: boolean) {
     if (!profile) return;
-    syncFantasySquad(getOrCreateDeviceId(), viewingJournee, profile.username, seats, captainId);
+    syncFantasySquad(getOrCreateDeviceId(), viewingJournee, profile.username, seats, captainId, locked);
   }
 
-  // Locking a squad in also opts every one of its 11 players into lineup/
-  // goal/assist/rating push notifications, reusing the exact same
-  // favorite_player_notifications pipeline Profil's "joueurs préférés"
-  // already use (see app/actions/notifications.ts's ensurePlayerNotificationSubscription)
-  // — asking for push permission here, not on every single player pick
-  // while composing, since this is the moment the squad becomes "final".
+  // Only ever runs for the *active* journée's own lock — locking next
+  // week's squad in advance must not notify for it yet (that's the whole
+  // point of the poll cron's separate activation step below); it still
+  // saves/syncs normally, just without touching notifications at all.
   //
-  // Also prunes the *other* direction: a player dropped from this journée
-  // (swapped out, or simply absent from next week's squad) stops
-  // generating notifications, unless they're still needed — still in
-  // another current-or-future journée's squad, or an explicit Profil
-  // favorite. `storage` here can be one save behind for viewingJournee
-  // itself (this render's closure, captured before the write that's about
-  // to happen), so `seats` — the squad actually being locked right now —
-  // is used for that one journée instead of the stale storage entry.
+  // Opts every one of the 11 players into lineup/goal/assist/rating push
+  // notifications, reusing the exact same favorite_player_notifications
+  // pipeline Profil's "joueurs préférés" already use (see
+  // app/actions/notifications.ts's ensurePlayerNotificationSubscription) —
+  // asking for push permission here, not on every single player pick while
+  // composing, since this is the moment the squad becomes "final".
+  //
+  // Also prunes the *other* direction: a player dropped from the active
+  // journée stops generating notifications unless still needed — an
+  // explicit Profil favorite (a *future* journée's squad no longer counts
+  // as "still needed": those players aren't notification-eligible until
+  // their own journée activates). `storage` here can be one save behind
+  // for viewingJournee itself (this render's closure, captured before the
+  // write that's about to happen), so `seats` — the squad actually being
+  // locked right now — is used instead of the stale storage entry.
   function subscribeSquadToNotifications(seats: SeatMap) {
     const currentSquadPlayerIds = Object.values(seats)
       .filter((id): id is string => id !== null)
       .map(Number);
 
     const relevantPlayerIds = new Set<number>(currentSquadPlayerIds);
-    for (const [journeeKey, squadState] of Object.entries(storage)) {
-      const journeeNum = Number(journeeKey);
-      if (journeeNum < activeJournee || journeeNum === viewingJournee) continue;
-      for (const id of Object.values(squadState.seats)) {
-        if (id !== null) relevantPlayerIds.add(Number(id));
-      }
-    }
     if (profile) {
       for (const id of profile.playerIds) relevantPlayerIds.add(Number(id));
     }
@@ -99,14 +100,14 @@ export function FantasyView({ pool }: FantasyViewProps) {
   function assign(seatId: SeatId, playerId: string) {
     const next = { ...squad, seats: { ...squad.seats, [seatId]: playerId } };
     saveSquadForJournee(storage, viewingJournee, next);
-    syncRemote(next.seats, next.captainId);
+    syncRemote(next.seats, next.captainId, next.locked);
   }
 
   function remove(seatId: SeatId) {
     const nextCaptainId = squad.captainId === squad.seats[seatId] ? null : squad.captainId;
     const next = { ...squad, seats: { ...squad.seats, [seatId]: null }, captainId: nextCaptainId };
     saveSquadForJournee(storage, viewingJournee, next);
-    syncRemote(next.seats, next.captainId);
+    syncRemote(next.seats, next.captainId, next.locked);
   }
 
   const activeSquad = storage[activeJournee];
@@ -171,7 +172,7 @@ export function FantasyView({ pool }: FantasyViewProps) {
           onSetCaptain={(playerId) => {
             const next = { ...squad, captainId: playerId };
             saveSquadForJournee(storage, viewingJournee, next);
-            syncRemote(next.seats, next.captainId);
+            syncRemote(next.seats, next.captainId, next.locked);
           }}
         />
 
@@ -186,8 +187,12 @@ export function FantasyView({ pool }: FantasyViewProps) {
             onClick={() => {
               const next = { ...squad, locked: true };
               saveSquadForJournee(storage, viewingJournee, next);
-              syncRemote(next.seats, next.captainId);
-              subscribeSquadToNotifications(next.seats);
+              syncRemote(next.seats, next.captainId, next.locked);
+              // Notifications only ever activate for the *active* journée's
+              // own lock — locking next week's squad early must wait for
+              // the poll cron's automatic activation once it becomes active
+              // (see api/cron/poll/route.ts), not fire immediately here.
+              if (viewingJournee === activeJournee) subscribeSquadToNotifications(next.seats);
             }}
             className={cn(
               "flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-5 text-base font-bold",
@@ -205,7 +210,7 @@ export function FantasyView({ pool }: FantasyViewProps) {
             onClick={() => {
               const next = { ...squad, locked: false };
               saveSquadForJournee(storage, viewingJournee, next);
-              syncRemote(next.seats, next.captainId);
+              syncRemote(next.seats, next.captainId, next.locked);
             }}
             className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-border bg-surface px-5 text-base font-bold text-foreground transition-transform duration-[var(--duration-fast)] active:scale-[0.98]"
           >
