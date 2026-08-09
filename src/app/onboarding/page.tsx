@@ -16,7 +16,7 @@ import { ensurePushSubscription, PUSH_FAILURE_MESSAGES } from "@/hooks/use-push-
 import { saveNewsNotificationPref } from "@/app/actions/notifications";
 import { TiktokIcon } from "@/components/icons/tiktok-icon";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
-import { getProfileByUserId } from "@/app/actions/profile-sync";
+import { getProfileByUserId, syncUserProfile } from "@/app/actions/profile-sync";
 
 const COUNTRIES = accentThemes.filter((theme) => theme.id !== "default");
 
@@ -140,13 +140,13 @@ export default function OnboardingPage() {
     });
   }
 
-  function next() {
+  async function next() {
     if (!canAdvance) return;
     if (stepIndex < STEPS.length - 1) {
       setStepIndex((i) => i + 1);
       return;
     }
-    finish();
+    await finish();
   }
 
   // The one write path for the collected wizard state — every ending
@@ -171,9 +171,27 @@ export default function OnboardingPage() {
   }
 
   // "Continuer en invité" — the guest path, unchanged from before accounts
-  // existed. Bound to the bottom "Terminer" button on every step.
-  function finish() {
+  // existed. Bound to the bottom "Terminer" button on every step. Syncs to
+  // Supabase directly here, awaited, before navigating — OnboardingGate
+  // also does this reactively once `profile` changes on the next page, but
+  // that effect is fire-and-forget: a user who's actually signed in,
+  // finishes onboarding, then immediately logs out could race past it and
+  // leave their user_profiles row keyed only by device_id, never by the
+  // account's user_id — logout wipes device_id, so that row becomes
+  // unreachable, and re-signing in finds nothing to restore. Awaiting the
+  // sync before the router.push closes that window.
+  async function finish() {
     saveLocalProfile();
+    if (countryId) {
+      await syncUserProfile(
+        getOrCreateDeviceId(),
+        username.trim(),
+        countryId,
+        playerIds,
+        null,
+        normalizeTiktokHandle(tiktokHandle)
+      );
+    }
     router.push("/actu");
   }
 
