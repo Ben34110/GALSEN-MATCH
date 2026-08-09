@@ -64,20 +64,26 @@ function FilledSeatToken({
         <span className="text-lg leading-none" aria-hidden>
           {getNationalityFlag(player.nationality)}
         </span>
-        <span
-          className={cn(
-            "relative grid size-12 place-items-center overflow-hidden rounded-full border-2 shadow-md sm:size-14",
-            isCaptain ? "border-accent-2" : "border-white/80"
-          )}
-        >
-          <Image src={player.photo} alt="" width={56} height={56} className="size-full object-cover" unoptimized />
+        {/* The photo circle clips to overflow-hidden (for the round crop) —
+            badges live on this *outer* span instead of inside it, otherwise
+            they get cut off at the circle's edge instead of sitting visibly
+            above the photo. */}
+        <span className="relative">
+          <span
+            className={cn(
+              "grid size-12 place-items-center overflow-hidden rounded-full border-2 shadow-md sm:size-14",
+              isCaptain ? "border-accent-2" : "border-white/80"
+            )}
+          >
+            <Image src={player.photo} alt="" width={56} height={56} className="size-full object-cover" unoptimized />
+          </span>
           {isCaptain && (
-            <Star
-              size={13}
-              className="absolute -right-0.5 -top-0.5 rounded-full bg-accent-2 p-0.5 text-foreground"
-              fill="currentColor"
+            <span
+              className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full border-2 border-white bg-accent-2 text-[10px] font-extrabold text-foreground shadow-sm"
               aria-hidden
-            />
+            >
+              C
+            </span>
           )}
           {rating?.status === "rated" && rating.rating !== null && (
             <span
