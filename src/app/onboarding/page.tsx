@@ -225,7 +225,21 @@ export default function OnboardingPage() {
     setAccountError(null);
 
     const { data, error } =
-      accountMode === "signup" ? await supabase.auth.signUp({ email, password }) : await supabase.auth.signInWithPassword({ email, password });
+      accountMode === "signup"
+        ? // emailRedirectTo mirrors continueWithGoogle's redirectTo below — without
+          // it, the confirmation link falls back to Supabase's project-level Site
+          // URL instead of this app's /auth/callback, which is what actually
+          // exchanges the confirmation for a real session cookie. Without this,
+          // clicking "confirm" could land the user on the app looking signed in
+          // (Supabase itself considers the email confirmed) while no session was
+          // ever established here — same silent-failure shape as the user_id
+          // index bug, just one layer up.
+          await supabase.auth.signUp({
+            email,
+            password,
+            options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=/actu` },
+          })
+        : await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
       setAccountStatus("idle");
