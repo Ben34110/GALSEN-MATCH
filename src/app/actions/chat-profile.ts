@@ -1,6 +1,7 @@
 "use server";
 
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { parseAvatarConfig, type AvatarConfig } from "@/lib/avatar-options";
 
 // The bundle shown in the chat profile sheet (see
 // components/chat/chat-profile-sheet.tsx) when a message is clicked.
@@ -15,6 +16,7 @@ export interface ChatProfileBundle {
   playerIds: string[];
   ballonDorTop3: string[]; // rankings.slice(0, 3); [] if that identity never predicted
   tiktokHandle: string | null;
+  avatar: AvatarConfig | null;
 }
 
 // Reads two tables for someone else's identity — the first place in this
@@ -34,7 +36,7 @@ export async function getChatProfile(deviceId: string, userId: string | null): P
 
   const { data: profileRow, error } = await supabase
     .from("user_profiles")
-    .select("device_id, username, country_id, player_ids, tiktok_handle")
+    .select("device_id, username, country_id, player_ids, tiktok_handle, avatar_config")
     .eq(matchColumn, matchValue)
     .maybeSingle();
   if (error || !profileRow) return null;
@@ -48,5 +50,6 @@ export async function getChatProfile(deviceId: string, userId: string | null): P
     playerIds: Array.isArray(profileRow.player_ids) ? profileRow.player_ids : [],
     ballonDorTop3: Array.isArray(ballonDorRow?.rankings) ? ballonDorRow.rankings.slice(0, 3) : [],
     tiktokHandle: profileRow.tiktok_handle ?? null,
+    avatar: parseAvatarConfig(profileRow.avatar_config),
   };
 }

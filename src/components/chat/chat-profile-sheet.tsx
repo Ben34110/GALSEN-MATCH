@@ -7,6 +7,7 @@ import { getAfricanNation } from "@/lib/data/african-nations";
 import { getNationalityFlag } from "@/lib/data/nationality-flags";
 import { getChatProfile, type ChatProfileBundle } from "@/app/actions/chat-profile";
 import { CountryAvatar } from "@/components/ui/country-avatar";
+import { CustomAvatar } from "@/components/ui/custom-avatar";
 import { initialsFromUsername } from "@/lib/onboarding";
 import { TiktokIcon } from "@/components/icons/tiktok-icon";
 import type { AfricanPlayer } from "@/types";
@@ -94,7 +95,11 @@ export function ChatProfileSheet({ deviceId, userId, playerPool, onClose }: Chat
         {bundle && bundle !== "loading" && (
           <div className="flex flex-col gap-6">
             <div className="flex items-center gap-3">
-              <CountryAvatar initials={initialsFromUsername(bundle.username)} size={14} />
+              {bundle.avatar ? (
+                <CustomAvatar config={bundle.avatar} size={14} />
+              ) : (
+                <CountryAvatar initials={initialsFromUsername(bundle.username)} size={14} />
+              )}
               <div className="min-w-0">
                 <p className="truncate text-base font-bold text-foreground">{bundle.username}</p>
                 {nation && (

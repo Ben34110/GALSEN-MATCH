@@ -8,6 +8,7 @@ import { getRecentChatMessages, getChatMessagesSince, sendChatMessage } from "@/
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { COUNTRY_CODE_BY_THEME_ID, COUNTRY_LOGOS, initialsFromUsername } from "@/lib/onboarding";
 import { CountryAvatar } from "@/components/ui/country-avatar";
+import { CustomAvatar } from "@/components/ui/custom-avatar";
 import { ChatProfileSheet } from "@/components/chat/chat-profile-sheet";
 import { useCurrentIdentity, isCurrentIdentity } from "@/hooks/use-current-identity";
 import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
@@ -160,7 +161,11 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
                       unoptimized
                     />
                   )}
-                  <CountryAvatar initials={initialsFromUsername(profile.username)} size={10} />
+                  {profile.avatar ? (
+                    <CustomAvatar config={profile.avatar} size={10} />
+                  ) : (
+                    <CountryAvatar initials={initialsFromUsername(profile.username)} size={10} />
+                  )}
                 </div>
               )}
               <div className={cn("rounded-2xl px-3 py-2 text-sm", isOwn ? "bg-accent text-accent-ink" : "bg-surface-2 text-foreground")}>
