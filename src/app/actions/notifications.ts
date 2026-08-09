@@ -125,6 +125,36 @@ export async function savePlayerNotificationPrefs(
   return { ok: !error };
 }
 
+// Auto-subscribes a Fantasy XI squad player to every notification type
+// (lineup, goal, assist, card, rating) the moment a squad locks in
+// (fantasy-view.tsx) — reuses this exact table/poll pipeline instead of a
+// second one, since "notify me about my Fantasy players" and "notify me
+// about my favorited players" (Profil) are the same underlying mechanism,
+// just a different reason a row exists. Unlike savePlayerNotificationPrefs,
+// this only *inserts* (ignoreDuplicates) — it must never clobber prefs the
+// player already customized, whether from favoriting this player
+// explicitly in Profil or from an earlier journée's squad.
+export async function ensurePlayerNotificationSubscription(deviceId: string, playerId: number): Promise<{ ok: boolean }> {
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return { ok: false };
+  const actor = await resolveActor(deviceId);
+
+  const { error } = await supabase.from("favorite_player_notifications").upsert(
+    {
+      device_id: deviceId,
+      ...(actor.userId ? { user_id: actor.userId } : {}),
+      player_id: playerId,
+      notify_lineup: true,
+      notify_goal: true,
+      notify_assist: true,
+      notify_card: true,
+      notify_rating: true,
+    },
+    { onConflict: `${actor.matchColumn},player_id`, ignoreDuplicates: true }
+  );
+  return { ok: !error };
+}
+
 export async function getPlayerNotificationPrefs(deviceId: string, playerId: number): Promise<PlayerNotificationPrefs> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return DEFAULT_PLAYER_PREFS;

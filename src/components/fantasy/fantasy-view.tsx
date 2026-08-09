@@ -13,6 +13,8 @@ import { useCountdown } from "@/hooks/use-countdown";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { getOrCreateDeviceId } from "@/lib/device-id";
 import { syncFantasySquad } from "@/app/actions/fantasy-sync";
+import { ensurePlayerNotificationSubscription } from "@/app/actions/notifications";
+import { ensurePushSubscription } from "@/hooks/use-push-subscription";
 import { getGameweekInfo } from "@/lib/fantasy-gameweek";
 import { formatCountdown } from "@/lib/countdown-format";
 import { EMPTY_SEATS, filledCount, isSquadComplete, type SeatId, type SeatMap } from "@/lib/fantasy-lineup";
@@ -52,6 +54,20 @@ export function FantasyView({ pool }: FantasyViewProps) {
   function syncRemote(seats: SeatMap, captainId: string | null) {
     if (!profile) return;
     syncFantasySquad(getOrCreateDeviceId(), viewingJournee, profile.username, seats, captainId);
+  }
+
+  // Locking a squad in also opts every one of its 11 players into lineup/
+  // goal/assist/rating push notifications, reusing the exact same
+  // favorite_player_notifications pipeline Profil's "joueurs préférés"
+  // already use (see app/actions/notifications.ts's ensurePlayerNotificationSubscription)
+  // — asking for push permission here, not on every single player pick
+  // while composing, since this is the moment the squad becomes "final".
+  function subscribeSquadToNotifications(seats: SeatMap) {
+    const playerIds = Object.values(seats).filter((id): id is string => id !== null);
+    ensurePushSubscription().then((result) => {
+      if (!result.ok) return;
+      for (const id of playerIds) ensurePlayerNotificationSubscription(getOrCreateDeviceId(), Number(id));
+    });
   }
 
   function assign(seatId: SeatId, playerId: string) {
@@ -145,6 +161,7 @@ export function FantasyView({ pool }: FantasyViewProps) {
               const next = { ...squad, locked: true };
               saveSquadForJournee(storage, viewingJournee, next);
               syncRemote(next.seats, next.captainId);
+              subscribeSquadToNotifications(next.seats);
             }}
             className={cn(
               "flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-5 text-base font-bold",

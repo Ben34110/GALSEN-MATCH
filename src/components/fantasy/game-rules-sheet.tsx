@@ -37,7 +37,8 @@ export function GameRulesSheet({ onClose }: { onClose: () => void }) {
           <p>
             Le score de ton équipe est l&apos;addition des scores de tes 11 joueurs. Ton capitaine reçoit un bonus
             de +0,5 sur sa note — un capitaine noté 7/10 rapporte donc 75 points au lieu de 70. Désigne-le en
-            appuyant sur l&apos;étoile à côté d&apos;un joueur pendant que tu composes ton équipe.
+            appuyant sur l&apos;étoile à côté d&apos;un joueur pendant que tu composes ton équipe — un badge « C »
+            apparaît sur sa photo.
           </p>
           <p>
             Si un joueur ne joue pas lors de la journée, il reçoit automatiquement la note de 5/10, soit 50 points.
@@ -51,6 +52,10 @@ export function GameRulesSheet({ onClose }: { onClose: () => void }) {
             Dès qu&apos;un match de la journée se termine, la note du joueur apparaît dans un petit rond en bas à
             droite de sa photo — rouge foncé proche de 0/10, orange à 5/10, vert clair à 7/10, vert foncé proche de
             10/10.
+          </p>
+          <p>
+            Enregistrer ton équipe active aussi les notifications pour tes 11 joueurs : titulaire ou non au coup
+            d&apos;envoi, but, passe décisive, carton, et note de fin de match.
           </p>
         </div>
       </div>
