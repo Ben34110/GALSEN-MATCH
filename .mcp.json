@@ -9,7 +9,14 @@
     },
     "graphify": {
       "command": "npx",
-      "args": ["-y", "@graphify/mcp-server"]
+      "args": [
+        "-y",
+        "@graphify/mcp-server"
+      ]
+    },
+    "lance": {
+      "type": "http",
+      "url": "https://api.lance.app/mcp"
     }
   }
 }
