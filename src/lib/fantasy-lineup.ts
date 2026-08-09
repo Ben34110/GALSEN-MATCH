@@ -24,6 +24,13 @@ export const EMPTY_SEATS: SeatMap = {
 export interface SquadState {
   seats: SeatMap;
   captainId: string | null;
+  // Set by tapping "Enregistrer l'équipe" (see fantasy-view.tsx) — distinct
+  // from the calendar deadline (activeStarted): this lets a player commit
+  // to a lineup and see next-match info on tap instead of the picker,
+  // before kickoff, with an explicit "Modifier" button to go back if they
+  // change their mind. The calendar deadline still wins once it passes,
+  // regardless of this flag.
+  locked: boolean;
 }
 
 // Keyed by journée number, not a single flat lineup — a squad locks once
@@ -44,7 +51,7 @@ function isValidSeatMap(value: unknown): value is SeatMap {
 export function parseFantasyStorage(raw: string | null): FantasyStorage {
   if (!raw) return {};
   try {
-    const parsed = JSON.parse(raw) as Record<string, { seats?: unknown; captainId?: unknown }>;
+    const parsed = JSON.parse(raw) as Record<string, { seats?: unknown; captainId?: unknown; locked?: unknown }>;
     const result: FantasyStorage = {};
     for (const [key, value] of Object.entries(parsed)) {
       const journee = Number(key);
@@ -52,6 +59,9 @@ export function parseFantasyStorage(raw: string | null): FantasyStorage {
       result[journee] = {
         seats: value.seats,
         captainId: typeof value.captainId === "string" ? value.captainId : null,
+        // Older saved squads predate this field — default to unlocked
+        // rather than retroactively locking someone's existing picks.
+        locked: value.locked === true,
       };
     }
     return result;

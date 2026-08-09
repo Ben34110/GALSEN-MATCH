@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Check, Info, ListOrdered, Trophy } from "lucide-react";
+import { Info, ListOrdered, Pencil, Trophy } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { SectionHeader } from "@/components/ui/section-header";
 import { cn } from "@/lib/utils";
@@ -29,15 +29,19 @@ export function FantasyView({ pool }: FantasyViewProps) {
   const countdown = useCountdown(editableDeadline);
   const storage = useFantasyStorage();
   const profile = useOnboardingProfile();
-  const [justSaved, setJustSaved] = useState(false);
   const [showRules, setShowRules] = useState(false);
 
   // Defaults to the active (locked-once-started) journée; a button switches
   // to preparing the next one instead of the two ever being conflated.
   const [viewingJournee, setViewingJournee] = useState(activeJournee);
-  const isEditableView = viewingJournee === editableJournee && !(activeStarted && viewingJournee === activeJournee);
-
-  const squad = storage[viewingJournee] ?? { seats: EMPTY_SEATS, captainId: null };
+  // The calendar deadline (kickoff) is the hard, un-overridable cutoff;
+  // squad.locked is a *voluntary* lock the player sets by tapping
+  // "Enregistrer l'équipe" before kickoff, so tapping a player shows their
+  // next match instead of the picker — with an explicit "Modifier" button
+  // to undo it, unlike the calendar deadline which nothing can undo.
+  const calendarEditable = viewingJournee === editableJournee && !(activeStarted && viewingJournee === activeJournee);
+  const squad = storage[viewingJournee] ?? { seats: EMPTY_SEATS, captainId: null, locked: false };
+  const isEditableView = calendarEditable && !squad.locked;
   const filled = filledCount(squad.seats);
   const complete = isSquadComplete(squad.seats);
 
@@ -58,7 +62,7 @@ export function FantasyView({ pool }: FantasyViewProps) {
 
   function remove(seatId: SeatId) {
     const nextCaptainId = squad.captainId === squad.seats[seatId] ? null : squad.captainId;
-    const next = { seats: { ...squad.seats, [seatId]: null }, captainId: nextCaptainId };
+    const next = { ...squad, seats: { ...squad.seats, [seatId]: null }, captainId: nextCaptainId };
     saveSquadForJournee(storage, viewingJournee, next);
     syncRemote(next.seats, next.captainId);
   }
@@ -76,7 +80,9 @@ export function FantasyView({ pool }: FantasyViewProps) {
             ? countdown.expired
               ? "Les compositions sont closes pour cette journée."
               : `Compositions ouvertes jusqu'au coup d'envoi — ${formatCountdown(countdown)} restant(es).`
-            : `La journée ${viewingJournee} a commencé — composition verrouillée.`
+            : calendarEditable
+              ? "Équipe enregistrée et verrouillée — appuie sur Modifier pour la changer avant le coup d'envoi."
+              : `La journée ${viewingJournee} a commencé — composition verrouillée.`
         }
         action={
           <div className="flex shrink-0 items-center gap-2">
@@ -135,10 +141,9 @@ export function FantasyView({ pool }: FantasyViewProps) {
             type="button"
             disabled={!complete}
             onClick={() => {
-              saveSquadForJournee(storage, viewingJournee, squad);
-              syncRemote(squad.seats, squad.captainId);
-              setJustSaved(true);
-              setTimeout(() => setJustSaved(false), 1500);
+              const next = { ...squad, locked: true };
+              saveSquadForJournee(storage, viewingJournee, next);
+              syncRemote(next.seats, next.captainId);
             }}
             className={cn(
               "flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-5 text-base font-bold",
@@ -146,16 +151,22 @@ export function FantasyView({ pool }: FantasyViewProps) {
               complete ? "bg-accent text-accent-ink active:scale-[0.98]" : "cursor-not-allowed bg-surface-2 text-muted"
             )}
           >
-            {justSaved ? (
-              <>
-                <Check size={18} aria-hidden />
-                Équipe enregistrée
-              </>
-            ) : complete ? (
-              `Enregistrer l'équipe pour la Journée ${viewingJournee}`
-            ) : (
-              `Choisis tes ${TOTAL_SEATS} joueurs (${filled}/${TOTAL_SEATS})`
-            )}
+            {complete ? `Enregistrer l'équipe pour la Journée ${viewingJournee}` : `Choisis tes ${TOTAL_SEATS} joueurs (${filled}/${TOTAL_SEATS})`}
+          </button>
+        )}
+
+        {calendarEditable && squad.locked && (
+          <button
+            type="button"
+            onClick={() => {
+              const next = { ...squad, locked: false };
+              saveSquadForJournee(storage, viewingJournee, next);
+              syncRemote(next.seats, next.captainId);
+            }}
+            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-border bg-surface px-5 text-base font-bold text-foreground transition-transform duration-[var(--duration-fast)] active:scale-[0.98]"
+          >
+            <Pencil size={16} aria-hidden />
+            Modifier l&apos;équipe
           </button>
         )}
 

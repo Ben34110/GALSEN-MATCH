@@ -40,11 +40,9 @@ export function GameRulesSheet({ onClose }: { onClose: () => void }) {
             Si un joueur ne joue pas lors de la journée, il reçoit automatiquement la note de 5/10, soit 50 points.
           </p>
           <p>
-            Une fois ton équipe enregistrée, le bouton reste actif pour confirmer qu&apos;elle est bien sauvegardée
-            — tu peux la modifier jusqu&apos;au coup d&apos;envoi.
-          </p>
-          <p>
-            Appuie sur un joueur du terrain pour voir son prochain match : date, heure et adversaire.
+            Une fois ton équipe enregistrée, elle est verrouillée : appuie sur un joueur pour voir son prochain
+            match (date, heure, adversaire) au lieu de le changer. Un bouton « Modifier l&apos;équipe » reste
+            disponible pour la déverrouiller et faire des changements jusqu&apos;au coup d&apos;envoi.
           </p>
         </div>
       </div>
