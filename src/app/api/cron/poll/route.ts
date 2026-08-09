@@ -137,6 +137,18 @@ const RATING_TEMPLATES = [
   (player: string, rating: string) => ({ title: "🧾 Bulletin de note", body: `${player} repart avec un ${rating}/10.` }),
 ];
 
+// Sent once per squad the moment its journée activates (see the activation
+// block below) — a nudge to come check ratings as they come in throughout
+// the week, since nothing else pings the user proactively for that (the
+// per-player rating notification only fires once that one player's own
+// match is over).
+const JOURNEE_LAUNCH_TEMPLATES = [
+  (journee: number) => ({ title: `🏟️ La journée ${journee} est lancée !`, body: "Pense à checker les notes de tes joueurs au fil de la semaine." }),
+  (journee: number) => ({ title: `🚀 C'est parti pour la journée ${journee} !`, body: "Garde un œil régulier sur les notes de ton équipe." }),
+  (journee: number) => ({ title: `📅 Journée ${journee} en cours !`, body: "Reviens souvent voir les notes tomber au fur et à mesure des matchs." }),
+  (journee: number) => ({ title: `⚡️ La journée ${journee} a commencé !`, body: "Surveille tes joueurs, leurs notes s'affichent dès leur match terminé." }),
+];
+
 export async function GET(request: Request) {
   const auth = request.headers.get("authorization");
   if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -215,7 +227,10 @@ export async function GET(request: Request) {
   // subscribed unless the user happened to reopen the app after the
   // rollover — fantasy-view.tsx deliberately skips subscribing at lock time
   // for any journée that isn't the active one yet, specifically so this is
-  // the only place activation happens once it goes live.
+  // the only place activation happens once it goes live. Also sends every
+  // locked squad's owner a one-off "the journée is live, go check ratings"
+  // push (JOURNEE_LAUNCH_TEMPLATES) — nothing else pings proactively about
+  // the week as a whole, only about individual player events.
   //
   // notified_events is keyed on (fixture_id, event_key); real fixture ids
   // are always positive, so a negative synthetic id namespaces this
@@ -236,6 +251,9 @@ export async function GET(request: Request) {
       .eq("locked", true);
 
     for (const row of (squadsToActivate ?? []) as FantasySquadRow[]) {
+      const { title: launchTitle, body: launchBody } = pick(JOURNEE_LAUNCH_TEMPLATES)(activeJournee);
+      pending.push({ target: targetKey(row), title: launchTitle, body: launchBody, url: "/fantasy/xi" });
+
       const playerIds = Object.values(row.seats ?? {})
         .filter((id): id is string => id !== null)
         .map(Number);
