@@ -272,7 +272,7 @@ export default function OnboardingPage() {
   return (
     <div className="mx-auto flex h-dvh w-full max-w-md flex-col overflow-hidden px-6 pt-[calc(1.5rem+var(--safe-top))]">
       <div className="flex shrink-0 items-center gap-2">
-        <Image src="/icon-512.png" alt="" width={36} height={36} className="size-9 object-contain" unoptimized />
+        <Image src="/logo-mark.png" alt="" width={36} height={36} className="size-9 object-contain" />
         <span className="font-serif text-lg font-bold tracking-tight text-foreground">AfroLive</span>
       </div>
 

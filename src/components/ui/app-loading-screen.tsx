@@ -7,7 +7,7 @@ import Image from "next/image";
 export function AppLoadingScreen() {
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-background">
-      <Image src="/icon-512.png" alt="" width={64} height={64} className="size-16 animate-pulse object-contain" unoptimized />
+      <Image src="/logo-mark.png" alt="" width={64} height={64} className="size-16 animate-pulse object-contain" />
       <span className="font-serif text-base font-bold tracking-tight text-foreground">AfroLive</span>
     </div>
   );

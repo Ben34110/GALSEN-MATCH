@@ -112,7 +112,7 @@ export function FloatingNav() {
         aria-label="Navigation principale"
       >
         <Link href="/actu" className="flex items-center gap-2 rounded-lg px-2 focus-visible:outline-offset-4">
-          <Image src="/icon-512.png" alt="" width={36} height={36} className="size-9 shrink-0 object-contain" unoptimized />
+          <Image src="/logo-mark.png" alt="" width={36} height={36} className="size-9 shrink-0 object-contain" />
           <span className="font-serif text-base font-bold tracking-tight text-foreground">AfroLive</span>
         </Link>
 
