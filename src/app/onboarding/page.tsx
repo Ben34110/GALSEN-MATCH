@@ -56,7 +56,11 @@ export default function OnboardingPage() {
   const [newsNotifFailReason, setNewsNotifFailReason] = useState<keyof typeof PUSH_FAILURE_MESSAGES | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [accountMode, setAccountMode] = useState<"signup" | "signin">("signup");
+  // Defaults to "signin" so opening this screen actually tests an existing
+  // login by default — defaulting to "signup" made typing throwaway
+  // credentials silently create a brand-new (unconfirmed, sessionless)
+  // account instead of failing like a real login attempt would.
+  const [accountMode, setAccountMode] = useState<"signup" | "signin">("signin");
   const [accountStatus, setAccountStatus] = useState<"idle" | "pending" | "check-email">("idle");
   const [accountError, setAccountError] = useState<string | null>(null);
 
