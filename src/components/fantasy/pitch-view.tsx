@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import { Plus, Star } from "lucide-react";
 import { cn, formatKickoff } from "@/lib/utils";
@@ -14,6 +14,14 @@ import { PlayerPickerSheet } from "@/components/fantasy/player-picker-sheet";
 import type { AfricanPlayer, Match } from "@/types";
 import type { SeatMap } from "@/lib/fantasy-lineup";
 import type { PlayerJourneeRating } from "@/lib/data/fantasy-ratings";
+
+// Shared by both tooltips below — clears the token stack under a seat (flag
+// + photo + name label, ~92-100px depending on the sm: breakpoint's larger
+// photo), sized to the desktop dimensions so mobile, with its smaller
+// photo, only ever gets *extra* clearance rather than risking an overlap.
+function tooltipPositionStyle(seat: SeatDef): CSSProperties {
+  return { top: `calc(${seat.topPercent}% + 106px)`, left: `${seat.leftPercent}%` };
+}
 
 // A player id absent from this map means "not fetched yet" (loading).
 type NextMatchState = Record<string, Match[] | "error">;
@@ -58,7 +66,13 @@ function FilledSeatToken({
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
-        aria-label={editable ? `Changer ${player.name}` : `Voir le prochain match de ${player.name}`}
+        aria-label={
+          editable
+            ? `Changer ${player.name}`
+            : rating?.status === "rated"
+              ? `Voir les faits marquants de ${player.name}`
+              : `Voir le prochain match de ${player.name}`
+        }
         className="flex flex-col items-center gap-0.5 active:scale-95 transition-transform duration-[var(--duration-fast)]"
       >
         <span className="text-lg leading-none" aria-hidden>
@@ -145,11 +159,7 @@ function NextMatchTooltip({
     <div
       role="tooltip"
       className="absolute z-30 w-44 -translate-x-1/2 rounded-xl border border-border bg-surface p-2.5 text-left shadow-lg"
-      // Clears the token stack below it (flag + photo + name label, ~92-100px
-      // depending on the sm: breakpoint's larger photo) — sized to the
-      // desktop dimensions so mobile, with its smaller photo, only ever gets
-      // *extra* clearance rather than risking an overlap.
-      style={{ top: `calc(${seat.topPercent}% + 106px)`, left: `${seat.leftPercent}%` }}
+      style={tooltipPositionStyle(seat)}
     >
       {nextMatch === undefined && <p className="text-xs text-muted">Chargement…</p>}
       {nextMatch === "error" && <p className="text-xs text-muted">Prochain match indisponible.</p>}
@@ -167,6 +177,73 @@ function NextMatchTooltip({
         ) : (
           <p className="text-xs text-muted">Aucun match à venir programmé.</p>
         ))}
+    </div>
+  );
+}
+
+// Shown instead of NextMatchTooltip once a player's journée rating is in —
+// there's no "next match" left to be curious about for a game that already
+// happened, but there are real key moments to surface (goals, assists,
+// cards, shots on target as the closest proxy API-Football offers to xG on
+// this plan — see fantasy-ratings.ts).
+function MatchMomentsTooltip({ seat, rating }: { seat: SeatDef; rating: PlayerJourneeRating }) {
+  const moments = rating.moments;
+  if (!moments) {
+    return (
+      <div
+        role="tooltip"
+        className="absolute z-30 w-48 -translate-x-1/2 rounded-xl border border-border bg-surface p-2.5 text-left shadow-lg"
+        style={tooltipPositionStyle(seat)}
+      >
+        <p className="text-xs text-muted">Détails du match indisponibles.</p>
+      </div>
+    );
+  }
+
+  const scoreLabel =
+    moments.teamScore !== null && moments.opponentScore !== null
+      ? moments.isHome
+        ? `${moments.teamScore}-${moments.opponentScore}`
+        : `${moments.opponentScore}-${moments.teamScore}`
+      : null;
+
+  const facts: string[] = [];
+  if (moments.goals > 0) facts.push(`⚽️ ${moments.goals} but${moments.goals > 1 ? "s" : ""}`);
+  if (moments.assists > 0) facts.push(`🎯 ${moments.assists} passe${moments.assists > 1 ? "s" : ""} déc.`);
+  if (moments.redCards > 0) facts.push("🟥 Carton rouge");
+  else if (moments.yellowCards > 0) facts.push("🟨 Carton jaune");
+  if (moments.shotsOnTarget !== null && moments.shotsTotal !== null) {
+    facts.push(`🥅 ${moments.shotsOnTarget}/${moments.shotsTotal} tirs cadrés`);
+  }
+  if (moments.duelsWon !== null && moments.duelsTotal !== null) {
+    facts.push(`💪 ${moments.duelsWon}/${moments.duelsTotal} duels gagnés`);
+  }
+
+  return (
+    <div
+      role="tooltip"
+      className="absolute z-30 w-52 -translate-x-1/2 rounded-xl border border-border bg-surface p-2.5 text-left shadow-lg"
+      style={tooltipPositionStyle(seat)}
+    >
+      <div className="mb-1.5 flex items-center gap-2">
+        <Image src={moments.opponentLogo} alt="" width={20} height={20} className="size-5 shrink-0 object-contain" unoptimized />
+        <div className="min-w-0">
+          <p className="truncate text-xs font-semibold text-foreground">vs {moments.opponentName}</p>
+          {scoreLabel && <p className="text-[10px] text-muted">{scoreLabel}</p>}
+        </div>
+      </div>
+      {moments.minutes !== null && <p className="mb-1 text-[10px] text-muted">{moments.minutes}&apos; jouées</p>}
+      {facts.length > 0 ? (
+        <ul className="flex flex-col gap-0.5">
+          {facts.map((fact) => (
+            <li key={fact} className="text-[11px] text-foreground">
+              {fact}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-[11px] text-muted">Aucun fait marquant.</p>
+      )}
     </div>
   );
 }
@@ -285,7 +362,11 @@ export function PitchView({ pool, seats, captainId, editable, journee, onAssign,
         })}
 
         {openSeat && openPlayer && (
-          <NextMatchTooltip seat={openSeat} player={openPlayer} nextMatch={nextMatches[String(openPlayer.id)]} />
+          ratings[String(openPlayer.id)]?.status === "rated" ? (
+            <MatchMomentsTooltip seat={openSeat} rating={ratings[String(openPlayer.id)]!} />
+          ) : (
+            <NextMatchTooltip seat={openSeat} player={openPlayer} nextMatch={nextMatches[String(openPlayer.id)]} />
+          )
         )}
       </div>
 

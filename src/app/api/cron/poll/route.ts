@@ -88,8 +88,12 @@ const LINEUP_TEMPLATES = [
 ];
 
 const PLAYER_LINEUP_TEMPLATES = [
-  (player: string) => ({ title: "🌟 Titulaire !", body: `${player} commence le match, en pleine confiance.` }),
-  (player: string) => ({ title: "✅ Sur la feuille de match !", body: `${player} est titulaire aujourd'hui, à toi de stresser.` }),
+  (player: string) => ({ title: `🌟 ${player} est titulaire !`, body: "On espère un hattrick !" }),
+  (player: string) => ({ title: `✅ ${player} dans le XI de départ !`, body: "Masterclass à venir ?" }),
+  (player: string) => ({ title: `🚨 ${player} est titulaire !`, body: "Chausse tes crampons virtuels, ça commence." }),
+  (player: string) => ({ title: `📋 ${player} dans le XI de départ !`, body: "Titulaire aujourd'hui, à toi de stresser jusqu'au coup de sifflet." }),
+  (player: string) => ({ title: `🔥 ${player} est titulaire !`, body: "Prêt à faire des dégâts dès le coup d'envoi." }),
+  (player: string) => ({ title: `⭐️ ${player} dans le XI de départ !`, body: "On croise les doigts pour un but ou une passe déc." }),
 ];
 
 const CLUB_GOAL_TEMPLATES = [

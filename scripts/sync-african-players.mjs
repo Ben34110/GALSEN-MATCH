@@ -137,6 +137,25 @@ const NATIONAL_TEAMS = [
 const NATION_NAME_SET = new Set(NATIONAL_TEAMS.map((n) => n.name.toLowerCase()));
 const YOUTH_TEAM_RE = /\bU1[5-9]\b|\bU2[0-3]\b/i;
 
+// Players confirmed (by hand, via their real API-Football `nationality`
+// field) to be eligible for an African nation but absent from that
+// nation's current /players/squads listing — not yet capped at senior
+// level, so the squad-enumeration method above (see the file's opening
+// comment) has no way to find them on its own. Shaped like a
+// fetchNationalSquad() entry so it merges into the same pipeline below and
+// gets its club/position/stats resolved exactly like everyone else.
+const MANUAL_ADDITIONS = [
+  {
+    id: 437901,
+    name: "P. Fall",
+    age: 21,
+    number: 11,
+    position: "Attacker",
+    photo: "https://media.api-sports.io/football/players/437901.png",
+    nationality: "Senegal", // Pape Moussa Fall, FC Metz
+  },
+];
+
 function isClubStatEntry(teamName) {
   if (!teamName) return false;
   if (NATION_NAME_SET.has(teamName.toLowerCase())) return false;
@@ -296,7 +315,9 @@ async function main() {
     squadResults.push(...players);
   }
 
-  console.log(`\nTotal squad entries (all 54 nations): ${squadResults.length}`);
+  squadResults.push(...MANUAL_ADDITIONS);
+
+  console.log(`\nTotal squad entries (all 54 nations + manual additions): ${squadResults.length}`);
 
   // A handful of players can appear in more than one nation's recent squad
   // list only in edge cases (shouldn't normally happen); keep the first.

@@ -148,7 +148,16 @@ export function getFixtureEvents(fixtureId: number) {
 
 export interface ApiFixturePlayerStats {
   team: { id: number };
-  players: { player: { id: number; name: string }; statistics: { games: { rating: string | null } }[] }[];
+  players: {
+    player: { id: number; name: string };
+    statistics: {
+      games: { minutes: number | null; rating: string | null };
+      shots: { total: number | null; on: number | null };
+      goals: { total: number | null; assists: number | null };
+      duels: { total: number | null; won: number | null };
+      cards: { yellow: number | null; red: number | null };
+    }[];
+  }[];
 }
 
 // Per-player end-of-match ratings — only meaningful once a fixture is FT;
