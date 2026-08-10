@@ -15,6 +15,8 @@ export interface JerseyAvatarProps {
   primaryColor: string;
   // Collar (V-neck trim) and shoulder stripes.
   secondaryColor: string;
+  // Small chest "crest" dot — defaults to secondaryColor when omitted.
+  badgeColor?: string;
   size?: 10 | 14 | 20 | 28;
   className?: string;
   // Head circle content, tried in this order:
@@ -61,7 +63,16 @@ function HeadContent({ flagUrl, flagColors, countryCode }: Pick<JerseyAvatarProp
   );
 }
 
-export function JerseyAvatar({ primaryColor, secondaryColor, size = 14, className, flagUrl, flagColors, countryCode }: JerseyAvatarProps) {
+export function JerseyAvatar({
+  primaryColor,
+  secondaryColor,
+  badgeColor,
+  size = 14,
+  className,
+  flagUrl,
+  flagColors,
+  countryCode,
+}: JerseyAvatarProps) {
   return (
     <span className={cn("inline-block shrink-0 overflow-hidden rounded-full", SIZE_CLASSES[size], className)}>
       <svg viewBox="0 0 100 100" className="size-full">
@@ -84,6 +95,11 @@ export function JerseyAvatar({ primaryColor, secondaryColor, size = 14, classNam
 
         {/* V-neck collar trim, drawn last so it sits on top of the body fill. */}
         <path d="M 30 68 L 50 82 L 70 68" stroke={secondaryColor} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+
+        {/* Chest crest — a plain dot standing in for a club/nation badge,
+            centered rather than off to one side to stay simple and legible
+            at avatar sizes. */}
+        <circle cx="50" cy="91" r="5" fill={badgeColor ?? secondaryColor} stroke="#ffffff" strokeWidth="1" />
 
         {/* Head circle, with a thin ring so it reads as a separate "crest"
             element from the jersey behind it, same as the reference art. */}
