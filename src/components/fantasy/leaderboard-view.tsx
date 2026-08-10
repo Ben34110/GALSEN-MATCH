@@ -1,8 +1,11 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCurrentIdentity, isCurrentIdentity } from "@/hooks/use-current-identity";
+import { getAfricanPlayers } from "@/lib/data/african-players";
+import { ChatProfileSheet } from "@/components/chat/chat-profile-sheet";
 
 const RANK_COLORS = ["text-accent-2", "text-muted", "text-accent-3"];
 
@@ -20,42 +23,62 @@ export interface LeaderboardRow {
 
 export function LeaderboardView({ entries, emptyMessage }: { entries: LeaderboardRow[]; emptyMessage: string }) {
   const identity = useCurrentIdentity();
+  const playerPool = useMemo(() => getAfricanPlayers(), []);
+  // Same "tap a row, see their profile" pattern as chat (see
+  // components/chat/chat-room.tsx's openProfileTarget) — ChatProfileSheet
+  // and its getChatProfile action are already identity-generic (deviceId +
+  // userId), not chat-specific, so this reuses both as-is.
+  const [openProfileTarget, setOpenProfileTarget] = useState<{ deviceId: string; userId: string | null } | null>(null);
 
   if (entries.length === 0) {
     return <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">{emptyMessage}</p>;
   }
 
   return (
-    <ol className="flex flex-col gap-2">
-      {entries.map((entry, index) => {
-        const isMe = isCurrentIdentity(entry, identity);
-        return (
-          <li
-            key={entry.deviceId}
-            className={cn(
-              "flex items-center gap-3 rounded-xl border px-3.5 py-3",
-              isMe ? "border-accent bg-accent/10" : "border-border bg-surface"
-            )}
-          >
-            <span
-              className={cn(
-                "grid size-8 shrink-0 place-items-center text-sm font-extrabold tabular-nums",
-                index < 3 ? RANK_COLORS[index] : "text-muted"
-              )}
-            >
-              {index < 3 ? <Trophy size={16} aria-hidden /> : index + 1}
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm font-semibold text-foreground">
-                {entry.username}
-                {isMe && " (toi)"}
-              </span>
-              <span className="block text-[11px] text-muted">{entry.secondaryLabel}</span>
-            </span>
-            <span className="shrink-0 text-lg font-extrabold tabular-nums text-accent">{entry.points}</span>
-          </li>
-        );
-      })}
-    </ol>
+    <>
+      <ol className="flex flex-col gap-2">
+        {entries.map((entry, index) => {
+          const isMe = isCurrentIdentity(entry, identity);
+          return (
+            <li key={entry.deviceId}>
+              <button
+                type="button"
+                onClick={() => setOpenProfileTarget({ deviceId: entry.deviceId, userId: entry.userId })}
+                className={cn(
+                  "flex w-full items-center gap-3 rounded-xl border px-3.5 py-3 text-left transition-transform duration-[var(--duration-fast)] active:scale-[0.99]",
+                  isMe ? "border-accent bg-accent/10" : "border-border bg-surface"
+                )}
+              >
+                <span
+                  className={cn(
+                    "grid size-8 shrink-0 place-items-center text-sm font-extrabold tabular-nums",
+                    index < 3 ? RANK_COLORS[index] : "text-muted"
+                  )}
+                >
+                  {index < 3 ? <Trophy size={16} aria-hidden /> : index + 1}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-semibold text-foreground">
+                    {entry.username}
+                    {isMe && " (toi)"}
+                  </span>
+                  <span className="block text-[11px] text-muted">{entry.secondaryLabel}</span>
+                </span>
+                <span className="shrink-0 text-lg font-extrabold tabular-nums text-accent">{entry.points}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ol>
+
+      {openProfileTarget && (
+        <ChatProfileSheet
+          deviceId={openProfileTarget.deviceId}
+          userId={openProfileTarget.userId}
+          playerPool={playerPool}
+          onClose={() => setOpenProfileTarget(null)}
+        />
+      )}
+    </>
   );
 }
