@@ -4,6 +4,7 @@ import "./globals.css";
 import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import { InstallPrompt } from "@/components/pwa/install-prompt";
 import { AccentThemeProvider } from "@/components/theme/accent-theme-provider";
+import { AppLocaleProvider } from "@/components/theme/locale-provider";
 
 const displayFont = Fraunces({
   subsets: ["latin"],
@@ -48,8 +49,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-dvh bg-background text-foreground antialiased">
         <ServiceWorkerRegister />
         <AccentThemeProvider />
-        {children}
-        <InstallPrompt />
+        <AppLocaleProvider>
+          {children}
+          <InstallPrompt />
+        </AppLocaleProvider>
       </body>
     </html>
   );

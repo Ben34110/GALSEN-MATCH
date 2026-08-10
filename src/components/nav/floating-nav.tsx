@@ -4,15 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLayoutEffect, useRef, useState, type RefObject } from "react";
+import { useTranslations } from "next-intl";
 import { Home, CalendarClock, Trophy, MessageCircle, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { href: "/actu", label: "Accueil", icon: Home },
-  { href: "/upcoming", label: "Matchs", icon: CalendarClock },
-  { href: "/fantasy", label: "Fantasy", icon: Trophy },
-  { href: "/chat", label: "Live Chat", icon: MessageCircle },
-  { href: "/profil", label: "Profil", icon: User },
+  { href: "/actu", key: "home", icon: Home },
+  { href: "/upcoming", key: "matches", icon: CalendarClock },
+  { href: "/fantasy", key: "fantasy", icon: Trophy },
+  { href: "/chat", key: "chat", icon: MessageCircle },
+  { href: "/profil", key: "profile", icon: User },
 ] as const;
 
 interface IndicatorRect {
@@ -57,6 +58,7 @@ function useIndicatorRect(
 }
 
 export function FloatingNav() {
+  const t = useTranslations("nav");
   const pathname = usePathname();
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
   const activeHref = NAV_ITEMS.find(({ href }) => isActive(href))?.href ?? NAV_ITEMS[0].href;
@@ -84,7 +86,7 @@ export function FloatingNav() {
               aria-hidden
             />
           )}
-          {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+          {NAV_ITEMS.map(({ href, key, icon: Icon }) => {
             const active = isActive(href);
             return (
               <li key={href} ref={(el) => void (el ? mobileItemRefs.current.set(href, el) : mobileItemRefs.current.delete(href))}>
@@ -98,7 +100,7 @@ export function FloatingNav() {
                   )}
                 >
                   <Icon size={20} strokeWidth={active ? 2.4 : 2} />
-                  {label}
+                  {t(key)}
                 </Link>
               </li>
             );
@@ -124,7 +126,7 @@ export function FloatingNav() {
               aria-hidden
             />
           )}
-          {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+          {NAV_ITEMS.map(({ href, key, icon: Icon }) => {
             const active = isActive(href);
             return (
               <li key={href} ref={(el) => void (el ? desktopItemRefs.current.set(href, el) : desktopItemRefs.current.delete(href))}>
@@ -138,7 +140,7 @@ export function FloatingNav() {
                   )}
                 >
                   <Icon size={20} strokeWidth={active ? 2.4 : 2} />
-                  {label}
+                  {t(key)}
                 </Link>
               </li>
             );
