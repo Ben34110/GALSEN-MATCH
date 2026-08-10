@@ -6,12 +6,11 @@ import { shadeColor } from "@/lib/color-utils";
 // (components/ui/custom-avatar.tsx): a 0 0 100 100 box, `size` mapped to a
 // Tailwind size-N class on the wrapping <span>.
 //
-// Every jersey detail (collar, chest badge) is a *shade* of primaryColor
-// (see lib/color-utils.ts's shadeColor) rather than an unrelated second
-// color — an earlier version used a separate secondaryColor for a V-neck
-// stroke and two shoulder stripes, but the stripes read as stray
-// disconnected marks rather than part of the jersey, so this version drops
-// them and keeps only tonal detail.
+// Deliberately plain: just the jersey silhouette in primaryColor and one
+// off-center chest badge (a shade of primaryColor, see lib/color-utils.ts's
+// shadeColor — not an unrelated second color). Earlier versions added a
+// V-neck collar stroke and shoulder stripes; both read as clutter/stray
+// marks rather than part of the jersey, so this version has neither.
 //
 // Pure <svg>/<circle>/<path>/<clipPath>/<image>/<text> tags only, no web-only
 // APIs (no CSS gradients, no <Image> from next/image) — porting to React
@@ -45,7 +44,13 @@ const SIZE_CLASSES: Record<NonNullable<JerseyAvatarProps["size"]>, string> = {
 
 function HeadContent({ flagUrl, flagColors, countryCode }: Pick<JerseyAvatarProps, "flagUrl" | "flagColors" | "countryCode">) {
   if (flagUrl) {
-    return <image href={flagUrl} x="17" y="2" width="66" height="66" preserveAspectRatio="xMidYMid slice" clipPath="url(#jersey-avatar-head)" />;
+    // Crest source images (media.api-sports.io) have a lot of transparent
+    // margin baked in around the actual badge artwork — sized exactly to
+    // the 66x66 circle bounds, that margin made the crest look tiny inside
+    // the circle. Oversizing the image (rendered well past the circle,
+    // still clipped to it) zooms past that margin so the crest itself
+    // fills the circle instead.
+    return <image href={flagUrl} x="-5" y="-20" width="110" height="110" preserveAspectRatio="xMidYMid slice" clipPath="url(#jersey-avatar-head)" />;
   }
   if (flagColors) {
     const [top, mid, bottom] = flagColors;
@@ -70,7 +75,6 @@ function HeadContent({ flagUrl, flagColors, countryCode }: Pick<JerseyAvatarProp
 }
 
 export function JerseyAvatar({ primaryColor, badgeColor, size = 14, className, flagUrl, flagColors, countryCode }: JerseyAvatarProps) {
-  const collarColor = shadeColor(primaryColor, -0.22);
   const badge = badgeColor ?? shadeColor(primaryColor, -0.32);
 
   return (
@@ -82,21 +86,17 @@ export function JerseyAvatar({ primaryColor, badgeColor, size = 14, className, f
           </clipPath>
         </defs>
 
-        {/* Jersey body, cropped at the canvas edge like a bust portrait. */}
+        {/* Jersey body, cropped at the canvas edge like a bust portrait —
+            plain fill, no collar or other markings: just the shape and the
+            badge below. */}
         <path
           d="M 50 62 C 38 62, 30 66, 22 72 C 10 80, 2 90, 0 100 L 100 100 C 98 90, 90 80, 78 72 C 70 66, 62 62, 50 62 Z"
           fill={primaryColor}
         />
 
-        {/* V-neck collar trim — a darker shade of the body color, not a
-            competing color, so it reads as fabric shading rather than a
-            decal. Drawn on top of the body fill. */}
-        <path d="M 30 68 L 50 82 L 70 68" stroke={collarColor} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-
-        {/* Chest crest — a plain dot standing in for a club/nation badge,
-            centered rather than off to one side to stay simple and legible
-            at avatar sizes. */}
-        <circle cx="50" cy="91" r="5" fill={badge} stroke="#ffffff" strokeWidth="1" />
+        {/* Chest crest — off-center toward the wearer's left (viewer's
+            right), like a real jersey badge, not centered on the chest. */}
+        <circle cx="64" cy="88" r="5" fill={badge} stroke="#ffffff" strokeWidth="1" />
 
         {/* Head circle, with a thin ring so it reads as a separate "crest"
             element from the jersey behind it, same as the reference art. */}
