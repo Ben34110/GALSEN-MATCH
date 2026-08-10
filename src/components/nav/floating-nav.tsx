@@ -94,7 +94,7 @@ export function FloatingNav() {
                   href={href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "relative z-10 flex min-h-11 min-w-11 flex-col items-center justify-center gap-0.5 rounded-full px-3.5 py-1.5",
+                    "relative z-10 flex min-h-11 min-w-11 flex-col items-center justify-center gap-0.5 whitespace-nowrap rounded-full px-3.5 py-1.5",
                     "text-[11px] font-medium transition-[color,transform] duration-[var(--duration-fast)] ease-[var(--ease-out)] active:scale-90",
                     active ? "text-accent" : "text-muted hover:text-foreground"
                   )}
@@ -134,7 +134,7 @@ export function FloatingNav() {
                   href={href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "relative z-10 flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold",
+                    "relative z-10 flex min-h-11 items-center gap-3 whitespace-nowrap rounded-xl px-3 py-2.5 text-sm font-semibold",
                     "transition-colors duration-[var(--duration-base)] ease-[var(--ease-out)]",
                     active ? "text-accent" : "text-muted hover:bg-foreground/[0.04] hover:text-foreground"
                   )}
