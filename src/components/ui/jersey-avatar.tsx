@@ -1,9 +1,17 @@
 import { cn } from "@/lib/utils";
+import { shadeColor } from "@/lib/color-utils";
 
 // Single neutral SVG template, recolored entirely through props — no
 // per-team image assets. Same viewBox/size convention as CustomAvatar
 // (components/ui/custom-avatar.tsx): a 0 0 100 100 box, `size` mapped to a
 // Tailwind size-N class on the wrapping <span>.
+//
+// Every jersey detail (collar, chest badge) is a *shade* of primaryColor
+// (see lib/color-utils.ts's shadeColor) rather than an unrelated second
+// color — an earlier version used a separate secondaryColor for a V-neck
+// stroke and two shoulder stripes, but the stripes read as stray
+// disconnected marks rather than part of the jersey, so this version drops
+// them and keeps only tonal detail.
 //
 // Pure <svg>/<circle>/<path>/<clipPath>/<image>/<text> tags only, no web-only
 // APIs (no CSS gradients, no <Image> from next/image) — porting to React
@@ -11,11 +19,9 @@ import { cn } from "@/lib/utils";
 // PascalCase equivalents (svg->Svg, circle->Circle, path->Path, clipPath->
 // ClipPath, image->Image, text->Text) and the geometry/props are unchanged.
 export interface JerseyAvatarProps {
-  // Jersey body fill.
+  // Jersey body fill — every other jersey detail shades off this one color.
   primaryColor: string;
-  // Collar (V-neck trim) and shoulder stripes.
-  secondaryColor: string;
-  // Small chest "crest" dot — defaults to secondaryColor when omitted.
+  // Chest "crest" dot — defaults to a darker shade of primaryColor.
   badgeColor?: string;
   size?: 10 | 14 | 20 | 28;
   className?: string;
@@ -63,16 +69,10 @@ function HeadContent({ flagUrl, flagColors, countryCode }: Pick<JerseyAvatarProp
   );
 }
 
-export function JerseyAvatar({
-  primaryColor,
-  secondaryColor,
-  badgeColor,
-  size = 14,
-  className,
-  flagUrl,
-  flagColors,
-  countryCode,
-}: JerseyAvatarProps) {
+export function JerseyAvatar({ primaryColor, badgeColor, size = 14, className, flagUrl, flagColors, countryCode }: JerseyAvatarProps) {
+  const collarColor = shadeColor(primaryColor, -0.22);
+  const badge = badgeColor ?? shadeColor(primaryColor, -0.32);
+
   return (
     <span className={cn("inline-block shrink-0 overflow-hidden rounded-full", SIZE_CLASSES[size], className)}>
       <svg viewBox="0 0 100 100" className="size-full">
@@ -88,18 +88,15 @@ export function JerseyAvatar({
           fill={primaryColor}
         />
 
-        {/* Shoulder stripes — a nod to the collar/rayures ask, independent
-            of the collar trim below. */}
-        <path d="M 24 74 L 34 84" stroke={secondaryColor} strokeWidth="4" strokeLinecap="round" />
-        <path d="M 76 74 L 66 84" stroke={secondaryColor} strokeWidth="4" strokeLinecap="round" />
-
-        {/* V-neck collar trim, drawn last so it sits on top of the body fill. */}
-        <path d="M 30 68 L 50 82 L 70 68" stroke={secondaryColor} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        {/* V-neck collar trim — a darker shade of the body color, not a
+            competing color, so it reads as fabric shading rather than a
+            decal. Drawn on top of the body fill. */}
+        <path d="M 30 68 L 50 82 L 70 68" stroke={collarColor} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
 
         {/* Chest crest — a plain dot standing in for a club/nation badge,
             centered rather than off to one side to stay simple and legible
             at avatar sizes. */}
-        <circle cx="50" cy="91" r="5" fill={badgeColor ?? secondaryColor} stroke="#ffffff" strokeWidth="1" />
+        <circle cx="50" cy="91" r="5" fill={badge} stroke="#ffffff" strokeWidth="1" />
 
         {/* Head circle, with a thin ring so it reads as a separate "crest"
             element from the jersey behind it, same as the reference art. */}

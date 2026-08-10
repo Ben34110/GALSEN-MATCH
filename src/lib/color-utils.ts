@@ -27,6 +27,21 @@ export function hslToHex(h: number, s: number, l: number): string {
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
+// Mixes a hex color toward black (negative percent) or white (positive),
+// e.g. shadeColor("#21a366", -0.25) for a 25%-darker tone — used for jersey
+// details (collar trim, chest badge, see components/ui/jersey-avatar.tsx)
+// that should read as "the same color, shaded" instead of an unrelated
+// second color competing with it.
+export function shadeColor(hex: string, percent: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const target = percent < 0 ? 0 : 255;
+  const mix = (channel: number) => Math.round(channel + (target - channel) * Math.abs(percent));
+  const toHex = (v: number) => v.toString(16).padStart(2, "0");
+  return `#${toHex(mix(r))}${toHex(mix(g))}${toHex(mix(b))}`;
+}
+
 // Relative luminance (WCAG) to pick a contrast-safe ink color automatically
 // instead of hand-choosing white/near-black per palette.
 export function pickInkColor(hex: string): string {
