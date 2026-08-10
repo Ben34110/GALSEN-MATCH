@@ -6,8 +6,9 @@ import { Send } from "lucide-react";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { getRecentChatMessages, getChatMessagesSince, sendChatMessage } from "@/app/actions/chat";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
-import { COUNTRY_CODE_BY_THEME_ID, COUNTRY_LOGOS, initialsFromUsername } from "@/lib/onboarding";
+import { COUNTRY_CODE_BY_THEME_ID, initialsFromUsername } from "@/lib/onboarding";
 import { CountryAvatar } from "@/components/ui/country-avatar";
+import { CountryCrest } from "@/components/ui/country-crest";
 import { CustomAvatar } from "@/components/ui/custom-avatar";
 import { ChatProfileSheet } from "@/components/chat/chat-profile-sheet";
 import { useCurrentIdentity, isCurrentIdentity } from "@/hooks/use-current-identity";
@@ -151,16 +152,7 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
               {isOwn && profile && (
                 <div className="mb-1 flex items-center justify-end gap-1.5">
                   <span className="text-xs font-semibold text-foreground">{profile.username}</span>
-                  {COUNTRY_LOGOS[profile.countryId] && (
-                    <Image
-                      src={COUNTRY_LOGOS[profile.countryId]}
-                      alt=""
-                      width={14}
-                      height={14}
-                      className="size-3.5 shrink-0 object-contain"
-                      unoptimized
-                    />
-                  )}
+                  <CountryCrest countryId={profile.countryId} size={14} className="size-3.5 shrink-0 object-contain" />
                   {profile.avatar ? (
                     <CustomAvatar config={profile.avatar} size={10} />
                   ) : (
@@ -171,15 +163,8 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
               <div className={cn("rounded-2xl px-3 py-2 text-sm", isOwn ? "bg-accent text-accent-ink" : "bg-surface-2 text-foreground")}>
                 {!isOwn && (
                   <p className="mb-0.5 flex items-center gap-1 text-[11px] font-bold opacity-70">
-                    {message.countryId && COUNTRY_LOGOS[message.countryId] && (
-                      <Image
-                        src={COUNTRY_LOGOS[message.countryId]}
-                        alt=""
-                        width={12}
-                        height={12}
-                        className="size-3 shrink-0 object-contain"
-                        unoptimized
-                      />
+                    {message.countryId && (
+                      <CountryCrest countryId={message.countryId} size={12} className="size-3 shrink-0 object-contain" />
                     )}
                     {message.authorName}
                   </p>

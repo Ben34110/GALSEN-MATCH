@@ -9,7 +9,9 @@ import { accentThemes } from "@/lib/mock/accent-themes";
 import { getAfricanPlayers, searchAfricanPlayers } from "@/lib/data/african-players";
 import { applyAccentTheme } from "@/components/theme/accent-theme-provider";
 import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
-import { COUNTRY_LOGOS, NATIONALITY_BY_THEME_ID, ONBOARDING_STORAGE_KEY, normalizeTiktokHandle } from "@/lib/onboarding";
+import { NATIONALITY_BY_THEME_ID, ONBOARDING_STORAGE_KEY, normalizeTiktokHandle } from "@/lib/onboarding";
+import { OTHER_COUNTRY_ID } from "@/lib/mock/accent-themes";
+import { CountryCrest } from "@/components/ui/country-crest";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { getOrCreateDeviceId } from "@/lib/device-id";
 import { ensurePushSubscription, PUSH_FAILURE_MESSAGES } from "@/hooks/use-push-subscription";
@@ -410,7 +412,7 @@ export default function OnboardingPage() {
             <h1 className="font-serif text-2xl font-bold text-foreground">Ton pays</h1>
             <p className="mt-1.5 text-sm leading-relaxed text-muted">
               On mettra en avant l&apos;actu, le chat et les couleurs de ta nation — les 54 pays de la CAF sont
-              disponibles.
+              disponibles, plus une option « Autre » si tu n&apos;es pas Africain.
             </p>
 
             <div className="relative mt-4">
@@ -441,14 +443,7 @@ export default function OnboardingPage() {
                       active ? "border-accent bg-accent/10" : "border-border bg-surface hover:border-accent/30"
                     )}
                   >
-                    <Image
-                      src={COUNTRY_LOGOS[country.id]}
-                      alt=""
-                      width={40}
-                      height={40}
-                      className="size-10 object-contain"
-                      unoptimized
-                    />
+                    <CountryCrest countryId={country.id} size={40} className="size-10 object-contain" />
                     <span className="text-sm font-semibold text-foreground">{country.label}</span>
                     {active && <Check size={16} className="text-accent" aria-hidden />}
                   </button>
@@ -459,7 +454,7 @@ export default function OnboardingPage() {
               )}
             </div>
 
-            {countryId && (
+            {countryId && countryId !== OTHER_COUNTRY_ID && (
               <div className="mt-4 flex items-center gap-3 rounded-2xl border border-accent/30 bg-accent/5 p-3.5">
                 <span className="grid size-10 shrink-0 place-items-center rounded-full bg-accent/10 text-accent">
                   <Bell size={18} aria-hidden />
@@ -508,10 +503,8 @@ export default function OnboardingPage() {
               </p>
               {!playerSearch && (
                 <p className="flex items-center gap-1 text-[11px] text-muted">
-                  {countryId && (
-                    <Image src={COUNTRY_LOGOS[countryId]} alt="" width={14} height={14} className="size-3.5 object-contain" unoptimized />
-                  )}
-                  Joueurs de ta nation d&apos;abord
+                  {countryId && <CountryCrest countryId={countryId} size={14} className="size-3.5 object-contain" />}
+                  {countryId === OTHER_COUNTRY_ID ? "Tous les joueurs" : "Joueurs de ta nation d'abord"}
                 </p>
               )}
             </div>

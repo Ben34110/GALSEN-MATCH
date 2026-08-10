@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { Mail, Pencil, UserRound } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { CountryAvatar } from "@/components/ui/country-avatar";
+import { CountryCrest } from "@/components/ui/country-crest";
 import { CustomAvatar } from "@/components/ui/custom-avatar";
 import { AvatarEditorSheet } from "@/components/profil/avatar-editor-sheet";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { useAuthIdentity } from "@/hooks/use-auth-identity";
-import { COUNTRY_LOGOS, initialsFromUsername, updateOnboardingProfile } from "@/lib/onboarding";
+import { initialsFromUsername, updateOnboardingProfile } from "@/lib/onboarding";
 import { getAccentTheme } from "@/lib/mock/accent-themes";
 import type { AvatarConfig } from "@/lib/avatar-options";
 
@@ -42,8 +42,8 @@ export function ProfileIdentityCard() {
   const profile = useOnboardingProfile();
   const [editingAvatar, setEditingAvatar] = useState(false);
   const username = profile?.username ?? "Amina Diop";
+  const countryId = profile?.countryId ?? "senegal";
   const countryLabel = profile ? getAccentTheme(profile.countryId).label : "Sénégal";
-  const logo = profile ? COUNTRY_LOGOS[profile.countryId] : COUNTRY_LOGOS.senegal;
   const handle = profile ? `@${profile.username.toLowerCase().replace(/\s+/g, "")}` : "@aminad";
 
   function saveAvatar(config: AvatarConfig) {
@@ -75,7 +75,7 @@ export function ProfileIdentityCard() {
       <div className="min-w-0">
         <p className="truncate text-base font-bold text-foreground">{username}</p>
         <p className="flex items-center gap-1.5 text-sm text-muted">
-          {logo && <Image src={logo} alt="" width={16} height={16} className="size-4 shrink-0 object-contain" unoptimized />}
+          <CountryCrest countryId={countryId} size={16} className="size-4 shrink-0 object-contain" />
           {countryLabel} · {handle}
         </p>
         <ConnectionStatus />

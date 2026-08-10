@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
-import { getAfricanNation } from "@/lib/data/african-nations";
 import { getNationalityFlag } from "@/lib/data/nationality-flags";
 import { getChatProfile, type ChatProfileBundle } from "@/app/actions/chat-profile";
 import { CountryAvatar } from "@/components/ui/country-avatar";
+import { CountryCrest } from "@/components/ui/country-crest";
 import { CustomAvatar } from "@/components/ui/custom-avatar";
+import { getAccentTheme } from "@/lib/mock/accent-themes";
 import { initialsFromUsername } from "@/lib/onboarding";
 import { TiktokIcon } from "@/components/icons/tiktok-icon";
 import type { AfricanPlayer } from "@/types";
@@ -63,7 +64,7 @@ export function ChatProfileSheet({ deviceId, userId, playerPool, onClose }: Chat
     };
   }, [deviceId, userId]);
 
-  const nation = bundle && bundle !== "loading" && bundle.countryId ? getAfricanNation(bundle.countryId) : undefined;
+  const countryLabel = bundle && bundle !== "loading" && bundle.countryId ? getAccentTheme(bundle.countryId).label : null;
   const favoritePlayers =
     bundle && bundle !== "loading"
       ? bundle.playerIds.map((id) => playerPool.find((player) => String(player.id) === id)).filter((p): p is AfricanPlayer => Boolean(p))
@@ -102,10 +103,10 @@ export function ChatProfileSheet({ deviceId, userId, playerPool, onClose }: Chat
               )}
               <div className="min-w-0">
                 <p className="truncate text-base font-bold text-foreground">{bundle.username}</p>
-                {nation && (
+                {bundle.countryId && countryLabel && (
                   <span className="flex items-center gap-1.5 text-sm text-muted">
-                    <Image src={nation.logo} alt="" width={16} height={16} className="size-4 shrink-0 object-contain" unoptimized />
-                    {nation.label}
+                    <CountryCrest countryId={bundle.countryId} size={16} className="size-4 shrink-0 object-contain" />
+                    {countryLabel}
                   </span>
                 )}
               </div>

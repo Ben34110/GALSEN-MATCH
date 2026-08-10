@@ -22,6 +22,15 @@ const LEGACY_THEMES: Record<string, Omit<AccentTheme, "id" | "label">> = {
   maroc: { accent: "#d94f4f", accentInk: "#1a0505", accent2: "#2f9e5c", accent3: "#e3b23c" },
 };
 
+// Not one of the 54 CAF nations, so deliberately kept out of
+// lib/data/african-nations.ts's AFRICAN_NATIONS — that list is the source
+// for chat rooms, news country filters, and CAN qualifiers "highlight my
+// country", none of which make sense for a non-African user. This id only
+// needs to exist as a selectable *theme* (onboarding/profile country
+// picker); every consumer of AFRICAN_NATIONS itself already degrades
+// gracefully (undefined lookups, no crash) when it sees this id instead.
+export const OTHER_COUNTRY_ID = "autre";
+
 export const accentThemes: AccentTheme[] = [
   { id: "default", label: "Galsen (par défaut)", accent: "#16794a", accentInk: "#ffffff", accent2: "#f5c518", accent3: "#ce1126" },
   ...AFRICAN_NATIONS.map((nation): AccentTheme => {
@@ -31,6 +40,9 @@ export const accentThemes: AccentTheme[] = [
     const { accent, accent2, accent3 } = generateHueTheme(nation.hues);
     return { id: nation.id, label: nation.label, accent, accentInk: pickInkColor(accent), accent2, accent3 };
   }),
+  // Neutral blue/purple "globe" palette — not derived from any flag's hues
+  // (there isn't one), unlike every other entry above.
+  { id: OTHER_COUNTRY_ID, label: "Autre", accent: "#2563eb", accentInk: "#ffffff", accent2: "#38bdf8", accent3: "#a855f7" },
 ];
 
 export function getAccentTheme(id: string): AccentTheme {
