@@ -9,6 +9,7 @@ import frCommon from "@/messages/fr/common.json";
 import frNav from "@/messages/fr/nav.json";
 import frActu from "@/messages/fr/actu.json";
 import frUpcoming from "@/messages/fr/upcoming.json";
+import frLive from "@/messages/fr/live.json";
 import frFantasy from "@/messages/fr/fantasy.json";
 import frChat from "@/messages/fr/chat.json";
 import frMercato from "@/messages/fr/mercato.json";
@@ -19,6 +20,7 @@ import enCommon from "@/messages/en/common.json";
 import enNav from "@/messages/en/nav.json";
 import enActu from "@/messages/en/actu.json";
 import enUpcoming from "@/messages/en/upcoming.json";
+import enLive from "@/messages/en/live.json";
 import enFantasy from "@/messages/en/fantasy.json";
 import enChat from "@/messages/en/chat.json";
 import enMercato from "@/messages/en/mercato.json";
@@ -29,6 +31,7 @@ import arCommon from "@/messages/ar/common.json";
 import arNav from "@/messages/ar/nav.json";
 import arActu from "@/messages/ar/actu.json";
 import arUpcoming from "@/messages/ar/upcoming.json";
+import arLive from "@/messages/ar/live.json";
 import arFantasy from "@/messages/ar/fantasy.json";
 import arChat from "@/messages/ar/chat.json";
 import arMercato from "@/messages/ar/mercato.json";
@@ -47,6 +50,7 @@ const MESSAGES: Record<Locale, Record<string, object>> = {
     nav: frNav,
     actu: frActu,
     upcoming: frUpcoming,
+    live: frLive,
     fantasy: frFantasy,
     chat: frChat,
     mercato: frMercato,
@@ -58,6 +62,7 @@ const MESSAGES: Record<Locale, Record<string, object>> = {
     nav: enNav,
     actu: enActu,
     upcoming: enUpcoming,
+    live: enLive,
     fantasy: enFantasy,
     chat: enChat,
     mercato: enMercato,
@@ -69,6 +74,7 @@ const MESSAGES: Record<Locale, Record<string, object>> = {
     nav: arNav,
     actu: arActu,
     upcoming: arUpcoming,
+    live: arLive,
     fantasy: arFantasy,
     chat: arChat,
     mercato: arMercato,
