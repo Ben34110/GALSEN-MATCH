@@ -3,19 +3,26 @@
 import { Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCurrentIdentity, isCurrentIdentity } from "@/hooks/use-current-identity";
-import type { LeaderboardEntry } from "@/lib/data/fantasy-leaderboard";
 
 const RANK_COLORS = ["text-accent-2", "text-muted", "text-accent-3"];
 
-export function LeaderboardView({ entries }: { entries: LeaderboardEntry[] }) {
+// Normalized shape shared by the weekly (per-journée) and monthly
+// (aggregated) leaderboards — `secondaryLabel` is the one field that
+// differs by mode ("X/11 joueurs" vs "X journées jouées"), computed by the
+// page before handing rows to this purely-presentational component.
+export interface LeaderboardRow {
+  deviceId: string;
+  userId: string | null;
+  username: string;
+  points: number;
+  secondaryLabel: string;
+}
+
+export function LeaderboardView({ entries, emptyMessage }: { entries: LeaderboardRow[]; emptyMessage: string }) {
   const identity = useCurrentIdentity();
 
   if (entries.length === 0) {
-    return (
-      <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">
-        Personne n&apos;a encore composé d&apos;équipe pour cette journée.
-      </p>
-    );
+    return <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">{emptyMessage}</p>;
   }
 
   return (
@@ -43,7 +50,7 @@ export function LeaderboardView({ entries }: { entries: LeaderboardEntry[] }) {
                 {entry.username}
                 {isMe && " (toi)"}
               </span>
-              <span className="block text-[11px] text-muted">{entry.filled}/11 joueurs</span>
+              <span className="block text-[11px] text-muted">{entry.secondaryLabel}</span>
             </span>
             <span className="shrink-0 text-lg font-extrabold tabular-nums text-accent">{entry.points}</span>
           </li>

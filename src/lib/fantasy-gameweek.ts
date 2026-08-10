@@ -32,6 +32,27 @@ export function getJourneeWeekRange(journee: number): { start: Date; end: Date }
   return { start: new Date(start), end: new Date(start + WEEK_MS) };
 }
 
+// Every distinct calendar month (as its 1st, UTC midnight) that at least
+// one journée's week starts in, from journée 1 through the currently active
+// one — powers the leaderboard's month picker (see
+// lib/data/fantasy-leaderboard.ts's getMonthlyLeaderboard). Journées beyond
+// activeJournee haven't happened yet, so their month has nothing to rank.
+export function getAvailableLeaderboardMonths(now: Date = new Date()): Date[] {
+  const { activeJournee } = getGameweekInfo(now);
+  const months: Date[] = [];
+  let lastKey = "";
+  for (let journee = 1; journee <= activeJournee; journee++) {
+    const { start } = getJourneeWeekRange(journee);
+    const monthStart = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), 1));
+    const key = monthStart.toISOString();
+    if (key !== lastKey) {
+      months.push(monthStart);
+      lastKey = key;
+    }
+  }
+  return months;
+}
+
 export function getGameweekInfo(now: Date = new Date()): GameweekInfo {
   const boundaryIndex = Math.floor((now.getTime() - EPOCH_MONDAY_UTC) / WEEK_MS);
 

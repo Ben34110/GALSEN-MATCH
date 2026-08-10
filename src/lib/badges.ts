@@ -36,6 +36,12 @@ export const BADGES: Badge[] = [
     description: "Ajoute un événement \"À venir\" à ton calendrier.",
     emoji: "🗓️",
   },
+  {
+    id: "top-semaine",
+    label: "Recordman",
+    description: "Termine n°1 du classement hebdomadaire d'une journée au moins une fois — un record acquis pour toujours.",
+    emoji: "👑",
+  },
 ];
 
 function countCompleteJournees(storage: FantasyStorage): number {

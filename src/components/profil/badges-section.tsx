@@ -1,12 +1,15 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useLocalStorageValue } from "@/hooks/use-local-storage-value";
 import { ONBOARDING_STORAGE_KEY } from "@/lib/onboarding";
 import { FANTASY_LINEUP_STORAGE_KEY } from "@/lib/fantasy-lineup";
-import { BADGES, HAS_ADDED_CALENDAR_EVENT_KEY, HAS_CHATTED_KEY, computeUnlockedBadgeIds } from "@/lib/badges";
+import { BADGES, HAS_ADDED_CALENDAR_EVENT_KEY, HAS_CHATTED_KEY, computeUnlockedBadgeIds, type Badge } from "@/lib/badges";
 import { getAfricanPlayers } from "@/lib/data/african-players";
+import { getOrCreateDeviceId } from "@/lib/device-id";
+import { checkTopWeeklyRankRecord } from "@/app/actions/fantasy-records";
+import { BadgeDetailSheet } from "@/components/profil/badge-detail-sheet";
 
 export function BadgesSection() {
   const rawProfile = useLocalStorageValue(ONBOARDING_STORAGE_KEY);
@@ -14,11 +17,23 @@ export function BadgesSection() {
   const hasChatted = useLocalStorageValue(HAS_CHATTED_KEY) === "true";
   const hasAddedCalendarEvent = useLocalStorageValue(HAS_ADDED_CALENDAR_EVENT_KEY) === "true";
   const pool = useMemo(() => getAfricanPlayers(), []);
+  const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
 
-  const unlocked = useMemo(
-    () => computeUnlockedBadgeIds(rawProfile, rawFantasy, hasChatted, hasAddedCalendarEvent, pool),
-    [rawProfile, rawFantasy, hasChatted, hasAddedCalendarEvent, pool]
-  );
+  // The one badge that isn't derivable from localStorage alone — it needs
+  // every past journée's leaderboard (see app/actions/fantasy-records.ts) —
+  // so it's fetched once on mount and merged into the otherwise-synchronous
+  // unlocked set below, instead of computeUnlockedBadgeIds needing to
+  // become async itself for this one case.
+  const [hasTopWeeklyRank, setHasTopWeeklyRank] = useState(false);
+  useEffect(() => {
+    checkTopWeeklyRankRecord(getOrCreateDeviceId()).then(setHasTopWeeklyRank);
+  }, []);
+
+  const unlocked = useMemo(() => {
+    const set = computeUnlockedBadgeIds(rawProfile, rawFantasy, hasChatted, hasAddedCalendarEvent, pool);
+    if (hasTopWeeklyRank) set.add("top-semaine");
+    return set;
+  }, [rawProfile, rawFantasy, hasChatted, hasAddedCalendarEvent, pool, hasTopWeeklyRank]);
 
   return (
     <section>
@@ -32,11 +47,12 @@ export function BadgesSection() {
         {BADGES.map((badge) => {
           const isUnlocked = unlocked.has(badge.id);
           return (
-            <div
+            <button
               key={badge.id}
-              title={badge.description}
+              type="button"
+              onClick={() => setSelectedBadge(badge)}
               className={cn(
-                "flex flex-col items-center gap-1.5 rounded-xl border p-3 text-center",
+                "flex flex-col items-center gap-1.5 rounded-xl border p-3 text-center transition-transform duration-[var(--duration-fast)] active:scale-95",
                 isUnlocked ? "border-accent bg-accent/10" : "border-border bg-surface opacity-50"
               )}
             >
@@ -44,10 +60,14 @@ export function BadgesSection() {
                 {badge.emoji}
               </span>
               <span className="text-[11px] font-semibold leading-tight text-foreground">{badge.label}</span>
-            </div>
+            </button>
           );
         })}
       </div>
+
+      {selectedBadge && (
+        <BadgeDetailSheet badge={selectedBadge} unlocked={unlocked.has(selectedBadge.id)} onClose={() => setSelectedBadge(null)} />
+      )}
     </section>
   );
 }
