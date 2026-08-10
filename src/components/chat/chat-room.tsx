@@ -6,10 +6,9 @@ import { Send } from "lucide-react";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { getRecentChatMessages, getChatMessagesSince, sendChatMessage } from "@/app/actions/chat";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
-import { COUNTRY_CODE_BY_THEME_ID, initialsFromUsername } from "@/lib/onboarding";
-import { CountryAvatar } from "@/components/ui/country-avatar";
+import { COUNTRY_CODE_BY_THEME_ID } from "@/lib/onboarding";
 import { CountryCrest } from "@/components/ui/country-crest";
-import { CustomAvatar } from "@/components/ui/custom-avatar";
+import { ProfileAvatar } from "@/components/ui/profile-avatar";
 import { ChatProfileSheet } from "@/components/chat/chat-profile-sheet";
 import { useCurrentIdentity, isCurrentIdentity } from "@/hooks/use-current-identity";
 import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
@@ -153,11 +152,7 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
                 <div className="mb-1 flex items-center justify-end gap-1.5">
                   <span className="text-xs font-semibold text-foreground">{profile.username}</span>
                   <CountryCrest countryId={profile.countryId} size={14} className="size-3.5 shrink-0 object-contain" />
-                  {profile.avatar ? (
-                    <CustomAvatar config={profile.avatar} size={10} />
-                  ) : (
-                    <CountryAvatar initials={initialsFromUsername(profile.username)} size={10} />
-                  )}
+                  <ProfileAvatar countryId={profile.countryId} size={10} />
                 </div>
               )}
               <div className={cn("rounded-2xl px-3 py-2 text-sm", isOwn ? "bg-accent text-accent-ink" : "bg-surface-2 text-foreground")}>

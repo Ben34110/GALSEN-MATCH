@@ -41,8 +41,7 @@ export function OnboardingGate({ children }: { children: React.ReactNode }) {
       profile.countryId,
       profile.playerIds,
       profile.favoriteClubId,
-      profile.tiktokHandle,
-      profile.avatar
+      profile.tiktokHandle
     );
   }, [profile]);
 

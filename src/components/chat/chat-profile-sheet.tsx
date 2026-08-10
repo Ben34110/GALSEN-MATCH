@@ -5,11 +5,9 @@ import Image from "next/image";
 import { X } from "lucide-react";
 import { getNationalityFlag } from "@/lib/data/nationality-flags";
 import { getChatProfile, type ChatProfileBundle } from "@/app/actions/chat-profile";
-import { CountryAvatar } from "@/components/ui/country-avatar";
 import { CountryCrest } from "@/components/ui/country-crest";
-import { CustomAvatar } from "@/components/ui/custom-avatar";
+import { ProfileAvatar } from "@/components/ui/profile-avatar";
 import { getAccentTheme } from "@/lib/mock/accent-themes";
-import { initialsFromUsername } from "@/lib/onboarding";
 import { TiktokIcon } from "@/components/icons/tiktok-icon";
 import type { AfricanPlayer } from "@/types";
 
@@ -96,11 +94,7 @@ export function ChatProfileSheet({ deviceId, userId, playerPool, onClose }: Chat
         {bundle && bundle !== "loading" && (
           <div className="flex flex-col gap-6">
             <div className="flex items-center gap-3">
-              {bundle.avatar ? (
-                <CustomAvatar config={bundle.avatar} size={14} />
-              ) : (
-                <CountryAvatar initials={initialsFromUsername(bundle.username)} size={14} />
-              )}
+              <ProfileAvatar countryId={bundle.countryId} size={14} />
               <div className="min-w-0">
                 <p className="truncate text-base font-bold text-foreground">{bundle.username}</p>
                 {bundle.countryId && countryLabel && (

@@ -7,7 +7,7 @@ import Image from "next/image";
 import { ArrowLeftRight, CalendarClock, ChevronRight, Newspaper, Star, Trophy } from "lucide-react";
 import { ArticleCard } from "@/components/actu/article-card";
 import { Card } from "@/components/ui/card";
-import { CustomAvatar } from "@/components/ui/custom-avatar";
+import { ProfileAvatar } from "@/components/ui/profile-avatar";
 import { cn } from "@/lib/utils";
 import { AFRICAN_NATIONS } from "@/lib/data/african-nations";
 import { getAfricanPlayers } from "@/lib/data/african-players";
@@ -15,7 +15,6 @@ import { useFantasyStorage } from "@/hooks/use-saved-lineup";
 import { getGameweekInfo } from "@/lib/fantasy-gameweek";
 import { filledCount, isSquadComplete } from "@/lib/fantasy-lineup";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
-import { initialsFromUsername } from "@/lib/onboarding";
 import { useLocalStorageValue } from "@/hooks/use-local-storage-value";
 import { LOCALE_STORAGE_KEY, resolveLocale } from "@/lib/locale";
 import { localizeArticle } from "@/lib/news/localize";
@@ -121,13 +120,7 @@ export function ActuPageClient({
           </h1>
         </div>
         <Link href="/profil" aria-label="Voir le profil" className="shrink-0 transition-transform active:scale-95">
-          {profile?.avatar ? (
-            <CustomAvatar config={profile.avatar} size={10} />
-          ) : (
-            <span className="grid size-12 place-items-center rounded-full bg-accent text-base font-extrabold text-accent-ink shadow-sm">
-              {profile ? initialsFromUsername(profile.username) : "AD"}
-            </span>
-          )}
+          <ProfileAvatar countryId={profile?.countryId ?? "senegal"} size={10} />
         </Link>
       </header>
 

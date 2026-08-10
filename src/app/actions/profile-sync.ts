@@ -2,7 +2,6 @@
 
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { resolveActor } from "@/lib/auth";
-import { parseAvatarConfig, type AvatarConfig } from "@/lib/avatar-options";
 
 // Best-effort background sync, called whenever the local onboarding profile
 // changes (see components/onboarding/onboarding-gate.tsx) — degrades to a
@@ -19,8 +18,7 @@ export async function syncUserProfile(
   countryId: string,
   playerIds: string[],
   favoriteClubId: number | null,
-  tiktokHandle: string | null,
-  avatarConfig: AvatarConfig | null
+  tiktokHandle: string | null
 ): Promise<{ ok: boolean }> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return { ok: false };
@@ -35,7 +33,6 @@ export async function syncUserProfile(
       player_ids: playerIds,
       favorite_club_id: favoriteClubId,
       tiktok_handle: tiktokHandle,
-      avatar_config: avatarConfig,
       updated_at: new Date().toISOString(),
     },
     { onConflict: actor.matchColumn }
@@ -77,7 +74,6 @@ export interface RestoredProfile {
   username: string;
   favoriteClubId: number | null;
   tiktokHandle: string | null;
-  avatar: AvatarConfig | null;
 }
 
 export async function getProfileByUserId(userId: string): Promise<RestoredProfile | null> {
@@ -86,7 +82,7 @@ export async function getProfileByUserId(userId: string): Promise<RestoredProfil
 
   const { data, error } = await supabase
     .from("user_profiles")
-    .select("country_id, player_ids, username, favorite_club_id, tiktok_handle, avatar_config")
+    .select("country_id, player_ids, username, favorite_club_id, tiktok_handle")
     .eq("user_id", userId)
     .maybeSingle();
   if (error || !data) return null;
@@ -97,6 +93,5 @@ export async function getProfileByUserId(userId: string): Promise<RestoredProfil
     username: data.username,
     favoriteClubId: data.favorite_club_id ?? null,
     tiktokHandle: data.tiktok_handle ?? null,
-    avatar: parseAvatarConfig(data.avatar_config),
   };
 }

@@ -167,7 +167,6 @@ export default function OnboardingPage() {
         username: username.trim(),
         favoriteClubId: null,
         tiktokHandle: normalizeTiktokHandle(tiktokHandle),
-        avatar: null,
       })
     );
     applyAccentTheme(countryId);
@@ -192,8 +191,7 @@ export default function OnboardingPage() {
         countryId,
         playerIds,
         null,
-        normalizeTiktokHandle(tiktokHandle),
-        null
+        normalizeTiktokHandle(tiktokHandle)
       );
     }
     router.push("/actu");

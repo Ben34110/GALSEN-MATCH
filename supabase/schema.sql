@@ -330,11 +330,11 @@ alter table user_profiles add column if not exists user_id uuid references auth.
 drop index if exists user_profiles_user_idx;
 create unique index user_profiles_user_idx on user_profiles (user_id);
 
--- Custom avatar (face shape, skin tone, eye style, hair style/color — see
--- lib/avatar-options.ts). Nullable: null means "no custom avatar yet",
--- falls back to initials (ProfileIdentityCard). The country-colored ring
--- around it isn't stored here — it's derived live from country_id via the
--- existing accent-theme system, same as everywhere else that ring appears.
+-- Unused: held the old manually-customized face avatar (face shape, skin
+-- tone, eye style, hair). The avatar is now a JerseyAvatar derived entirely
+-- from country_id (see components/ui/profile-avatar.tsx) — nothing left to
+-- store per-profile. Column kept rather than dropped (no code reads/writes
+-- it anymore, but existing rows' data isn't worth a migration to erase).
 alter table user_profiles add column if not exists avatar_config jsonb;
 
 -- No RLS policies: every read/write goes through server-only code using the
