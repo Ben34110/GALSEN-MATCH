@@ -1,4 +1,3 @@
-import { SectionHeader } from "@/components/ui/section-header";
 import { MercatoTransferList } from "@/components/mercato/mercato-transfer-list";
 import { getMercatoTransfers } from "@/lib/data/mercato";
 
@@ -9,17 +8,11 @@ import { getMercatoTransfers } from "@/lib/data/mercato";
 // Supabase read per request is a non-issue at this app's traffic.
 export const dynamic = "force-dynamic";
 
+// Header text lives inside MercatoTransferList (a Client Component) since
+// the locale is a client-only localStorage value this Server Component
+// can't read — see AGENTS.md's i18n notes.
 export default async function MercatoPage() {
   const transfers = await getMercatoTransfers();
 
-  return (
-    <div>
-      <SectionHeader
-        eyebrow="Mercato"
-        title="Derniers transferts"
-        subtitle="Les mouvements les plus récents des joueurs africains, club de départ et club d'arrivée."
-      />
-      <MercatoTransferList transfers={transfers} />
-    </div>
-  );
+  return <MercatoTransferList transfers={transfers} />;
 }

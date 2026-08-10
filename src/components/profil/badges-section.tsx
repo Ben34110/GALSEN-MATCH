@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { useLocalStorageValue } from "@/hooks/use-local-storage-value";
 import { ONBOARDING_STORAGE_KEY } from "@/lib/onboarding";
@@ -12,6 +13,7 @@ import { checkTopWeeklyRankRecord } from "@/app/actions/fantasy-records";
 import { BadgeDetailSheet } from "@/components/profil/badge-detail-sheet";
 
 export function BadgesSection() {
+  const t = useTranslations("profil.badges");
   const rawProfile = useLocalStorageValue(ONBOARDING_STORAGE_KEY);
   const rawFantasy = useLocalStorageValue(FANTASY_LINEUP_STORAGE_KEY);
   const hasChatted = useLocalStorageValue(HAS_CHATTED_KEY) === "true";
@@ -38,7 +40,7 @@ export function BadgesSection() {
   return (
     <section>
       <div className="mb-2 flex items-baseline justify-between">
-        <h2 className="text-xs font-bold uppercase tracking-wide text-muted">Badges</h2>
+        <h2 className="text-xs font-bold uppercase tracking-wide text-muted">{t("title")}</h2>
         <span className="text-xs font-semibold tabular-nums text-accent">
           {unlocked.size}/{BADGES.length}
         </span>

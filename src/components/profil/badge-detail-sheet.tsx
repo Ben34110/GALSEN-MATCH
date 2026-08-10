@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import type { Badge } from "@/lib/badges";
 
@@ -8,6 +9,8 @@ import type { Badge } from "@/lib/badges";
 // tapping a badge (badges-section.tsx) explains what it is and how to
 // unlock it, since the grid itself only has room for an emoji and a label.
 export function BadgeDetailSheet({ badge, unlocked, onClose }: { badge: Badge; unlocked: boolean; onClose: () => void }) {
+  const t = useTranslations("profil.badgeDetail");
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col justify-end bg-foreground/40" onClick={onClose}>
       <div
@@ -22,14 +25,14 @@ export function BadgeDetailSheet({ badge, unlocked, onClose }: { badge: Badge; u
             <div>
               <h2 className="font-serif text-lg font-bold text-foreground">{badge.label}</h2>
               <span className={cn("text-xs font-semibold", unlocked ? "text-accent" : "text-muted")}>
-                {unlocked ? "Débloqué" : "Verrouillé"}
+                {unlocked ? t("unlocked") : t("locked")}
               </span>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Fermer"
+            aria-label={t("close")}
             className="grid size-9 shrink-0 place-items-center rounded-full bg-surface-2 text-muted transition-colors hover:text-foreground"
           >
             <X size={16} aria-hidden />

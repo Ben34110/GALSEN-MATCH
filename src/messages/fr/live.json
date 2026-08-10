@@ -1,1 +1,20 @@
-{}
+{
+  "back": "Retour",
+  "finished": "Terminé",
+  "unknownTeam": "Équipe inconnue",
+  "halftimeScore": "Mi-temps : {home} – {away}",
+  "lineups": {
+    "title": "Compositions",
+    "notAnnounced": "Compositions pas encore annoncées.",
+    "goalkeeper": "Gardien",
+    "defenders": "Défenseurs",
+    "midfielders": "Milieux",
+    "forwards": "Attaquants",
+    "substitutes": "Remplaçants ({count})",
+    "coach": "Entraîneur : {name}"
+  },
+  "favorite": {
+    "remove": "Retirer {teamName} des favoris",
+    "add": "Ajouter {teamName} aux favoris"
+  }
+}

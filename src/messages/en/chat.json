@@ -1,1 +1,27 @@
-{}
+{
+  "header": {
+    "eyebrow": "Community",
+    "title": "Chat",
+    "subtitle": "Country rooms and a general room."
+  },
+  "room": {
+    "messagesAriaLabel": "Messages from {roomName}",
+    "fallbackConversation": "the conversation",
+    "emptyState": "No messages yet in {roomName}.",
+    "messageLabel": "Message for {roomName}",
+    "placeholder": "Write in {roomName}…",
+    "send": "Send",
+    "sendError": "The message could not be sent. Try again."
+  },
+  "profileSheet": {
+    "title": "Profile",
+    "close": "Close",
+    "loading": "Loading…",
+    "unavailable": "Profile unavailable right now.",
+    "tiktokAriaLabel": "View @{handle} on TikTok",
+    "favoritePlayers": "Favorite players",
+    "noFavoritePlayers": "No favorite players set.",
+    "ballonDor": "Top 3 African Ballon d'Or",
+    "noBallonDor": "No prediction set."
+  }
+}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Mail, UserRound } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { CountryCrest } from "@/components/ui/country-crest";
 import { ProfileAvatar } from "@/components/ui/profile-avatar";
@@ -17,6 +18,7 @@ import { getAccentTheme } from "@/lib/mock/accent-themes";
 // on this device — see create-account-sheet.tsx for why nothing extra is
 // needed to keep it linked.
 function ConnectionStatus() {
+  const t = useTranslations("profil.identityCard");
   const identity = useAuthIdentity();
   const [creatingAccount, setCreatingAccount] = useState(false);
 
@@ -25,26 +27,26 @@ function ConnectionStatus() {
       <>
         <p className="mt-1 flex items-center gap-1.5 text-xs text-muted">
           <UserRound size={12} className="shrink-0" aria-hidden />
-          Mode invité — aucun compte lié sur cet appareil
+          {t("guestMode")}
         </p>
         <button
           type="button"
           onClick={() => setCreatingAccount(true)}
           className="mt-1.5 text-xs font-bold text-accent underline-offset-2 hover:underline"
         >
-          Créer un compte
+          {t("createAccount")}
         </button>
         {creatingAccount && <CreateAccountSheet onClose={() => setCreatingAccount(false)} />}
       </>
     );
   }
 
-  const label = identity.provider === "google" ? `Google · ${identity.email}` : identity.email;
+  const label = identity.provider === "google" ? `Google · ${identity.email}` : (identity.email ?? "");
 
   return (
     <p className="mt-1 flex items-center gap-1.5 truncate text-xs text-muted">
       <Mail size={12} className="shrink-0" aria-hidden />
-      Connecté avec {label}
+      {t("connectedWith", { label })}
     </p>
   );
 }

@@ -1,1 +1,64 @@
-{}
+{
+  "fifaRanking": {
+    "eyebrow": "Sélections",
+    "title": "Classement FIFA",
+    "subtitle": "Classement de {month} — rang africain et mondial, points, et progression depuis le mois précédent.",
+    "caption": "Classement FIFA des sélections africaines, rang africain et mondial, points, et progression depuis le mois précédent.",
+    "columns": {
+      "rank": "#",
+      "country": "Pays",
+      "world": "Mondial",
+      "points": "Points",
+      "trend": "+/-"
+    },
+    "months": [
+      "janvier", "février", "mars", "avril", "mai", "juin",
+      "juillet", "août", "septembre", "octobre", "novembre", "décembre"
+    ]
+  },
+  "canQualifiers": {
+    "eyebrow": "CAN 2027",
+    "title": "Qualifications",
+    "subtitle": "Les deux premières journées de septembre 2026, groupe par groupe.",
+    "views": {
+      "matches": "Matchs",
+      "standings": "Classement"
+    },
+    "rounds": {
+      "group1": "1ère journée — 23 septembre 2026",
+      "group2": "2e journée — 27 septembre 2026"
+    },
+    "fixtures": {
+      "unavailable": "Calendrier indisponible pour l'instant."
+    },
+    "standings": {
+      "unavailable": "Classement indisponible pour l'instant.",
+      "provisionalNote": "Groupes reconstitués à partir du calendrier — les qualifications n'ont pas encore commencé (1ère journée le 23 septembre 2026), le classement officiel remplacera ces groupes dès qu'API-Football le publiera.",
+      "caption": "Classement du {group} des qualifications CAN 2027.",
+      "columns": {
+        "team": "Équipe",
+        "points": "Pts",
+        "played": "J",
+        "won": "G",
+        "drawn": "N",
+        "lost": "P",
+        "goalsFor": "BP",
+        "goalsAgainst": "BC",
+        "diff": "Diff"
+      }
+    }
+  },
+  "matchFavorite": {
+    "remove": "Retirer {match} des favoris",
+    "add": "Ajouter {match} aux favoris"
+  },
+  "events": {
+    "eyebrow": "Foot africain",
+    "title": "À venir",
+    "subtitle": "Les prochains grands rendez-vous du football africain, en direct.",
+    "empty": "Aucun événement à venir pour l'instant.",
+    "inProgress": "En cours",
+    "estimatedDate": "date estimée",
+    "addToCalendar": "Ajouter à mon calendrier"
+  }
+}

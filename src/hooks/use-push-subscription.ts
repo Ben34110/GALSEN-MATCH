@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { getOrCreateDeviceId } from "@/lib/device-id";
 import { saveDeviceSubscription } from "@/app/actions/notifications";
 
@@ -29,22 +30,21 @@ export type PushSubscriptionResult =
   | { ok: false; reason: "subscribe-failed" }
   | { ok: false; reason: "save-failed" };
 
+export type PushFailureReason = Exclude<PushSubscriptionResult, { ok: true }>["reason"];
+
 // One concrete, actionable line per failure reason, shared by every "enable
 // notifications" UI (Profil's per-country toggle, onboarding's opt-in
 // card) — a generic "check your settings" message was useless for the #1
 // real case, iOS PWA users whose phone-level "Notifications" toggle is
 // already on but who opened this from a regular Safari tab: Web Push is
 // only reachable from the installed (Add to Home Screen) app on iOS, no
-// matter what Settings says.
-export const PUSH_FAILURE_MESSAGES: Record<Exclude<PushSubscriptionResult, { ok: true }>["reason"], string> = {
-  unsupported:
-    "Ce navigateur ne supporte pas les notifications ici. Sur iPhone : ouvre AfroLive depuis l'icône ajoutée à l'écran d'accueil (pas depuis Safari) — les notifications web ne marchent que depuis l'app installée.",
-  "permission-denied":
-    "La demande d'autorisation a été refusée ou ignorée. Va dans les réglages de notifications de ton téléphone pour AfroLive, active-les, puis réessaie.",
-  "not-configured": "Les notifications ne sont pas encore configurées côté serveur — réessaie plus tard.",
-  "subscribe-failed": "Un problème technique a empêché l'activation. Réessaie dans quelques secondes.",
-  "save-failed": "Impossible d'enregistrer ta préférence — vérifie ta connexion et réessaie.",
-};
+// matter what Settings says. A hook (not a plain constant) because the
+// text is translated (messages/{locale}/common.json's pushFailure.*),
+// which needs the locale from next-intl's context.
+export function usePushFailureMessage(reason: PushFailureReason | null): string | null {
+  const t = useTranslations("common.pushFailure");
+  return reason ? t(reason) : null;
+}
 
 // Requests Notification permission (if not already decided) and makes sure
 // this browser has an active push subscription saved server-side. Called

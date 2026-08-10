@@ -1,1 +1,27 @@
-{}
+{
+  "header": {
+    "eyebrow": "Communauté",
+    "title": "Chat",
+    "subtitle": "Salons par pays et salon général."
+  },
+  "room": {
+    "messagesAriaLabel": "Messages de {roomName}",
+    "fallbackConversation": "la conversation",
+    "emptyState": "Aucun message pour l'instant dans {roomName}.",
+    "messageLabel": "Message pour {roomName}",
+    "placeholder": "Écrire dans {roomName}…",
+    "send": "Envoyer",
+    "sendError": "Le message n'a pas pu être envoyé. Réessaie."
+  },
+  "profileSheet": {
+    "title": "Profil",
+    "close": "Fermer",
+    "loading": "Chargement…",
+    "unavailable": "Profil indisponible pour l'instant.",
+    "tiktokAriaLabel": "Voir @{handle} sur TikTok",
+    "favoritePlayers": "Joueurs préférés",
+    "noFavoritePlayers": "Aucun joueur préféré renseigné.",
+    "ballonDor": "Top 3 Ballon d'Or Africain",
+    "noBallonDor": "Aucun pronostic renseigné."
+  }
+}

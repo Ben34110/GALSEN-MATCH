@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { Bell, Check, Search, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn, normalizeForSearch } from "@/lib/utils";
 import { accentThemes } from "@/lib/mock/accent-themes";
 import { applyAccentTheme } from "@/components/theme/accent-theme-provider";
@@ -33,25 +34,11 @@ import {
 
 const COUNTRIES = accentThemes.filter((theme) => theme.id !== "default");
 
-const CLUB_NOTIFICATION_OPTIONS: NotificationOption<ClubNotificationPrefs>[] = [
-  { key: "notifyLineup", label: "Compo annoncée" },
-  { key: "notifyGoals", label: "Chaque but" },
-  { key: "notifyKickoff", label: "Coup d'envoi" },
-  { key: "notifyFulltime", label: "Fin du match" },
-];
-
-const PLAYER_NOTIFICATION_OPTIONS: NotificationOption<PlayerNotificationPrefs>[] = [
-  { key: "notifyLineup", label: "Titulaire au coup d'envoi" },
-  { key: "notifyGoal", label: "But marqué" },
-  { key: "notifyAssist", label: "Passe décisive" },
-  { key: "notifyCard", label: "Carton" },
-  { key: "notifyRating", label: "Note de fin de match" },
-];
-
 type ClubPrefsPanelState = { teamId: number; mode: "add" | "edit"; initial: ClubNotificationPrefs };
 type PlayerPrefsPanelState = { playerId: string; mode: "add" | "edit"; initial: PlayerNotificationPrefs };
 
 export function PreferencesEditor() {
+  const t = useTranslations("profil");
   const profile = useOnboardingProfile();
   const favoriteTeamIds = useFavoriteTeamIds();
   const allPlayers = useMemo(() => getAfricanPlayers(), []);
@@ -64,6 +51,21 @@ export function PreferencesEditor() {
   const [playerPrefsPanel, setPlayerPrefsPanel] = useState<PlayerPrefsPanelState | null>(null);
 
   if (!profile) return null;
+
+  const clubNotificationOptions: NotificationOption<ClubNotificationPrefs>[] = [
+    { key: "notifyLineup", label: t("notificationPanel.club.lineup") },
+    { key: "notifyGoals", label: t("notificationPanel.club.goals") },
+    { key: "notifyKickoff", label: t("notificationPanel.club.kickoff") },
+    { key: "notifyFulltime", label: t("notificationPanel.club.fulltime") },
+  ];
+
+  const playerNotificationOptions: NotificationOption<PlayerNotificationPrefs>[] = [
+    { key: "notifyLineup", label: t("notificationPanel.player.lineup") },
+    { key: "notifyGoal", label: t("notificationPanel.player.goal") },
+    { key: "notifyAssist", label: t("notificationPanel.player.assist") },
+    { key: "notifyCard", label: t("notificationPanel.player.card") },
+    { key: "notifyRating", label: t("notificationPanel.player.rating") },
+  ];
 
   const visibleCountries = countrySearch.trim()
     ? COUNTRIES.filter((country) => normalizeForSearch(country.label).includes(normalizeForSearch(countrySearch.trim())))
@@ -164,11 +166,8 @@ export function PreferencesEditor() {
       <UsernameEditor />
 
       <section>
-        <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">Pays favori</h2>
-        <p className="mb-3 text-sm leading-relaxed text-muted">
-          Adapte les couleurs de l&apos;app et l&apos;ordre du chat à ta nation — les 54 pays de la CAF sont
-          disponibles, plus une option « Autre » si tu n&apos;es pas Africain.
-        </p>
+        <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">{t("preferences.country.title")}</h2>
+        <p className="mb-3 text-sm leading-relaxed text-muted">{t("preferences.country.subtitle")}</p>
 
         {(() => {
           const current = COUNTRIES.find((country) => country.id === profile.countryId);
@@ -187,7 +186,7 @@ export function PreferencesEditor() {
           <input
             value={countrySearch}
             onChange={(event) => setCountrySearch(event.target.value)}
-            placeholder="Changer de pays…"
+            placeholder={t("preferences.country.search")}
             className={cn(
               "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-base text-foreground",
               "placeholder:text-muted focus:border-accent focus:outline-none"
@@ -220,7 +219,7 @@ export function PreferencesEditor() {
               );
             })}
             {visibleCountries.length === 0 && (
-              <p className="col-span-3 py-2 text-center text-xs text-muted">Aucun pays trouvé.</p>
+              <p className="col-span-3 py-2 text-center text-xs text-muted">{t("preferences.country.noResults")}</p>
             )}
           </div>
         )}
@@ -228,7 +227,7 @@ export function PreferencesEditor() {
 
       <section>
         <div className="mb-2 flex items-baseline justify-between">
-          <h2 className="text-xs font-bold uppercase tracking-wide text-muted">Joueurs préférés</h2>
+          <h2 className="text-xs font-bold uppercase tracking-wide text-muted">{t("preferences.players.title")}</h2>
           <span className="text-xs font-semibold tabular-nums text-accent">{selectedPlayers.length}/3</span>
         </div>
 
@@ -255,7 +254,7 @@ export function PreferencesEditor() {
                   <button
                     type="button"
                     onClick={() => openEditPlayerPrefs(playerId)}
-                    aria-label={`Gérer les notifications pour ${player.name}`}
+                    aria-label={t("preferences.players.manageNotifications", { name: player.name })}
                     className="grid size-8 shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
                   >
                     <Bell size={15} aria-hidden />
@@ -263,7 +262,7 @@ export function PreferencesEditor() {
                   <button
                     type="button"
                     onClick={() => removePlayer(playerId)}
-                    aria-label={`Retirer ${player.name}`}
+                    aria-label={t("preferences.players.remove", { name: player.name })}
                     className="grid size-8 shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
                   >
                     <X size={15} aria-hidden />
@@ -271,18 +270,18 @@ export function PreferencesEditor() {
                 </div>
                 {playerPrefsPanel?.playerId === playerId && playerPrefsPanel.mode === "edit" && (
                   <NotificationPrefsPanel
-                    title={`Notifications — ${player.name}`}
-                    options={PLAYER_NOTIFICATION_OPTIONS}
+                    title={t("notificationPanel.titleForPlayer", { name: player.name })}
+                    options={playerNotificationOptions}
                     initialPrefs={playerPrefsPanel.initial}
                     onConfirm={confirmPlayerPrefs}
                     onCancel={() => setPlayerPrefsPanel(null)}
-                    confirmLabel="Enregistrer"
+                    confirmLabel={t("notificationPanel.save")}
                   />
                 )}
               </div>
             );
           })}
-          {selectedPlayers.length === 0 && <p className="text-sm text-muted">Aucun joueur sélectionné.</p>}
+          {selectedPlayers.length === 0 && <p className="text-sm text-muted">{t("preferences.players.none")}</p>}
         </div>
 
         {selectedPlayers.length < 3 && (
@@ -297,7 +296,7 @@ export function PreferencesEditor() {
               <input
                 value={playerSearch}
                 onChange={(event) => setPlayerSearch(event.target.value)}
-                placeholder="Ajouter un joueur…"
+                placeholder={t("preferences.players.add")}
                 className={cn(
                   "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-base text-foreground",
                   "placeholder:text-muted focus:border-accent focus:outline-none"
@@ -332,8 +331,8 @@ export function PreferencesEditor() {
                       </button>
                       {playerPrefsPanel?.playerId === playerId && playerPrefsPanel.mode === "add" && (
                         <NotificationPrefsPanel
-                          title={`Notifications — ${player.name}`}
-                          options={PLAYER_NOTIFICATION_OPTIONS}
+                          title={t("notificationPanel.titleForPlayer", { name: player.name })}
+                          options={playerNotificationOptions}
                           initialPrefs={playerPrefsPanel.initial}
                           onConfirm={confirmPlayerPrefs}
                           onCancel={() => setPlayerPrefsPanel(null)}
@@ -342,7 +341,9 @@ export function PreferencesEditor() {
                     </div>
                   );
                 })}
-                {playerResults.length === 0 && <p className="py-2 text-center text-xs text-muted">Aucun joueur trouvé.</p>}
+                {playerResults.length === 0 && (
+                  <p className="py-2 text-center text-xs text-muted">{t("preferences.players.noResults")}</p>
+                )}
               </div>
             )}
           </div>
@@ -350,7 +351,7 @@ export function PreferencesEditor() {
       </section>
 
       <section>
-        <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">Club préféré</h2>
+        <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">{t("preferences.club.title")}</h2>
 
         {favoriteClub ? (
           <div className="flex flex-col gap-2">
@@ -363,7 +364,7 @@ export function PreferencesEditor() {
               <button
                 type="button"
                 onClick={() => openEditClubPrefs(favoriteClub.id)}
-                aria-label={`Gérer les notifications pour ${favoriteClub.name}`}
+                aria-label={t("preferences.club.manageNotifications", { name: favoriteClub.name })}
                 className="grid size-8 shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
               >
                 <Bell size={15} aria-hidden />
@@ -371,7 +372,7 @@ export function PreferencesEditor() {
               <button
                 type="button"
                 onClick={clearClub}
-                aria-label={`Retirer ${favoriteClub.name}`}
+                aria-label={t("preferences.club.remove", { name: favoriteClub.name })}
                 className="grid size-8 shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
               >
                 <X size={15} aria-hidden />
@@ -379,12 +380,12 @@ export function PreferencesEditor() {
             </div>
             {clubPrefsPanel?.teamId === favoriteClub.id && clubPrefsPanel.mode === "edit" && (
               <NotificationPrefsPanel
-                title={`Notifications — ${favoriteClub.name}`}
-                options={CLUB_NOTIFICATION_OPTIONS}
+                title={t("notificationPanel.titleForClub", { name: favoriteClub.name })}
+                options={clubNotificationOptions}
                 initialPrefs={clubPrefsPanel.initial}
                 onConfirm={confirmClubPrefs}
                 onCancel={() => setClubPrefsPanel(null)}
-                confirmLabel="Enregistrer"
+                confirmLabel={t("notificationPanel.save")}
               />
             )}
           </div>
@@ -395,7 +396,7 @@ export function PreferencesEditor() {
               <input
                 value={clubSearch}
                 onChange={(event) => setClubSearch(event.target.value)}
-                placeholder="Chercher un club (Real Madrid, Bayern…)"
+                placeholder={t("preferences.club.search")}
                 className={cn(
                   "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-base text-foreground",
                   "placeholder:text-muted focus:border-accent focus:outline-none"
@@ -419,8 +420,8 @@ export function PreferencesEditor() {
                     </button>
                     {clubPrefsPanel?.teamId === team.id && clubPrefsPanel.mode === "add" && (
                       <NotificationPrefsPanel
-                        title={`Notifications — ${team.name}`}
-                        options={CLUB_NOTIFICATION_OPTIONS}
+                        title={t("notificationPanel.titleForClub", { name: team.name })}
+                        options={clubNotificationOptions}
                         initialPrefs={clubPrefsPanel.initial}
                         onConfirm={confirmClubPrefs}
                         onCancel={() => setClubPrefsPanel(null)}
@@ -428,7 +429,9 @@ export function PreferencesEditor() {
                     )}
                   </div>
                 ))}
-                {clubResults.length === 0 && <p className="py-2 text-center text-xs text-muted">Aucun club trouvé.</p>}
+                {clubResults.length === 0 && (
+                  <p className="py-2 text-center text-xs text-muted">{t("preferences.club.noResults")}</p>
+                )}
               </div>
             )}
           </div>
@@ -436,15 +439,13 @@ export function PreferencesEditor() {
       </section>
 
       <section>
-        <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">TikTok</h2>
-        <p className="mb-3 text-sm leading-relaxed text-muted">
-          Affiché sur ton profil dans le chat — les autres pourront y accéder en un clic.
-        </p>
+        <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">{t("preferences.tiktok.title")}</h2>
+        <p className="mb-3 text-sm leading-relaxed text-muted">{t("preferences.tiktok.subtitle")}</p>
         <input
           key={profile.tiktokHandle ?? ""}
           defaultValue={profile.tiktokHandle ?? ""}
           onBlur={(event) => updateOnboardingProfile(profile, { tiktokHandle: normalizeTiktokHandle(event.target.value) })}
-          placeholder="@tonpseudo"
+          placeholder={t("preferences.tiktok.placeholder")}
           className={cn(
             "min-h-11 w-full rounded-xl border border-border bg-surface px-3 text-base text-foreground",
             "placeholder:text-muted focus:border-accent focus:outline-none"

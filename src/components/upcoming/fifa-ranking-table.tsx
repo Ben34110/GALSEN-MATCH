@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Globe2, Minus, TrendingDown, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getAfricanNationByNationality } from "@/lib/data/african-nations";
@@ -32,14 +35,12 @@ function MovementIndicator({ row }: { row: FifaRankingRow }) {
 // literally requested ("progression de places par rapport au mois
 // précédent"), even though the scraped data also carries a points delta.
 export function FifaRankingTable({ rows }: { rows: FifaRankingRow[] }) {
+  const t = useTranslations("upcoming.fifaRanking");
   return (
     <div className="overflow-hidden rounded-2xl border border-border">
       <div className="overflow-x-auto">
         <table className="w-full table-fixed text-sm">
-          <caption className="sr-only">
-            Classement FIFA des sélections africaines, rang africain et mondial, points, et progression depuis le mois
-            précédent.
-          </caption>
+          <caption className="sr-only">{t("caption")}</caption>
           <colgroup>
             <col className="w-8" />
             <col />
@@ -50,19 +51,19 @@ export function FifaRankingTable({ rows }: { rows: FifaRankingRow[] }) {
           <thead>
             <tr className="bg-surface-2 text-[10px] uppercase tracking-wide text-muted">
               <th scope="col" className="py-2 pl-2 text-left font-semibold">
-                #
+                {t("columns.rank")}
               </th>
               <th scope="col" className="py-2 pl-1.5 text-left font-semibold">
-                Pays
+                {t("columns.country")}
               </th>
               <th scope="col" className="py-2 text-center font-semibold">
-                Mondial
+                {t("columns.world")}
               </th>
               <th scope="col" className="py-2 text-right font-semibold">
-                Points
+                {t("columns.points")}
               </th>
               <th scope="col" className="py-2 pr-2 text-right font-semibold">
-                +/-
+                {t("columns.trend")}
               </th>
             </tr>
           </thead>

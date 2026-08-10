@@ -1,1 +1,127 @@
-{}
+{
+  "common": {
+    "back": "Back",
+    "close": "Close",
+    "eyebrow": "Fantasy",
+    "searchPlaceholder": "Search for a player, country, club…",
+    "noPlayerFound": "No player found.",
+    "loading": "Loading…",
+    "leaderboardUnavailable": "Leaderboard unavailable right now.",
+    "you": " (you)"
+  },
+  "hub": {
+    "title": "Fantasy",
+    "subtitle": "Choose a mini-game.",
+    "xiTitle": "The XI",
+    "xiDescription": "Build your team of the week with African players.",
+    "ballonDorTitle": "African Ballon d'Or",
+    "ballonDorDescription": "Predict the African Ballon d'Or podium.",
+    "quizTitle": "African Football Quiz",
+    "quizDescription": "A one-minute sprint on African football."
+  },
+  "xi": {
+    "eyebrow": "Starting XI",
+    "title": "Matchday {journee}",
+    "closedSubtitle": "Lineups are closed for this matchday.",
+    "openSubtitle": "Lineups open until kickoff — {countdown} remaining.",
+    "lockedEditableSubtitle": "Team saved and locked — tap Edit to change it before kickoff.",
+    "startedSubtitle": "Matchday {journee} has started — lineup locked.",
+    "rulesAriaLabel": "How it works",
+    "leaderboardAriaLabel": "Overall leaderboard",
+    "instructions": "Tap an empty spot to pick an African player — 1 goalkeeper, 4 defenders, 3 midfielders, 3 forwards.",
+    "selectedCount": "{filled}/{total} selected.",
+    "noTeamSelected": "No team has been selected for this matchday.",
+    "saveButton": "Save the team for Matchday {journee}",
+    "chooseButton": "Choose your {total} players ({filled}/{total})",
+    "editButton": "Edit team",
+    "prepareNext": "Prepare matchday {journee}",
+    "backToActive": "Back to matchday {journee}"
+  },
+  "pitch": {
+    "chooseGoalkeeper": "Choose a goalkeeper",
+    "choosePlayer": "Choose a player",
+    "chooseLabel": "Choose",
+    "changePlayer": "Change {name}",
+    "viewMoments": "View key moments for {name}",
+    "viewNextMatch": "View {name}'s next match",
+    "setCaptain": "Make {name} captain",
+    "isCaptain": "{name} is captain",
+    "ratingAria": "Rating: {rating} out of 10",
+    "nextMatchUnavailable": "Next match unavailable.",
+    "vsOpponent": "vs {name}",
+    "noUpcomingMatch": "No upcoming match scheduled.",
+    "matchDetailsUnavailable": "Match details unavailable.",
+    "minutesPlayed": "{minutes}' played",
+    "noHighlights": "No key moments.",
+    "goalsFact": "⚽️ {count, plural, one {# goal} other {# goals}}",
+    "assistsFact": "🎯 {count, plural, one {# assist} other {# assists}}",
+    "redCard": "🟥 Red card",
+    "yellowCard": "🟨 Yellow card",
+    "shotsOnTarget": "🥅 {made}/{total} shots on target",
+    "duelsWon": "💪 {made}/{total} duels won"
+  },
+  "playerPicker": {
+    "removeFromSeat": "Remove this player from the spot",
+    "opponentUnavailable": "Next match unavailable",
+    "noUpcomingMatch": "No upcoming match scheduled",
+    "vsThisWeek": "vs {opponent} this week",
+    "atThisWeek": "@ {opponent} this week",
+    "unknownOpponent": "unknown opponent"
+  },
+  "leaderboard": {
+    "titleWeek": "Leaderboard — Matchday {journee}",
+    "titleMonth": "Leaderboard — {month}",
+    "subtitle": "All AfroLive players, ranked on their Starting XI.",
+    "modeWeek": "Week",
+    "modeMonth": "Month",
+    "emptyWeek": "No one has built a team for this matchday yet.",
+    "emptyMonth": "No one has a ranking for this month yet.",
+    "weeklyPlayers": "{filled}/11 players",
+    "monthlyPlayed": "{count, plural, one {# matchday played} other {# matchdays played}}"
+  },
+  "quiz": {
+    "hub": {
+      "title": "African Football Quiz",
+      "subtitle": "Pick a theme, answer as many questions as you can in 60 seconds.",
+      "intro": "A one-minute sprint, one correct answer per question.",
+      "record": "Best: {best}",
+      "noRecord": "No record yet",
+      "leaderboardLink": "Leaderboard"
+    },
+    "session": {
+      "noQuestions": "No questions available for this theme yet.",
+      "score": "Score: {score}",
+      "resultCaption": "{count, plural, =1 {correct answer} other {correct answers}} in 60 seconds",
+      "newRecord": "New record!",
+      "replay": "Play again",
+      "viewLeaderboard": "View leaderboard",
+      "changeTheme": "Change theme"
+    },
+    "leaderboard": {
+      "title": "Leaderboard — {theme}",
+      "subtitle": "Best scores on this theme, in 60 seconds.",
+      "empty": "No one has played this theme yet."
+    }
+  },
+  "ballonDor": {
+    "title": "African Ballon d'Or Prediction",
+    "subtitle": "Rank your Top 10 African players for the next CAF Ballon d'Or.",
+    "emptyState": "Add up to {size} players and rank them from 1st to {size}th.",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "removePlayer": "Remove",
+    "addPlayerButton": "Add a player ({count}/{size})",
+    "save": "Save my prediction",
+    "saved": "Prediction saved",
+    "pickerTitle": "Add a player"
+  },
+  "gameRules": {
+    "title": "How it works",
+    "p1": "The Starting XI ranking is calculated at the end of each matchday. The rating each player receives from the API (out of 10) is multiplied by 10 to give their score — a player rated 7/10 earns 70 points.",
+    "p2": "Your team's score is the sum of your 11 players' scores. Your captain gets a +0.5 bonus on their rating — a captain rated 7/10 earns 75 points instead of 70. Set your captain by tapping the star next to a player while building your team — a \"C\" badge appears on their photo.",
+    "p3": "If a player doesn't play during the matchday, they automatically receive a rating of 5/10, i.e. 50 points.",
+    "p4": "Once your team is saved, it's locked: tap a player to see their next match (date, time, opponent) instead of changing them. An \"Edit team\" button remains available to unlock it and make changes until kickoff.",
+    "p5": "As soon as a matchday's match ends, the player's rating appears in a small circle at the bottom right of their photo — dark red near 0/10, orange at 5/10, light green at 7/10, dark green near 10/10.",
+    "p6": "Saving your team also activates notifications for your 11 players: starting or not at kickoff, goal, assist, card, and full-time rating. If you're already preparing next matchday's team in advance, its notifications stay pending and activate automatically once that matchday starts — no need to reopen the app."
+  }
+}

@@ -1,5 +1,3 @@
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
 import { BallonDorView } from "@/components/fantasy/ballon-dor-view";
 import { getAfricanPlayers } from "@/lib/data/african-players";
 
@@ -8,14 +6,6 @@ export default function BallonDorPage() {
 
   return (
     <div>
-      <Link
-        href="/fantasy"
-        className="mb-4 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-muted transition-colors hover:text-foreground"
-      >
-        <ChevronLeft size={18} aria-hidden />
-        Retour
-      </Link>
-
       <BallonDorView pool={pool} />
     </div>
   );

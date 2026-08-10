@@ -1,1 +1,61 @@
-{}
+{
+  "account": {
+    "title": "Connecte-toi",
+    "subtitle": "Facultatif — si tu as déjà un compte, on retrouve direct ton profil. Sinon, crée-en un pour le sauvegarder au fil des prochaines étapes, ou continue sans compte : tout reste alors sur cet appareil, comme avant.",
+    "checkEmail": "Vérifie ta boîte mail pour confirmer ton compte. Continue en attendant — tes données te suivront automatiquement dès que tu reviendras connecté.",
+    "continueWithGoogle": "Continuer avec Google",
+    "or": "ou",
+    "signup": "Créer un compte",
+    "signin": "Se connecter",
+    "emailLabel": "Email",
+    "emailPlaceholder": "ton@email.com",
+    "passwordLabel": "Mot de passe",
+    "passwordPlaceholder": "Mot de passe",
+    "accountsUnavailable": "Comptes indisponibles pour l'instant — continue en invité.",
+    "submitSignup": "Créer mon compte",
+    "submitSignin": "Se connecter",
+    "continueWithoutAccount": "Continuer sans compte"
+  },
+  "country": {
+    "title": "Ton pays",
+    "subtitle": "On mettra en avant l'actu, le chat et les couleurs de ta nation — les 54 pays de la CAF sont disponibles, plus une option « Autre » si tu n'es pas Africain.",
+    "search": "Chercher un pays…",
+    "noResults": "Aucun pays trouvé.",
+    "newsTitle": "Reçois les actus de ton pays",
+    "newsSubtitle": "Une notification dès qu'un nouvel article sort.",
+    "enable": "Activer",
+    "enabled": "Activé"
+  },
+  "players": {
+    "title": "Tes 3 joueurs préférés",
+    "subtitle": "Choisis-en exactement trois parmi {count} joueurs africains des 5 grands championnats européens — ils te serviront de base pour ton Starting 6.",
+    "selected": "{count}/3 sélectionnés",
+    "allPlayers": "Tous les joueurs",
+    "ownNationFirst": "Joueurs de ta nation d'abord",
+    "search": "Chercher un joueur, un pays, un club…",
+    "noResults": "Aucun joueur trouvé pour cette recherche.",
+    "positions": {
+      "Goalkeeper": "Gardien",
+      "Defender": "Défenseur",
+      "Midfielder": "Milieu",
+      "Attacker": "Attaquant"
+    }
+  },
+  "username": {
+    "title": "Choisis ton pseudo",
+    "subtitle": "C'est ce que la communauté verra dans le chat et le classement fantasy.",
+    "label": "Pseudo",
+    "placeholder": "Ex. AminaD"
+  },
+  "tiktok": {
+    "title": "Ton compte TikTok",
+    "subtitle": "Facultatif — affiché sur ton profil dans le chat, les autres pourront y accéder en un clic. Tu peux passer cette étape ou le renseigner plus tard depuis Profil.",
+    "label": "Compte TikTok",
+    "placeholder": "@tonpseudo"
+  },
+  "nav": {
+    "previousStep": "Étape précédente",
+    "finish": "Terminer",
+    "continue": "Continuer"
+  }
+}

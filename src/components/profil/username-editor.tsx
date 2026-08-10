@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Check, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { updateOnboardingProfile } from "@/lib/onboarding";
@@ -9,6 +10,7 @@ import { getOrCreateDeviceId } from "@/lib/device-id";
 import { isUsernameTaken } from "@/app/actions/profile-sync";
 
 export function UsernameEditor() {
+  const t = useTranslations("profil.preferences.username");
   const profile = useOnboardingProfile();
   const [value, setValue] = useState(profile?.username ?? "");
   const [status, setStatus] = useState<"idle" | "checking" | "saved">("idle");
@@ -26,7 +28,7 @@ export function UsernameEditor() {
       return;
     }
     if (trimmed.length < 2) {
-      setError("2 caractères minimum.");
+      setError(t("minLength"));
       setValue(profile.username);
       return;
     }
@@ -35,7 +37,7 @@ export function UsernameEditor() {
     const taken = await isUsernameTaken(trimmed, getOrCreateDeviceId());
     if (taken) {
       setStatus("idle");
-      setError("Nom d'utilisateur déjà utilisé.");
+      setError(t("taken"));
       setValue(profile.username);
       return;
     }
@@ -47,10 +49,8 @@ export function UsernameEditor() {
 
   return (
     <section>
-      <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">Nom d&apos;utilisateur</h2>
-      <p className="mb-3 text-sm leading-relaxed text-muted">
-        Affiché dans le chat et sur les classements — unique, personne d&apos;autre ne peut prendre le même.
-      </p>
+      <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">{t("title")}</h2>
+      <p className="mb-3 text-sm leading-relaxed text-muted">{t("subtitle")}</p>
       <div className="relative">
         <input
           value={value}

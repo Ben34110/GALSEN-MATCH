@@ -1,1 +1,30 @@
-{}
+{
+  "greeting": "مرحباً 👋",
+  "profileAlt": "عرض الملف الشخصي",
+  "team": {
+    "header": "فريقك · الجولة {number}",
+    "journee": "الجولة {number}",
+    "manage": "إدارة فريقي",
+    "createTitle": "كوّن فريقك لهذا الأسبوع",
+    "create": "إنشاء",
+    "rank": "المرتبة #{rank}",
+    "waitingRank": "في انتظار الترتيب",
+    "progress": "{count}/11"
+  },
+  "quickLinks": {
+    "matches": "المباريات",
+    "mercato": "الانتقالات",
+    "fantasy": "فانتازي",
+    "news": "الأخبار"
+  },
+  "news": {
+    "title": "الأخبار",
+    "latest": "آخر الأخبار",
+    "general": "عام",
+    "unavailable": "الأخبار غير متوفرة حالياً.",
+    "empty": "لا توجد مقالات في هذه الفئة حالياً.",
+    "byline": "بقلم {author} • {source}",
+    "defaultAuthor": "فريق التحرير",
+    "readArticle": "قراءة المقال"
+  }
+}

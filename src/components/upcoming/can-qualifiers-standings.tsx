@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import type { CanQualifierGroup } from "@/lib/data/can-qualifiers";
 
 // Two honest states, decided here (not in the data layer — see
@@ -16,10 +19,11 @@ export function CanQualifiersStandings({
   error: string | null;
   isProvisional: boolean;
 }) {
+  const t = useTranslations("upcoming.canQualifiers.standings");
   if (groups === null) {
     return (
       <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">
-        Classement indisponible pour l&apos;instant.
+        {t("unavailable")}
         {error && <span className="mt-1 block text-xs text-muted/70">({error})</span>}
       </p>
     );
@@ -27,13 +31,7 @@ export function CanQualifiersStandings({
 
   return (
     <div className="flex flex-col gap-5">
-      {isProvisional && (
-        <p className="text-xs text-muted">
-          Groupes reconstitués à partir du calendrier — les qualifications n&apos;ont pas encore commencé (1ère
-          journée le 23 septembre 2026), le classement officiel remplacera ces groupes dès qu&apos;API-Football le
-          publiera.
-        </p>
-      )}
+      {isProvisional && <p className="text-xs text-muted">{t("provisionalNote")}</p>}
       {groups.map((group) => (
         <div key={group.groupLabel} className="overflow-hidden rounded-2xl border border-border">
           <div className="bg-surface-2 px-3 py-2 text-xs font-bold uppercase tracking-wide text-muted">
@@ -41,7 +39,7 @@ export function CanQualifiersStandings({
           </div>
           <div className="overflow-x-auto">
             <table className="w-full table-fixed text-sm">
-              <caption className="sr-only">Classement du {group.groupLabel} des qualifications CAN 2027.</caption>
+              <caption className="sr-only">{t("caption", { group: group.groupLabel })}</caption>
               <colgroup>
                 <col />
                 <col className="w-10" />
@@ -56,31 +54,31 @@ export function CanQualifiersStandings({
               <thead>
                 <tr className="border-t border-border bg-surface text-[10px] uppercase tracking-wide text-muted">
                   <th scope="col" className="py-2 pl-2 text-left font-semibold">
-                    Équipe
+                    {t("columns.team")}
                   </th>
                   <th scope="col" className="py-2 text-right font-semibold">
-                    Pts
+                    {t("columns.points")}
                   </th>
                   <th scope="col" className="py-2 text-right font-semibold">
-                    J
+                    {t("columns.played")}
                   </th>
                   <th scope="col" className="py-2 text-right font-semibold">
-                    G
+                    {t("columns.won")}
                   </th>
                   <th scope="col" className="py-2 text-right font-semibold">
-                    N
+                    {t("columns.drawn")}
                   </th>
                   <th scope="col" className="py-2 text-right font-semibold">
-                    P
+                    {t("columns.lost")}
                   </th>
                   <th scope="col" className="py-2 text-right font-semibold">
-                    BP
+                    {t("columns.goalsFor")}
                   </th>
                   <th scope="col" className="py-2 text-right font-semibold">
-                    BC
+                    {t("columns.goalsAgainst")}
                   </th>
                   <th scope="col" className="py-2 pr-2 text-right font-semibold">
-                    Diff
+                    {t("columns.diff")}
                   </th>
                 </tr>
               </thead>

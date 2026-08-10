@@ -2,10 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Bell, BellOff, Globe2, Search } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn, normalizeForSearch } from "@/lib/utils";
 import { AFRICAN_NATIONS } from "@/lib/data/african-nations";
 import { getOrCreateDeviceId } from "@/lib/device-id";
-import { ensurePushSubscription, PUSH_FAILURE_MESSAGES } from "@/hooks/use-push-subscription";
+import { ensurePushSubscription, usePushFailureMessage, type PushFailureReason } from "@/hooks/use-push-subscription";
 import {
   deleteNewsNotificationPref,
   getNewsNotificationCountries,
@@ -18,9 +19,6 @@ interface CountryOption {
   logo: string | null;
 }
 
-const GENERAL_OPTION: CountryOption = { id: "general", label: "Actu Afrique (panafricain)", logo: null };
-const ALL_OPTIONS: CountryOption[] = [GENERAL_OPTION, ...AFRICAN_NATIONS.map((n) => ({ id: n.id, label: n.label, logo: n.logo }))];
-
 // "donne la possibilité de mettre par exemple actus du sénégal en
 // notification" — one on/off toggle per country (no sub-options like club/
 // player notifications have), delivered by api/cron/fetch-news/route.ts
@@ -29,21 +27,31 @@ const ALL_OPTIONS: CountryOption[] = [GENERAL_OPTION, ...AFRICAN_NATIONS.map((n)
 // possible entries, only currently-subscribed countries show by default,
 // the full grid appears once the user starts typing.
 export function NewsNotificationsSection() {
+  const t = useTranslations("profil.notifications");
   const [search, setSearch] = useState("");
   const [subscribed, setSubscribed] = useState<Set<string>>(new Set());
   const [pendingId, setPendingId] = useState<string | null>(null);
-  const [failure, setFailure] = useState<{ countryId: string; reason: keyof typeof PUSH_FAILURE_MESSAGES } | null>(null);
+  const [failure, setFailure] = useState<{ countryId: string; reason: PushFailureReason } | null>(null);
+  const failureMessage = usePushFailureMessage(failure?.reason ?? null);
 
   useEffect(() => {
     const deviceId = getOrCreateDeviceId();
     getNewsNotificationCountries(deviceId).then((countries) => setSubscribed(new Set(countries)));
   }, []);
 
+  const allOptions = useMemo<CountryOption[]>(
+    () => [
+      { id: "general", label: t("generalOption"), logo: null },
+      ...AFRICAN_NATIONS.map((n) => ({ id: n.id, label: n.label, logo: n.logo })),
+    ],
+    [t]
+  );
+
   const visibleOptions = useMemo(() => {
     const query = normalizeForSearch(search.trim());
-    if (!query) return ALL_OPTIONS.filter((option) => subscribed.has(option.id));
-    return ALL_OPTIONS.filter((option) => normalizeForSearch(option.label).includes(query));
-  }, [search, subscribed]);
+    if (!query) return allOptions.filter((option) => subscribed.has(option.id));
+    return allOptions.filter((option) => normalizeForSearch(option.label).includes(query));
+  }, [search, subscribed, allOptions]);
 
   async function toggle(countryId: string) {
     if (pendingId) return;
@@ -82,18 +90,16 @@ export function NewsNotificationsSection() {
     <section>
       <h2 className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-muted">
         <Bell size={13} aria-hidden />
-        Notifications actu
+        {t("title")}
       </h2>
-      <p className="mb-3 text-sm leading-relaxed text-muted">
-        Reçois une notification dès qu&apos;un nouvel article sort pour les pays que tu choisis.
-      </p>
+      <p className="mb-3 text-sm leading-relaxed text-muted">{t("subtitle")}</p>
 
       <div className="relative mb-3">
         <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
         <input
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          placeholder="Chercher un pays à suivre…"
+          placeholder={t("search")}
           className={cn(
             "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-base text-foreground",
             "placeholder:text-muted focus:border-accent focus:outline-none"
@@ -134,18 +140,14 @@ export function NewsNotificationsSection() {
           );
         })}
         {visibleOptions.length === 0 && search.trim() && (
-          <p className="col-span-2 py-2 text-center text-xs text-muted">Aucun pays trouvé.</p>
+          <p className="col-span-2 py-2 text-center text-xs text-muted">{t("noResults")}</p>
         )}
         {visibleOptions.length === 0 && !search.trim() && (
-          <p className="col-span-2 py-2 text-center text-xs text-muted">
-            Aucune notification activée pour l&apos;instant — cherche un pays ci-dessus.
-          </p>
+          <p className="col-span-2 py-2 text-center text-xs text-muted">{t("empty")}</p>
         )}
       </div>
 
-      {failure && (
-        <p className="mt-2.5 text-xs leading-relaxed text-accent-3">{PUSH_FAILURE_MESSAGES[failure.reason]}</p>
-      )}
+      {failureMessage && <p className="mt-2.5 text-xs leading-relaxed text-accent-3">{failureMessage}</p>}
     </section>
   );
 }

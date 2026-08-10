@@ -1,1 +1,30 @@
-{}
+{
+  "greeting": "Hi 👋",
+  "profileAlt": "View profile",
+  "team": {
+    "header": "Your team · Matchday {number}",
+    "journee": "Matchday {number}",
+    "manage": "Manage my team",
+    "createTitle": "Build your team of the week",
+    "create": "Create",
+    "rank": "#{rank} in the standings",
+    "waitingRank": "Waiting for the standings",
+    "progress": "{count}/11"
+  },
+  "quickLinks": {
+    "matches": "Matches",
+    "mercato": "Transfers",
+    "fantasy": "Fantasy",
+    "news": "News"
+  },
+  "news": {
+    "title": "News",
+    "latest": "Latest news",
+    "general": "General",
+    "unavailable": "News is unavailable for now.",
+    "empty": "No articles in this category for now.",
+    "byline": "By {author} • {source}",
+    "defaultAuthor": "Editorial team",
+    "readArticle": "Read the article"
+  }
+}

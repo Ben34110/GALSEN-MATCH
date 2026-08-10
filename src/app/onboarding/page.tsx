@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Bell, Check, ChevronLeft, ChevronRight, Mail, Search, UserRound } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn, normalizeForSearch } from "@/lib/utils";
 import { accentThemes } from "@/lib/mock/accent-themes";
 import { getAfricanPlayers, searchAfricanPlayers } from "@/lib/data/african-players";
@@ -14,7 +15,7 @@ import { OTHER_COUNTRY_ID } from "@/lib/mock/accent-themes";
 import { CountryCrest } from "@/components/ui/country-crest";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { getOrCreateDeviceId } from "@/lib/device-id";
-import { ensurePushSubscription, PUSH_FAILURE_MESSAGES } from "@/hooks/use-push-subscription";
+import { ensurePushSubscription, usePushFailureMessage, type PushFailureReason } from "@/hooks/use-push-subscription";
 import { saveNewsNotificationPref } from "@/app/actions/notifications";
 import { TiktokIcon } from "@/components/icons/tiktok-icon";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
@@ -25,13 +26,6 @@ import { FANTASY_LINEUP_STORAGE_KEY } from "@/lib/fantasy-lineup";
 const COUNTRIES = accentThemes.filter((theme) => theme.id !== "default");
 
 const STEPS = ["account", "country", "players", "username", "tiktok"] as const;
-
-const POSITION_LABELS: Record<string, string> = {
-  Goalkeeper: "Gardien",
-  Defender: "Défenseur",
-  Midfielder: "Milieu",
-  Attacker: "Attaquant",
-};
 
 // First-run wizard: sign-in/restore (optional) -> country -> 3 favorite
 // players -> username -> TikTok (optional). Lives outside the (app) route
@@ -44,9 +38,17 @@ const POSITION_LABELS: Record<string, string> = {
 // case (see the mount effect below) since re-authenticating would be
 // redundant.
 export default function OnboardingPage() {
+  const t = useTranslations("onboarding");
   const router = useRouter();
   const profile = useOnboardingProfile();
   const players = useMemo(() => getAfricanPlayers(), []);
+
+  const POSITION_LABELS: Record<string, string> = {
+    Goalkeeper: t("players.positions.Goalkeeper"),
+    Defender: t("players.positions.Defender"),
+    Midfielder: t("players.positions.Midfielder"),
+    Attacker: t("players.positions.Attacker"),
+  };
 
   const [stepIndex, setStepIndex] = useState(0);
   const [countryId, setCountryId] = useState<string | null>(null);
@@ -57,7 +59,8 @@ export default function OnboardingPage() {
   const [countrySearch, setCountrySearch] = useState("");
   const [newsNotifStatus, setNewsNotifStatus] = useState<"idle" | "pending" | "enabled">("idle");
   const [newsNotifCountryId, setNewsNotifCountryId] = useState<string | null>(null);
-  const [newsNotifFailReason, setNewsNotifFailReason] = useState<keyof typeof PUSH_FAILURE_MESSAGES | null>(null);
+  const [newsNotifFailReason, setNewsNotifFailReason] = useState<PushFailureReason | null>(null);
+  const pushFailureMessage = usePushFailureMessage(newsNotifFailReason);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // Defaults to "signin" so opening this screen actually tests an existing
@@ -232,7 +235,7 @@ export default function OnboardingPage() {
   async function submitAccountForm() {
     const supabase = getSupabaseBrowserClient();
     if (!supabase) {
-      setAccountError("Comptes indisponibles pour l'instant — continue en invité.");
+      setAccountError(t("account.accountsUnavailable"));
       return;
     }
     setAccountStatus("pending");
@@ -274,7 +277,7 @@ export default function OnboardingPage() {
   async function continueWithGoogle() {
     const supabase = getSupabaseBrowserClient();
     if (!supabase) {
-      setAccountError("Comptes indisponibles pour l'instant — continue en invité.");
+      setAccountError(t("account.accountsUnavailable"));
       return;
     }
     await supabase.auth.signInWithOAuth({
@@ -314,20 +317,13 @@ export default function OnboardingPage() {
             <span className="grid size-11 place-items-center rounded-full bg-accent/10 text-accent">
               <UserRound size={20} aria-hidden />
             </span>
-            <h1 className="mt-3 font-serif text-2xl font-bold text-foreground">Connecte-toi</h1>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted">
-              Facultatif — si tu as déjà un compte, on retrouve direct ton profil. Sinon, crée-en un pour le
-              sauvegarder au fil des prochaines étapes, ou continue sans compte : tout reste alors sur cet appareil,
-              comme avant.
-            </p>
+            <h1 className="mt-3 font-serif text-2xl font-bold text-foreground">{t("account.title")}</h1>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted">{t("account.subtitle")}</p>
 
             {accountStatus === "check-email" ? (
               <div className="mt-6 flex items-center gap-3 rounded-2xl border border-accent/30 bg-accent/5 p-3.5">
                 <Mail size={18} className="shrink-0 text-accent" aria-hidden />
-                <p className="text-sm leading-snug text-foreground">
-                  Vérifie ta boîte mail pour confirmer ton compte. Continue en attendant — tes données te suivront
-                  automatiquement dès que tu reviendras connecté.
-                </p>
+                <p className="text-sm leading-snug text-foreground">{t("account.checkEmail")}</p>
               </div>
             ) : (
               <>
@@ -336,12 +332,12 @@ export default function OnboardingPage() {
                   onClick={continueWithGoogle}
                   className="mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-border bg-surface text-sm font-semibold text-foreground transition-transform duration-[var(--duration-fast)] active:scale-[0.98]"
                 >
-                  Continuer avec Google
+                  {t("account.continueWithGoogle")}
                 </button>
 
                 <div className="my-4 flex items-center gap-3 text-xs font-semibold uppercase tracking-wide text-muted">
                   <span className="h-px flex-1 bg-border" aria-hidden />
-                  ou
+                  {t("account.or")}
                   <span className="h-px flex-1 bg-border" aria-hidden />
                 </div>
 
@@ -354,7 +350,7 @@ export default function OnboardingPage() {
                       accountMode === "signup" ? "bg-accent text-accent-ink" : "text-muted"
                     )}
                   >
-                    Créer un compte
+                    {t("account.signup")}
                   </button>
                   <button
                     type="button"
@@ -364,19 +360,19 @@ export default function OnboardingPage() {
                       accountMode === "signin" ? "bg-accent text-accent-ink" : "text-muted"
                     )}
                   >
-                    Se connecter
+                    {t("account.signin")}
                   </button>
                 </div>
 
                 <label htmlFor="onboarding-email" className="sr-only">
-                  Email
+                  {t("account.emailLabel")}
                 </label>
                 <input
                   id="onboarding-email"
                   type="email"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
-                  placeholder="ton@email.com"
+                  placeholder={t("account.emailPlaceholder")}
                   autoComplete="email"
                   className={cn(
                     "mt-3 min-h-12 w-full rounded-xl border border-border bg-surface px-4 text-base text-foreground",
@@ -384,14 +380,14 @@ export default function OnboardingPage() {
                   )}
                 />
                 <label htmlFor="onboarding-password" className="sr-only">
-                  Mot de passe
+                  {t("account.passwordLabel")}
                 </label>
                 <input
                   id="onboarding-password"
                   type="password"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
-                  placeholder="Mot de passe"
+                  placeholder={t("account.passwordPlaceholder")}
                   autoComplete={accountMode === "signup" ? "new-password" : "current-password"}
                   className={cn(
                     "mt-2 min-h-12 w-full rounded-xl border border-border bg-surface px-4 text-base text-foreground",
@@ -410,7 +406,7 @@ export default function OnboardingPage() {
                     "transition-transform duration-[var(--duration-fast)] active:scale-[0.98] disabled:opacity-40"
                   )}
                 >
-                  {accountStatus === "pending" ? "…" : accountMode === "signup" ? "Créer mon compte" : "Se connecter"}
+                  {accountStatus === "pending" ? "…" : accountMode === "signup" ? t("account.submitSignup") : t("account.submitSignin")}
                 </button>
               </>
             )}
@@ -419,18 +415,15 @@ export default function OnboardingPage() {
 
         {step === "country" && (
           <>
-            <h1 className="font-serif text-2xl font-bold text-foreground">Ton pays</h1>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted">
-              On mettra en avant l&apos;actu, le chat et les couleurs de ta nation — les 54 pays de la CAF sont
-              disponibles, plus une option « Autre » si tu n&apos;es pas Africain.
-            </p>
+            <h1 className="font-serif text-2xl font-bold text-foreground">{t("country.title")}</h1>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted">{t("country.subtitle")}</p>
 
             <div className="relative mt-4">
               <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
               <input
                 value={countrySearch}
                 onChange={(event) => setCountrySearch(event.target.value)}
-                placeholder="Chercher un pays…"
+                placeholder={t("country.search")}
                 className={cn(
                   "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-base text-foreground",
                   "placeholder:text-muted focus:border-accent focus:outline-none"
@@ -460,7 +453,7 @@ export default function OnboardingPage() {
                 );
               })}
               {visibleCountries.length === 0 && (
-                <p className="col-span-2 py-6 text-center text-sm text-muted">Aucun pays trouvé.</p>
+                <p className="col-span-2 py-6 text-center text-sm text-muted">{t("country.noResults")}</p>
               )}
             </div>
 
@@ -470,8 +463,8 @@ export default function OnboardingPage() {
                   <Bell size={18} aria-hidden />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold text-foreground">Reçois les actus de ton pays</p>
-                  <p className="text-xs leading-snug text-muted">Une notification dès qu&apos;un nouvel article sort.</p>
+                  <p className="text-sm font-semibold text-foreground">{t("country.newsTitle")}</p>
+                  <p className="text-xs leading-snug text-muted">{t("country.newsSubtitle")}</p>
                 </div>
                 <button
                   type="button"
@@ -488,33 +481,28 @@ export default function OnboardingPage() {
                   {newsNotifStatus === "pending"
                     ? "…"
                     : newsNotifStatus === "enabled" && newsNotifCountryId === countryId
-                      ? "Activé"
-                      : "Activer"}
+                      ? t("country.enabled")
+                      : t("country.enable")}
                 </button>
               </div>
             )}
-            {newsNotifFailReason && (
-              <p className="mt-2 text-xs leading-relaxed text-accent-3">{PUSH_FAILURE_MESSAGES[newsNotifFailReason]}</p>
-            )}
+            {pushFailureMessage && <p className="mt-2 text-xs leading-relaxed text-accent-3">{pushFailureMessage}</p>}
           </>
         )}
 
         {step === "players" && (
           <>
-            <h1 className="font-serif text-2xl font-bold text-foreground">Tes 3 joueurs préférés</h1>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted">
-              Choisis-en exactement trois parmi {players.length} joueurs africains des 5 grands championnats
-              européens — ils te serviront de base pour ton Starting 6.
-            </p>
+            <h1 className="font-serif text-2xl font-bold text-foreground">{t("players.title")}</h1>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted">{t("players.subtitle", { count: players.length })}</p>
 
             <div className="mt-4 flex items-center justify-between gap-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-accent">
-                {playerIds.length}/3 sélectionnés
+                {t("players.selected", { count: playerIds.length })}
               </p>
               {!playerSearch && (
                 <p className="flex items-center gap-1 text-[11px] text-muted">
                   {countryId && <CountryCrest countryId={countryId} size={14} className="size-3.5 object-contain" />}
-                  {countryId === OTHER_COUNTRY_ID ? "Tous les joueurs" : "Joueurs de ta nation d'abord"}
+                  {countryId === OTHER_COUNTRY_ID ? t("players.allPlayers") : t("players.ownNationFirst")}
                 </p>
               )}
             </div>
@@ -524,7 +512,7 @@ export default function OnboardingPage() {
               <input
                 value={playerSearch}
                 onChange={(event) => setPlayerSearch(event.target.value)}
-                placeholder="Chercher un joueur, un pays, un club…"
+                placeholder={t("players.search")}
                 className={cn(
                   "min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-base text-foreground",
                   "placeholder:text-muted focus:border-accent focus:outline-none"
@@ -571,7 +559,7 @@ export default function OnboardingPage() {
                 );
               })}
               {visiblePlayers.length === 0 && (
-                <p className="py-6 text-center text-sm text-muted">Aucun joueur trouvé pour cette recherche.</p>
+                <p className="py-6 text-center text-sm text-muted">{t("players.noResults")}</p>
               )}
             </div>
           </>
@@ -579,18 +567,16 @@ export default function OnboardingPage() {
 
         {step === "username" && (
           <>
-            <h1 className="font-serif text-2xl font-bold text-foreground">Choisis ton pseudo</h1>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted">
-              C&apos;est ce que la communauté verra dans le chat et le classement fantasy.
-            </p>
+            <h1 className="font-serif text-2xl font-bold text-foreground">{t("username.title")}</h1>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted">{t("username.subtitle")}</p>
             <label htmlFor="onboarding-username" className="sr-only">
-              Pseudo
+              {t("username.label")}
             </label>
             <input
               id="onboarding-username"
               value={username}
               onChange={(event) => setUsername(event.target.value)}
-              placeholder="Ex. AminaD"
+              placeholder={t("username.placeholder")}
               maxLength={24}
               autoComplete="off"
               autoFocus
@@ -607,19 +593,16 @@ export default function OnboardingPage() {
             <span className="grid size-11 place-items-center rounded-full bg-accent/10 text-foreground">
               <TiktokIcon size={20} />
             </span>
-            <h1 className="mt-3 font-serif text-2xl font-bold text-foreground">Ton compte TikTok</h1>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted">
-              Facultatif — affiché sur ton profil dans le chat, les autres pourront y accéder en un clic. Tu peux
-              passer cette étape ou le renseigner plus tard depuis Profil.
-            </p>
+            <h1 className="mt-3 font-serif text-2xl font-bold text-foreground">{t("tiktok.title")}</h1>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted">{t("tiktok.subtitle")}</p>
             <label htmlFor="onboarding-tiktok" className="sr-only">
-              Compte TikTok
+              {t("tiktok.label")}
             </label>
             <input
               id="onboarding-tiktok"
               value={tiktokHandle}
               onChange={(event) => setTiktokHandle(event.target.value)}
-              placeholder="@tonpseudo"
+              placeholder={t("tiktok.placeholder")}
               autoComplete="off"
               autoFocus
               className={cn(
@@ -636,7 +619,7 @@ export default function OnboardingPage() {
           <button
             type="button"
             onClick={() => setStepIndex((i) => Math.max(0, i - 1))}
-            aria-label="Étape précédente"
+            aria-label={t("nav.previousStep")}
             className="grid size-14 shrink-0 place-items-center rounded-full border border-border bg-surface text-foreground transition-transform duration-[var(--duration-fast)] active:scale-95"
           >
             <ChevronLeft size={20} aria-hidden />
@@ -663,7 +646,11 @@ export default function OnboardingPage() {
                 : "bg-foreground text-background"
           )}
         >
-          {stepIndex === STEPS.length - 1 ? "Terminer" : step === "account" ? "Continuer sans compte" : "Continuer"}
+          {stepIndex === STEPS.length - 1
+            ? t("nav.finish")
+            : step === "account"
+              ? t("account.continueWithoutAccount")
+              : t("nav.continue")}
           <ChevronRight size={18} aria-hidden />
         </button>
       </div>

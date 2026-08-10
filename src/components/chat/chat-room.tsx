@@ -3,12 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { Send } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { getRecentChatMessages, getChatMessagesSince, sendChatMessage } from "@/app/actions/chat";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { COUNTRY_CODE_BY_THEME_ID } from "@/lib/onboarding";
 import { CountryCrest } from "@/components/ui/country-crest";
 import { ProfileAvatar } from "@/components/ui/profile-avatar";
+import { SectionHeader } from "@/components/ui/section-header";
 import { ChatProfileSheet } from "@/components/chat/chat-profile-sheet";
 import { useCurrentIdentity, isCurrentIdentity } from "@/hooks/use-current-identity";
 import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
@@ -24,6 +26,7 @@ import type { AfricanPlayer, ChatMessage, ChatRoom as ChatRoomType } from "@/typ
 const POLL_INTERVAL_MS = 3000;
 
 export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerPool: AfricanPlayer[] }) {
+  const t = useTranslations("chat");
   const profile = useOnboardingProfile();
   const countryCode = profile ? COUNTRY_CODE_BY_THEME_ID[profile.countryId] : undefined;
 
@@ -104,8 +107,13 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
     }
   }
 
+  const activeRoomName = activeRoom?.name;
+
   return (
     <div className="flex min-h-0 flex-1 flex-col">
+      <div className="shrink-0">
+        <SectionHeader eyebrow={t("header.eyebrow")} title={t("header.title")} subtitle={t("header.subtitle")} />
+      </div>
       <div className="-mx-4 mb-3 flex shrink-0 gap-2 overflow-x-auto px-4 pb-1 scrollbar-none sm:mx-0 sm:px-0">
         {orderedRooms.map((room) => (
           <button
@@ -133,11 +141,13 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
       <div
         role="log"
         aria-live="polite"
-        aria-label={`Messages de ${activeRoom?.name ?? "la conversation"}`}
+        aria-label={t("room.messagesAriaLabel", { roomName: activeRoomName ?? t("room.fallbackConversation") })}
         className="flex min-h-0 flex-1 flex-col justify-end gap-2.5 overflow-y-auto rounded-2xl border border-border bg-surface p-3"
       >
         {messages.length === 0 && (
-          <p className="py-8 text-center text-sm text-muted">Aucun message pour l&apos;instant dans {activeRoom?.name}.</p>
+          <p className="py-8 text-center text-sm text-muted">
+            {t("room.emptyState", { roomName: activeRoomName ?? "" })}
+          </p>
         )}
         {messages.map((message) => {
           const isOwn = isCurrentIdentity(message, identity);
@@ -176,7 +186,7 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
 
       {sendError && (
         <p className="mt-2 text-center text-xs font-semibold text-accent-3">
-          Le message n&apos;a pas pu être envoyé. Réessaie.
+          {t("room.sendError")}
         </p>
       )}
 
@@ -188,7 +198,7 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
         className="mt-3 flex shrink-0 items-center gap-2"
       >
         <label htmlFor="chat-draft" className="sr-only">
-          Message pour {activeRoom?.name ?? "la conversation"}
+          {t("room.messageLabel", { roomName: activeRoomName ?? t("room.fallbackConversation") })}
         </label>
         <input
           id="chat-draft"
@@ -197,14 +207,14 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
             setDraft(event.target.value);
             setSendError(false);
           }}
-          placeholder={`Écrire dans ${activeRoom?.name ?? ""}…`}
+          placeholder={t("room.placeholder", { roomName: activeRoomName ?? "" })}
           maxLength={500}
           autoComplete="off"
           className="min-h-11 flex-1 rounded-full border border-border bg-surface px-4 py-2.5 text-base text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
         />
         <button
           type="submit"
-          aria-label="Envoyer"
+          aria-label={t("room.send")}
           className={cn(
             "grid size-11 shrink-0 place-items-center rounded-full bg-accent text-accent-ink",
             "transition-[transform,opacity] duration-[var(--duration-fast)] active:scale-90 disabled:opacity-40"

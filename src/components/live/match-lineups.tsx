@@ -1,32 +1,30 @@
+"use client";
+
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import type { MatchLineup, MatchLineupPlayer } from "@/types";
 
 // API-Football's own position codes on a lineup entry (distinct from this
 // app's internal G/D/M/A PlayerPosition used by Fantasy — this one uses "F"
 // for forward, and isn't always present for every player).
-const POSITION_LABELS: Record<string, string> = {
-  G: "Gardien",
-  D: "Défenseurs",
-  M: "Milieux",
-  F: "Attaquants",
-};
 const POSITION_ORDER = ["G", "D", "M", "F"];
 
-function groupByPosition(players: MatchLineupPlayer[]) {
+function groupByPosition(players: MatchLineupPlayer[], positionLabels: Record<string, string>) {
   const groups = new Map<string, MatchLineupPlayer[]>();
   for (const player of players) {
-    const key = player.position && POSITION_LABELS[player.position] ? player.position : "?";
+    const key = player.position && positionLabels[player.position] ? player.position : "?";
     groups.set(key, [...(groups.get(key) ?? []), player]);
   }
   return POSITION_ORDER.filter((code) => groups.has(code)).map((code) => ({
-    label: POSITION_LABELS[code],
+    code,
+    label: positionLabels[code],
     players: groups.get(code) ?? [],
   }));
 }
 
-function TeamLineup({ lineup }: { lineup: MatchLineup }) {
-  const groups = groupByPosition(lineup.startXI);
+function TeamLineup({ lineup, positionLabels, t }: { lineup: MatchLineup; positionLabels: Record<string, string>; t: ReturnType<typeof useTranslations> }) {
+  const groups = groupByPosition(lineup.startXI, positionLabels);
 
   return (
     <div className="flex-1">
@@ -48,7 +46,7 @@ function TeamLineup({ lineup }: { lineup: MatchLineup }) {
 
       <div className="flex flex-col gap-3">
         {groups.map((group) => (
-          <div key={group.label}>
+          <div key={group.code}>
             <p className="mb-1 text-[10px] font-bold uppercase tracking-wide text-muted">{group.label}</p>
             <ul className="flex flex-col gap-1">
               {group.players.map((player) => (
@@ -67,7 +65,7 @@ function TeamLineup({ lineup }: { lineup: MatchLineup }) {
       {lineup.substitutes.length > 0 && (
         <details className="mt-3">
           <summary className="cursor-pointer text-xs font-semibold text-muted transition-colors hover:text-foreground">
-            Remplaçants ({lineup.substitutes.length})
+            {t("lineups.substitutes", { count: lineup.substitutes.length })}
           </summary>
           <ul className="mt-1.5 flex flex-col gap-1">
             {lineup.substitutes.map((player) => (
@@ -80,26 +78,34 @@ function TeamLineup({ lineup }: { lineup: MatchLineup }) {
         </details>
       )}
 
-      {lineup.coachName && <p className="mt-3 text-[11px] text-muted">Entraîneur : {lineup.coachName}</p>}
+      {lineup.coachName && <p className="mt-3 text-[11px] text-muted">{t("lineups.coach", { name: lineup.coachName })}</p>}
     </div>
   );
 }
 
 export function MatchLineups({ lineups }: { lineups: MatchLineup[] }) {
+  const t = useTranslations("live");
+  const positionLabels: Record<string, string> = {
+    G: t("lineups.goalkeeper"),
+    D: t("lineups.defenders"),
+    M: t("lineups.midfielders"),
+    F: t("lineups.forwards"),
+  };
+
   if (lineups.length === 0) {
     return (
       <Card>
-        <p className="py-4 text-center text-sm text-muted">Compositions pas encore annoncées.</p>
+        <p className="py-4 text-center text-sm text-muted">{t("lineups.notAnnounced")}</p>
       </Card>
     );
   }
 
   return (
     <Card>
-      <h2 className="mb-4 text-xs font-bold uppercase tracking-wide text-muted">Compositions</h2>
+      <h2 className="mb-4 text-xs font-bold uppercase tracking-wide text-muted">{t("lineups.title")}</h2>
       <div className="flex flex-col gap-6 sm:flex-row sm:gap-4">
         {lineups.map((lineup) => (
-          <TeamLineup key={lineup.team.id} lineup={lineup} />
+          <TeamLineup key={lineup.team.id} lineup={lineup} positionLabels={positionLabels} t={t} />
         ))}
       </div>
     </Card>

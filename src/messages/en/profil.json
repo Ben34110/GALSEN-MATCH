@@ -1,1 +1,103 @@
-{}
+{
+  "page": {
+    "eyebrow": "Profile",
+    "title": "Your account",
+    "language": "Language"
+  },
+  "identityCard": {
+    "guestMode": "Guest mode — no account linked on this device",
+    "createAccount": "Create an account",
+    "connectedWith": "Signed in with {label}"
+  },
+  "badgeDetail": {
+    "unlocked": "Unlocked",
+    "locked": "Locked",
+    "close": "Close"
+  },
+  "badges": {
+    "title": "Badges"
+  },
+  "createAccount": {
+    "title": "Create an account",
+    "close": "Close",
+    "checkEmail": "Check your inbox to confirm your account — your current progress (squad, favorites, chat…) will link to it automatically once you're signed in.",
+    "intro": "Your progress on this device (Fantasy squad, favorites, messages…) stays linked automatically once the account is created.",
+    "continueWithGoogle": "Continue with Google",
+    "or": "or",
+    "signup": "Create an account",
+    "signin": "Sign in",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@email.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Password",
+    "accountsUnavailable": "Accounts aren't available right now.",
+    "submitSignup": "Create my account",
+    "submitSignin": "Sign in"
+  },
+  "logout": {
+    "confirm": "Sign out? Your profile, favorites, and Fantasy squad will be cleared from this device.",
+    "button": "Sign out"
+  },
+  "notifications": {
+    "title": "News notifications",
+    "subtitle": "Get notified as soon as a new article comes out for the countries you choose.",
+    "search": "Search a country to follow…",
+    "generalOption": "Africa News (pan-African)",
+    "noResults": "No country found.",
+    "empty": "No notifications enabled yet — search for a country above."
+  },
+  "preferences": {
+    "username": {
+      "title": "Username",
+      "subtitle": "Shown in chat and on leaderboards — unique, no one else can take the same one.",
+      "minLength": "2 characters minimum.",
+      "taken": "Username already taken."
+    },
+    "country": {
+      "title": "Favorite country",
+      "subtitle": "Tailors the app's colors and chat order to your nation — all 54 CAF countries are available, plus an \"Other\" option if you're not African.",
+      "search": "Change country…",
+      "noResults": "No country found."
+    },
+    "players": {
+      "title": "Favorite players",
+      "manageNotifications": "Manage notifications for {name}",
+      "remove": "Remove {name}",
+      "none": "No player selected.",
+      "add": "Add a player…",
+      "noResults": "No player found."
+    },
+    "club": {
+      "title": "Favorite club",
+      "manageNotifications": "Manage notifications for {name}",
+      "remove": "Remove {name}",
+      "search": "Search for a club (Real Madrid, Bayern…)",
+      "noResults": "No club found."
+    },
+    "tiktok": {
+      "title": "TikTok",
+      "subtitle": "Shown on your profile in chat — others can reach it in one tap.",
+      "placeholder": "@yourhandle"
+    }
+  },
+  "notificationPanel": {
+    "titleForPlayer": "Notifications — {name}",
+    "titleForClub": "Notifications — {name}",
+    "cancel": "Cancel",
+    "activate": "Enable",
+    "save": "Save",
+    "club": {
+      "lineup": "Lineup announced",
+      "goals": "Every goal",
+      "kickoff": "Kickoff",
+      "fulltime": "Full time"
+    },
+    "player": {
+      "lineup": "Starting at kickoff",
+      "goal": "Goal scored",
+      "assist": "Assist",
+      "card": "Card",
+      "rating": "End-of-match rating"
+    }
+  }
+}

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Check, ListOrdered, RotateCcw, X, XCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { useCountdown } from "@/hooks/use-countdown";
 import { getQuizQuestions, pickNextQuestion, QUIZ_THEMES } from "@/lib/data/quiz-questions";
@@ -66,6 +67,7 @@ function pickAndShuffle(pool: QuizQuestion[], recentIds: string[]): ShuffledQues
 // simpler and less error-prone than manually clearing every piece of
 // local state by hand.
 export function QuizSessionView({ theme, onClose, onRestart }: QuizSessionViewProps) {
+  const t = useTranslations("fantasy");
   // theme never actually changes within one mounted instance (the parent
   // remounts via a fresh `key` instead — see the comment above), but a
   // plain useMemo is still simpler and purer than stashing a ref just to
@@ -124,7 +126,7 @@ export function QuizSessionView({ theme, onClose, onRestart }: QuizSessionViewPr
     <button
       type="button"
       onClick={onClose}
-      aria-label="Fermer"
+      aria-label={t("common.close")}
       className="grid size-9 shrink-0 place-items-center rounded-full text-muted transition-colors hover:text-foreground"
     >
       <X size={18} aria-hidden />
@@ -139,13 +141,13 @@ export function QuizSessionView({ theme, onClose, onRestart }: QuizSessionViewPr
           {closeButton}
         </div>
         <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
-          <p className="text-sm text-muted">Aucune question disponible pour ce thème pour l&apos;instant.</p>
+          <p className="text-sm text-muted">{t("quiz.session.noQuestions")}</p>
           <button
             type="button"
             onClick={onClose}
             className="min-h-11 rounded-full bg-accent px-5 text-sm font-bold text-accent-ink"
           >
-            Retour
+            {t("common.back")}
           </button>
         </div>
       </div>
@@ -163,7 +165,7 @@ export function QuizSessionView({ theme, onClose, onRestart }: QuizSessionViewPr
         <div className="flex flex-1 flex-col px-4 py-6">
           <div className="mb-6 flex items-center justify-between">
             <span className="text-2xl font-extrabold tabular-nums text-accent">{countdown.seconds}s</span>
-            <span className="text-sm font-semibold text-muted">Score : {score}</span>
+            <span className="text-sm font-semibold text-muted">{t("quiz.session.score", { score })}</span>
           </div>
 
           <p className="mb-6 font-serif text-xl font-bold leading-snug text-foreground">{current.question}</p>
@@ -204,10 +206,8 @@ export function QuizSessionView({ theme, onClose, onRestart }: QuizSessionViewPr
       {finished && (
         <div className="flex flex-1 flex-col items-center justify-center gap-2 px-6 text-center">
           <span className="text-6xl font-extrabold tabular-nums text-accent">{score}</span>
-          <p className="text-sm text-muted">
-            bonne{score !== 1 ? "s" : ""} réponse{score !== 1 ? "s" : ""} en 60 secondes
-          </p>
-          {improved && <p className="mt-1 text-xs font-bold uppercase tracking-wide text-accent">Nouveau record !</p>}
+          <p className="text-sm text-muted">{t("quiz.session.resultCaption", { count: score })}</p>
+          {improved && <p className="mt-1 text-xs font-bold uppercase tracking-wide text-accent">{t("quiz.session.newRecord")}</p>}
 
           <div className="mt-6 flex w-full flex-col gap-2.5">
             <button
@@ -216,21 +216,21 @@ export function QuizSessionView({ theme, onClose, onRestart }: QuizSessionViewPr
               className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-accent px-5 text-base font-bold text-accent-ink transition-transform duration-[var(--duration-fast)] active:scale-[0.98]"
             >
               <RotateCcw size={18} aria-hidden />
-              Rejouer
+              {t("quiz.session.replay")}
             </button>
             <Link
               href={`/fantasy/quiz/leaderboard?theme=${theme}`}
               className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-border bg-surface px-5 text-sm font-semibold text-foreground transition-transform duration-[var(--duration-fast)] active:scale-[0.98]"
             >
               <ListOrdered size={16} aria-hidden />
-              Voir le classement
+              {t("quiz.session.viewLeaderboard")}
             </Link>
             <button
               type="button"
               onClick={onClose}
               className="flex min-h-12 w-full items-center justify-center rounded-full text-sm font-semibold text-muted transition-colors hover:text-foreground"
             >
-              Changer de thème
+              {t("quiz.session.changeTheme")}
             </button>
           </div>
         </div>

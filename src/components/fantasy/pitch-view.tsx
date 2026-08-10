@@ -3,6 +3,7 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import { Plus, Star } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn, formatKickoff } from "@/lib/utils";
 import { fetchTeamUpcomingMatches, fetchPlayerJourneeRating } from "@/app/(app)/live/actions";
 import { getNationalityFlag } from "@/lib/data/nationality-flags";
@@ -28,17 +29,18 @@ type NextMatchState = Record<string, Match[] | "error">;
 type RatingState = Record<string, PlayerJourneeRating>;
 
 function EmptySeatToken({ seat, onTap }: { seat: SeatDef; onTap: () => void }) {
+  const t = useTranslations("fantasy");
   return (
     <button
       type="button"
       onClick={onTap}
-      aria-label={`Choisir un ${seat.position === "G" ? "gardien" : "joueur"}`}
+      aria-label={seat.position === "G" ? t("pitch.chooseGoalkeeper") : t("pitch.choosePlayer")}
       className="flex flex-col items-center gap-1 active:scale-95 transition-transform duration-[var(--duration-fast)]"
     >
       <span className="grid size-12 place-items-center rounded-full border-2 border-dashed border-white/70 bg-black/15 text-white sm:size-14">
         <Plus size={20} aria-hidden />
       </span>
-      <span className="rounded-full bg-black/55 px-1.5 py-0.5 text-[10px] font-semibold text-white">Choisir</span>
+      <span className="rounded-full bg-black/55 px-1.5 py-0.5 text-[10px] font-semibold text-white">{t("pitch.chooseLabel")}</span>
     </button>
   );
 }
@@ -60,6 +62,7 @@ function FilledSeatToken({
   onSetCaptain: () => void;
   rating: PlayerJourneeRating | undefined;
 }) {
+  const t = useTranslations("fantasy");
   return (
     <div className="relative flex flex-col items-center gap-1">
       <button
@@ -68,10 +71,10 @@ function FilledSeatToken({
         aria-expanded={isOpen}
         aria-label={
           editable
-            ? `Changer ${player.name}`
+            ? t("pitch.changePlayer", { name: player.name })
             : rating?.status === "rated"
-              ? `Voir les faits marquants de ${player.name}`
-              : `Voir le prochain match de ${player.name}`
+              ? t("pitch.viewMoments", { name: player.name })
+              : t("pitch.viewNextMatch", { name: player.name })
         }
         className="flex flex-col items-center gap-0.5 active:scale-95 transition-transform duration-[var(--duration-fast)]"
       >
@@ -103,7 +106,7 @@ function FilledSeatToken({
             <span
               className="absolute -right-1 -bottom-1 grid size-5 place-items-center rounded-full border-2 border-white text-[9px] font-extrabold text-white shadow-sm"
               style={{ backgroundColor: ratingColor(rating.rating) }}
-              aria-label={`Note : ${rating.rating.toFixed(1)} sur 10`}
+              aria-label={t("pitch.ratingAria", { rating: rating.rating.toFixed(1) })}
             >
               {rating.rating.toFixed(1).replace(".", ",")}
             </span>
@@ -122,7 +125,7 @@ function FilledSeatToken({
             onSetCaptain();
           }}
           aria-pressed={isCaptain}
-          aria-label={isCaptain ? `${player.name} est capitaine` : `Désigner ${player.name} capitaine`}
+          aria-label={isCaptain ? t("pitch.isCaptain", { name: player.name }) : t("pitch.setCaptain", { name: player.name })}
           className={cn(
             "absolute right-0 top-3.5 grid size-5 place-items-center rounded-full shadow-sm transition-colors active:scale-90",
             isCaptain ? "bg-accent-2 text-foreground" : "bg-black/40 text-white hover:bg-black/55"
@@ -151,6 +154,7 @@ function NextMatchTooltip({
   player: AfricanPlayer;
   nextMatch: NextMatchState[string] | undefined;
 }) {
+  const t = useTranslations("fantasy");
   const match = Array.isArray(nextMatch) ? nextMatch[0] : undefined;
   const isHome = match ? match.homeTeamId === String(player.teamId) : false;
   const opponent = match ? (isHome ? match.awayTeam : match.homeTeam) : undefined;
@@ -161,8 +165,8 @@ function NextMatchTooltip({
       className="absolute z-30 w-44 -translate-x-1/2 rounded-xl border border-border bg-surface p-2.5 text-left shadow-lg"
       style={tooltipPositionStyle(seat)}
     >
-      {nextMatch === undefined && <p className="text-xs text-muted">Chargement…</p>}
-      {nextMatch === "error" && <p className="text-xs text-muted">Prochain match indisponible.</p>}
+      {nextMatch === undefined && <p className="text-xs text-muted">{t("common.loading")}</p>}
+      {nextMatch === "error" && <p className="text-xs text-muted">{t("pitch.nextMatchUnavailable")}</p>}
       {Array.isArray(nextMatch) &&
         (match && opponent ? (
           <div className="flex items-center gap-2">
@@ -170,12 +174,12 @@ function NextMatchTooltip({
               <Image src={opponent.logo} alt="" width={24} height={24} className="size-6 shrink-0 object-contain" unoptimized />
             )}
             <div className="min-w-0">
-              <p className="truncate text-xs font-semibold text-foreground">vs {opponent.name}</p>
+              <p className="truncate text-xs font-semibold text-foreground">{t("pitch.vsOpponent", { name: opponent.name })}</p>
               <p className="text-[10px] text-muted">{formatKickoff(match.kickoffAt)}</p>
             </div>
           </div>
         ) : (
-          <p className="text-xs text-muted">Aucun match à venir programmé.</p>
+          <p className="text-xs text-muted">{t("pitch.noUpcomingMatch")}</p>
         ))}
     </div>
   );
@@ -187,6 +191,7 @@ function NextMatchTooltip({
 // cards, shots on target as the closest proxy API-Football offers to xG on
 // this plan — see fantasy-ratings.ts).
 function MatchMomentsTooltip({ seat, rating }: { seat: SeatDef; rating: PlayerJourneeRating }) {
+  const t = useTranslations("fantasy");
   const moments = rating.moments;
   if (!moments) {
     return (
@@ -195,7 +200,7 @@ function MatchMomentsTooltip({ seat, rating }: { seat: SeatDef; rating: PlayerJo
         className="absolute z-30 w-48 -translate-x-1/2 rounded-xl border border-border bg-surface p-2.5 text-left shadow-lg"
         style={tooltipPositionStyle(seat)}
       >
-        <p className="text-xs text-muted">Détails du match indisponibles.</p>
+        <p className="text-xs text-muted">{t("pitch.matchDetailsUnavailable")}</p>
       </div>
     );
   }
@@ -208,15 +213,15 @@ function MatchMomentsTooltip({ seat, rating }: { seat: SeatDef; rating: PlayerJo
       : null;
 
   const facts: string[] = [];
-  if (moments.goals > 0) facts.push(`⚽️ ${moments.goals} but${moments.goals > 1 ? "s" : ""}`);
-  if (moments.assists > 0) facts.push(`🎯 ${moments.assists} passe${moments.assists > 1 ? "s" : ""} déc.`);
-  if (moments.redCards > 0) facts.push("🟥 Carton rouge");
-  else if (moments.yellowCards > 0) facts.push("🟨 Carton jaune");
+  if (moments.goals > 0) facts.push(t("pitch.goalsFact", { count: moments.goals }));
+  if (moments.assists > 0) facts.push(t("pitch.assistsFact", { count: moments.assists }));
+  if (moments.redCards > 0) facts.push(t("pitch.redCard"));
+  else if (moments.yellowCards > 0) facts.push(t("pitch.yellowCard"));
   if (moments.shotsOnTarget !== null && moments.shotsTotal !== null) {
-    facts.push(`🥅 ${moments.shotsOnTarget}/${moments.shotsTotal} tirs cadrés`);
+    facts.push(t("pitch.shotsOnTarget", { made: moments.shotsOnTarget, total: moments.shotsTotal }));
   }
   if (moments.duelsWon !== null && moments.duelsTotal !== null) {
-    facts.push(`💪 ${moments.duelsWon}/${moments.duelsTotal} duels gagnés`);
+    facts.push(t("pitch.duelsWon", { made: moments.duelsWon, total: moments.duelsTotal }));
   }
 
   return (
@@ -228,11 +233,13 @@ function MatchMomentsTooltip({ seat, rating }: { seat: SeatDef; rating: PlayerJo
       <div className="mb-1.5 flex items-center gap-2">
         <Image src={moments.opponentLogo} alt="" width={20} height={20} className="size-5 shrink-0 object-contain" unoptimized />
         <div className="min-w-0">
-          <p className="truncate text-xs font-semibold text-foreground">vs {moments.opponentName}</p>
+          <p className="truncate text-xs font-semibold text-foreground">{t("pitch.vsOpponent", { name: moments.opponentName })}</p>
           {scoreLabel && <p className="text-[10px] text-muted">{scoreLabel}</p>}
         </div>
       </div>
-      {moments.minutes !== null && <p className="mb-1 text-[10px] text-muted">{moments.minutes}&apos; jouées</p>}
+      {moments.minutes !== null && (
+        <p className="mb-1 text-[10px] text-muted">{t("pitch.minutesPlayed", { minutes: moments.minutes })}</p>
+      )}
       {facts.length > 0 ? (
         <ul className="flex flex-col gap-0.5">
           {facts.map((fact) => (
@@ -242,7 +249,7 @@ function MatchMomentsTooltip({ seat, rating }: { seat: SeatDef; rating: PlayerJo
           ))}
         </ul>
       ) : (
-        <p className="text-[11px] text-muted">Aucun fait marquant.</p>
+        <p className="text-[11px] text-muted">{t("pitch.noHighlights")}</p>
       )}
     </div>
   );

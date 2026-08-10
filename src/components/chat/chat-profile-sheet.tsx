@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { getNationalityFlag } from "@/lib/data/nationality-flags";
 import { getChatProfile, type ChatProfileBundle } from "@/app/actions/chat-profile";
 import { CountryCrest } from "@/components/ui/country-crest";
@@ -44,6 +45,7 @@ function PlayerRow({ player, rank }: { player: AfricanPlayer; rank?: number }) {
 // client-side, against the pool already loaded by the chat page — same
 // convention as ballon-dor-view.tsx/preferences-editor.tsx.
 export function ChatProfileSheet({ deviceId, userId, playerPool, onClose }: ChatProfileSheetProps) {
+  const t = useTranslations("chat.profileSheet");
   const [bundle, setBundle] = useState<ChatProfileBundle | null | "loading">("loading");
 
   useEffect(() => {
@@ -75,11 +77,11 @@ export function ChatProfileSheet({ deviceId, userId, playerPool, onClose }: Chat
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-background">
       <div className="flex items-center justify-between border-b border-border px-4 py-[calc(0.75rem+var(--safe-top))]">
-        <h2 className="font-serif text-lg font-bold text-foreground">Profil</h2>
+        <h2 className="font-serif text-lg font-bold text-foreground">{t("title")}</h2>
         <button
           type="button"
           onClick={onClose}
-          aria-label="Fermer"
+          aria-label={t("close")}
           className="grid size-9 shrink-0 place-items-center rounded-full text-muted transition-colors hover:text-foreground"
         >
           <X size={18} aria-hidden />
@@ -87,9 +89,9 @@ export function ChatProfileSheet({ deviceId, userId, playerPool, onClose }: Chat
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-6">
-        {bundle === "loading" && <p className="py-10 text-center text-sm text-muted">Chargement…</p>}
+        {bundle === "loading" && <p className="py-10 text-center text-sm text-muted">{t("loading")}</p>}
 
-        {bundle === null && <p className="py-10 text-center text-sm text-muted">Profil indisponible pour l&apos;instant.</p>}
+        {bundle === null && <p className="py-10 text-center text-sm text-muted">{t("unavailable")}</p>}
 
         {bundle && bundle !== "loading" && (
           <div className="flex flex-col gap-6">
@@ -109,7 +111,7 @@ export function ChatProfileSheet({ deviceId, userId, playerPool, onClose }: Chat
                   href={`https://www.tiktok.com/@${bundle.tiktokHandle}`}
                   target="_blank"
                   rel="noreferrer noopener"
-                  aria-label={`Voir @${bundle.tiktokHandle} sur TikTok`}
+                  aria-label={t("tiktokAriaLabel", { handle: bundle.tiktokHandle })}
                   className="ml-auto grid size-10 shrink-0 place-items-center rounded-full bg-surface-2 text-foreground transition-transform active:scale-90"
                 >
                   <TiktokIcon size={18} />
@@ -118,9 +120,9 @@ export function ChatProfileSheet({ deviceId, userId, playerPool, onClose }: Chat
             </div>
 
             <div>
-              <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">Joueurs préférés</h3>
+              <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">{t("favoritePlayers")}</h3>
               {favoritePlayers.length === 0 ? (
-                <p className="text-sm text-muted">Aucun joueur préféré renseigné.</p>
+                <p className="text-sm text-muted">{t("noFavoritePlayers")}</p>
               ) : (
                 <div className="flex flex-col gap-2">
                   {favoritePlayers.map((player) => (
@@ -131,9 +133,9 @@ export function ChatProfileSheet({ deviceId, userId, playerPool, onClose }: Chat
             </div>
 
             <div>
-              <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">Top 3 Ballon d&apos;Or Africain</h3>
+              <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">{t("ballonDor")}</h3>
               {ballonDorPlayers.length === 0 ? (
-                <p className="text-sm text-muted">Aucun pronostic renseigné.</p>
+                <p className="text-sm text-muted">{t("noBallonDor")}</p>
               ) : (
                 <div className="flex flex-col gap-2">
                   {ballonDorPlayers.map((player, index) => (

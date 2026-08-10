@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Check, ChevronDown, ChevronUp, Plus, Trophy, X } from "lucide-react";
+import Link from "next/link";
+import { Check, ChevronDown, ChevronLeft, ChevronUp, Plus, Trophy, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { SectionHeader } from "@/components/ui/section-header";
 import { cn } from "@/lib/utils";
@@ -20,6 +22,7 @@ interface BallonDorViewProps {
 }
 
 export function BallonDorView({ pool }: BallonDorViewProps) {
+  const t = useTranslations("fantasy");
   const ranking = useBallonDorRanking();
   const profile = useOnboardingProfile();
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -65,20 +68,22 @@ export function BallonDorView({ pool }: BallonDorViewProps) {
 
   return (
     <div>
-      <SectionHeader
-        eyebrow="Fantasy"
-        title="Pronostic Ballon d'Or Africain"
-        subtitle="Classe ton Top 10 des joueurs africains pour le prochain Ballon d'Or CAF."
-      />
+      <Link
+        href="/fantasy"
+        className="mb-4 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-muted transition-colors hover:text-foreground"
+      >
+        <ChevronLeft size={18} aria-hidden />
+        {t("common.back")}
+      </Link>
+
+      <SectionHeader eyebrow={t("common.eyebrow")} title={t("ballonDor.title")} subtitle={t("ballonDor.subtitle")} />
 
       {rankedPlayers.length === 0 ? (
         <Card className="mb-4 flex items-center gap-3">
           <span className="grid size-11 shrink-0 place-items-center rounded-full bg-accent-2/15 text-accent-2">
             <Trophy size={20} aria-hidden />
           </span>
-          <p className="text-sm leading-snug text-muted">
-            Ajoute jusqu&apos;à {BALLON_DOR_SIZE} joueurs et classe-les du 1er au {BALLON_DOR_SIZE}e.
-          </p>
+          <p className="text-sm leading-snug text-muted">{t("ballonDor.emptyState", { size: BALLON_DOR_SIZE })}</p>
         </Card>
       ) : (
         <div className="mb-4 flex flex-col gap-2">
@@ -108,7 +113,7 @@ export function BallonDorView({ pool }: BallonDorViewProps) {
                   type="button"
                   onClick={() => move(index, -1)}
                   disabled={index === 0}
-                  aria-label="Monter"
+                  aria-label={t("ballonDor.moveUp")}
                   className="grid size-8 place-items-center rounded-full text-muted transition-colors disabled:opacity-30 hover:text-foreground"
                 >
                   <ChevronUp size={16} aria-hidden />
@@ -117,7 +122,7 @@ export function BallonDorView({ pool }: BallonDorViewProps) {
                   type="button"
                   onClick={() => move(index, 1)}
                   disabled={index === rankedPlayers.length - 1}
-                  aria-label="Descendre"
+                  aria-label={t("ballonDor.moveDown")}
                   className="grid size-8 place-items-center rounded-full text-muted transition-colors disabled:opacity-30 hover:text-foreground"
                 >
                   <ChevronDown size={16} aria-hidden />
@@ -125,7 +130,7 @@ export function BallonDorView({ pool }: BallonDorViewProps) {
                 <button
                   type="button"
                   onClick={() => removePlayer(String(player.id))}
-                  aria-label="Retirer"
+                  aria-label={t("ballonDor.removePlayer")}
                   className="grid size-8 place-items-center rounded-full text-muted transition-colors hover:text-accent-3"
                 >
                   <X size={16} aria-hidden />
@@ -143,7 +148,7 @@ export function BallonDorView({ pool }: BallonDorViewProps) {
           className="mb-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-dashed border-border text-sm font-semibold text-muted transition-colors hover:border-accent/40 hover:text-foreground"
         >
           <Plus size={16} aria-hidden />
-          Ajouter un joueur ({rankedPlayers.length}/{BALLON_DOR_SIZE})
+          {t("ballonDor.addPlayerButton", { count: rankedPlayers.length, size: BALLON_DOR_SIZE })}
         </button>
       )}
 
@@ -160,10 +165,10 @@ export function BallonDorView({ pool }: BallonDorViewProps) {
         {justSaved ? (
           <>
             <Check size={18} aria-hidden />
-            Pronostic enregistré
+            {t("ballonDor.saved")}
           </>
         ) : (
-          "Enregistrer mon pronostic"
+          t("ballonDor.save")
         )}
       </button>
 

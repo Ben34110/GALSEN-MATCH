@@ -1,1 +1,64 @@
-{}
+{
+  "fifaRanking": {
+    "eyebrow": "National teams",
+    "title": "FIFA Ranking",
+    "subtitle": "{month} ranking — African and world rank, points, and movement since last month.",
+    "caption": "FIFA ranking of African national teams, African and world rank, points, and movement since last month.",
+    "columns": {
+      "rank": "#",
+      "country": "Country",
+      "world": "World",
+      "points": "Points",
+      "trend": "+/-"
+    },
+    "months": [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ]
+  },
+  "canQualifiers": {
+    "eyebrow": "AFCON 2027",
+    "title": "Qualifiers",
+    "subtitle": "The first two matchdays of September 2026, group by group.",
+    "views": {
+      "matches": "Matches",
+      "standings": "Standings"
+    },
+    "rounds": {
+      "group1": "Matchday 1 — September 23, 2026",
+      "group2": "Matchday 2 — September 27, 2026"
+    },
+    "fixtures": {
+      "unavailable": "Fixtures are unavailable for now."
+    },
+    "standings": {
+      "unavailable": "Standings are unavailable for now.",
+      "provisionalNote": "Groups reconstructed from the fixture list — qualifiers haven't started yet (matchday 1 on September 23, 2026), the official standings will replace these groups as soon as API-Football publishes them.",
+      "caption": "Standings for {group} of the AFCON 2027 qualifiers.",
+      "columns": {
+        "team": "Team",
+        "points": "Pts",
+        "played": "P",
+        "won": "W",
+        "drawn": "D",
+        "lost": "L",
+        "goalsFor": "GF",
+        "goalsAgainst": "GA",
+        "diff": "GD"
+      }
+    }
+  },
+  "matchFavorite": {
+    "remove": "Remove {match} from favorites",
+    "add": "Add {match} to favorites"
+  },
+  "events": {
+    "eyebrow": "African football",
+    "title": "Upcoming",
+    "subtitle": "The next big dates in African football, all in one place.",
+    "empty": "No upcoming events for now.",
+    "inProgress": "In progress",
+    "estimatedDate": "estimated date",
+    "addToCalendar": "Add to my calendar"
+  }
+}

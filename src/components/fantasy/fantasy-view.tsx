@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Info, ListOrdered, Pencil, Trophy } from "lucide-react";
+import { ChevronLeft, Info, ListOrdered, Pencil, Trophy } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { SectionHeader } from "@/components/ui/section-header";
 import { cn } from "@/lib/utils";
@@ -27,6 +28,7 @@ interface FantasyViewProps {
 const TOTAL_SEATS = 11;
 
 export function FantasyView({ pool }: FantasyViewProps) {
+  const t = useTranslations("fantasy");
   const { activeJournee, activeStarted, editableJournee, editableDeadline } = useMemo(() => getGameweekInfo(), []);
   const countdown = useCountdown(editableDeadline);
   const storage = useFantasyStorage();
@@ -115,31 +117,39 @@ export function FantasyView({ pool }: FantasyViewProps) {
 
   return (
     <div>
+      <Link
+        href="/fantasy"
+        className="mb-4 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-muted transition-colors hover:text-foreground"
+      >
+        <ChevronLeft size={18} aria-hidden />
+        {t("common.back")}
+      </Link>
+
       <SectionHeader
-        eyebrow="Starting XI"
-        title={`Journée ${viewingJournee}`}
+        eyebrow={t("xi.eyebrow")}
+        title={t("xi.title", { journee: viewingJournee })}
         subtitle={
           isEditableView
             ? countdown.expired
-              ? "Les compositions sont closes pour cette journée."
-              : `Compositions ouvertes jusqu'au coup d'envoi — ${formatCountdown(countdown)} restant(es).`
+              ? t("xi.closedSubtitle")
+              : t("xi.openSubtitle", { countdown: formatCountdown(countdown) })
             : calendarEditable
-              ? "Équipe enregistrée et verrouillée — appuie sur Modifier pour la changer avant le coup d'envoi."
-              : `La journée ${viewingJournee} a commencé — composition verrouillée.`
+              ? t("xi.lockedEditableSubtitle")
+              : t("xi.startedSubtitle", { journee: viewingJournee })
         }
         action={
           <div className="flex shrink-0 items-center gap-2">
             <button
               type="button"
               onClick={() => setShowRules(true)}
-              aria-label="Comment ça marche"
+              aria-label={t("xi.rulesAriaLabel")}
               className="grid size-11 shrink-0 place-items-center rounded-full border border-border bg-surface text-foreground transition-transform duration-[var(--duration-fast)] active:scale-90"
             >
               <Info size={20} aria-hidden />
             </button>
             <Link
               href={`/fantasy/xi/leaderboard?journee=${activeJournee}`}
-              aria-label="Classement général"
+              aria-label={t("xi.leaderboardAriaLabel")}
               className="grid size-11 shrink-0 place-items-center rounded-full border border-border bg-surface text-foreground transition-transform duration-[var(--duration-fast)] active:scale-90"
             >
               <ListOrdered size={20} aria-hidden />
@@ -154,8 +164,7 @@ export function FantasyView({ pool }: FantasyViewProps) {
             <Trophy size={20} aria-hidden />
           </span>
           <p className="text-sm leading-snug text-muted">
-            Touche un poste vide pour choisir un joueur africain — 1 gardien, 4 défenseurs, 3 milieux, 3
-            attaquants. {filled}/{TOTAL_SEATS} sélectionné{filled > 1 ? "s" : ""}.
+            {t("xi.instructions")} {t("xi.selectedCount", { filled, total: TOTAL_SEATS })}
           </p>
         </Card>
       )}
@@ -176,9 +185,7 @@ export function FantasyView({ pool }: FantasyViewProps) {
           }}
         />
 
-        {!isEditableView && !activeHasTeam && (
-          <p className="text-center text-sm text-muted">Aucune équipe n&apos;a été sélectionnée pour cette journée.</p>
-        )}
+        {!isEditableView && !activeHasTeam && <p className="text-center text-sm text-muted">{t("xi.noTeamSelected")}</p>}
 
         {isEditableView && (
           <button
@@ -200,7 +207,9 @@ export function FantasyView({ pool }: FantasyViewProps) {
               complete ? "bg-accent text-accent-ink active:scale-[0.98]" : "cursor-not-allowed bg-surface-2 text-muted"
             )}
           >
-            {complete ? `Enregistrer l'équipe pour la Journée ${viewingJournee}` : `Choisis tes ${TOTAL_SEATS} joueurs (${filled}/${TOTAL_SEATS})`}
+            {complete
+              ? t("xi.saveButton", { journee: viewingJournee })
+              : t("xi.chooseButton", { total: TOTAL_SEATS, filled })}
           </button>
         )}
 
@@ -215,7 +224,7 @@ export function FantasyView({ pool }: FantasyViewProps) {
             className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-border bg-surface px-5 text-base font-bold text-foreground transition-transform duration-[var(--duration-fast)] active:scale-[0.98]"
           >
             <Pencil size={16} aria-hidden />
-            Modifier l&apos;équipe
+            {t("xi.editButton")}
           </button>
         )}
 
@@ -225,7 +234,7 @@ export function FantasyView({ pool }: FantasyViewProps) {
             onClick={() => setViewingJournee(editableJournee)}
             className="flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-border bg-surface px-5 text-sm font-semibold text-foreground transition-transform duration-[var(--duration-fast)] active:scale-95"
           >
-            Préparer la journée {editableJournee}
+            {t("xi.prepareNext", { journee: editableJournee })}
           </button>
         )}
 
@@ -235,7 +244,7 @@ export function FantasyView({ pool }: FantasyViewProps) {
             onClick={() => setViewingJournee(activeJournee)}
             className="flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-border bg-surface px-5 text-sm font-semibold text-foreground transition-transform duration-[var(--duration-fast)] active:scale-95"
           >
-            Revenir à la journée {activeJournee}
+            {t("xi.backToActive", { journee: activeJournee })}
           </button>
         )}
       </div>

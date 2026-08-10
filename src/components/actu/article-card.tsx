@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { ExternalLink, Globe2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { formatRelativeTime } from "@/lib/utils";
@@ -5,8 +8,9 @@ import { getAfricanNation } from "@/lib/data/african-nations";
 import type { Article } from "@/types";
 
 export function ArticleCard({ article }: { article: Article }) {
+  const t = useTranslations("actu.news");
   const nation = article.country === "general" ? null : getAfricanNation(article.country);
-  const countryLabel = nation?.label ?? "Général";
+  const countryLabel = nation?.label ?? t("general");
 
   return (
     <Card className="flex h-full flex-col gap-0 overflow-hidden p-0">
@@ -36,7 +40,7 @@ export function ArticleCard({ article }: { article: Article }) {
 
         <div className="mt-auto flex items-center justify-between gap-2 border-t border-border pt-3">
           <p className="min-w-0 truncate text-[11px] text-muted">
-            Par {article.author ?? "Rédaction"} • {article.sourceName}
+            {t("byline", { author: article.author ?? t("defaultAuthor"), source: article.sourceName })}
           </p>
           <a
             href={article.contentUrl}
@@ -44,7 +48,7 @@ export function ArticleCard({ article }: { article: Article }) {
             rel="noopener noreferrer nofollow"
             className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-full text-xs font-semibold text-accent transition-colors hover:text-foreground hover:underline"
           >
-            Lire l&apos;article
+            {t("readArticle")}
             <ExternalLink size={12} aria-hidden />
           </a>
         </div>

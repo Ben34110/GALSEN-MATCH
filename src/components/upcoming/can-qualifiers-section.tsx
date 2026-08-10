@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { SectionHeader } from "@/components/ui/section-header";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { CanQualifiersFixturesList } from "@/components/upcoming/can-qualifiers-fixtures-list";
@@ -15,11 +16,6 @@ interface CanQualifiersSectionProps {
   groupsProvisional: boolean;
 }
 
-const VIEWS = [
-  { id: "matchs", label: "Matchs" },
-  { id: "classement", label: "Classement" },
-];
-
 export function CanQualifiersSection({
   fixtures,
   fixturesError,
@@ -27,15 +23,20 @@ export function CanQualifiersSection({
   groupsError,
   groupsProvisional,
 }: CanQualifiersSectionProps) {
+  const t = useTranslations("upcoming.canQualifiers");
   const [view, setView] = useState<string>("matchs");
+  const views = [
+    { id: "matchs", label: t("views.matches") },
+    { id: "classement", label: t("views.standings") },
+  ];
 
   return (
     <div>
       <SectionHeader
-        eyebrow="CAN 2027"
-        title="Qualifications"
-        subtitle="Les deux premières journées de septembre 2026, groupe par groupe."
-        action={<SegmentedControl items={VIEWS} activeId={view} onChange={setView} />}
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        subtitle={t("subtitle")}
+        action={<SegmentedControl items={views} activeId={view} onChange={setView} />}
       />
       {view === "matchs" ? (
         <CanQualifiersFixturesList fixtures={fixtures} error={fixturesError} />

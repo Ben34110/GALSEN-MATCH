@@ -1,1 +1,30 @@
-{}
+{
+  "greeting": "Bonjour 👋",
+  "profileAlt": "Voir le profil",
+  "team": {
+    "header": "Ton équipe · Journée {number}",
+    "journee": "Journée {number}",
+    "manage": "Gérer mon équipe",
+    "createTitle": "Compose ton équipe de la semaine",
+    "create": "Créer",
+    "rank": "#{rank} au classement",
+    "waitingRank": "En attente du classement",
+    "progress": "{count}/11"
+  },
+  "quickLinks": {
+    "matches": "Matchs",
+    "mercato": "Mercato",
+    "fantasy": "Fantasy",
+    "news": "Actualités"
+  },
+  "news": {
+    "title": "Actualités",
+    "latest": "Dernières news",
+    "general": "Général",
+    "unavailable": "Actualités indisponibles pour l'instant.",
+    "empty": "Aucun article dans cette catégorie pour l'instant.",
+    "byline": "Par {author} • {source}",
+    "defaultAuthor": "Rédaction",
+    "readArticle": "Lire l'article"
+  }
+}

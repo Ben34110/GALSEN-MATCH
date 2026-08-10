@@ -9,5 +9,12 @@
   "unavailable": "Unavailable for now.",
   "noResults": "No results.",
   "seeAll": "See all",
-  "you": "you"
+  "you": "you",
+  "pushFailure": {
+    "unsupported": "This browser doesn't support notifications here. On iPhone: open AfroLive from the icon added to your home screen (not from Safari) — web notifications only work from the installed app.",
+    "permission-denied": "The permission request was denied or dismissed. Go to your phone's notification settings for AfroLive, turn them on, then try again.",
+    "not-configured": "Notifications aren't set up on the server yet — try again later.",
+    "subscribe-failed": "A technical issue prevented activation. Try again in a few seconds.",
+    "save-failed": "Couldn't save your preference — check your connection and try again."
+  }
 }

@@ -1,1 +1,27 @@
-{}
+{
+  "header": {
+    "eyebrow": "المجتمع",
+    "title": "الدردشة",
+    "subtitle": "غرف حسب الدولة وغرفة عامة."
+  },
+  "room": {
+    "messagesAriaLabel": "رسائل {roomName}",
+    "fallbackConversation": "المحادثة",
+    "emptyState": "لا توجد رسائل بعد في {roomName}.",
+    "messageLabel": "رسالة إلى {roomName}",
+    "placeholder": "اكتب في {roomName}…",
+    "send": "إرسال",
+    "sendError": "تعذر إرسال الرسالة. حاول مرة أخرى."
+  },
+  "profileSheet": {
+    "title": "الملف الشخصي",
+    "close": "إغلاق",
+    "loading": "جارٍ التحميل…",
+    "unavailable": "الملف الشخصي غير متاح حاليًا.",
+    "tiktokAriaLabel": "مشاهدة @{handle} على TikTok",
+    "favoritePlayers": "اللاعبون المفضلون",
+    "noFavoritePlayers": "لم يتم تحديد أي لاعب مفضل.",
+    "ballonDor": "أفضل 3 في الكرة الذهبية الإفريقية",
+    "noBallonDor": "لم يتم تحديد أي توقع."
+  }
+}

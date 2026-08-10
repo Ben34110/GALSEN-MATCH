@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { ArrowLeftRight, CalendarClock, ChevronRight, Newspaper, Star, Trophy } from "lucide-react";
 import { ArticleCard } from "@/components/actu/article-card";
 import { Card } from "@/components/ui/card";
@@ -23,10 +24,10 @@ import type { LeaderboardEntry } from "@/lib/data/fantasy-leaderboard";
 import type { AfricanPlayer, Article } from "@/types";
 
 const QUICK_LINKS = [
-  { id: "upcoming", label: "Matchs", icon: CalendarClock },
-  { id: "mercato", label: "Mercato", icon: ArrowLeftRight },
-  { id: "fantasy", label: "Fantasy", icon: Trophy },
-  { id: "actu", label: "Actualités", icon: Newspaper },
+  { id: "upcoming", key: "matches", icon: CalendarClock },
+  { id: "mercato", key: "mercato", icon: ArrowLeftRight },
+  { id: "fantasy", key: "fantasy", icon: Trophy },
+  { id: "actu", key: "news", icon: Newspaper },
 ] as const;
 
 export function ActuPageClient({
@@ -36,6 +37,7 @@ export function ActuPageClient({
   articles: Article[] | null;
   leaderboard: LeaderboardEntry[] | null;
 }) {
+  const t = useTranslations("actu");
   const [filter, setFilter] = useState<string>("all");
   const articlesRef = useRef<HTMLDivElement>(null);
 
@@ -70,12 +72,12 @@ export function ActuPageClient({
     if (!localizedArticles) return [];
     const present = new Set(localizedArticles.map((article) => article.country));
     const ordered: { id: string; label: string }[] = [];
-    if (present.has("general")) ordered.push({ id: "general", label: "Général" });
+    if (present.has("general")) ordered.push({ id: "general", label: t("news.general") });
     for (const nation of AFRICAN_NATIONS) {
       if (present.has(nation.id)) ordered.push({ id: nation.id, label: nation.label });
     }
     return ordered;
-  }, [localizedArticles]);
+  }, [localizedArticles, t]);
 
   const filtered = !localizedArticles
     ? []
@@ -114,12 +116,12 @@ export function ActuPageClient({
     <div>
       <header className="mb-6 flex items-center justify-between gap-3 lg:mb-8">
         <div>
-          <p className="text-sm text-muted">Bonjour 👋</p>
+          <p className="text-sm text-muted">{t("greeting")}</p>
           <h1 className="mt-0.5 font-serif text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
             {profile?.username ?? "Amina Diop"}
           </h1>
         </div>
-        <Link href="/profil" aria-label="Voir le profil" className="shrink-0 transition-transform active:scale-95">
+        <Link href="/profil" aria-label={t("profileAlt")} className="shrink-0 transition-transform active:scale-95">
           <ProfileAvatar countryId={profile?.countryId ?? "senegal"} size={10} />
         </Link>
       </header>
@@ -128,10 +130,14 @@ export function ActuPageClient({
         <Card className="glass-accent mb-6 flex flex-col gap-4 text-foreground shadow-md lg:mb-8">
           <div className="flex items-center justify-between gap-2">
             <span className="text-xs font-bold uppercase tracking-wide text-muted">
-              Ton équipe · Journée {previewJournee}
+              {t("team.header", { number: previewJournee })}
             </span>
             <span className="rounded-full bg-accent/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-accent">
-              {squadComplete ? (myRank > 0 ? `#${myRank} au classement` : "En attente du classement") : `${lineupPlayers.length}/11`}
+              {squadComplete
+                ? myRank > 0
+                  ? t("team.rank", { rank: myRank })
+                  : t("team.waitingRank")
+                : t("team.progress", { count: lineupPlayers.length })}
             </span>
           </div>
 
@@ -168,15 +174,15 @@ export function ActuPageClient({
               "transition-transform duration-[var(--duration-fast)] active:scale-[0.98]"
             )}
           >
-            Gérer mon équipe
+            {t("team.manage")}
             <ChevronRight size={16} aria-hidden />
           </Link>
         </Card>
       ) : (
         <Card className="mb-6 flex items-center justify-between gap-3 lg:mb-8">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Journée {previewJournee}</p>
-            <p className="text-base font-bold text-foreground">Compose ton équipe de la semaine</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted">{t("team.journee", { number: previewJournee })}</p>
+            <p className="text-base font-bold text-foreground">{t("team.createTitle")}</p>
           </div>
           <Link
             href="/fantasy/xi"
@@ -185,20 +191,20 @@ export function ActuPageClient({
               "transition-transform duration-[var(--duration-fast)] active:scale-95"
             )}
           >
-            Créer
+            {t("team.create")}
             <ChevronRight size={16} aria-hidden />
           </Link>
         </Card>
       )}
 
       <div className="-mx-4 mb-7 flex gap-2.5 overflow-x-auto px-4 pb-1 scrollbar-none sm:mx-0 sm:px-0 lg:mb-8">
-        {QUICK_LINKS.map(({ id, label, icon: Icon }) => {
+        {QUICK_LINKS.map(({ id, key, icon: Icon }) => {
           const content = (
             <>
               <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-accent/10 text-accent">
                 <Icon size={17} aria-hidden />
               </span>
-              {label}
+              {t(`quickLinks.${key}`)}
             </>
           );
           const className = cn(
@@ -237,7 +243,7 @@ export function ActuPageClient({
 
       <div ref={articlesRef} className="scroll-mt-24">
         <div className="mb-4 flex items-baseline justify-between gap-3">
-          <h2 className="font-serif text-xl font-bold tracking-tight text-foreground">Actualités</h2>
+          <h2 className="font-serif text-xl font-bold tracking-tight text-foreground">{t("news.title")}</h2>
         </div>
 
         {articles && articles.length > 0 && (
@@ -253,7 +259,7 @@ export function ActuPageClient({
                   : "border-border bg-surface text-muted hover:text-foreground"
               )}
             >
-              Dernières news
+              {t("news.latest")}
             </button>
             {countryFilters.map((item) => (
               <button
@@ -276,11 +282,11 @@ export function ActuPageClient({
 
         {!articles ? (
           <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">
-            Actualités indisponibles pour l&apos;instant.
+            {t("news.unavailable")}
           </p>
         ) : filtered.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">
-            Aucun article dans cette catégorie pour l&apos;instant.
+            {t("news.empty")}
           </p>
         ) : (
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">

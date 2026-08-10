@@ -1,1 +1,20 @@
-{}
+{
+  "back": "رجوع",
+  "finished": "انتهت المباراة",
+  "unknownTeam": "فريق غير معروف",
+  "halftimeScore": "الشوط الأول: {home} – {away}",
+  "lineups": {
+    "title": "التشكيلات",
+    "notAnnounced": "التشكيلات لم تُعلن بعد.",
+    "goalkeeper": "حارس المرمى",
+    "defenders": "المدافعون",
+    "midfielders": "لاعبو الوسط",
+    "forwards": "المهاجمون",
+    "substitutes": "الاحتياط ({count})",
+    "coach": "المدرب: {name}"
+  },
+  "favorite": {
+    "remove": "إزالة {teamName} من المفضلة",
+    "add": "إضافة {teamName} إلى المفضلة"
+  }
+}

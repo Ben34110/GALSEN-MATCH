@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { Search, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { getNationalityFlag } from "@/lib/data/nationality-flags";
 import { searchAfricanPlayers } from "@/lib/data/african-players";
 import type { AfricanPlayer } from "@/types";
@@ -20,6 +21,7 @@ interface BallonDorPickerSheetProps {
 // Ballon d'Or pick isn't seat-scoped) and no "next opponent" fetch (that's
 // a Starting XI-specific concern, irrelevant to a season-long prediction).
 export function BallonDorPickerSheet({ candidates, onPick, onClose }: BallonDorPickerSheetProps) {
+  const t = useTranslations("fantasy");
   const [search, setSearch] = useState("");
 
   const sorted = useMemo(
@@ -31,11 +33,11 @@ export function BallonDorPickerSheet({ candidates, onPick, onClose }: BallonDorP
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-background">
       <div className="flex items-center justify-between border-b border-border px-4 py-[calc(0.75rem+var(--safe-top))]">
-        <h2 className="font-serif text-lg font-bold text-foreground">Ajouter un joueur</h2>
+        <h2 className="font-serif text-lg font-bold text-foreground">{t("ballonDor.pickerTitle")}</h2>
         <button
           type="button"
           onClick={onClose}
-          aria-label="Fermer"
+          aria-label={t("common.close")}
           className="grid size-9 shrink-0 place-items-center rounded-full text-muted transition-colors hover:text-foreground"
         >
           <X size={18} aria-hidden />
@@ -48,7 +50,7 @@ export function BallonDorPickerSheet({ candidates, onPick, onClose }: BallonDorP
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="Chercher un joueur, un pays, un club…"
+            placeholder={t("common.searchPlaceholder")}
             autoFocus
             className="min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-base text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
           />
@@ -88,7 +90,7 @@ export function BallonDorPickerSheet({ candidates, onPick, onClose }: BallonDorP
               </span>
             </button>
           ))}
-          {visible.length === 0 && <p className="py-8 text-center text-sm text-muted">Aucun joueur trouvé.</p>}
+          {visible.length === 0 && <p className="py-8 text-center text-sm text-muted">{t("common.noPlayerFound")}</p>}
         </div>
       </div>
     </div>

@@ -1,1 +1,61 @@
-{}
+{
+  "account": {
+    "title": "Sign in",
+    "subtitle": "Optional — if you already have an account, we'll find your profile right away. Otherwise, create one to save it as you go through the next steps, or continue without one: everything then stays on this device, like before.",
+    "checkEmail": "Check your inbox to confirm your account. Keep going in the meantime — your data will follow automatically once you come back signed in.",
+    "continueWithGoogle": "Continue with Google",
+    "or": "or",
+    "signup": "Create an account",
+    "signin": "Sign in",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@email.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Password",
+    "accountsUnavailable": "Accounts aren't available right now — continue as a guest.",
+    "submitSignup": "Create my account",
+    "submitSignin": "Sign in",
+    "continueWithoutAccount": "Continue without an account"
+  },
+  "country": {
+    "title": "Your country",
+    "subtitle": "We'll highlight news, chat, and colors for your nation — all 54 CAF countries are available, plus an \"Other\" option if you're not African.",
+    "search": "Search a country…",
+    "noResults": "No country found.",
+    "newsTitle": "Get news from your country",
+    "newsSubtitle": "A notification as soon as a new article comes out.",
+    "enable": "Enable",
+    "enabled": "Enabled"
+  },
+  "players": {
+    "title": "Your 3 favorite players",
+    "subtitle": "Pick exactly three from {count} African players in the 5 major European leagues — they'll be the base for your Starting 6.",
+    "selected": "{count}/3 selected",
+    "allPlayers": "All players",
+    "ownNationFirst": "Players from your nation first",
+    "search": "Search a player, country, club…",
+    "noResults": "No player found for this search.",
+    "positions": {
+      "Goalkeeper": "Goalkeeper",
+      "Defender": "Defender",
+      "Midfielder": "Midfielder",
+      "Attacker": "Attacker"
+    }
+  },
+  "username": {
+    "title": "Choose your username",
+    "subtitle": "This is what the community will see in chat and on the fantasy leaderboard.",
+    "label": "Username",
+    "placeholder": "e.g. AminaD"
+  },
+  "tiktok": {
+    "title": "Your TikTok account",
+    "subtitle": "Optional — shown on your profile in chat, others can reach it in one tap. You can skip this step or fill it in later from your Profile.",
+    "label": "TikTok account",
+    "placeholder": "@yourhandle"
+  },
+  "nav": {
+    "previousStep": "Previous step",
+    "finish": "Finish",
+    "continue": "Continue"
+  }
+}

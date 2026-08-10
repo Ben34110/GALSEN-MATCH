@@ -1,1 +1,20 @@
-{}
+{
+  "back": "Back",
+  "finished": "Finished",
+  "unknownTeam": "Unknown team",
+  "halftimeScore": "Half-time: {home} – {away}",
+  "lineups": {
+    "title": "Lineups",
+    "notAnnounced": "Lineups not announced yet.",
+    "goalkeeper": "Goalkeeper",
+    "defenders": "Defenders",
+    "midfielders": "Midfielders",
+    "forwards": "Forwards",
+    "substitutes": "Substitutes ({count})",
+    "coach": "Coach: {name}"
+  },
+  "favorite": {
+    "remove": "Remove {teamName} from favorites",
+    "add": "Add {teamName} to favorites"
+  }
+}

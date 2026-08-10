@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { Search, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { fetchTeamUpcomingMatches } from "@/app/(app)/live/actions";
 import { getNationalityFlag } from "@/lib/data/nationality-flags";
@@ -15,14 +16,19 @@ const DEFAULT_VISIBLE = 15;
 // A player id absent from this map means "not fetched yet" (loading).
 type OpponentState = Record<number, Match[] | "error">;
 
-function opponentLabel(player: AfricanPlayer, state: Match[] | "error" | undefined): string {
-  if (state === undefined) return "Chargement…";
-  if (state === "error") return "Prochain match indisponible";
+function opponentLabel(
+  player: AfricanPlayer,
+  state: Match[] | "error" | undefined,
+  t: ReturnType<typeof useTranslations>
+): string {
+  if (state === undefined) return t("common.loading");
+  if (state === "error") return t("playerPicker.opponentUnavailable");
   const nextMatch = state[0];
-  if (!nextMatch) return "Aucun match à venir programmé";
+  if (!nextMatch) return t("playerPicker.noUpcomingMatch");
   const isHome = nextMatch.homeTeamId === String(player.teamId);
   const opponent = isHome ? nextMatch.awayTeam?.name : nextMatch.homeTeam?.name;
-  return `${isHome ? "vs" : "@"} ${opponent ?? "adversaire inconnu"} cette semaine`;
+  const opponentName = opponent ?? t("playerPicker.unknownOpponent");
+  return isHome ? t("playerPicker.vsThisWeek", { opponent: opponentName }) : t("playerPicker.atThisWeek", { opponent: opponentName });
 }
 
 interface PlayerPickerSheetProps {
@@ -35,6 +41,7 @@ interface PlayerPickerSheetProps {
 }
 
 export function PlayerPickerSheet({ position, candidates, currentPlayerId, onPick, onRemove, onClose }: PlayerPickerSheetProps) {
+  const t = useTranslations("fantasy");
   const [search, setSearch] = useState("");
   const [opponents, setOpponents] = useState<OpponentState>({});
 
@@ -62,7 +69,7 @@ export function PlayerPickerSheet({ position, candidates, currentPlayerId, onPic
         <button
           type="button"
           onClick={onClose}
-          aria-label="Fermer"
+          aria-label={t("common.close")}
           className="grid size-9 shrink-0 place-items-center rounded-full text-muted transition-colors hover:text-foreground"
         >
           <X size={18} aria-hidden />
@@ -75,7 +82,7 @@ export function PlayerPickerSheet({ position, candidates, currentPlayerId, onPic
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="Chercher un joueur, un pays, un club…"
+            placeholder={t("common.searchPlaceholder")}
             autoFocus
             className="min-h-11 w-full rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-base text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
           />
@@ -86,7 +93,7 @@ export function PlayerPickerSheet({ position, candidates, currentPlayerId, onPic
             onClick={onRemove}
             className="mt-2 min-h-9 w-full rounded-xl border border-accent-3/30 bg-accent-3/5 text-xs font-semibold text-accent-3 transition-colors hover:bg-accent-3/10"
           >
-            Retirer ce joueur du siège
+            {t("playerPicker.removeFromSeat")}
           </button>
         )}
       </div>
@@ -128,13 +135,13 @@ export function PlayerPickerSheet({ position, candidates, currentPlayerId, onPic
                     {player.nationality} · {player.teamName ?? "—"}
                   </span>
                   <span className="block truncate text-[11px] font-medium text-accent">
-                    {opponentLabel(player, opponents[player.id])}
+                    {opponentLabel(player, opponents[player.id], t)}
                   </span>
                 </span>
               </button>
             );
           })}
-          {visible.length === 0 && <p className="py-8 text-center text-sm text-muted">Aucun joueur trouvé.</p>}
+          {visible.length === 0 && <p className="py-8 text-center text-sm text-muted">{t("common.noPlayerFound")}</p>}
         </div>
       </div>
     </div>

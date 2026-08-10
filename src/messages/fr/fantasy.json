@@ -1,1 +1,127 @@
-{}
+{
+  "common": {
+    "back": "Retour",
+    "close": "Fermer",
+    "eyebrow": "Fantasy",
+    "searchPlaceholder": "Chercher un joueur, un pays, un club…",
+    "noPlayerFound": "Aucun joueur trouvé.",
+    "loading": "Chargement…",
+    "leaderboardUnavailable": "Classement indisponible pour l'instant.",
+    "you": " (toi)"
+  },
+  "hub": {
+    "title": "Fantasy",
+    "subtitle": "Choisis un mini-jeu.",
+    "xiTitle": "Le XI",
+    "xiDescription": "Compose ton onze de la semaine avec des joueurs africains.",
+    "ballonDorTitle": "Ballon d'Or Africain",
+    "ballonDorDescription": "Pronostique le podium du Ballon d'Or africain.",
+    "quizTitle": "Quizz Foot Africain",
+    "quizDescription": "Un sprint d'une minute sur le foot africain."
+  },
+  "xi": {
+    "eyebrow": "Starting XI",
+    "title": "Journée {journee}",
+    "closedSubtitle": "Les compositions sont closes pour cette journée.",
+    "openSubtitle": "Compositions ouvertes jusqu'au coup d'envoi — {countdown} restant(es).",
+    "lockedEditableSubtitle": "Équipe enregistrée et verrouillée — appuie sur Modifier pour la changer avant le coup d'envoi.",
+    "startedSubtitle": "La journée {journee} a commencé — composition verrouillée.",
+    "rulesAriaLabel": "Comment ça marche",
+    "leaderboardAriaLabel": "Classement général",
+    "instructions": "Touche un poste vide pour choisir un joueur africain — 1 gardien, 4 défenseurs, 3 milieux, 3 attaquants.",
+    "selectedCount": "{filled}/{total} {filled, plural, one {sélectionné} other {sélectionnés}}.",
+    "noTeamSelected": "Aucune équipe n'a été sélectionnée pour cette journée.",
+    "saveButton": "Enregistrer l'équipe pour la Journée {journee}",
+    "chooseButton": "Choisis tes {total} joueurs ({filled}/{total})",
+    "editButton": "Modifier l'équipe",
+    "prepareNext": "Préparer la journée {journee}",
+    "backToActive": "Revenir à la journée {journee}"
+  },
+  "pitch": {
+    "chooseGoalkeeper": "Choisir un gardien",
+    "choosePlayer": "Choisir un joueur",
+    "chooseLabel": "Choisir",
+    "changePlayer": "Changer {name}",
+    "viewMoments": "Voir les faits marquants de {name}",
+    "viewNextMatch": "Voir le prochain match de {name}",
+    "setCaptain": "Désigner {name} capitaine",
+    "isCaptain": "{name} est capitaine",
+    "ratingAria": "Note : {rating} sur 10",
+    "nextMatchUnavailable": "Prochain match indisponible.",
+    "vsOpponent": "vs {name}",
+    "noUpcomingMatch": "Aucun match à venir programmé.",
+    "matchDetailsUnavailable": "Détails du match indisponibles.",
+    "minutesPlayed": "{minutes}' jouées",
+    "noHighlights": "Aucun fait marquant.",
+    "goalsFact": "⚽️ {count, plural, one {# but} other {# buts}}",
+    "assistsFact": "🎯 {count, plural, one {# passe déc.} other {# passes déc.}}",
+    "redCard": "🟥 Carton rouge",
+    "yellowCard": "🟨 Carton jaune",
+    "shotsOnTarget": "🥅 {made}/{total} tirs cadrés",
+    "duelsWon": "💪 {made}/{total} duels gagnés"
+  },
+  "playerPicker": {
+    "removeFromSeat": "Retirer ce joueur du siège",
+    "opponentUnavailable": "Prochain match indisponible",
+    "noUpcomingMatch": "Aucun match à venir programmé",
+    "vsThisWeek": "vs {opponent} cette semaine",
+    "atThisWeek": "@ {opponent} cette semaine",
+    "unknownOpponent": "adversaire inconnu"
+  },
+  "leaderboard": {
+    "titleWeek": "Classement — Journée {journee}",
+    "titleMonth": "Classement — {month}",
+    "subtitle": "Tous les joueurs AfroLive, classés sur leur Starting XI.",
+    "modeWeek": "Semaine",
+    "modeMonth": "Mois",
+    "emptyWeek": "Personne n'a encore composé d'équipe pour cette journée.",
+    "emptyMonth": "Personne n'a encore de classement pour ce mois.",
+    "weeklyPlayers": "{filled}/11 joueurs",
+    "monthlyPlayed": "{count, plural, one {# journée jouée} other {# journées jouées}}"
+  },
+  "quiz": {
+    "hub": {
+      "title": "Quizz Foot Africain",
+      "subtitle": "Choisis un thème, réponds à un maximum de questions en 60 secondes chrono.",
+      "intro": "Un sprint d'une minute, une seule bonne réponse par question.",
+      "record": "Record : {best}",
+      "noRecord": "Aucun record",
+      "leaderboardLink": "Classement"
+    },
+    "session": {
+      "noQuestions": "Aucune question disponible pour ce thème pour l'instant.",
+      "score": "Score : {score}",
+      "resultCaption": "{count, plural, =1 {bonne réponse} other {bonnes réponses}} en 60 secondes",
+      "newRecord": "Nouveau record !",
+      "replay": "Rejouer",
+      "viewLeaderboard": "Voir le classement",
+      "changeTheme": "Changer de thème"
+    },
+    "leaderboard": {
+      "title": "Classement — {theme}",
+      "subtitle": "Meilleurs scores sur ce thème, en 60 secondes.",
+      "empty": "Personne n'a encore joué ce thème."
+    }
+  },
+  "ballonDor": {
+    "title": "Pronostic Ballon d'Or Africain",
+    "subtitle": "Classe ton Top 10 des joueurs africains pour le prochain Ballon d'Or CAF.",
+    "emptyState": "Ajoute jusqu'à {size} joueurs et classe-les du 1er au {size}e.",
+    "moveUp": "Monter",
+    "moveDown": "Descendre",
+    "removePlayer": "Retirer",
+    "addPlayerButton": "Ajouter un joueur ({count}/{size})",
+    "save": "Enregistrer mon pronostic",
+    "saved": "Pronostic enregistré",
+    "pickerTitle": "Ajouter un joueur"
+  },
+  "gameRules": {
+    "title": "Comment ça marche",
+    "p1": "Le classement du Starting XI se calcule à la fin de chaque journée. La note reçue de l'API pour chaque joueur (sur 10) est multipliée par 10 pour donner son score — un joueur noté 7/10 rapporte donc 70 points.",
+    "p2": "Le score de ton équipe est l'addition des scores de tes 11 joueurs. Ton capitaine reçoit un bonus de +0,5 sur sa note — un capitaine noté 7/10 rapporte donc 75 points au lieu de 70. Désigne-le en appuyant sur l'étoile à côté d'un joueur pendant que tu composes ton équipe — un badge « C » apparaît sur sa photo.",
+    "p3": "Si un joueur ne joue pas lors de la journée, il reçoit automatiquement la note de 5/10, soit 50 points.",
+    "p4": "Une fois ton équipe enregistrée, elle est verrouillée : appuie sur un joueur pour voir son prochain match (date, heure, adversaire) au lieu de le changer. Un bouton « Modifier l'équipe » reste disponible pour la déverrouiller et faire des changements jusqu'au coup d'envoi.",
+    "p5": "Dès qu'un match de la journée se termine, la note du joueur apparaît dans un petit rond en bas à droite de sa photo — rouge foncé proche de 0/10, orange à 5/10, vert clair à 7/10, vert foncé proche de 10/10.",
+    "p6": "Enregistrer ton équipe active aussi les notifications pour tes 11 joueurs : titulaire ou non au coup d'envoi, but, passe décisive, carton, et note de fin de match. Si tu prépares déjà la journée suivante à l'avance, ses notifications restent en attente et s'activent automatiquement dès que cette journée démarre — inutile de rouvrir l'appli."
+  }
+}

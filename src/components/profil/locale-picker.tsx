@@ -10,11 +10,11 @@ const LOCALES = [
   { id: "ar", label: "العربية" },
 ] as const;
 
-// Sélection persistée localement — le rendu multilingue effectif (next-intl,
-// RTL pour l'arabe) arrive en phase 5 de la roadmap ; ce contrôle prépare le
-// terrain côté UI et côté préférence utilisateur. Les articles Actualités
-// (lib/news/localize.ts) sont la première brique à réagir à ce réglage —
-// traduits fr<->en à la volée depuis leur langue source.
+// Sélection persistée localement (localStorage, pas de cookie) — lue par
+// components/theme/locale-provider.tsx pour piloter next-intl côté client
+// (fr/en/ar) sur toute l'app. Les 3 libellés ci-dessous sont les noms des
+// langues dans leur propre langue (pas du texte d'UI) : ils ne passent donc
+// pas par next-intl et restent identiques quel que soit le réglage actif.
 export function LocalePicker() {
   const saved = useLocalStorageValue(LOCALE_STORAGE_KEY);
   const locale = resolveLocale(saved);

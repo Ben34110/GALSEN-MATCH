@@ -1,1 +1,16 @@
-{}
+{
+  "header": {
+    "eyebrow": "Mercato",
+    "title": "Derniers transferts",
+    "subtitle": "Les mouvements les plus récents des joueurs africains, club de départ et club d'arrivée."
+  },
+  "list": {
+    "unavailable": "Transferts indisponibles pour l'instant.",
+    "empty": "Aucun transfert récent enregistré pour l'instant."
+  },
+  "fee": {
+    "free": "Libre",
+    "loan": "Prêt"
+  },
+  "freeAgent": "Agent libre"
+}

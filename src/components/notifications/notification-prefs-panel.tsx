@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Bell, Check } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 export interface NotificationOption<Prefs> {
@@ -30,8 +31,9 @@ export function NotificationPrefsPanel<Prefs extends Record<string, boolean>>({
   initialPrefs,
   onConfirm,
   onCancel,
-  confirmLabel = "Activer",
+  confirmLabel,
 }: NotificationPrefsPanelProps<Prefs>) {
+  const t = useTranslations("profil.notificationPanel");
   const [prefs, setPrefs] = useState<Prefs>(initialPrefs);
 
   return (
@@ -70,14 +72,14 @@ export function NotificationPrefsPanel<Prefs extends Record<string, boolean>>({
           onClick={onCancel}
           className="min-h-9 flex-1 rounded-lg border border-border bg-surface text-xs font-semibold text-muted transition-colors hover:text-foreground"
         >
-          Annuler
+          {t("cancel")}
         </button>
         <button
           type="button"
           onClick={() => onConfirm(prefs)}
           className="min-h-9 flex-1 rounded-lg bg-accent text-xs font-semibold text-accent-ink transition-transform active:scale-95"
         >
-          {confirmLabel}
+          {confirmLabel ?? t("activate")}
         </button>
       </div>
     </div>
