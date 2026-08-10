@@ -19,6 +19,8 @@ import { saveNewsNotificationPref } from "@/app/actions/notifications";
 import { TiktokIcon } from "@/components/icons/tiktok-icon";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { getProfileByUserId, syncUserProfile } from "@/app/actions/profile-sync";
+import { getFantasySquadsByUserId } from "@/app/actions/fantasy-sync";
+import { FANTASY_LINEUP_STORAGE_KEY } from "@/lib/fantasy-lineup";
 
 const COUNTRIES = accentThemes.filter((theme) => theme.id !== "default");
 
@@ -209,6 +211,16 @@ export default function OnboardingPage() {
     const restored = await getProfileByUserId(userId);
     if (restored) {
       writeLocalStorageValue(ONBOARDING_STORAGE_KEY, JSON.stringify(restored));
+      // Fantasy squads have no other restore path (see app/actions/
+      // fantasy-sync.ts's getFantasySquadsByUserId) — without this, signing
+      // back in here (including right after LogoutButton wipes this same
+      // device's local squad) would restore the profile but leave the
+      // pitch view empty despite Supabase still having every journée's
+      // squad for this account.
+      const fantasySquads = await getFantasySquadsByUserId(userId);
+      if (Object.keys(fantasySquads).length > 0) {
+        writeLocalStorageValue(FANTASY_LINEUP_STORAGE_KEY, JSON.stringify(fantasySquads));
+      }
       applyAccentTheme(restored.countryId);
       router.push("/actu");
       return;

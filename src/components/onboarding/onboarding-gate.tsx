@@ -8,7 +8,9 @@ import { ONBOARDING_STORAGE_KEY, parseOnboardingProfile } from "@/lib/onboarding
 import { AppLoadingScreen } from "@/components/ui/app-loading-screen";
 import { getOrCreateDeviceId } from "@/lib/device-id";
 import { syncUserProfile, getProfileByUserId } from "@/app/actions/profile-sync";
+import { getFantasySquadsByUserId } from "@/app/actions/fantasy-sync";
 import { linkDeviceData } from "@/app/actions/link-device-data";
+import { FANTASY_LINEUP_STORAGE_KEY } from "@/lib/fantasy-lineup";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
 
@@ -92,6 +94,16 @@ export function OnboardingGate({ children }: { children: React.ReactNode }) {
           const restored = await getProfileByUserId(userId);
           if (restored) {
             writeLocalStorageValue(ONBOARDING_STORAGE_KEY, JSON.stringify(restored));
+            // Fantasy squads have no other restore path (see
+            // app/actions/fantasy-sync.ts's getFantasySquadsByUserId) — without
+            // this, an account signing in on a device with no local profile
+            // (including this same device right after LogoutButton wipes it)
+            // would see an empty pitch view despite Supabase still having
+            // every journée's squad for this account.
+            const fantasySquads = await getFantasySquadsByUserId(userId);
+            if (Object.keys(fantasySquads).length > 0) {
+              writeLocalStorageValue(FANTASY_LINEUP_STORAGE_KEY, JSON.stringify(fantasySquads));
+            }
             return;
           }
         }
