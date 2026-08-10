@@ -131,4 +131,15 @@ export function generateHueTheme(hues: [number, number, number]): { accent: stri
   return { accent, accent2, accent3 };
 }
 
+// A vivid, flag-accurate color from a nation's primary hue anchor — used
+// for the jersey avatar (components/ui/profile-avatar.tsx), which needs to
+// actually look like the flag's real color (e.g. Morocco's vivid flag red)
+// rather than generateHueTheme's deliberately muted UI accent (tuned for
+// buttons/backgrounds, not for matching a flag by eye). Bypasses the 5
+// legacy hand-picked accent overrides in lib/mock/accent-themes.ts too —
+// those were picked for UI contrast, not flag fidelity.
+export function jerseyColorFromHue(hue: number): string {
+  return hslToHex(hue, 80, 42);
+}
+
 export { pickInkColor };

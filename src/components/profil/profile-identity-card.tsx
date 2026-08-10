@@ -1,25 +1,41 @@
 "use client";
 
+import { useState } from "react";
 import { Mail, UserRound } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { CountryCrest } from "@/components/ui/country-crest";
 import { ProfileAvatar } from "@/components/ui/profile-avatar";
+import { CreateAccountSheet } from "@/components/profil/create-account-sheet";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { useAuthIdentity } from "@/hooks/use-auth-identity";
 import { getAccentTheme } from "@/lib/mock/accent-themes";
 
 // So a returning user can tell at a glance which account (if any) this
 // device is tied to, without having to log out to find out — "je veux voir
-// avec quelle manière je suis connecté pour que je puisse me rappeler."
+// avec quelle manière je suis connecté pour que je puisse me rappeler." A
+// guest additionally gets a way to create one without losing what's already
+// on this device — see create-account-sheet.tsx for why nothing extra is
+// needed to keep it linked.
 function ConnectionStatus() {
   const identity = useAuthIdentity();
+  const [creatingAccount, setCreatingAccount] = useState(false);
 
   if (!identity) {
     return (
-      <p className="mt-1 flex items-center gap-1.5 text-xs text-muted">
-        <UserRound size={12} className="shrink-0" aria-hidden />
-        Mode invité — aucun compte lié sur cet appareil
-      </p>
+      <>
+        <p className="mt-1 flex items-center gap-1.5 text-xs text-muted">
+          <UserRound size={12} className="shrink-0" aria-hidden />
+          Mode invité — aucun compte lié sur cet appareil
+        </p>
+        <button
+          type="button"
+          onClick={() => setCreatingAccount(true)}
+          className="mt-1.5 text-xs font-bold text-accent underline-offset-2 hover:underline"
+        >
+          Créer un compte
+        </button>
+        {creatingAccount && <CreateAccountSheet onClose={() => setCreatingAccount(false)} />}
+      </>
     );
   }
 
