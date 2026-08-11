@@ -11,6 +11,7 @@ import { positionCode } from "@/lib/data/african-players";
 import { FORMATION_SEATS, type SeatDef, type SeatId } from "@/lib/fantasy-formation";
 import { getJourneeWeekRange } from "@/lib/fantasy-gameweek";
 import { ratingColor } from "@/lib/rating-color";
+import { ratingCache, ratingCacheKey } from "@/lib/fantasy-rating-cache";
 import { PlayerPickerSheet } from "@/components/fantasy/player-picker-sheet";
 import type { AfricanPlayer, Match } from "@/types";
 import type { SeatMap } from "@/lib/fantasy-lineup";
@@ -27,20 +28,6 @@ function tooltipPositionStyle(seat: SeatDef): CSSProperties {
 // A player id absent from this map means "not fetched yet" (loading).
 type NextMatchState = Record<string, Match[] | "error">;
 type RatingState = Record<string, PlayerJourneeRating>;
-
-// Module-level (not per-mount state) so it survives PitchView unmounting
-// and remounting — switching tabs and back, or toggling "Préparer la
-// journée N+1" and back — within the same browser tab. Without this, every
-// single mount started from a blank RatingState and re-paid the same
-// couple-seconds network round trip (fixtures lookup, then player-stats
-// lookup) before showing anything, even for a player whose rating was
-// already fetched moments ago. Seeded on mount below, then still
-// refreshed in the background so a stale cached value (a live rating
-// that's since moved, a match that's since finished) doesn't linger.
-const ratingCache = new Map<string, PlayerJourneeRating>();
-function ratingCacheKey(playerId: number, journee: number): string {
-  return `${playerId}-${journee}`;
-}
 
 function EmptySeatToken({ seat, onTap }: { seat: SeatDef; onTap: () => void }) {
   const t = useTranslations("fantasy");
@@ -126,16 +113,6 @@ function FilledSeatToken({
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-500 opacity-75" />
               <span className="relative inline-flex size-3 rounded-full border border-white bg-red-500" />
             </span>
-          )}
-          {!editable && rating === undefined && (
-            // First-ever fetch this tab (nothing in ratingCache to seed
-            // from yet) — a quiet placeholder so *something* shows up
-            // immediately instead of an empty photo for the couple of
-            // seconds the network round trip actually takes.
-            <span
-              className="absolute -right-1 -bottom-1 size-5 animate-pulse rounded-full border-2 border-white bg-surface-2 shadow-sm"
-              aria-hidden
-            />
           )}
           {(rating?.status === "rated" || rating?.status === "live") && rating.rating !== null && (
             <span

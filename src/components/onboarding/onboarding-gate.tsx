@@ -6,6 +6,7 @@ import type { Session } from "@supabase/supabase-js";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { ONBOARDING_STORAGE_KEY, parseOnboardingProfile } from "@/lib/onboarding";
 import { AppLoadingScreen } from "@/components/ui/app-loading-screen";
+import { FantasyRatingsPrefetch } from "@/components/fantasy/fantasy-ratings-prefetch";
 import { getOrCreateDeviceId } from "@/lib/device-id";
 import { syncUserProfile, getProfileByUserId } from "@/app/actions/profile-sync";
 import { getFantasySquadsByUserId } from "@/app/actions/fantasy-sync";
@@ -120,5 +121,10 @@ export function OnboardingGate({ children }: { children: React.ReactNode }) {
   // real content (or a blank flash) show before we actually know whether
   // this visitor is onboarded.
   if (!profile) return <AppLoadingScreen />;
-  return <>{children}</>;
+  return (
+    <>
+      <FantasyRatingsPrefetch />
+      {children}
+    </>
+  );
 }
