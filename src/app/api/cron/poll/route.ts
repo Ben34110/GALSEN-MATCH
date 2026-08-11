@@ -346,7 +346,17 @@ export async function GET(request: Request) {
 
       if (!NOT_STARTED_STATUSES.has(status)) {
         const lineupKey = `lineup-${teamId}`;
-        if (clubDevices.some((d) => d.notify_lineup) && !(await notifiedKey(fixtureId, lineupKey))) {
+        // A player-only favorite (no club-level favorite for their team)
+        // used to never trigger this fetch at all — the gate below used to
+        // check clubDevices.some(...) alone, so "is my favorited player
+        // starting?" silently never fired unless someone had *also*
+        // favorited that whole club with lineup notifications on. Checking
+        // both keeps the single /fixtures/lineups call shared (still one
+        // fetch either way), just no longer conditional on club interest.
+        const teamHasPlayerLineupSubscribers = playerPrefRows.some(
+          (r) => r.notify_lineup && favoritedPlayerMeta.get(r.player_id)?.teamId === teamId
+        );
+        if ((clubDevices.some((d) => d.notify_lineup) || teamHasPlayerLineupSubscribers) && !(await notifiedKey(fixtureId, lineupKey))) {
           const lineupResult = await getFixtureLineups(fixtureId);
           if (!lineupResult.error && lineupResult.data.length > 0) {
             const { title, body } = pick(LINEUP_TEMPLATES)(matchLabel);

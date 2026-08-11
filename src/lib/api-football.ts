@@ -160,10 +160,13 @@ export interface ApiFixturePlayerStats {
   }[];
 }
 
-// Per-player end-of-match ratings — only meaningful once a fixture is FT;
-// polled once per fixture the first time it's seen finished.
-export function getFixturePlayerStats(fixtureId: number) {
-  return apiFootballGet<ApiFixturePlayerStats>("/fixtures/players", { fixture: fixtureId }, 60 * 60);
+// Per-player ratings — meaningful once a fixture is FT (frozen, hence the
+// long default cache), but also updates near-real-time during a live
+// match (see lib/data/fantasy-ratings.ts's "live" status), which needs a
+// much shorter revalidate window to actually track the game instead of
+// showing an hour-stale snapshot.
+export function getFixturePlayerStats(fixtureId: number, revalidateSeconds = 60 * 60) {
+  return apiFootballGet<ApiFixturePlayerStats>("/fixtures/players", { fixture: fixtureId }, revalidateSeconds);
 }
 
 // --- CAN 2027 qualifiers (see lib/data/can-qualifiers.ts) ---

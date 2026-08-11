@@ -1,6 +1,7 @@
 import { getRecentFixturesForTeam, getFixturePlayerStats } from "@/lib/api-football";
 
 const FINISHED_STATUSES = new Set(["FT", "AET", "PEN"]);
+const STARTED_STATUSES = new Set(["1H", "2H", "HT", "ET", "P", "LIVE", "BT"]);
 
 // A player who doesn't feature in their team's journée match still counts
 // for the fantasy score — see components/fantasy/game-rules-sheet.tsx's
@@ -33,10 +34,13 @@ export interface PlayerMatchMoments {
 
 export interface PlayerJourneeRating {
   // "rated" once the team's match inside the journée's week has finished
-  // (win, lose, or the player never left the bench) — "pending" beforehand,
-  // whether the match hasn't kicked off yet or is still in progress.
-  status: "pending" | "rated";
-  rating: number | null; // set only when status is "rated"
+  // (win, lose, or the player never left the bench). "live" while that
+  // match is currently in progress — API-Football's rating field updates
+  // in near-real-time during a live match, not just once it's over, so
+  // this carries a real (if still-moving) rating when one's already
+  // available. "pending" beforehand, before kickoff.
+  status: "pending" | "live" | "rated";
+  rating: number | null; // set for "rated", and for "live" once the player has one yet
   // Absent when the player never appears in the fixture's player-stats
   // response at all (team lost the ball to a walkover, API gap, etc.) —
   // the UNPLAYED_DEFAULT_RATING case below still has a fixture to describe,
@@ -47,9 +51,12 @@ export interface PlayerJourneeRating {
 // Finds *this* journée's fixture for a team (by kickoff falling inside its
 // calendar week — see fantasy-gameweek.ts's getJourneeWeekRange) among its
 // recently played matches, and returns the player's rating from it once
-// finished. "last 5" is generous slack for a team that plays more than
-// once in a week (cup + league) without needing the exact fixture id ahead
-// of time.
+// finished — or its live, still-updating rating while the match is still
+// in progress (API-Football's "last N fixtures" endpoint already includes
+// an in-progress match, not just completed ones, so no separate live-
+// fixtures lookup is needed here). "last 5" is generous slack for a team
+// that plays more than once in a week (cup + league) without needing the
+// exact fixture id ahead of time.
 export async function getPlayerJourneeRating(
   playerId: number,
   teamId: number,
@@ -61,23 +68,27 @@ export async function getPlayerJourneeRating(
 
   const fixture = recent.data.find((f) => {
     const kickoff = new Date(f.fixture.date).getTime();
+    const status = f.fixture.status.short;
     return (
       kickoff >= weekStart.getTime() &&
       kickoff < weekEnd.getTime() &&
-      FINISHED_STATUSES.has(f.fixture.status.short) &&
+      (FINISHED_STATUSES.has(status) || STARTED_STATUSES.has(status)) &&
       (f.teams.home.id === teamId || f.teams.away.id === teamId)
     );
   });
   if (!fixture) return { status: "pending", rating: null };
 
-  const stats = await getFixturePlayerStats(fixture.fixture.id);
-  if (stats.error) return { status: "pending", rating: null };
+  const isLive = STARTED_STATUSES.has(fixture.fixture.status.short);
+  // Live ratings genuinely change minute to minute — the default 1h cache
+  // (fine once a match is over and its stats are frozen) would otherwise
+  // show a stale in-match rating for up to an hour.
+  const stats = await getFixturePlayerStats(fixture.fixture.id, isLive ? 45 : 60 * 60);
+  if (stats.error) return isLive ? { status: "live", rating: null } : { status: "pending", rating: null };
 
   const teamBlock = stats.data.find((t) => t.team.id === teamId);
   const playerEntry = teamBlock?.players.find((p) => p.player.id === playerId);
   const playerStats = playerEntry?.statistics[0];
   const ratingStr = playerStats?.games.rating;
-  const rating = ratingStr ? Number.parseFloat(ratingStr) : UNPLAYED_DEFAULT_RATING;
 
   const isHome = fixture.teams.home.id === teamId;
   const opponentTeam = isHome ? fixture.teams.away : fixture.teams.home;
@@ -98,5 +109,11 @@ export async function getPlayerJourneeRating(
     opponentScore: (isHome ? fixture.goals.away : fixture.goals.home) ?? null,
   };
 
+  if (isLive) {
+    const liveRating = ratingStr ? Number.parseFloat(ratingStr) : null;
+    return { status: "live", rating: liveRating !== null && Number.isFinite(liveRating) ? liveRating : null, moments };
+  }
+
+  const rating = ratingStr ? Number.parseFloat(ratingStr) : UNPLAYED_DEFAULT_RATING;
   return { status: "rated", rating: Number.isFinite(rating) ? rating : UNPLAYED_DEFAULT_RATING, moments };
 }

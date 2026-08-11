@@ -58,7 +58,10 @@
     "redCard": "🟥 Carton rouge",
     "yellowCard": "🟨 Carton jaune",
     "shotsOnTarget": "🥅 {made}/{total} tirs cadrés",
-    "duelsWon": "💪 {made}/{total} duels gagnés"
+    "duelsWon": "💪 {made}/{total} duels gagnés",
+    "liveRatingAria": "Note en direct : {rating} sur 10",
+    "liveIndicatorAria": "Match en cours",
+    "live": "En direct"
   },
   "playerPicker": {
     "removeFromSeat": "Retirer ce joueur du siège",

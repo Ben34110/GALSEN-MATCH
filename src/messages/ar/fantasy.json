@@ -58,7 +58,10 @@
     "redCard": "🟥 بطاقة حمراء",
     "yellowCard": "🟨 بطاقة صفراء",
     "shotsOnTarget": "🥅 {made}/{total} تسديدات على المرمى",
-    "duelsWon": "💪 {made}/{total} ثنائيات مكسوبة"
+    "duelsWon": "💪 {made}/{total} ثنائيات مكسوبة",
+    "liveRatingAria": "التقييم المباشر: {rating} من 10",
+    "liveIndicatorAria": "المباراة جارية",
+    "live": "مباشر"
   },
   "playerPicker": {
     "removeFromSeat": "إزالة هذا اللاعب من المركز",

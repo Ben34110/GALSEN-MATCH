@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import { Plus, Star } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -72,7 +72,7 @@ function FilledSeatToken({
         aria-label={
           editable
             ? t("pitch.changePlayer", { name: player.name })
-            : rating?.status === "rated"
+            : rating?.status === "rated" || rating?.status === "live"
               ? t("pitch.viewMoments", { name: player.name })
               : t("pitch.viewNextMatch", { name: player.name })
         }
@@ -102,11 +102,26 @@ function FilledSeatToken({
               C
             </span>
           )}
-          {rating?.status === "rated" && rating.rating !== null && (
+          {rating?.status === "live" && (
+            // Small dynamic "match in progress" indicator — a pinging ring
+            // behind a solid dot, the common "LIVE" visual shorthand.
+            // Independent of the rating badge below: shown even before the
+            // player has an in-match rating yet (e.g. kickoff just
+            // happened), which the rating badge alone can't convey.
+            <span className="absolute -left-1 -top-1 flex size-3" aria-hidden>
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-500 opacity-75" />
+              <span className="relative inline-flex size-3 rounded-full border border-white bg-red-500" />
+            </span>
+          )}
+          {(rating?.status === "rated" || rating?.status === "live") && rating.rating !== null && (
             <span
               className="absolute -right-1 -bottom-1 grid size-5 place-items-center rounded-full border-2 border-white text-[9px] font-extrabold text-white shadow-sm"
               style={{ backgroundColor: ratingColor(rating.rating) }}
-              aria-label={t("pitch.ratingAria", { rating: rating.rating.toFixed(1) })}
+              aria-label={
+                rating.status === "live"
+                  ? t("pitch.liveRatingAria", { rating: rating.rating.toFixed(1) })
+                  : t("pitch.ratingAria", { rating: rating.rating.toFixed(1) })
+              }
             >
               {rating.rating.toFixed(1).replace(".", ",")}
             </span>
@@ -232,10 +247,16 @@ function MatchMomentsTooltip({ seat, rating }: { seat: SeatDef; rating: PlayerJo
     >
       <div className="mb-1.5 flex items-center gap-2">
         <Image src={moments.opponentLogo} alt="" width={20} height={20} className="size-5 shrink-0 object-contain" unoptimized />
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="truncate text-xs font-semibold text-foreground">{t("pitch.vsOpponent", { name: moments.opponentName })}</p>
           {scoreLabel && <p className="text-[10px] text-muted">{scoreLabel}</p>}
         </div>
+        {rating.status === "live" && (
+          <span className="flex shrink-0 items-center gap-1 rounded-full bg-red-500/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-red-500">
+            <span className="size-1.5 rounded-full bg-red-500" aria-hidden />
+            {t("pitch.live")}
+          </span>
+        )}
       </div>
       {moments.minutes !== null && (
         <p className="mb-1 text-[10px] text-muted">{t("pitch.minutesPlayed", { minutes: moments.minutes })}</p>
@@ -293,23 +314,51 @@ export function PitchView({ pool, seats, captainId, editable, journee, onAssign,
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only re-fetch when the actual set of players changes
   }, [editable, filledPlayers.map((p) => p.id).join(",")]);
 
+  // Mirrors `ratings` for the interval below to read fresh state without
+  // needing `ratings` itself in the effect's deps — putting it there would
+  // restart (and so never let 45s pass on) the interval every time a fetch
+  // resolves.
+  const ratingsRef = useRef<RatingState>({});
+  useEffect(() => {
+    ratingsRef.current = ratings;
+  }, [ratings]);
+
   useEffect(() => {
     if (editable || journee === undefined) return; // only meaningful once locked
     const { start, end } = getJourneeWeekRange(journee);
-    for (const player of filledPlayers) {
+
+    function fetchRating(player: AfricanPlayer) {
+      if (!player.teamId) return;
       const id = String(player.id);
-      if (ratings[id] !== undefined || !player.teamId) continue;
       fetchPlayerJourneeRating(player.id, player.teamId, start.toISOString(), end.toISOString())
         .then((result) => setRatings((current) => ({ ...current, [id]: result })))
         .catch(() => setRatings((current) => ({ ...current, [id]: { status: "pending", rating: null } })));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only re-fetch when the journée or player set changes
+
+    for (const player of filledPlayers) {
+      if (ratingsRef.current[String(player.id)] === undefined) fetchRating(player);
+    }
+
+    // Keeps polling while any tracked player's match could still be moving
+    // (not fetched yet, or currently live) — without this, a locked squad
+    // page only ever showed whatever rating was in as of the moment it was
+    // first opened, never updating while a match is actually being played.
+    const interval = setInterval(() => {
+      for (const player of filledPlayers) {
+        const current = ratingsRef.current[String(player.id)];
+        if (current === undefined || current.status === "pending" || current.status === "live") fetchRating(player);
+      }
+    }, 45_000);
+
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only re-fetch when the journée or player set changes; ratingsRef gives the interval fresh state without restarting it
   }, [editable, journee, filledPlayers.map((p) => p.id).join(",")]);
 
   const pickerSeat = pickerSeatId ? FORMATION_SEATS.find((s) => s.id === pickerSeatId) : undefined;
   const openSeat = openKey ? FORMATION_SEATS.find((s) => s.id === openKey) : undefined;
   const openPlayerId = openSeat ? seats[openSeat.id] : null;
   const openPlayer = openPlayerId ? pool.find((p) => String(p.id) === openPlayerId) : undefined;
+  const openPlayerRating = openPlayer ? ratings[String(openPlayer.id)] : undefined;
 
   return (
     <>
@@ -369,8 +418,8 @@ export function PitchView({ pool, seats, captainId, editable, journee, onAssign,
         })}
 
         {openSeat && openPlayer && (
-          ratings[String(openPlayer.id)]?.status === "rated" ? (
-            <MatchMomentsTooltip seat={openSeat} rating={ratings[String(openPlayer.id)]!} />
+          openPlayerRating?.status === "rated" || openPlayerRating?.status === "live" ? (
+            <MatchMomentsTooltip seat={openSeat} rating={openPlayerRating} />
           ) : (
             <NextMatchTooltip seat={openSeat} player={openPlayer} nextMatch={nextMatches[String(openPlayer.id)]} />
           )

@@ -58,7 +58,10 @@
     "redCard": "🟥 Red card",
     "yellowCard": "🟨 Yellow card",
     "shotsOnTarget": "🥅 {made}/{total} shots on target",
-    "duelsWon": "💪 {made}/{total} duels won"
+    "duelsWon": "💪 {made}/{total} duels won",
+    "liveRatingAria": "Live rating: {rating} out of 10",
+    "liveIndicatorAria": "Match in progress",
+    "live": "Live"
   },
   "playerPicker": {
     "removeFromSeat": "Remove this player from the spot",
