@@ -28,6 +28,20 @@ function tooltipPositionStyle(seat: SeatDef): CSSProperties {
 type NextMatchState = Record<string, Match[] | "error">;
 type RatingState = Record<string, PlayerJourneeRating>;
 
+// Module-level (not per-mount state) so it survives PitchView unmounting
+// and remounting — switching tabs and back, or toggling "Préparer la
+// journée N+1" and back — within the same browser tab. Without this, every
+// single mount started from a blank RatingState and re-paid the same
+// couple-seconds network round trip (fixtures lookup, then player-stats
+// lookup) before showing anything, even for a player whose rating was
+// already fetched moments ago. Seeded on mount below, then still
+// refreshed in the background so a stale cached value (a live rating
+// that's since moved, a match that's since finished) doesn't linger.
+const ratingCache = new Map<string, PlayerJourneeRating>();
+function ratingCacheKey(playerId: number, journee: number): string {
+  return `${playerId}-${journee}`;
+}
+
 function EmptySeatToken({ seat, onTap }: { seat: SeatDef; onTap: () => void }) {
   const t = useTranslations("fantasy");
   return (
@@ -112,6 +126,16 @@ function FilledSeatToken({
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-500 opacity-75" />
               <span className="relative inline-flex size-3 rounded-full border border-white bg-red-500" />
             </span>
+          )}
+          {!editable && rating === undefined && (
+            // First-ever fetch this tab (nothing in ratingCache to seed
+            // from yet) — a quiet placeholder so *something* shows up
+            // immediately instead of an empty photo for the couple of
+            // seconds the network round trip actually takes.
+            <span
+              className="absolute -right-1 -bottom-1 size-5 animate-pulse rounded-full border-2 border-white bg-surface-2 shadow-sm"
+              aria-hidden
+            />
           )}
           {(rating?.status === "rated" || rating?.status === "live") && rating.rating !== null && (
             <span
@@ -325,14 +349,34 @@ export function PitchView({ pool, seats, captainId, editable, journee, onAssign,
 
   useEffect(() => {
     if (editable || journee === undefined) return; // only meaningful once locked
-    const { start, end } = getJourneeWeekRange(journee);
+    const currentJournee = journee; // narrowed to `number` for the closures below
+    const { start, end } = getJourneeWeekRange(currentJournee);
 
     function fetchRating(player: AfricanPlayer) {
       if (!player.teamId) return;
       const id = String(player.id);
       fetchPlayerJourneeRating(player.id, player.teamId, start.toISOString(), end.toISOString())
-        .then((result) => setRatings((current) => ({ ...current, [id]: result })))
+        .then((result) => {
+          ratingCache.set(ratingCacheKey(player.id, currentJournee), result);
+          setRatings((current) => ({ ...current, [id]: result }));
+        })
         .catch(() => setRatings((current) => ({ ...current, [id]: { status: "pending", rating: null } })));
+    }
+
+    // Show whatever we already know instantly (no blank flash) before the
+    // network round trip even starts, for any player whose rating this tab
+    // already fetched once — see ratingCache's own comment.
+    const seeded: RatingState = {};
+    for (const player of filledPlayers) {
+      if (ratingsRef.current[String(player.id)] !== undefined) continue;
+      const cached = ratingCache.get(ratingCacheKey(player.id, currentJournee));
+      if (cached) seeded[String(player.id)] = cached;
+    }
+    if (Object.keys(seeded).length > 0) {
+      // Deferred to a microtask rather than called synchronously in the
+      // effect body (react-hooks/set-state-in-effect — same fix used
+      // elsewhere in this app, e.g. quiz-session-view.tsx).
+      Promise.resolve().then(() => setRatings((current) => ({ ...seeded, ...current })));
     }
 
     for (const player of filledPlayers) {
