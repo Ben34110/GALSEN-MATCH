@@ -4,16 +4,19 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { fetchMyLeaderboardStanding, type MyLeaderboardStanding } from "@/app/(app)/live/actions";
 import { getOrCreateDeviceId } from "@/lib/device-id";
+import { standingCache } from "@/lib/standing-cache";
 import { cn } from "@/lib/utils";
 
 // Points + rank for one journée, shared by the Actu home card and the
-// Fantasy XI page. Polls every 45s (same cadence as pitch-view.tsx's live
-// rating refresh, and for the same reason: points are computed live from
-// each squad's per-player ratings, not stored, so re-fetching on an
-// interval is what "the ranking updates after a match ends" actually
-// means here) — renders nothing while loading or when there's nothing to
-// show (no synced squad for this journée yet), rather than a loading
-// skeleton, so it never displaces surrounding layout.
+// Fantasy XI page. Seeds instantly from the shared cache (lib/standing-
+// cache.ts) if components/fantasy/my-standing-prefetch.tsx already warmed
+// it in the background at app open — same reasoning as pitch-view.tsx's
+// rating cache: without it, every mount started blank and re-paid the
+// round trip right when the player was looking at the screen. Still polls
+// every 45s (same cadence as the live rating refresh, and for the same
+// reason: points are computed live from each squad's per-player ratings,
+// not stored, so re-fetching on an interval is what "the ranking updates
+// after a match ends" actually means here).
 export function MyJourneeStanding({
   journee,
   fallback = null,
@@ -28,13 +31,16 @@ export function MyJourneeStanding({
   className?: string;
 }) {
   const t = useTranslations("fantasy.standing");
-  const [standing, setStanding] = useState<MyLeaderboardStanding | null>(null);
+  const [standing, setStanding] = useState<MyLeaderboardStanding | null>(() => standingCache.get(journee) ?? null);
 
   useEffect(() => {
     let cancelled = false;
     function load() {
       fetchMyLeaderboardStanding(getOrCreateDeviceId(), journee).then((result) => {
-        if (!cancelled) setStanding(result);
+        if (result) standingCache.set(journee, result);
+        // A transient null (leaderboard fetch failed this one time) keeps
+        // showing the last known good value instead of blanking out.
+        if (!cancelled) setStanding(result ?? standingCache.get(journee) ?? null);
       });
     }
     load();

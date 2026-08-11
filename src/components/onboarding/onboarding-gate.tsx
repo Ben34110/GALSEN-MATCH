@@ -7,6 +7,7 @@ import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { ONBOARDING_STORAGE_KEY, parseOnboardingProfile } from "@/lib/onboarding";
 import { AppLoadingScreen } from "@/components/ui/app-loading-screen";
 import { FantasyRatingsPrefetch } from "@/components/fantasy/fantasy-ratings-prefetch";
+import { MyStandingPrefetch } from "@/components/fantasy/my-standing-prefetch";
 import { getOrCreateDeviceId } from "@/lib/device-id";
 import { syncUserProfile, getProfileByUserId } from "@/app/actions/profile-sync";
 import { getFantasySquadsByUserId } from "@/app/actions/fantasy-sync";
@@ -124,6 +125,7 @@ export function OnboardingGate({ children }: { children: React.ReactNode }) {
   return (
     <>
       <FantasyRatingsPrefetch />
+      <MyStandingPrefetch />
       {children}
     </>
   );
