@@ -7,7 +7,6 @@
     "manage": "Manage my team",
     "createTitle": "Build your team of the week",
     "create": "Create",
-    "rank": "#{rank} in the standings",
     "waitingRank": "Waiting for the standings",
     "progress": "{count}/11"
   },

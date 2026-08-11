@@ -126,5 +126,9 @@
     "p4": "Une fois ton équipe enregistrée, elle est verrouillée : appuie sur un joueur pour voir son prochain match (date, heure, adversaire) au lieu de le changer. Un bouton « Modifier l'équipe » reste disponible pour la déverrouiller et faire des changements jusqu'au coup d'envoi.",
     "p5": "Dès qu'un match de la journée se termine, la note du joueur apparaît dans un petit rond en bas à droite de sa photo — rouge foncé proche de 0/10, orange à 5/10, vert clair à 7/10, vert foncé proche de 10/10.",
     "p6": "Enregistrer ton équipe active aussi les notifications pour tes 11 joueurs : titulaire ou non au coup d'envoi, but, passe décisive, carton, et note de fin de match. Si tu prépares déjà la journée suivante à l'avance, ses notifications restent en attente et s'activent automatiquement dès que cette journée démarre — inutile de rouvrir l'appli."
+  },
+  "standing": {
+    "points": "{points, plural, one {# point} other {# points}}",
+    "rankOf": "#{rank} / {total}"
   }
 }

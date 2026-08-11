@@ -9,6 +9,7 @@ import { ArrowLeftRight, CalendarClock, ChevronRight, Newspaper, Star, Trophy } 
 import { ArticleCard } from "@/components/actu/article-card";
 import { Card } from "@/components/ui/card";
 import { ProfileAvatar } from "@/components/ui/profile-avatar";
+import { MyJourneeStanding } from "@/components/fantasy/my-journee-standing";
 import { cn } from "@/lib/utils";
 import { AFRICAN_NATIONS } from "@/lib/data/african-nations";
 import { getAfricanPlayers } from "@/lib/data/african-players";
@@ -19,8 +20,6 @@ import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { useLocalStorageValue } from "@/hooks/use-local-storage-value";
 import { LOCALE_STORAGE_KEY, resolveLocale } from "@/lib/locale";
 import { localizeArticle } from "@/lib/news/localize";
-import { getOrCreateDeviceId } from "@/lib/device-id";
-import type { LeaderboardEntry } from "@/lib/data/fantasy-leaderboard";
 import type { AfricanPlayer, Article } from "@/types";
 
 const QUICK_LINKS = [
@@ -30,13 +29,7 @@ const QUICK_LINKS = [
   { id: "actu", key: "news", icon: Newspaper },
 ] as const;
 
-export function ActuPageClient({
-  articles,
-  leaderboard,
-}: {
-  articles: Article[] | null;
-  leaderboard: LeaderboardEntry[] | null;
-}) {
+export function ActuPageClient({ articles }: { articles: Article[] | null }) {
   const t = useTranslations("actu");
   const [filter, setFilter] = useState<string>("all");
   const articlesRef = useRef<HTMLDivElement>(null);
@@ -100,12 +93,6 @@ export function ActuPageClient({
         .filter((player): player is AfricanPlayer => Boolean(player))
     : [];
   const squadComplete = Boolean(squad && isSquadComplete(squad.seats));
-  // Rank within this journée's leaderboard (see app/actions/fantasy-sync.ts
-  // — every synced squad row always carries device_id, signed in or not,
-  // so matching on it finds "this device's" entry either way). 0 means not
-  // ranked yet (leaderboard unavailable, or nothing synced for this device).
-  const deviceId = useMemo(() => getOrCreateDeviceId(), []);
-  const myRank = leaderboard ? leaderboard.findIndex((entry) => entry.deviceId === deviceId) + 1 : 0;
 
   function goToArticles(nextFilter: string) {
     setFilter(nextFilter);
@@ -133,11 +120,15 @@ export function ActuPageClient({
               {t("team.header", { number: previewJournee })}
             </span>
             <span className="rounded-full bg-accent/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-accent">
-              {squadComplete
-                ? myRank > 0
-                  ? t("team.rank", { rank: myRank })
-                  : t("team.waitingRank")
-                : t("team.progress", { count: lineupPlayers.length })}
+              {squadComplete ? (
+                previewJournee === activeJournee ? (
+                  <MyJourneeStanding journee={activeJournee} fallback={t("team.waitingRank")} />
+                ) : (
+                  t("team.waitingRank")
+                )
+              ) : (
+                t("team.progress", { count: lineupPlayers.length })
+              )}
             </span>
           </div>
 

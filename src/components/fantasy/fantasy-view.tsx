@@ -9,6 +9,7 @@ import { SectionHeader } from "@/components/ui/section-header";
 import { cn } from "@/lib/utils";
 import { PitchView } from "@/components/fantasy/pitch-view";
 import { GameRulesSheet } from "@/components/fantasy/game-rules-sheet";
+import { MyJourneeStanding } from "@/components/fantasy/my-journee-standing";
 import { useFantasyStorage, saveSquadForJournee } from "@/hooks/use-saved-lineup";
 import { useCountdown } from "@/hooks/use-countdown";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
@@ -157,6 +158,15 @@ export function FantasyView({ pool }: FantasyViewProps) {
           </div>
         }
       />
+
+      {viewingJournee === activeJournee && activeStarted && (
+        <div className="mb-5 flex justify-center">
+          <MyJourneeStanding
+            journee={activeJournee}
+            className="rounded-full bg-accent/15 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-accent"
+          />
+        </div>
+      )}
 
       {isEditableView && (
         <Card className="mb-5 flex items-center gap-3">

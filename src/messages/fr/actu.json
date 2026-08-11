@@ -7,7 +7,6 @@
     "manage": "Gérer mon équipe",
     "createTitle": "Compose ton équipe de la semaine",
     "create": "Créer",
-    "rank": "#{rank} au classement",
     "waitingRank": "En attente du classement",
     "progress": "{count}/11"
   },

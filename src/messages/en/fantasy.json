@@ -126,5 +126,9 @@
     "p4": "Once your team is saved, it's locked: tap a player to see their next match (date, time, opponent) instead of changing them. An \"Edit team\" button remains available to unlock it and make changes until kickoff.",
     "p5": "As soon as a matchday's match ends, the player's rating appears in a small circle at the bottom right of their photo — dark red near 0/10, orange at 5/10, light green at 7/10, dark green near 10/10.",
     "p6": "Saving your team also activates notifications for your 11 players: starting or not at kickoff, goal, assist, card, and full-time rating. If you're already preparing next matchday's team in advance, its notifications stay pending and activate automatically once that matchday starts — no need to reopen the app."
+  },
+  "standing": {
+    "points": "{points, plural, one {# point} other {# points}}",
+    "rankOf": "#{rank} of {total}"
   }
 }
