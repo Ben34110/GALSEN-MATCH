@@ -21,8 +21,19 @@ import type { PlayerJourneeRating } from "@/lib/data/fantasy-ratings";
 // + photo + name label, ~92-100px depending on the sm: breakpoint's larger
 // photo), sized to the desktop dimensions so mobile, with its smaller
 // photo, only ever gets *extra* clearance rather than risking an overlap.
+//
+// Horizontal anchoring can't just always center on the seat (translateX
+// -50%) — a right-back sits at leftPercent 86, and a ~200px-wide tooltip
+// centered there extends ~100px past the pitch's own right edge, off the
+// actual screen on most phones. Seats near either edge anchor that same
+// edge of the tooltip to the seat instead, growing inward; only seats
+// closer to the middle (where centering can't overflow either side) still
+// center.
 function tooltipPositionStyle(seat: SeatDef): CSSProperties {
-  return { top: `calc(${seat.topPercent}% + 106px)`, left: `${seat.leftPercent}%` };
+  const top = `calc(${seat.topPercent}% + 106px)`;
+  if (seat.leftPercent >= 70) return { top, right: `${100 - seat.leftPercent}%` };
+  if (seat.leftPercent <= 30) return { top, left: `${seat.leftPercent}%` };
+  return { top, left: `${seat.leftPercent}%`, transform: "translateX(-50%)" };
 }
 
 // A player id absent from this map means "not fetched yet" (loading).
@@ -178,7 +189,7 @@ function NextMatchTooltip({
   return (
     <div
       role="tooltip"
-      className="absolute z-30 w-44 -translate-x-1/2 rounded-xl border border-border bg-surface p-2.5 text-left shadow-lg"
+      className="absolute z-30 w-44 rounded-xl border border-border bg-surface p-2.5 text-left shadow-lg"
       style={tooltipPositionStyle(seat)}
     >
       {nextMatch === undefined && <p className="text-xs text-muted">{t("common.loading")}</p>}
@@ -213,7 +224,7 @@ function MatchMomentsTooltip({ seat, rating }: { seat: SeatDef; rating: PlayerJo
     return (
       <div
         role="tooltip"
-        className="absolute z-30 w-48 -translate-x-1/2 rounded-xl border border-border bg-surface p-2.5 text-left shadow-lg"
+        className="absolute z-30 w-48 rounded-xl border border-border bg-surface p-2.5 text-left shadow-lg"
         style={tooltipPositionStyle(seat)}
       >
         <p className="text-xs text-muted">{t("pitch.matchDetailsUnavailable")}</p>
@@ -243,7 +254,7 @@ function MatchMomentsTooltip({ seat, rating }: { seat: SeatDef; rating: PlayerJo
   return (
     <div
       role="tooltip"
-      className="absolute z-30 w-52 -translate-x-1/2 rounded-xl border border-border bg-surface p-2.5 text-left shadow-lg"
+      className="absolute z-30 w-52 rounded-xl border border-border bg-surface p-2.5 text-left shadow-lg"
       style={tooltipPositionStyle(seat)}
     >
       <div className="mb-1.5 flex items-center gap-2">

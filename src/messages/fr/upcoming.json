@@ -12,8 +12,18 @@
       "trend": "+/-"
     },
     "months": [
-      "janvier", "février", "mars", "avril", "mai", "juin",
-      "juillet", "août", "septembre", "octobre", "novembre", "décembre"
+      "janvier",
+      "février",
+      "mars",
+      "avril",
+      "mai",
+      "juin",
+      "juillet",
+      "août",
+      "septembre",
+      "octobre",
+      "novembre",
+      "décembre"
     ]
   },
   "canQualifiers": {
@@ -60,5 +70,37 @@
     "inProgress": "En cours",
     "estimatedDate": "date estimée",
     "addToCalendar": "Ajouter à mon calendrier"
+  },
+  "u17WorldCup": {
+    "eyebrow": "Coupe du Monde",
+    "title": "U17",
+    "subtitle": "Les deux premières journées, du 19 au 22 novembre 2026, groupe par groupe.",
+    "views": {
+      "matches": "Matchs",
+      "standings": "Classement"
+    },
+    "rounds": {
+      "group1": "1ère journée — 19 novembre 2026",
+      "group2": "2e journée — 22 novembre 2026"
+    },
+    "fixtures": {
+      "unavailable": "Calendrier indisponible pour l'instant."
+    },
+    "standings": {
+      "unavailable": "Classement indisponible pour l'instant.",
+      "provisionalNote": "Groupes reconstitués à partir du calendrier — le tournoi n'a pas encore commencé (1ère journée le 19 novembre 2026), le classement officiel remplacera ces groupes dès qu'API-Football le publiera.",
+      "caption": "Classement du {group} de la Coupe du Monde U17.",
+      "columns": {
+        "team": "Équipe",
+        "points": "Pts",
+        "played": "J",
+        "won": "G",
+        "drawn": "N",
+        "lost": "P",
+        "goalsFor": "BP",
+        "goalsAgainst": "BC",
+        "diff": "Diff"
+      }
+    }
   }
 }

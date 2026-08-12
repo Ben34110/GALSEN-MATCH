@@ -67,7 +67,6 @@ function targetKey(row: { device_id: string; user_id: string | null }): string {
 
 const STARTED_STATUSES = new Set(["1H", "2H", "HT", "ET", "P", "LIVE", "BT"]);
 const FINISHED_STATUSES = new Set(["FT", "AET", "PEN"]);
-const NOT_STARTED_STATUSES = new Set(["NS", "TBD"]);
 
 // A little variety so it doesn't read like a robot filled out a form —
 // picks a random title/body template per event so the same person scoring
@@ -344,42 +343,52 @@ export async function GET(request: Request) {
       const clubDevices = clubPrefRows.filter((r) => r.team_id === teamId);
       const teamLogo = logoFor(fixture, teamId);
 
-      if (!NOT_STARTED_STATUSES.has(status)) {
-        const lineupKey = `lineup-${teamId}`;
-        // A player-only favorite (no club-level favorite for their team)
-        // used to never trigger this fetch at all — the gate below used to
-        // check clubDevices.some(...) alone, so "is my favorited player
-        // starting?" silently never fired unless someone had *also*
-        // favorited that whole club with lineup notifications on. Checking
-        // both keeps the single /fixtures/lineups call shared (still one
-        // fetch either way), just no longer conditional on club interest.
-        const teamHasPlayerLineupSubscribers = playerPrefRows.some(
-          (r) => r.notify_lineup && favoritedPlayerMeta.get(r.player_id)?.teamId === teamId
-        );
-        if ((clubDevices.some((d) => d.notify_lineup) || teamHasPlayerLineupSubscribers) && !(await notifiedKey(fixtureId, lineupKey))) {
-          const lineupResult = await getFixtureLineups(fixtureId);
-          if (!lineupResult.error && lineupResult.data.length > 0) {
-            const { title, body } = pick(LINEUP_TEMPLATES)(matchLabel);
-            for (const device of clubDevices.filter((d) => d.notify_lineup)) {
-              queue(targetKey(device), title, body, fixtureId, teamLogo);
-            }
-            await markKey(fixtureId, lineupKey);
+      // No status gate here on purpose — lineups are typically published
+      // ~60-75 minutes *before* kickoff, while the fixture is still "NS"
+      // (API-Football's own "not started" status). This used to be gated
+      // behind `!NOT_STARTED_STATUSES.has(status)` (only check once the
+      // match had already gone live), which meant the "titulaire" push
+      // could only ever fire once the match had already started — the
+      // earliest point that condition let this code run at all — instead
+      // of when the lineup actually came out. getFixtureLineups itself
+      // just returns an empty result until a lineup truly exists, and
+      // notifiedKey/markKey already stop this from re-fetching every poll
+      // once one's been found, so there's nothing this gate was protecting
+      // against.
+      const lineupKey = `lineup-${teamId}`;
+      // A player-only favorite (no club-level favorite for their team)
+      // used to never trigger this fetch at all — the gate below used to
+      // check clubDevices.some(...) alone, so "is my favorited player
+      // starting?" silently never fired unless someone had *also*
+      // favorited that whole club with lineup notifications on. Checking
+      // both keeps the single /fixtures/lineups call shared (still one
+      // fetch either way), just no longer conditional on club interest.
+      const teamHasPlayerLineupSubscribers = playerPrefRows.some(
+        (r) => r.notify_lineup && favoritedPlayerMeta.get(r.player_id)?.teamId === teamId
+      );
+      if ((clubDevices.some((d) => d.notify_lineup) || teamHasPlayerLineupSubscribers) && !(await notifiedKey(fixtureId, lineupKey))) {
+        const lineupResult = await getFixtureLineups(fixtureId);
+        if (!lineupResult.error && lineupResult.data.length > 0) {
+          const { title, body } = pick(LINEUP_TEMPLATES)(matchLabel);
+          for (const device of clubDevices.filter((d) => d.notify_lineup)) {
+            queue(targetKey(device), title, body, fixtureId, teamLogo);
+          }
+          await markKey(fixtureId, lineupKey);
 
-            // Same lineup fetch also answers "is my favorited player starting?" —
-            // check it here instead of a second /fixtures/lineups call.
-            const teamLineup = lineupResult.data.find((l) => l.team.id === teamId);
-            if (teamLineup) {
-              for (const slot of teamLineup.startXI) {
-                if (!favoritedPlayerMeta.has(slot.player.id)) continue;
-                const playerKey = `player-lineup-${slot.player.id}`;
-                if (await notifiedKey(fixtureId, playerKey)) continue;
-                const player = favoritedPlayerMeta.get(slot.player.id)!;
-                const { title: pTitle, body: pBody } = pick(PLAYER_LINEUP_TEMPLATES)(player.name);
-                for (const device of playerPrefRows.filter((r) => r.player_id === slot.player.id && r.notify_lineup)) {
-                  queue(targetKey(device), pTitle, pBody, fixtureId, player.photo);
-                }
-                await markKey(fixtureId, playerKey);
+          // Same lineup fetch also answers "is my favorited player starting?" —
+          // check it here instead of a second /fixtures/lineups call.
+          const teamLineup = lineupResult.data.find((l) => l.team.id === teamId);
+          if (teamLineup) {
+            for (const slot of teamLineup.startXI) {
+              if (!favoritedPlayerMeta.has(slot.player.id)) continue;
+              const playerKey = `player-lineup-${slot.player.id}`;
+              if (await notifiedKey(fixtureId, playerKey)) continue;
+              const player = favoritedPlayerMeta.get(slot.player.id)!;
+              const { title: pTitle, body: pBody } = pick(PLAYER_LINEUP_TEMPLATES)(player.name);
+              for (const device of playerPrefRows.filter((r) => r.player_id === slot.player.id && r.notify_lineup)) {
+                queue(targetKey(device), pTitle, pBody, fixtureId, player.photo);
               }
+              await markKey(fixtureId, playerKey);
             }
           }
         }

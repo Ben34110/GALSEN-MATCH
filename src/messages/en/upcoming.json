@@ -12,8 +12,18 @@
       "trend": "+/-"
     },
     "months": [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
     ]
   },
   "canQualifiers": {
@@ -60,5 +70,37 @@
     "inProgress": "In progress",
     "estimatedDate": "estimated date",
     "addToCalendar": "Add to my calendar"
+  },
+  "u17WorldCup": {
+    "eyebrow": "World Cup",
+    "title": "U17",
+    "subtitle": "The first two matchdays, November 19-22, 2026, group by group.",
+    "views": {
+      "matches": "Matches",
+      "standings": "Standings"
+    },
+    "rounds": {
+      "group1": "Matchday 1 — November 19, 2026",
+      "group2": "Matchday 2 — November 22, 2026"
+    },
+    "fixtures": {
+      "unavailable": "Schedule unavailable for now."
+    },
+    "standings": {
+      "unavailable": "Standings unavailable for now.",
+      "provisionalNote": "Groups rebuilt from the schedule — the tournament hasn't started yet (matchday 1 on November 19, 2026), the official standings will replace these groups as soon as API-Football publishes them.",
+      "caption": "{group} standings for the U17 World Cup.",
+      "columns": {
+        "team": "Team",
+        "points": "Pts",
+        "played": "P",
+        "won": "W",
+        "drawn": "D",
+        "lost": "L",
+        "goalsFor": "GF",
+        "goalsAgainst": "GA",
+        "diff": "Diff"
+      }
+    }
   }
 }
