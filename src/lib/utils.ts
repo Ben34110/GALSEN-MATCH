@@ -43,6 +43,15 @@ export function formatDaysAgo(iso: string): string {
   return `il y a ${diffDays} jours`;
 }
 
+// Plain calendar date, no time — for a transfer's announcement date on the
+// player profile page (see components/profile/player-profile-view.tsx),
+// where the exact date matters more than "how long ago" (formatDaysAgo,
+// used for Mercato's feed instead, where recency is the point).
+export function formatDate(iso: string): string {
+  const date = new Date(iso);
+  return date.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" });
+}
+
 export function formatKickoff(iso: string): string {
   const date = new Date(iso);
   return date.toLocaleString("fr-FR", {

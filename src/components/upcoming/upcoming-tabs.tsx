@@ -54,7 +54,13 @@ export function UpcomingTabs({
 
   return (
     <div className="flex flex-col gap-5">
-      <SegmentedControl items={tabs} activeId={tab} onChange={setTab} />
+      {/* self-start: without it, being the first child of this flex-col
+          stretches the pill row to the column's full width (align-items:
+          stretch is the flex default) — right up under the fixed global
+          search button (components/search/global-search-button.tsx) at
+          the top-right of every page. Content-width + left-aligned avoids
+          the overlap and also just looks like a normal tab row. */}
+      <SegmentedControl items={tabs} activeId={tab} onChange={setTab} className="self-start" />
 
       {tab === "can" && (
         <CanQualifiersSection

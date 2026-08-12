@@ -8,7 +8,6 @@ import { useTranslations } from "next-intl";
 import { ArrowLeftRight, CalendarClock, ChevronRight, Newspaper, Star, Trophy } from "lucide-react";
 import { ArticleCard } from "@/components/actu/article-card";
 import { Card } from "@/components/ui/card";
-import { ProfileAvatar } from "@/components/ui/profile-avatar";
 import { MyJourneeStanding } from "@/components/fantasy/my-journee-standing";
 import { cn } from "@/lib/utils";
 import { AFRICAN_NATIONS } from "@/lib/data/african-nations";
@@ -101,16 +100,11 @@ export function ActuPageClient({ articles }: { articles: Article[] | null }) {
 
   return (
     <div>
-      <header className="mb-6 flex items-center justify-between gap-3 lg:mb-8">
-        <div>
-          <p className="text-sm text-muted">{t("greeting")}</p>
-          <h1 className="mt-0.5 font-serif text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            {profile?.username ?? "Amina Diop"}
-          </h1>
-        </div>
-        <Link href="/profil" aria-label={t("profileAlt")} className="shrink-0 transition-transform active:scale-95">
-          <ProfileAvatar countryId={profile?.countryId ?? "senegal"} size={10} />
-        </Link>
+      <header className="mb-6 lg:mb-8">
+        <p className="text-sm text-muted">{t("greeting")}</p>
+        <h1 className="mt-0.5 font-serif text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+          {profile?.username ?? "Amina Diop"}
+        </h1>
       </header>
 
       {squad && lineupPlayers.length > 0 ? (

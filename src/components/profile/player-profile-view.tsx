@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { MatchCompactList } from "@/components/profile/match-compact-list";
 import { getNationalityFlag } from "@/lib/data/nationality-flags";
 import { positionCode } from "@/lib/data/african-players";
-import { formatDaysAgo } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import type { PlayerDetail, PlayerTransferRecord } from "@/types";
 
 const BACK_HREF = "/joueur";
@@ -48,7 +48,7 @@ function TransferRow({ transfer, freeAgentLabel }: { transfer: PlayerTransferRec
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-1.5">
           <FeeBadge type={transfer.type} />
-          <span className="shrink-0 text-[11px] text-muted">{formatDaysAgo(transfer.date)}</span>
+          <span className="shrink-0 text-[11px] text-muted">{formatDate(transfer.date)}</span>
         </div>
         <div className="mt-2 flex items-center gap-2">
           <ClubCrest club={transfer.clubFrom} freeAgentLabel={freeAgentLabel} />
