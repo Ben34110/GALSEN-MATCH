@@ -158,9 +158,13 @@ export interface MercatoTransfer {
   clubTo: { id: number; name: string; logo: string };
 }
 
-// A real club, pre-crawled via scripts/sync-teams.mjs into
+// A real club or national team, pre-crawled via scripts/sync-teams.mjs into
 // lib/data/generated/teams.json — powers the favorite-club search in Profil
-// (see components/profil/preferences-editor.tsx).
+// (see components/profil/preferences-editor.tsx) and the global search (see
+// lib/data/global-search.ts). National-team entries have no real domestic
+// league — leagueId is 0 and leagueName is a display placeholder ("Équipe
+// nationale" etc.), never used to query /standings for them (see
+// lib/data/team-profile.ts, which branches on `type` instead).
 export interface LeagueTeam {
   id: number;
   name: string;
@@ -168,6 +172,90 @@ export interface LeagueTeam {
   country: string;
   leagueId: number;
   leagueName: string;
+  type: "club" | "national";
+}
+
+// One /transfers entry for a player — doubles as both "carrière" (the
+// chronological club-to-club history) and "transferts" (fee/date/type) on
+// the player profile page, since a single API-Football call already
+// carries both (see lib/data/player-profile.ts).
+export interface PlayerTransferRecord {
+  date: string; // ISO date
+  type: string | null; // fee ("€ 60M"), "Loan", or null (free agent)
+  clubFrom: { id: number; name: string; logo: string } | null;
+  clubTo: { id: number; name: string; logo: string };
+}
+
+// The player's own season-to-date line at their current club (goals/
+// assists/appearances/average rating) — the "saison en cours" section of
+// the player profile page.
+export interface PlayerSeasonStats {
+  displaySeason: string; // e.g. "2025-2026"
+  leagueName: string;
+  teamName: string;
+  teamLogo: string;
+  appearances: number;
+  goals: number;
+  assists: number;
+  rating: number | null;
+  yellowCards: number;
+  redCards: number;
+}
+
+// Full detail for the player profile page (/joueur/[id]) — combines the
+// static bio already known from lib/data/african-players.json with live
+// API-Football lookups for whatever can't be pre-crawled cheaply (current
+// season stats, transfer history, last/next matches). See
+// lib/data/player-profile.ts.
+export interface PlayerDetail {
+  id: number;
+  name: string;
+  firstname: string | null;
+  lastname: string | null;
+  age: number | null;
+  nationality: string;
+  photo: string;
+  position: string | null;
+  teamId: number | null;
+  teamName: string | null;
+  teamLogo: string | null;
+  currentSeason: PlayerSeasonStats | null;
+  recentMatches: Match[];
+  upcomingMatches: Match[];
+  transfers: PlayerTransferRecord[];
+}
+
+// A club's position in its domestic league standings — the team profile
+// page's "classement dans sa ligue" section (club teams only; national
+// teams show their FifaRankingRow instead, see TeamDetail).
+export interface TeamStandingSummary {
+  rank: number;
+  leagueName: string;
+  points: number;
+  played: number;
+  won: number;
+  drawn: number;
+  lost: number;
+  goalsFor: number;
+  goalsAgainst: number;
+  goalsDiff: number;
+}
+
+// Full detail for the team profile page (/equipe/[id]) — shared by both
+// clubs and national teams (see LeagueTeam's `type`); exactly one of
+// `standing`/`fifaRanking` is populated depending on which. See
+// lib/data/team-profile.ts.
+export interface TeamDetail {
+  id: number;
+  name: string;
+  logo: string;
+  country: string;
+  type: "club" | "national";
+  leagueName: string | null;
+  recentMatches: Match[];
+  upcomingMatches: Match[];
+  standing: TeamStandingSummary | null;
+  fifaRanking: FifaRankingRow | null;
 }
 
 // A real match's announced starting XI/bench (see lib/data/live.ts

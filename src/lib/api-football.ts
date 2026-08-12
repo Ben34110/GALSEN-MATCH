@@ -289,3 +289,52 @@ interface ApiStandingsResponse {
 export function getStandingsForSeason(leagueId: number, season: number) {
   return apiFootballGet<ApiStandingsResponse>("/standings", { league: leagueId, season }, 30 * 60);
 }
+
+// --- Player/club profile pages (global search, see lib/data/player-profile.ts
+// and lib/data/team-profile.ts) ---
+
+export interface ApiPlayerStatEntry {
+  team: { id: number; name: string; logo: string };
+  league: { id: number; name: string; season: number };
+  games: { appearences: number | null; position: string | null; rating: string | null };
+  goals: { total: number | null; assists: number | null };
+  cards: { yellow: number | null; red: number | null };
+}
+
+export interface ApiPlayerProfileResponse {
+  player: { id: number; firstname: string; lastname: string; age: number; nationality: string; photo: string };
+  statistics: ApiPlayerStatEntry[];
+}
+
+// One season's full profile (bio + a stat line per competition/team played
+// in that season) — the "saison en cours" section of the player profile
+// page. Cached half an hour: frequent enough that a goal scored this
+// afternoon shows up same-day, without re-fetching on every page view.
+export function getPlayerProfile(playerId: number, season: number) {
+  return apiFootballGet<ApiPlayerProfileResponse>("/players", { id: playerId, season }, 30 * 60);
+}
+
+export interface ApiTransferRecord {
+  date: string;
+  type: string | null;
+  // Both sides can come back with a null id (a "Free agent" placeholder
+  // team) — `out` can additionally be entirely absent for a player's very
+  // first registered move (arriving from outside professional football).
+  teams: {
+    in: { id: number | null; name: string; logo: string };
+    out: { id: number | null; name: string; logo: string } | null;
+  };
+}
+
+interface ApiPlayerTransfersResponse {
+  player: { id: number };
+  transfers: ApiTransferRecord[];
+}
+
+// A player's full transfer history — doubles as "carrière" (the
+// chronological club-to-club history) and "transferts" (fee/date/type) on
+// the player profile page. Cached a day: transfer records essentially
+// never change once registered outside of an active window.
+export function getPlayerTransfers(playerId: number) {
+  return apiFootballGet<ApiPlayerTransfersResponse>("/transfers", { player: playerId }, 24 * 60 * 60);
+}

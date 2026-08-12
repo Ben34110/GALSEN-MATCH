@@ -1,0 +1,58 @@
+{
+  "bar": {
+    "openAriaLabel": "بحث",
+    "title": "بحث",
+    "placeholder": "لاعب، نادٍ، منتخب…",
+    "closeAriaLabel": "إغلاق",
+    "prompt": "اكتب اسم لاعب أو نادٍ أو منتخب وطني.",
+    "noResults": "لا توجد نتائج لـ « {query} ».",
+    "players": "لاعب",
+    "clubs": "نادٍ",
+    "national": "منتخب"
+  },
+  "player": {
+    "back": "رجوع",
+    "currentSeason": "الموسم الحالي",
+    "noCurrentSeason": "الإحصائيات غير متوفرة للموسم الحالي.",
+    "appearances": "المباريات",
+    "goals": "الأهداف",
+    "assists": "التمريرات الحاسمة",
+    "rating": "متوسط التقييم",
+    "yellowCards": "البطاقات الصفراء",
+    "redCards": "البطاقات الحمراء",
+    "recentMatches": "آخر 3 مباريات",
+    "upcomingMatches": "المباريات الـ3 القادمة",
+    "noRecentMatches": "لا توجد مباراة حديثة.",
+    "noUpcomingMatches": "لا توجد مباراة قادمة مبرمجة.",
+    "careerTransfers": "المسيرة والانتقالات",
+    "noTransfers": "لا يوجد انتقال مسجل.",
+    "freeAgent": "لاعب حر",
+    "positions": {
+      "G": "حارس مرمى",
+      "D": "مدافع",
+      "M": "وسط",
+      "A": "مهاجم"
+    }
+  },
+  "team": {
+    "back": "رجوع",
+    "recentMatches": "آخر المباريات",
+    "upcomingMatches": "المباريات القادمة",
+    "noRecentMatches": "لا توجد مباراة حديثة.",
+    "noUpcomingMatches": "لا توجد مباراة قادمة مبرمجة.",
+    "standing": "الترتيب",
+    "noStanding": "الترتيب غير متوفر حالياً.",
+    "fifaRanking": "تصنيف الفيفا",
+    "noFifaRanking": "تصنيف الفيفا غير متوفر.",
+    "rank": "المرتبة",
+    "points": "نقاط",
+    "played": "لعب",
+    "won": "فاز",
+    "drawn": "تعادل",
+    "lost": "خسر",
+    "goalsFor": "له-عليه",
+    "diff": "الفارق",
+    "worldRank": "عالمي",
+    "africanRank": "إفريقيا"
+  }
+}

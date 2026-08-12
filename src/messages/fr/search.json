@@ -1,0 +1,58 @@
+{
+  "bar": {
+    "openAriaLabel": "Rechercher",
+    "title": "Recherche",
+    "placeholder": "Joueur, club, sélection…",
+    "closeAriaLabel": "Fermer",
+    "prompt": "Tapez le nom d'un joueur, d'un club ou d'une sélection nationale.",
+    "noResults": "Aucun résultat pour « {query} ».",
+    "players": "Joueur",
+    "clubs": "Club",
+    "national": "Sélection"
+  },
+  "player": {
+    "back": "Retour",
+    "currentSeason": "Saison en cours",
+    "noCurrentSeason": "Statistiques indisponibles pour la saison en cours.",
+    "appearances": "Matchs",
+    "goals": "Buts",
+    "assists": "Passes déc.",
+    "rating": "Note moy.",
+    "yellowCards": "Cartons jaunes",
+    "redCards": "Cartons rouges",
+    "recentMatches": "3 derniers matchs",
+    "upcomingMatches": "3 prochains matchs",
+    "noRecentMatches": "Aucun match récent trouvé.",
+    "noUpcomingMatches": "Aucun match à venir programmé.",
+    "careerTransfers": "Carrière & transferts",
+    "noTransfers": "Aucun transfert enregistré.",
+    "freeAgent": "Agent libre",
+    "positions": {
+      "G": "Gardien",
+      "D": "Défenseur",
+      "M": "Milieu",
+      "A": "Attaquant"
+    }
+  },
+  "team": {
+    "back": "Retour",
+    "recentMatches": "Derniers matchs",
+    "upcomingMatches": "Prochains matchs",
+    "noRecentMatches": "Aucun match récent trouvé.",
+    "noUpcomingMatches": "Aucun match à venir programmé.",
+    "standing": "Classement",
+    "noStanding": "Classement indisponible pour l'instant.",
+    "fifaRanking": "Classement FIFA",
+    "noFifaRanking": "Classement FIFA indisponible.",
+    "rank": "Rang",
+    "points": "Pts",
+    "played": "J",
+    "won": "G",
+    "drawn": "N",
+    "lost": "P",
+    "goalsFor": "BP-BC",
+    "diff": "Diff",
+    "worldRank": "Mondial",
+    "africanRank": "Afrique"
+  }
+}

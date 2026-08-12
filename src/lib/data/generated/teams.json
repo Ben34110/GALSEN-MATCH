@@ -5,7 +5,8 @@
     "logo": "https://media.api-sports.io/football/teams/5285.png",
     "country": "Senegal",
     "leagueId": 403,
-    "leagueName": "Ligue 1 Sénégal"
+    "leagueName": "Ligue 1 Sénégal",
+    "type": "club"
   },
   {
     "id": 5287,
@@ -13,7 +14,8 @@
     "logo": "https://media.api-sports.io/football/teams/5287.png",
     "country": "Senegal",
     "leagueId": 403,
-    "leagueName": "Ligue 1 Sénégal"
+    "leagueName": "Ligue 1 Sénégal",
+    "type": "club"
   },
   {
     "id": 5288,
@@ -21,7 +23,8 @@
     "logo": "https://media.api-sports.io/football/teams/5288.png",
     "country": "Senegal",
     "leagueId": 403,
-    "leagueName": "Ligue 1 Sénégal"
+    "leagueName": "Ligue 1 Sénégal",
+    "type": "club"
   },
   {
     "id": 5289,
@@ -29,7 +32,8 @@
     "logo": "https://media.api-sports.io/football/teams/5289.png",
     "country": "Senegal",
     "leagueId": 403,
-    "leagueName": "Ligue 1 Sénégal"
+    "leagueName": "Ligue 1 Sénégal",
+    "type": "club"
   },
   {
     "id": 5290,
@@ -37,7 +41,8 @@
     "logo": "https://media.api-sports.io/football/teams/5290.png",
     "country": "Senegal",
     "leagueId": 403,
-    "leagueName": "Ligue 1 Sénégal"
+    "leagueName": "Ligue 1 Sénégal",
+    "type": "club"
   },
   {
     "id": 5293,
@@ -45,7 +50,8 @@
     "logo": "https://media.api-sports.io/football/teams/5293.png",
     "country": "Senegal",
     "leagueId": 403,
-    "leagueName": "Ligue 1 Sénégal"
+    "leagueName": "Ligue 1 Sénégal",
+    "type": "club"
   },
   {
     "id": 5294,
@@ -53,7 +59,8 @@
     "logo": "https://media.api-sports.io/football/teams/5294.png",
     "country": "Senegal",
     "leagueId": 403,
-    "leagueName": "Ligue 1 Sénégal"
+    "leagueName": "Ligue 1 Sénégal",
+    "type": "club"
   },
   {
     "id": 5295,
@@ -61,7 +68,8 @@
     "logo": "https://media.api-sports.io/football/teams/5295.png",
     "country": "Senegal",
     "leagueId": 403,
-    "leagueName": "Ligue 1 Sénégal"
+    "leagueName": "Ligue 1 Sénégal",
+    "type": "club"
   },
   {
     "id": 5296,
@@ -69,7 +77,8 @@
     "logo": "https://media.api-sports.io/football/teams/5296.png",
     "country": "Senegal",
     "leagueId": 403,
-    "leagueName": "Ligue 1 Sénégal"
+    "leagueName": "Ligue 1 Sénégal",
+    "type": "club"
   },
   {
     "id": 5553,
@@ -77,7 +86,8 @@
     "logo": "https://media.api-sports.io/football/teams/5553.png",
     "country": "Senegal",
     "leagueId": 403,
-    "leagueName": "Ligue 1 Sénégal"
+    "leagueName": "Ligue 1 Sénégal",
+    "type": "club"
   },
   {
     "id": 5554,
@@ -85,7 +95,8 @@
     "logo": "https://media.api-sports.io/football/teams/5554.png",
     "country": "Senegal",
     "leagueId": 403,
-    "leagueName": "Ligue 1 Sénégal"
+    "leagueName": "Ligue 1 Sénégal",
+    "type": "club"
   },
   {
     "id": 13172,
@@ -93,7 +104,8 @@
     "logo": "https://media.api-sports.io/football/teams/13172.png",
     "country": "Senegal",
     "leagueId": 403,
-    "leagueName": "Ligue 1 Sénégal"
+    "leagueName": "Ligue 1 Sénégal",
+    "type": "club"
   },
   {
     "id": 25067,
@@ -101,7 +113,8 @@
     "logo": "https://media.api-sports.io/football/teams/25067.png",
     "country": "Senegal",
     "leagueId": 403,
-    "leagueName": "Ligue 1 Sénégal"
+    "leagueName": "Ligue 1 Sénégal",
+    "type": "club"
   },
   {
     "id": 25068,
@@ -109,7 +122,8 @@
     "logo": "https://media.api-sports.io/football/teams/25068.png",
     "country": "Senegal",
     "leagueId": 403,
-    "leagueName": "Ligue 1 Sénégal"
+    "leagueName": "Ligue 1 Sénégal",
+    "type": "club"
   },
   {
     "id": 25070,
@@ -117,7 +131,8 @@
     "logo": "https://media.api-sports.io/football/teams/25070.png",
     "country": "Senegal",
     "leagueId": 403,
-    "leagueName": "Ligue 1 Sénégal"
+    "leagueName": "Ligue 1 Sénégal",
+    "type": "club"
   },
   {
     "id": 27005,
@@ -125,7 +140,8 @@
     "logo": "https://media.api-sports.io/football/teams/27005.png",
     "country": "Senegal",
     "leagueId": 403,
-    "leagueName": "Ligue 1 Sénégal"
+    "leagueName": "Ligue 1 Sénégal",
+    "type": "club"
   },
   {
     "id": 5171,
@@ -133,7 +149,8 @@
     "logo": "https://media.api-sports.io/football/teams/5171.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 5173,
@@ -141,7 +158,8 @@
     "logo": "https://media.api-sports.io/football/teams/5173.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 5175,
@@ -149,7 +167,8 @@
     "logo": "https://media.api-sports.io/football/teams/5175.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 5176,
@@ -157,7 +176,8 @@
     "logo": "https://media.api-sports.io/football/teams/5176.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 5177,
@@ -165,7 +185,8 @@
     "logo": "https://media.api-sports.io/football/teams/5177.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 5183,
@@ -173,7 +194,8 @@
     "logo": "https://media.api-sports.io/football/teams/5183.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 5184,
@@ -181,7 +203,8 @@
     "logo": "https://media.api-sports.io/football/teams/5184.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 5185,
@@ -189,7 +212,8 @@
     "logo": "https://media.api-sports.io/football/teams/5185.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 5188,
@@ -197,7 +221,8 @@
     "logo": "https://media.api-sports.io/football/teams/5188.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 5189,
@@ -205,7 +230,8 @@
     "logo": "https://media.api-sports.io/football/teams/5189.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 5190,
@@ -213,7 +239,8 @@
     "logo": "https://media.api-sports.io/football/teams/5190.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 5191,
@@ -221,7 +248,8 @@
     "logo": "https://media.api-sports.io/football/teams/5191.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 5192,
@@ -229,7 +257,8 @@
     "logo": "https://media.api-sports.io/football/teams/5192.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 5194,
@@ -237,7 +266,8 @@
     "logo": "https://media.api-sports.io/football/teams/5194.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 5504,
@@ -245,7 +275,8 @@
     "logo": "https://media.api-sports.io/football/teams/5504.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 5508,
@@ -253,7 +284,8 @@
     "logo": "https://media.api-sports.io/football/teams/5508.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 17445,
@@ -261,7 +293,8 @@
     "logo": "https://media.api-sports.io/football/teams/17445.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 24512,
@@ -269,7 +302,8 @@
     "logo": "https://media.api-sports.io/football/teams/24512.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 26400,
@@ -277,7 +311,8 @@
     "logo": "https://media.api-sports.io/football/teams/26400.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 26401,
@@ -285,7 +320,8 @@
     "logo": "https://media.api-sports.io/football/teams/26401.png",
     "country": "Nigeria",
     "leagueId": 399,
-    "leagueName": "NPFL (Nigeria)"
+    "leagueName": "NPFL (Nigeria)",
+    "type": "club"
   },
   {
     "id": 1031,
@@ -293,7 +329,8 @@
     "logo": "https://media.api-sports.io/football/teams/1031.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 1036,
@@ -301,7 +338,8 @@
     "logo": "https://media.api-sports.io/football/teams/1036.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 1037,
@@ -309,7 +347,8 @@
     "logo": "https://media.api-sports.io/football/teams/1037.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 1039,
@@ -317,7 +356,8 @@
     "logo": "https://media.api-sports.io/football/teams/1039.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 1040,
@@ -325,7 +365,8 @@
     "logo": "https://media.api-sports.io/football/teams/1040.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 1041,
@@ -333,7 +374,8 @@
     "logo": "https://media.api-sports.io/football/teams/1041.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 1044,
@@ -341,7 +383,8 @@
     "logo": "https://media.api-sports.io/football/teams/1044.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 1046,
@@ -349,7 +392,8 @@
     "logo": "https://media.api-sports.io/football/teams/1046.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 1572,
@@ -357,7 +401,8 @@
     "logo": "https://media.api-sports.io/football/teams/1572.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 1574,
@@ -365,7 +410,8 @@
     "logo": "https://media.api-sports.io/football/teams/1574.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 1575,
@@ -373,7 +419,8 @@
     "logo": "https://media.api-sports.io/football/teams/1575.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 1577,
@@ -381,7 +428,8 @@
     "logo": "https://media.api-sports.io/football/teams/1577.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 7520,
@@ -389,7 +437,8 @@
     "logo": "https://media.api-sports.io/football/teams/7520.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 13819,
@@ -397,7 +446,8 @@
     "logo": "https://media.api-sports.io/football/teams/13819.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 13822,
@@ -405,7 +455,8 @@
     "logo": "https://media.api-sports.io/football/teams/13822.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 14651,
@@ -413,7 +464,8 @@
     "logo": "https://media.api-sports.io/football/teams/14651.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 15570,
@@ -421,7 +473,8 @@
     "logo": "https://media.api-sports.io/football/teams/15570.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 15731,
@@ -429,7 +482,8 @@
     "logo": "https://media.api-sports.io/football/teams/15731.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 16431,
@@ -437,7 +491,8 @@
     "logo": "https://media.api-sports.io/football/teams/16431.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 18021,
@@ -445,7 +500,8 @@
     "logo": "https://media.api-sports.io/football/teams/18021.png",
     "country": "Egypt",
     "leagueId": 233,
-    "leagueName": "Premier League (Égypte)"
+    "leagueName": "Premier League (Égypte)",
+    "type": "club"
   },
   {
     "id": 962,
@@ -453,7 +509,8 @@
     "logo": "https://media.api-sports.io/football/teams/962.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 964,
@@ -461,7 +518,8 @@
     "logo": "https://media.api-sports.io/football/teams/964.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 968,
@@ -469,7 +527,8 @@
     "logo": "https://media.api-sports.io/football/teams/968.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 969,
@@ -477,7 +536,8 @@
     "logo": "https://media.api-sports.io/football/teams/969.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 971,
@@ -485,7 +545,8 @@
     "logo": "https://media.api-sports.io/football/teams/971.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 973,
@@ -493,7 +554,8 @@
     "logo": "https://media.api-sports.io/football/teams/973.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 974,
@@ -501,7 +563,8 @@
     "logo": "https://media.api-sports.io/football/teams/974.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 975,
@@ -509,7 +572,8 @@
     "logo": "https://media.api-sports.io/football/teams/975.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 976,
@@ -517,7 +581,8 @@
     "logo": "https://media.api-sports.io/football/teams/976.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 977,
@@ -525,7 +590,8 @@
     "logo": "https://media.api-sports.io/football/teams/977.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 3449,
@@ -533,7 +599,8 @@
     "logo": "https://media.api-sports.io/football/teams/3449.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 3451,
@@ -541,7 +608,8 @@
     "logo": "https://media.api-sports.io/football/teams/3451.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 3453,
@@ -549,7 +617,8 @@
     "logo": "https://media.api-sports.io/football/teams/3453.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 3454,
@@ -557,7 +626,8 @@
     "logo": "https://media.api-sports.io/football/teams/3454.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 14806,
@@ -565,7 +635,8 @@
     "logo": "https://media.api-sports.io/football/teams/14806.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 18753,
@@ -573,7 +644,8 @@
     "logo": "https://media.api-sports.io/football/teams/18753.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 22218,
@@ -581,7 +653,8 @@
     "logo": "https://media.api-sports.io/football/teams/22218.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 25058,
@@ -589,7 +662,8 @@
     "logo": "https://media.api-sports.io/football/teams/25058.png",
     "country": "Morocco",
     "leagueId": 200,
-    "leagueName": "Botola Pro (Maroc)"
+    "leagueName": "Botola Pro (Maroc)",
+    "type": "club"
   },
   {
     "id": 904,
@@ -597,7 +671,8 @@
     "logo": "https://media.api-sports.io/football/teams/904.png",
     "country": "Algeria",
     "leagueId": 186,
-    "leagueName": "Ligue 1 (Algérie)"
+    "leagueName": "Ligue 1 (Algérie)",
+    "type": "club"
   },
   {
     "id": 905,
@@ -605,7 +680,8 @@
     "logo": "https://media.api-sports.io/football/teams/905.png",
     "country": "Algeria",
     "leagueId": 186,
-    "leagueName": "Ligue 1 (Algérie)"
+    "leagueName": "Ligue 1 (Algérie)",
+    "type": "club"
   },
   {
     "id": 906,
@@ -613,7 +689,8 @@
     "logo": "https://media.api-sports.io/football/teams/906.png",
     "country": "Algeria",
     "leagueId": 186,
-    "leagueName": "Ligue 1 (Algérie)"
+    "leagueName": "Ligue 1 (Algérie)",
+    "type": "club"
   },
   {
     "id": 907,
@@ -621,7 +698,8 @@
     "logo": "https://media.api-sports.io/football/teams/907.png",
     "country": "Algeria",
     "leagueId": 186,
-    "leagueName": "Ligue 1 (Algérie)"
+    "leagueName": "Ligue 1 (Algérie)",
+    "type": "club"
   },
   {
     "id": 909,
@@ -629,7 +707,8 @@
     "logo": "https://media.api-sports.io/football/teams/909.png",
     "country": "Algeria",
     "leagueId": 186,
-    "leagueName": "Ligue 1 (Algérie)"
+    "leagueName": "Ligue 1 (Algérie)",
+    "type": "club"
   },
   {
     "id": 910,
@@ -637,7 +716,8 @@
     "logo": "https://media.api-sports.io/football/teams/910.png",
     "country": "Algeria",
     "leagueId": 186,
-    "leagueName": "Ligue 1 (Algérie)"
+    "leagueName": "Ligue 1 (Algérie)",
+    "type": "club"
   },
   {
     "id": 911,
@@ -645,7 +725,8 @@
     "logo": "https://media.api-sports.io/football/teams/911.png",
     "country": "Algeria",
     "leagueId": 186,
-    "leagueName": "Ligue 1 (Algérie)"
+    "leagueName": "Ligue 1 (Algérie)",
+    "type": "club"
   },
   {
     "id": 914,
@@ -653,7 +734,8 @@
     "logo": "https://media.api-sports.io/football/teams/914.png",
     "country": "Algeria",
     "leagueId": 186,
-    "leagueName": "Ligue 1 (Algérie)"
+    "leagueName": "Ligue 1 (Algérie)",
+    "type": "club"
   },
   {
     "id": 918,
@@ -661,7 +743,8 @@
     "logo": "https://media.api-sports.io/football/teams/918.png",
     "country": "Algeria",
     "leagueId": 186,
-    "leagueName": "Ligue 1 (Algérie)"
+    "leagueName": "Ligue 1 (Algérie)",
+    "type": "club"
   },
   {
     "id": 931,
@@ -669,7 +752,8 @@
     "logo": "https://media.api-sports.io/football/teams/931.png",
     "country": "Algeria",
     "leagueId": 186,
-    "leagueName": "Ligue 1 (Algérie)"
+    "leagueName": "Ligue 1 (Algérie)",
+    "type": "club"
   },
   {
     "id": 10715,
@@ -677,7 +761,8 @@
     "logo": "https://media.api-sports.io/football/teams/10715.png",
     "country": "Algeria",
     "leagueId": 186,
-    "leagueName": "Ligue 1 (Algérie)"
+    "leagueName": "Ligue 1 (Algérie)",
+    "type": "club"
   },
   {
     "id": 10752,
@@ -685,7 +770,8 @@
     "logo": "https://media.api-sports.io/football/teams/10752.png",
     "country": "Algeria",
     "leagueId": 186,
-    "leagueName": "Ligue 1 (Algérie)"
+    "leagueName": "Ligue 1 (Algérie)",
+    "type": "club"
   },
   {
     "id": 10777,
@@ -693,7 +779,8 @@
     "logo": "https://media.api-sports.io/football/teams/10777.png",
     "country": "Algeria",
     "leagueId": 186,
-    "leagueName": "Ligue 1 (Algérie)"
+    "leagueName": "Ligue 1 (Algérie)",
+    "type": "club"
   },
   {
     "id": 10780,
@@ -701,7 +788,8 @@
     "logo": "https://media.api-sports.io/football/teams/10780.png",
     "country": "Algeria",
     "leagueId": 186,
-    "leagueName": "Ligue 1 (Algérie)"
+    "leagueName": "Ligue 1 (Algérie)",
+    "type": "club"
   },
   {
     "id": 10792,
@@ -709,7 +797,8 @@
     "logo": "https://media.api-sports.io/football/teams/10792.png",
     "country": "Algeria",
     "leagueId": 186,
-    "leagueName": "Ligue 1 (Algérie)"
+    "leagueName": "Ligue 1 (Algérie)",
+    "type": "club"
   },
   {
     "id": 20699,
@@ -717,7 +806,8 @@
     "logo": "https://media.api-sports.io/football/teams/20699.png",
     "country": "Algeria",
     "leagueId": 186,
-    "leagueName": "Ligue 1 (Algérie)"
+    "leagueName": "Ligue 1 (Algérie)",
+    "type": "club"
   },
   {
     "id": 980,
@@ -725,7 +815,8 @@
     "logo": "https://media.api-sports.io/football/teams/980.png",
     "country": "Tunisia",
     "leagueId": 202,
-    "leagueName": "Ligue 1 (Tunisie)"
+    "leagueName": "Ligue 1 (Tunisie)",
+    "type": "club"
   },
   {
     "id": 981,
@@ -733,7 +824,8 @@
     "logo": "https://media.api-sports.io/football/teams/981.png",
     "country": "Tunisia",
     "leagueId": 202,
-    "leagueName": "Ligue 1 (Tunisie)"
+    "leagueName": "Ligue 1 (Tunisie)",
+    "type": "club"
   },
   {
     "id": 983,
@@ -741,7 +833,8 @@
     "logo": "https://media.api-sports.io/football/teams/983.png",
     "country": "Tunisia",
     "leagueId": 202,
-    "leagueName": "Ligue 1 (Tunisie)"
+    "leagueName": "Ligue 1 (Tunisie)",
+    "type": "club"
   },
   {
     "id": 984,
@@ -749,7 +842,8 @@
     "logo": "https://media.api-sports.io/football/teams/984.png",
     "country": "Tunisia",
     "leagueId": 202,
-    "leagueName": "Ligue 1 (Tunisie)"
+    "leagueName": "Ligue 1 (Tunisie)",
+    "type": "club"
   },
   {
     "id": 986,
@@ -757,7 +851,8 @@
     "logo": "https://media.api-sports.io/football/teams/986.png",
     "country": "Tunisia",
     "leagueId": 202,
-    "leagueName": "Ligue 1 (Tunisie)"
+    "leagueName": "Ligue 1 (Tunisie)",
+    "type": "club"
   },
   {
     "id": 988,
@@ -765,7 +860,8 @@
     "logo": "https://media.api-sports.io/football/teams/988.png",
     "country": "Tunisia",
     "leagueId": 202,
-    "leagueName": "Ligue 1 (Tunisie)"
+    "leagueName": "Ligue 1 (Tunisie)",
+    "type": "club"
   },
   {
     "id": 989,
@@ -773,7 +869,8 @@
     "logo": "https://media.api-sports.io/football/teams/989.png",
     "country": "Tunisia",
     "leagueId": 202,
-    "leagueName": "Ligue 1 (Tunisie)"
+    "leagueName": "Ligue 1 (Tunisie)",
+    "type": "club"
   },
   {
     "id": 990,
@@ -781,7 +878,8 @@
     "logo": "https://media.api-sports.io/football/teams/990.png",
     "country": "Tunisia",
     "leagueId": 202,
-    "leagueName": "Ligue 1 (Tunisie)"
+    "leagueName": "Ligue 1 (Tunisie)",
+    "type": "club"
   },
   {
     "id": 991,
@@ -789,7 +887,8 @@
     "logo": "https://media.api-sports.io/football/teams/991.png",
     "country": "Tunisia",
     "leagueId": 202,
-    "leagueName": "Ligue 1 (Tunisie)"
+    "leagueName": "Ligue 1 (Tunisie)",
+    "type": "club"
   },
   {
     "id": 992,
@@ -797,7 +896,8 @@
     "logo": "https://media.api-sports.io/football/teams/992.png",
     "country": "Tunisia",
     "leagueId": 202,
-    "leagueName": "Ligue 1 (Tunisie)"
+    "leagueName": "Ligue 1 (Tunisie)",
+    "type": "club"
   },
   {
     "id": 1191,
@@ -805,7 +905,8 @@
     "logo": "https://media.api-sports.io/football/teams/1191.png",
     "country": "Tunisia",
     "leagueId": 202,
-    "leagueName": "Ligue 1 (Tunisie)"
+    "leagueName": "Ligue 1 (Tunisie)",
+    "type": "club"
   },
   {
     "id": 10368,
@@ -813,7 +914,8 @@
     "logo": "https://media.api-sports.io/football/teams/10368.png",
     "country": "Tunisia",
     "leagueId": 202,
-    "leagueName": "Ligue 1 (Tunisie)"
+    "leagueName": "Ligue 1 (Tunisie)",
+    "type": "club"
   },
   {
     "id": 10609,
@@ -821,7 +923,8 @@
     "logo": "https://media.api-sports.io/football/teams/10609.png",
     "country": "Tunisia",
     "leagueId": 202,
-    "leagueName": "Ligue 1 (Tunisie)"
+    "leagueName": "Ligue 1 (Tunisie)",
+    "type": "club"
   },
   {
     "id": 10625,
@@ -829,7 +932,8 @@
     "logo": "https://media.api-sports.io/football/teams/10625.png",
     "country": "Tunisia",
     "leagueId": 202,
-    "leagueName": "Ligue 1 (Tunisie)"
+    "leagueName": "Ligue 1 (Tunisie)",
+    "type": "club"
   },
   {
     "id": 13358,
@@ -837,7 +941,8 @@
     "logo": "https://media.api-sports.io/football/teams/13358.png",
     "country": "Tunisia",
     "leagueId": 202,
-    "leagueName": "Ligue 1 (Tunisie)"
+    "leagueName": "Ligue 1 (Tunisie)",
+    "type": "club"
   },
   {
     "id": 18284,
@@ -845,7 +950,8 @@
     "logo": "https://media.api-sports.io/football/teams/18284.png",
     "country": "Tunisia",
     "leagueId": 202,
-    "leagueName": "Ligue 1 (Tunisie)"
+    "leagueName": "Ligue 1 (Tunisie)",
+    "type": "club"
   },
   {
     "id": 4511,
@@ -853,7 +959,8 @@
     "logo": "https://media.api-sports.io/football/teams/4511.png",
     "country": "Ivory-Coast",
     "leagueId": 386,
-    "leagueName": "Ligue 1 (Côte d'Ivoire)"
+    "leagueName": "Ligue 1 (Côte d'Ivoire)",
+    "type": "club"
   },
   {
     "id": 4512,
@@ -861,7 +968,8 @@
     "logo": "https://media.api-sports.io/football/teams/4512.png",
     "country": "Ivory-Coast",
     "leagueId": 386,
-    "leagueName": "Ligue 1 (Côte d'Ivoire)"
+    "leagueName": "Ligue 1 (Côte d'Ivoire)",
+    "type": "club"
   },
   {
     "id": 4516,
@@ -869,7 +977,8 @@
     "logo": "https://media.api-sports.io/football/teams/4516.png",
     "country": "Ivory-Coast",
     "leagueId": 386,
-    "leagueName": "Ligue 1 (Côte d'Ivoire)"
+    "leagueName": "Ligue 1 (Côte d'Ivoire)",
+    "type": "club"
   },
   {
     "id": 4519,
@@ -877,7 +986,8 @@
     "logo": "https://media.api-sports.io/football/teams/4519.png",
     "country": "Ivory-Coast",
     "leagueId": 386,
-    "leagueName": "Ligue 1 (Côte d'Ivoire)"
+    "leagueName": "Ligue 1 (Côte d'Ivoire)",
+    "type": "club"
   },
   {
     "id": 4520,
@@ -885,7 +995,8 @@
     "logo": "https://media.api-sports.io/football/teams/4520.png",
     "country": "Ivory-Coast",
     "leagueId": 386,
-    "leagueName": "Ligue 1 (Côte d'Ivoire)"
+    "leagueName": "Ligue 1 (Côte d'Ivoire)",
+    "type": "club"
   },
   {
     "id": 4521,
@@ -893,7 +1004,8 @@
     "logo": "https://media.api-sports.io/football/teams/4521.png",
     "country": "Ivory-Coast",
     "leagueId": 386,
-    "leagueName": "Ligue 1 (Côte d'Ivoire)"
+    "leagueName": "Ligue 1 (Côte d'Ivoire)",
+    "type": "club"
   },
   {
     "id": 4525,
@@ -901,7 +1013,8 @@
     "logo": "https://media.api-sports.io/football/teams/4525.png",
     "country": "Ivory-Coast",
     "leagueId": 386,
-    "leagueName": "Ligue 1 (Côte d'Ivoire)"
+    "leagueName": "Ligue 1 (Côte d'Ivoire)",
+    "type": "club"
   },
   {
     "id": 6346,
@@ -909,7 +1022,8 @@
     "logo": "https://media.api-sports.io/football/teams/6346.png",
     "country": "Ivory-Coast",
     "leagueId": 386,
-    "leagueName": "Ligue 1 (Côte d'Ivoire)"
+    "leagueName": "Ligue 1 (Côte d'Ivoire)",
+    "type": "club"
   },
   {
     "id": 16588,
@@ -917,7 +1031,8 @@
     "logo": "https://media.api-sports.io/football/teams/16588.png",
     "country": "Ivory-Coast",
     "leagueId": 386,
-    "leagueName": "Ligue 1 (Côte d'Ivoire)"
+    "leagueName": "Ligue 1 (Côte d'Ivoire)",
+    "type": "club"
   },
   {
     "id": 18179,
@@ -925,7 +1040,8 @@
     "logo": "https://media.api-sports.io/football/teams/18179.png",
     "country": "Ivory-Coast",
     "leagueId": 386,
-    "leagueName": "Ligue 1 (Côte d'Ivoire)"
+    "leagueName": "Ligue 1 (Côte d'Ivoire)",
+    "type": "club"
   },
   {
     "id": 22583,
@@ -933,7 +1049,8 @@
     "logo": "https://media.api-sports.io/football/teams/22583.png",
     "country": "Ivory-Coast",
     "leagueId": 386,
-    "leagueName": "Ligue 1 (Côte d'Ivoire)"
+    "leagueName": "Ligue 1 (Côte d'Ivoire)",
+    "type": "club"
   },
   {
     "id": 22584,
@@ -941,7 +1058,8 @@
     "logo": "https://media.api-sports.io/football/teams/22584.png",
     "country": "Ivory-Coast",
     "leagueId": 386,
-    "leagueName": "Ligue 1 (Côte d'Ivoire)"
+    "leagueName": "Ligue 1 (Côte d'Ivoire)",
+    "type": "club"
   },
   {
     "id": 24756,
@@ -949,7 +1067,8 @@
     "logo": "https://media.api-sports.io/football/teams/24756.png",
     "country": "Ivory-Coast",
     "leagueId": 386,
-    "leagueName": "Ligue 1 (Côte d'Ivoire)"
+    "leagueName": "Ligue 1 (Côte d'Ivoire)",
+    "type": "club"
   },
   {
     "id": 25587,
@@ -957,7 +1076,8 @@
     "logo": "https://media.api-sports.io/football/teams/25587.png",
     "country": "Ivory-Coast",
     "leagueId": 386,
-    "leagueName": "Ligue 1 (Côte d'Ivoire)"
+    "leagueName": "Ligue 1 (Côte d'Ivoire)",
+    "type": "club"
   },
   {
     "id": 26340,
@@ -965,7 +1085,8 @@
     "logo": "https://media.api-sports.io/football/teams/26340.png",
     "country": "Ivory-Coast",
     "leagueId": 386,
-    "leagueName": "Ligue 1 (Côte d'Ivoire)"
+    "leagueName": "Ligue 1 (Côte d'Ivoire)",
+    "type": "club"
   },
   {
     "id": 26341,
@@ -973,7 +1094,8 @@
     "logo": "https://media.api-sports.io/football/teams/26341.png",
     "country": "Ivory-Coast",
     "leagueId": 386,
-    "leagueName": "Ligue 1 (Côte d'Ivoire)"
+    "leagueName": "Ligue 1 (Côte d'Ivoire)",
+    "type": "club"
   },
   {
     "id": 4450,
@@ -981,7 +1103,8 @@
     "logo": "https://media.api-sports.io/football/teams/4450.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 6411,
@@ -989,7 +1112,8 @@
     "logo": "https://media.api-sports.io/football/teams/6411.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 8056,
@@ -997,7 +1121,8 @@
     "logo": "https://media.api-sports.io/football/teams/8056.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 8079,
@@ -1005,7 +1130,8 @@
     "logo": "https://media.api-sports.io/football/teams/8079.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 8099,
@@ -1013,7 +1139,8 @@
     "logo": "https://media.api-sports.io/football/teams/8099.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 12244,
@@ -1021,7 +1148,8 @@
     "logo": "https://media.api-sports.io/football/teams/12244.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 12249,
@@ -1029,7 +1157,8 @@
     "logo": "https://media.api-sports.io/football/teams/12249.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 12251,
@@ -1037,7 +1166,8 @@
     "logo": "https://media.api-sports.io/football/teams/12251.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 12255,
@@ -1045,7 +1175,8 @@
     "logo": "https://media.api-sports.io/football/teams/12255.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 13882,
@@ -1053,7 +1184,8 @@
     "logo": "https://media.api-sports.io/football/teams/13882.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 17993,
@@ -1061,7 +1193,8 @@
     "logo": "https://media.api-sports.io/football/teams/17993.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 20022,
@@ -1069,7 +1202,8 @@
     "logo": "https://media.api-sports.io/football/teams/20022.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 21071,
@@ -1077,7 +1211,8 @@
     "logo": "https://media.api-sports.io/football/teams/21071.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 21093,
@@ -1085,7 +1220,8 @@
     "logo": "https://media.api-sports.io/football/teams/21093.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 22763,
@@ -1093,7 +1229,8 @@
     "logo": "https://media.api-sports.io/football/teams/22763.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 22782,
@@ -1101,7 +1238,8 @@
     "logo": "https://media.api-sports.io/football/teams/22782.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 22783,
@@ -1109,7 +1247,8 @@
     "logo": "https://media.api-sports.io/football/teams/22783.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 26805,
@@ -1117,7 +1256,8 @@
     "logo": "https://media.api-sports.io/football/teams/26805.png",
     "country": "Ghana",
     "leagueId": 570,
-    "leagueName": "Premier League (Ghana)"
+    "leagueName": "Premier League (Ghana)",
+    "type": "club"
   },
   {
     "id": 2669,
@@ -1125,7 +1265,8 @@
     "logo": "https://media.api-sports.io/football/teams/2669.png",
     "country": "South-Africa",
     "leagueId": 288,
-    "leagueName": "Premier Soccer League (Afrique du Sud)"
+    "leagueName": "Premier Soccer League (Afrique du Sud)",
+    "type": "club"
   },
   {
     "id": 2682,
@@ -1133,7 +1274,8 @@
     "logo": "https://media.api-sports.io/football/teams/2682.png",
     "country": "South-Africa",
     "leagueId": 288,
-    "leagueName": "Premier Soccer League (Afrique du Sud)"
+    "leagueName": "Premier Soccer League (Afrique du Sud)",
+    "type": "club"
   },
   {
     "id": 2690,
@@ -1141,7 +1283,8 @@
     "logo": "https://media.api-sports.io/football/teams/2690.png",
     "country": "South-Africa",
     "leagueId": 288,
-    "leagueName": "Premier Soccer League (Afrique du Sud)"
+    "leagueName": "Premier Soccer League (Afrique du Sud)",
+    "type": "club"
   },
   {
     "id": 2691,
@@ -1149,7 +1292,8 @@
     "logo": "https://media.api-sports.io/football/teams/2691.png",
     "country": "South-Africa",
     "leagueId": 288,
-    "leagueName": "Premier Soccer League (Afrique du Sud)"
+    "leagueName": "Premier Soccer League (Afrique du Sud)",
+    "type": "club"
   },
   {
     "id": 2693,
@@ -1157,7 +1301,8 @@
     "logo": "https://media.api-sports.io/football/teams/2693.png",
     "country": "South-Africa",
     "leagueId": 288,
-    "leagueName": "Premier Soccer League (Afrique du Sud)"
+    "leagueName": "Premier Soccer League (Afrique du Sud)",
+    "type": "club"
   },
   {
     "id": 2698,
@@ -1165,7 +1310,8 @@
     "logo": "https://media.api-sports.io/football/teams/2698.png",
     "country": "South-Africa",
     "leagueId": 288,
-    "leagueName": "Premier Soccer League (Afrique du Sud)"
+    "leagueName": "Premier Soccer League (Afrique du Sud)",
+    "type": "club"
   },
   {
     "id": 2699,
@@ -1173,7 +1319,8 @@
     "logo": "https://media.api-sports.io/football/teams/2699.png",
     "country": "South-Africa",
     "leagueId": 288,
-    "leagueName": "Premier Soccer League (Afrique du Sud)"
+    "leagueName": "Premier Soccer League (Afrique du Sud)",
+    "type": "club"
   },
   {
     "id": 2700,
@@ -1181,7 +1328,8 @@
     "logo": "https://media.api-sports.io/football/teams/2700.png",
     "country": "South-Africa",
     "leagueId": 288,
-    "leagueName": "Premier Soccer League (Afrique du Sud)"
+    "leagueName": "Premier Soccer League (Afrique du Sud)",
+    "type": "club"
   },
   {
     "id": 4905,
@@ -1189,7 +1337,8 @@
     "logo": "https://media.api-sports.io/football/teams/4905.png",
     "country": "South-Africa",
     "leagueId": 288,
-    "leagueName": "Premier Soccer League (Afrique du Sud)"
+    "leagueName": "Premier Soccer League (Afrique du Sud)",
+    "type": "club"
   },
   {
     "id": 8074,
@@ -1197,7 +1346,8 @@
     "logo": "https://media.api-sports.io/football/teams/8074.png",
     "country": "South-Africa",
     "leagueId": 288,
-    "leagueName": "Premier Soccer League (Afrique du Sud)"
+    "leagueName": "Premier Soccer League (Afrique du Sud)",
+    "type": "club"
   },
   {
     "id": 10567,
@@ -1205,7 +1355,8 @@
     "logo": "https://media.api-sports.io/football/teams/10567.png",
     "country": "South-Africa",
     "leagueId": 288,
-    "leagueName": "Premier Soccer League (Afrique du Sud)"
+    "leagueName": "Premier Soccer League (Afrique du Sud)",
+    "type": "club"
   },
   {
     "id": 15537,
@@ -1213,7 +1364,8 @@
     "logo": "https://media.api-sports.io/football/teams/15537.png",
     "country": "South-Africa",
     "leagueId": 288,
-    "leagueName": "Premier Soccer League (Afrique du Sud)"
+    "leagueName": "Premier Soccer League (Afrique du Sud)",
+    "type": "club"
   },
   {
     "id": 22234,
@@ -1221,7 +1373,8 @@
     "logo": "https://media.api-sports.io/football/teams/22234.png",
     "country": "South-Africa",
     "leagueId": 288,
-    "leagueName": "Premier Soccer League (Afrique du Sud)"
+    "leagueName": "Premier Soccer League (Afrique du Sud)",
+    "type": "club"
   },
   {
     "id": 24757,
@@ -1229,7 +1382,8 @@
     "logo": "https://media.api-sports.io/football/teams/24757.png",
     "country": "South-Africa",
     "leagueId": 288,
-    "leagueName": "Premier Soccer League (Afrique du Sud)"
+    "leagueName": "Premier Soccer League (Afrique du Sud)",
+    "type": "club"
   },
   {
     "id": 24759,
@@ -1237,7 +1391,8 @@
     "logo": "https://media.api-sports.io/football/teams/24759.png",
     "country": "South-Africa",
     "leagueId": 288,
-    "leagueName": "Premier Soccer League (Afrique du Sud)"
+    "leagueName": "Premier Soccer League (Afrique du Sud)",
+    "type": "club"
   },
   {
     "id": 26299,
@@ -1245,6 +1400,1348 @@
     "logo": "https://media.api-sports.io/football/teams/26299.png",
     "country": "South-Africa",
     "leagueId": 288,
-    "leagueName": "Premier Soccer League (Afrique du Sud)"
+    "leagueName": "Premier Soccer League (Afrique du Sud)",
+    "type": "club"
+  },
+  {
+    "id": 33,
+    "name": "Manchester United",
+    "logo": "https://media.api-sports.io/football/teams/33.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 34,
+    "name": "Newcastle",
+    "logo": "https://media.api-sports.io/football/teams/34.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 35,
+    "name": "Bournemouth",
+    "logo": "https://media.api-sports.io/football/teams/35.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 36,
+    "name": "Fulham",
+    "logo": "https://media.api-sports.io/football/teams/36.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 40,
+    "name": "Liverpool",
+    "logo": "https://media.api-sports.io/football/teams/40.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 42,
+    "name": "Arsenal",
+    "logo": "https://media.api-sports.io/football/teams/42.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 45,
+    "name": "Everton",
+    "logo": "https://media.api-sports.io/football/teams/45.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 47,
+    "name": "Tottenham",
+    "logo": "https://media.api-sports.io/football/teams/47.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 49,
+    "name": "Chelsea",
+    "logo": "https://media.api-sports.io/football/teams/49.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 50,
+    "name": "Manchester City",
+    "logo": "https://media.api-sports.io/football/teams/50.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 51,
+    "name": "Brighton",
+    "logo": "https://media.api-sports.io/football/teams/51.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 52,
+    "name": "Crystal Palace",
+    "logo": "https://media.api-sports.io/football/teams/52.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 55,
+    "name": "Brentford",
+    "logo": "https://media.api-sports.io/football/teams/55.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 57,
+    "name": "Ipswich",
+    "logo": "https://media.api-sports.io/football/teams/57.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 63,
+    "name": "Leeds",
+    "logo": "https://media.api-sports.io/football/teams/63.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 64,
+    "name": "Hull City",
+    "logo": "https://media.api-sports.io/football/teams/64.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 65,
+    "name": "Nottingham Forest",
+    "logo": "https://media.api-sports.io/football/teams/65.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 66,
+    "name": "Aston Villa",
+    "logo": "https://media.api-sports.io/football/teams/66.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 746,
+    "name": "Sunderland",
+    "logo": "https://media.api-sports.io/football/teams/746.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 1346,
+    "name": "Coventry",
+    "logo": "https://media.api-sports.io/football/teams/1346.png",
+    "country": "England",
+    "leagueId": 39,
+    "leagueName": "Premier League",
+    "type": "club"
+  },
+  {
+    "id": 529,
+    "name": "Barcelona",
+    "logo": "https://media.api-sports.io/football/teams/529.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 530,
+    "name": "Atletico Madrid",
+    "logo": "https://media.api-sports.io/football/teams/530.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 531,
+    "name": "Athletic Club",
+    "logo": "https://media.api-sports.io/football/teams/531.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 532,
+    "name": "Valencia",
+    "logo": "https://media.api-sports.io/football/teams/532.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 533,
+    "name": "Villarreal",
+    "logo": "https://media.api-sports.io/football/teams/533.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 535,
+    "name": "Malaga",
+    "logo": "https://media.api-sports.io/football/teams/535.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 536,
+    "name": "Sevilla",
+    "logo": "https://media.api-sports.io/football/teams/536.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 538,
+    "name": "Celta Vigo",
+    "logo": "https://media.api-sports.io/football/teams/538.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 539,
+    "name": "Levante",
+    "logo": "https://media.api-sports.io/football/teams/539.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 540,
+    "name": "Espanyol",
+    "logo": "https://media.api-sports.io/football/teams/540.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 541,
+    "name": "Real Madrid",
+    "logo": "https://media.api-sports.io/football/teams/541.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 542,
+    "name": "Alaves",
+    "logo": "https://media.api-sports.io/football/teams/542.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 543,
+    "name": "Real Betis",
+    "logo": "https://media.api-sports.io/football/teams/543.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 544,
+    "name": "Deportivo La Coruna",
+    "logo": "https://media.api-sports.io/football/teams/544.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 546,
+    "name": "Getafe",
+    "logo": "https://media.api-sports.io/football/teams/546.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 548,
+    "name": "Real Sociedad",
+    "logo": "https://media.api-sports.io/football/teams/548.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 727,
+    "name": "Osasuna",
+    "logo": "https://media.api-sports.io/football/teams/727.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 728,
+    "name": "Rayo Vallecano",
+    "logo": "https://media.api-sports.io/football/teams/728.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 797,
+    "name": "Elche",
+    "logo": "https://media.api-sports.io/football/teams/797.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 4665,
+    "name": "Racing Santander",
+    "logo": "https://media.api-sports.io/football/teams/4665.png",
+    "country": "Spain",
+    "leagueId": 140,
+    "leagueName": "La Liga",
+    "type": "club"
+  },
+  {
+    "id": 487,
+    "name": "Lazio",
+    "logo": "https://media.api-sports.io/football/teams/487.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 488,
+    "name": "Sassuolo",
+    "logo": "https://media.api-sports.io/football/teams/488.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 489,
+    "name": "AC Milan",
+    "logo": "https://media.api-sports.io/football/teams/489.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 490,
+    "name": "Cagliari",
+    "logo": "https://media.api-sports.io/football/teams/490.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 492,
+    "name": "Napoli",
+    "logo": "https://media.api-sports.io/football/teams/492.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 494,
+    "name": "Udinese",
+    "logo": "https://media.api-sports.io/football/teams/494.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 495,
+    "name": "Genoa",
+    "logo": "https://media.api-sports.io/football/teams/495.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 496,
+    "name": "Juventus",
+    "logo": "https://media.api-sports.io/football/teams/496.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 497,
+    "name": "AS Roma",
+    "logo": "https://media.api-sports.io/football/teams/497.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 499,
+    "name": "Atalanta",
+    "logo": "https://media.api-sports.io/football/teams/499.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 500,
+    "name": "Bologna",
+    "logo": "https://media.api-sports.io/football/teams/500.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 502,
+    "name": "Fiorentina",
+    "logo": "https://media.api-sports.io/football/teams/502.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 503,
+    "name": "Torino",
+    "logo": "https://media.api-sports.io/football/teams/503.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 505,
+    "name": "Inter",
+    "logo": "https://media.api-sports.io/football/teams/505.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 512,
+    "name": "Frosinone",
+    "logo": "https://media.api-sports.io/football/teams/512.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 517,
+    "name": "Venezia",
+    "logo": "https://media.api-sports.io/football/teams/517.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 523,
+    "name": "Parma",
+    "logo": "https://media.api-sports.io/football/teams/523.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 867,
+    "name": "Lecce",
+    "logo": "https://media.api-sports.io/football/teams/867.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 895,
+    "name": "Como",
+    "logo": "https://media.api-sports.io/football/teams/895.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 1579,
+    "name": "Monza",
+    "logo": "https://media.api-sports.io/football/teams/1579.png",
+    "country": "Italy",
+    "leagueId": 135,
+    "leagueName": "Serie A",
+    "type": "club"
+  },
+  {
+    "id": 157,
+    "name": "Bayern München",
+    "logo": "https://media.api-sports.io/football/teams/157.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 160,
+    "name": "SC Freiburg",
+    "logo": "https://media.api-sports.io/football/teams/160.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 162,
+    "name": "Werder Bremen",
+    "logo": "https://media.api-sports.io/football/teams/162.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 163,
+    "name": "Borussia Mönchengladbach",
+    "logo": "https://media.api-sports.io/football/teams/163.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 164,
+    "name": "FSV Mainz 05",
+    "logo": "https://media.api-sports.io/football/teams/164.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 165,
+    "name": "Borussia Dortmund",
+    "logo": "https://media.api-sports.io/football/teams/165.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 167,
+    "name": "1899 Hoffenheim",
+    "logo": "https://media.api-sports.io/football/teams/167.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 168,
+    "name": "Bayer Leverkusen",
+    "logo": "https://media.api-sports.io/football/teams/168.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 169,
+    "name": "Eintracht Frankfurt",
+    "logo": "https://media.api-sports.io/football/teams/169.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 170,
+    "name": "FC Augsburg",
+    "logo": "https://media.api-sports.io/football/teams/170.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 172,
+    "name": "VfB Stuttgart",
+    "logo": "https://media.api-sports.io/football/teams/172.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 173,
+    "name": "RB Leipzig",
+    "logo": "https://media.api-sports.io/football/teams/173.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 174,
+    "name": "FC Schalke 04",
+    "logo": "https://media.api-sports.io/football/teams/174.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 175,
+    "name": "Hamburger SV",
+    "logo": "https://media.api-sports.io/football/teams/175.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 182,
+    "name": "Union Berlin",
+    "logo": "https://media.api-sports.io/football/teams/182.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 185,
+    "name": "SC Paderborn 07",
+    "logo": "https://media.api-sports.io/football/teams/185.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 192,
+    "name": "1. FC Köln",
+    "logo": "https://media.api-sports.io/football/teams/192.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 1660,
+    "name": "SV Elversberg",
+    "logo": "https://media.api-sports.io/football/teams/1660.png",
+    "country": "Germany",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
+    "type": "club"
+  },
+  {
+    "id": 77,
+    "name": "Angers",
+    "logo": "https://media.api-sports.io/football/teams/77.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 79,
+    "name": "Lille",
+    "logo": "https://media.api-sports.io/football/teams/79.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 80,
+    "name": "Lyon",
+    "logo": "https://media.api-sports.io/football/teams/80.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 81,
+    "name": "Marseille",
+    "logo": "https://media.api-sports.io/football/teams/81.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 84,
+    "name": "Nice",
+    "logo": "https://media.api-sports.io/football/teams/84.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 85,
+    "name": "Paris Saint Germain",
+    "logo": "https://media.api-sports.io/football/teams/85.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 91,
+    "name": "Monaco",
+    "logo": "https://media.api-sports.io/football/teams/91.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 94,
+    "name": "Rennes",
+    "logo": "https://media.api-sports.io/football/teams/94.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 95,
+    "name": "Strasbourg",
+    "logo": "https://media.api-sports.io/football/teams/95.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 96,
+    "name": "Toulouse",
+    "logo": "https://media.api-sports.io/football/teams/96.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 97,
+    "name": "Lorient",
+    "logo": "https://media.api-sports.io/football/teams/97.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 106,
+    "name": "Stade Brestois 29",
+    "logo": "https://media.api-sports.io/football/teams/106.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 108,
+    "name": "Auxerre",
+    "logo": "https://media.api-sports.io/football/teams/108.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 110,
+    "name": "Estac Troyes",
+    "logo": "https://media.api-sports.io/football/teams/110.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 111,
+    "name": "Le Havre",
+    "logo": "https://media.api-sports.io/football/teams/111.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 114,
+    "name": "Paris FC",
+    "logo": "https://media.api-sports.io/football/teams/114.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 116,
+    "name": "Lens",
+    "logo": "https://media.api-sports.io/football/teams/116.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 1298,
+    "name": "Le Mans",
+    "logo": "https://media.api-sports.io/football/teams/1298.png",
+    "country": "France",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "type": "club"
+  },
+  {
+    "id": 1532,
+    "name": "Algeria",
+    "logo": "https://media.api-sports.io/football/teams/1532.png",
+    "country": "Algeria",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1529,
+    "name": "Angola",
+    "logo": "https://media.api-sports.io/football/teams/1529.png",
+    "country": "Angola",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1516,
+    "name": "Benin",
+    "logo": "https://media.api-sports.io/football/teams/1516.png",
+    "country": "Benin",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1520,
+    "name": "Botswana",
+    "logo": "https://media.api-sports.io/football/teams/1520.png",
+    "country": "Botswana",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1502,
+    "name": "Burkina Faso",
+    "logo": "https://media.api-sports.io/football/teams/1502.png",
+    "country": "Burkina Faso",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1528,
+    "name": "Burundi",
+    "logo": "https://media.api-sports.io/football/teams/1528.png",
+    "country": "Burundi",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1530,
+    "name": "Cameroon",
+    "logo": "https://media.api-sports.io/football/teams/1530.png",
+    "country": "Cameroon",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1533,
+    "name": "Cape Verde",
+    "logo": "https://media.api-sports.io/football/teams/1533.png",
+    "country": "Cape Verde",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1527,
+    "name": "Central African Republic",
+    "logo": "https://media.api-sports.io/football/teams/1527.png",
+    "country": "Central African Republic",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1523,
+    "name": "Chad",
+    "logo": "https://media.api-sports.io/football/teams/1523.png",
+    "country": "Chad",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1524,
+    "name": "Comoros",
+    "logo": "https://media.api-sports.io/football/teams/1524.png",
+    "country": "Comoros",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1508,
+    "name": "DR Congo",
+    "logo": "https://media.api-sports.io/football/teams/1508.png",
+    "country": "DR Congo",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1517,
+    "name": "Congo",
+    "logo": "https://media.api-sports.io/football/teams/1517.png",
+    "country": "Congo",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1535,
+    "name": "Djibouti",
+    "logo": "https://media.api-sports.io/football/teams/1535.png",
+    "country": "Djibouti",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 32,
+    "name": "Egypt",
+    "logo": "https://media.api-sports.io/football/teams/32.png",
+    "country": "Egypt",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1521,
+    "name": "Equatorial Guinea",
+    "logo": "https://media.api-sports.io/football/teams/1521.png",
+    "country": "Equatorial Guinea",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1498,
+    "name": "Eritrea",
+    "logo": "https://media.api-sports.io/football/teams/1498.png",
+    "country": "Eritrea",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 2995,
+    "name": "Eswatini",
+    "logo": "https://media.api-sports.io/football/teams/2995.png",
+    "country": "Eswatini",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1506,
+    "name": "Ethiopia",
+    "logo": "https://media.api-sports.io/football/teams/1506.png",
+    "country": "Ethiopia",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1503,
+    "name": "Gabon",
+    "logo": "https://media.api-sports.io/football/teams/1503.png",
+    "country": "Gabon",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1492,
+    "name": "Gambia",
+    "logo": "https://media.api-sports.io/football/teams/1492.png",
+    "country": "Gambia",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1504,
+    "name": "Ghana",
+    "logo": "https://media.api-sports.io/football/teams/1504.png",
+    "country": "Ghana",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1509,
+    "name": "Guinea",
+    "logo": "https://media.api-sports.io/football/teams/1509.png",
+    "country": "Guinea",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1513,
+    "name": "Guinea-Bissau",
+    "logo": "https://media.api-sports.io/football/teams/1513.png",
+    "country": "Guinea-Bissau",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1501,
+    "name": "Ivory Coast",
+    "logo": "https://media.api-sports.io/football/teams/1501.png",
+    "country": "Ivory Coast",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1511,
+    "name": "Kenya",
+    "logo": "https://media.api-sports.io/football/teams/1511.png",
+    "country": "Kenya",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1518,
+    "name": "Lesotho",
+    "logo": "https://media.api-sports.io/football/teams/1518.png",
+    "country": "Lesotho",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1525,
+    "name": "Liberia",
+    "logo": "https://media.api-sports.io/football/teams/1525.png",
+    "country": "Liberia",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1526,
+    "name": "Libya",
+    "logo": "https://media.api-sports.io/football/teams/1526.png",
+    "country": "Libya",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1490,
+    "name": "Madagascar",
+    "logo": "https://media.api-sports.io/football/teams/1490.png",
+    "country": "Madagascar",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1495,
+    "name": "Malawi",
+    "logo": "https://media.api-sports.io/football/teams/1495.png",
+    "country": "Malawi",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1500,
+    "name": "Mali",
+    "logo": "https://media.api-sports.io/football/teams/1500.png",
+    "country": "Mali",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1491,
+    "name": "Mauritania",
+    "logo": "https://media.api-sports.io/football/teams/1491.png",
+    "country": "Mauritania",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1497,
+    "name": "Mauritius",
+    "logo": "https://media.api-sports.io/football/teams/1497.png",
+    "country": "Mauritius",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 31,
+    "name": "Morocco",
+    "logo": "https://media.api-sports.io/football/teams/31.png",
+    "country": "Morocco",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1512,
+    "name": "Mozambique",
+    "logo": "https://media.api-sports.io/football/teams/1512.png",
+    "country": "Mozambique",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1493,
+    "name": "Namibia",
+    "logo": "https://media.api-sports.io/football/teams/1493.png",
+    "country": "Namibia",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1505,
+    "name": "Niger",
+    "logo": "https://media.api-sports.io/football/teams/1505.png",
+    "country": "Niger",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 19,
+    "name": "Nigeria",
+    "logo": "https://media.api-sports.io/football/teams/19.png",
+    "country": "Nigeria",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1514,
+    "name": "Rwanda",
+    "logo": "https://media.api-sports.io/football/teams/1514.png",
+    "country": "Rwanda",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 13,
+    "name": "Senegal",
+    "logo": "https://media.api-sports.io/football/teams/13.png",
+    "country": "Senegal",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1515,
+    "name": "Seychelles",
+    "logo": "https://media.api-sports.io/football/teams/1515.png",
+    "country": "Seychelles",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1499,
+    "name": "Sierra Leone",
+    "logo": "https://media.api-sports.io/football/teams/1499.png",
+    "country": "Sierra Leone",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 8050,
+    "name": "Somalia",
+    "logo": "https://media.api-sports.io/football/teams/8050.png",
+    "country": "Somalia",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1531,
+    "name": "South Africa",
+    "logo": "https://media.api-sports.io/football/teams/1531.png",
+    "country": "South Africa",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1496,
+    "name": "South Sudan",
+    "logo": "https://media.api-sports.io/football/teams/1496.png",
+    "country": "South Sudan",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1510,
+    "name": "Sudan",
+    "logo": "https://media.api-sports.io/football/teams/1510.png",
+    "country": "Sudan",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1489,
+    "name": "Tanzania",
+    "logo": "https://media.api-sports.io/football/teams/1489.png",
+    "country": "Tanzania",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1534,
+    "name": "Togo",
+    "logo": "https://media.api-sports.io/football/teams/1534.png",
+    "country": "Togo",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 28,
+    "name": "Tunisia",
+    "logo": "https://media.api-sports.io/football/teams/28.png",
+    "country": "Tunisia",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1519,
+    "name": "Uganda",
+    "logo": "https://media.api-sports.io/football/teams/1519.png",
+    "country": "Uganda",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1507,
+    "name": "Zambia",
+    "logo": "https://media.api-sports.io/football/teams/1507.png",
+    "country": "Zambia",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
+  },
+  {
+    "id": 1522,
+    "name": "Zimbabwe",
+    "logo": "https://media.api-sports.io/football/teams/1522.png",
+    "country": "Zimbabwe",
+    "leagueId": 0,
+    "leagueName": "Équipe nationale",
+    "type": "national"
   }
 ]

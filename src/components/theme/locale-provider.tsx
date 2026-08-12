@@ -15,6 +15,7 @@ import frChat from "@/messages/fr/chat.json";
 import frMercato from "@/messages/fr/mercato.json";
 import frProfil from "@/messages/fr/profil.json";
 import frOnboarding from "@/messages/fr/onboarding.json";
+import frSearch from "@/messages/fr/search.json";
 
 import enCommon from "@/messages/en/common.json";
 import enNav from "@/messages/en/nav.json";
@@ -26,6 +27,7 @@ import enChat from "@/messages/en/chat.json";
 import enMercato from "@/messages/en/mercato.json";
 import enProfil from "@/messages/en/profil.json";
 import enOnboarding from "@/messages/en/onboarding.json";
+import enSearch from "@/messages/en/search.json";
 
 import arCommon from "@/messages/ar/common.json";
 import arNav from "@/messages/ar/nav.json";
@@ -37,6 +39,7 @@ import arChat from "@/messages/ar/chat.json";
 import arMercato from "@/messages/ar/mercato.json";
 import arProfil from "@/messages/ar/profil.json";
 import arOnboarding from "@/messages/ar/onboarding.json";
+import arSearch from "@/messages/ar/search.json";
 
 // One JSON file per app section per locale (src/messages/{locale}/{section}.json)
 // instead of one giant per-locale file — keeps each section's translations
@@ -56,6 +59,7 @@ const MESSAGES: Record<Locale, Record<string, object>> = {
     mercato: frMercato,
     profil: frProfil,
     onboarding: frOnboarding,
+    search: frSearch,
   },
   en: {
     common: enCommon,
@@ -68,6 +72,7 @@ const MESSAGES: Record<Locale, Record<string, object>> = {
     mercato: enMercato,
     profil: enProfil,
     onboarding: enOnboarding,
+    search: enSearch,
   },
   ar: {
     common: arCommon,
@@ -80,6 +85,7 @@ const MESSAGES: Record<Locale, Record<string, object>> = {
     mercato: arMercato,
     profil: arProfil,
     onboarding: arOnboarding,
+    search: arSearch,
   },
 };
 

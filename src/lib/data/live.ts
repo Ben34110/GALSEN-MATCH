@@ -1,4 +1,10 @@
-import { getFixtureById, getFixtureLineups, getUpcomingFixturesForTeam, type ApiFixture } from "@/lib/api-football";
+import {
+  getFixtureById,
+  getFixtureLineups,
+  getUpcomingFixturesForTeam,
+  getRecentFixturesForTeam,
+  type ApiFixture,
+} from "@/lib/api-football";
 import type { Match, MatchLineup, MatchLineupPlayer, MatchStatus, TeamRef } from "@/types";
 
 // The live-scores/standings browsing tab ("Matchs") was removed when the app
@@ -93,4 +99,16 @@ export async function getUpcomingMatchesForTeam(teamId: number, count = 10): Pro
   const result = await getUpcomingFixturesForTeam(teamId, count);
   if (result.error) throw new Error(result.error);
   return sortByKickoff(result.data.map(mapFixtureToMatch));
+}
+
+// Symmetric counterpart to getUpcomingMatchesForTeam, most recent first —
+// powers the player/team profile pages' "derniers matchs" section (see
+// lib/data/player-profile.ts, lib/data/team-profile.ts). Swallows errors
+// into an empty array rather than throwing: those pages already show
+// several independent sections, one missing fixture list shouldn't blank
+// the whole page.
+export async function getRecentMatchesForTeam(teamId: number, count = 5): Promise<Match[]> {
+  const result = await getRecentFixturesForTeam(teamId, count);
+  if (result.error) return [];
+  return sortByKickoff(result.data.map(mapFixtureToMatch)).reverse();
 }

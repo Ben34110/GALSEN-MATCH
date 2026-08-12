@@ -1,0 +1,58 @@
+{
+  "bar": {
+    "openAriaLabel": "Search",
+    "title": "Search",
+    "placeholder": "Player, club, national team…",
+    "closeAriaLabel": "Close",
+    "prompt": "Type a player, club, or national team name.",
+    "noResults": "No results for \"{query}\".",
+    "players": "Player",
+    "clubs": "Club",
+    "national": "National team"
+  },
+  "player": {
+    "back": "Back",
+    "currentSeason": "Current season",
+    "noCurrentSeason": "Stats unavailable for the current season.",
+    "appearances": "Apps",
+    "goals": "Goals",
+    "assists": "Assists",
+    "rating": "Avg. rating",
+    "yellowCards": "Yellow cards",
+    "redCards": "Red cards",
+    "recentMatches": "Last 3 matches",
+    "upcomingMatches": "Next 3 matches",
+    "noRecentMatches": "No recent match found.",
+    "noUpcomingMatches": "No upcoming match scheduled.",
+    "careerTransfers": "Career & transfers",
+    "noTransfers": "No transfer on record.",
+    "freeAgent": "Free agent",
+    "positions": {
+      "G": "Goalkeeper",
+      "D": "Defender",
+      "M": "Midfielder",
+      "A": "Forward"
+    }
+  },
+  "team": {
+    "back": "Back",
+    "recentMatches": "Recent matches",
+    "upcomingMatches": "Upcoming matches",
+    "noRecentMatches": "No recent match found.",
+    "noUpcomingMatches": "No upcoming match scheduled.",
+    "standing": "Standing",
+    "noStanding": "Standing unavailable for now.",
+    "fifaRanking": "FIFA ranking",
+    "noFifaRanking": "FIFA ranking unavailable.",
+    "rank": "Rank",
+    "points": "Pts",
+    "played": "P",
+    "won": "W",
+    "drawn": "D",
+    "lost": "L",
+    "goalsFor": "GF-GA",
+    "diff": "GD",
+    "worldRank": "World",
+    "africanRank": "Africa"
+  }
+}

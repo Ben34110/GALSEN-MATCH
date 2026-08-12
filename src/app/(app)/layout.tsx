@@ -1,4 +1,5 @@
 import { FloatingNav } from "@/components/nav/floating-nav";
+import { GlobalSearchButton } from "@/components/search/global-search-button";
 import { OnboardingGate } from "@/components/onboarding/onboarding-gate";
 
 // Chrome (nav) shared by every tab (/actu, /live, /fantasy, /chat, /profil).
@@ -19,6 +20,8 @@ export default function AppShellLayout({ children }: { children: React.ReactNode
       >
         Aller au contenu principal
       </a>
+
+      <GlobalSearchButton />
 
       <div className="mx-auto flex w-full max-w-6xl lg:gap-10 lg:px-8">
         <FloatingNav />
