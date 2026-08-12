@@ -337,7 +337,14 @@ export function PitchView({ pool, seats, captainId, editable, journee, onAssign,
           ratingCache.set(ratingCacheKey(player.id, currentJournee), result);
           setRatings((current) => ({ ...current, [id]: result }));
         })
-        .catch(() => setRatings((current) => ({ ...current, [id]: { status: "pending", rating: null } })));
+        .catch(() => {
+          // A transient failure (Server Action RPC hiccup — API-Football's
+          // own errors are already handled inside getPlayerJourneeRating
+          // and never reach here) shouldn't downgrade an already-known-good
+          // rating back to "pending"; fall back to the cache instead.
+          const cached = ratingCache.get(ratingCacheKey(player.id, currentJournee));
+          setRatings((current) => ({ ...current, [id]: cached ?? { status: "pending", rating: null } }));
+        });
     }
 
     // Show whatever we already know instantly (no blank flash) before the

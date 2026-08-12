@@ -14,6 +14,39 @@ export interface ApiFootballResult<T> {
   error: string | null;
 }
 
+// This app fans out to a lot of concurrent API-Football calls by design —
+// scoring one 11-player Fantasy squad fires up to 22 (fixture lookup +
+// player-stats per player), and getLeaderboard does that *per squad*
+// concurrently too. Confirmed by hand: the exact same request succeeds
+// reliably alone but intermittently comes back rate-limited when fired
+// alongside a dozen others at once — and every caller (getPlayerJourneeRating
+// in particular) treats any error as "no data yet", so a transient rate
+// limit was silently misread as "this player hasn't played" instead of
+// retried. A small global concurrency gate plus a short retry specifically
+// for rate-limit responses fixes this at the one shared choke point
+// instead of needing every call site to guard against it separately.
+const MAX_CONCURRENT_REQUESTS = 5;
+let activeRequests = 0;
+const requestQueue: (() => void)[] = [];
+
+async function withConcurrencyLimit<T>(run: () => Promise<T>): Promise<T> {
+  if (activeRequests >= MAX_CONCURRENT_REQUESTS) {
+    await new Promise<void>((resolve) => requestQueue.push(resolve));
+  }
+  activeRequests++;
+  try {
+    return await run();
+  } finally {
+    activeRequests--;
+    const next = requestQueue.shift();
+    if (next) next();
+  }
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function apiFootballGet<T>(
   path: string,
   params: Record<string, string | number>,
@@ -25,27 +58,41 @@ async function apiFootballGet<T>(
   const url = new URL(`${BASE_URL}${path}`);
   for (const [name, value] of Object.entries(params)) url.searchParams.set(name, String(value));
 
-  let res: Response;
-  try {
-    res = await fetch(url, {
-      headers: { "x-apisports-key": key },
-      next: { revalidate: revalidateSeconds },
-    });
-  } catch (err) {
-    return { data: [], error: err instanceof Error ? err.message : "Erreur réseau API-Football." };
-  }
+  return withConcurrencyLimit(async () => {
+    const MAX_ATTEMPTS = 3;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      let res: Response;
+      try {
+        res = await fetch(url, {
+          headers: { "x-apisports-key": key },
+          next: { revalidate: revalidateSeconds },
+        });
+      } catch (err) {
+        return { data: [], error: err instanceof Error ? err.message : "Erreur réseau API-Football." };
+      }
 
-  if (!res.ok) return { data: [], error: `API-Football a répondu ${res.status}.` };
+      if (!res.ok) return { data: [], error: `API-Football a répondu ${res.status}.` };
 
-  const json = (await res.json()) as ApiFootballEnvelope<T>;
-  // `errors` is `[]` when empty, or an object keyed by field name when the
-  // free plan rejects a param (e.g. a season it doesn't cover) — this is how
-  // we detect and surface plan restrictions to the caller.
-  if (!Array.isArray(json.errors) && json.errors && Object.keys(json.errors).length > 0) {
-    return { data: [], error: String(Object.values(json.errors)[0]) };
-  }
+      const json = (await res.json()) as ApiFootballEnvelope<T>;
+      // `errors` is `[]` when empty, or an object keyed by field name
+      // otherwise — either a plan restriction (e.g. a season it doesn't
+      // cover) or a rate limit (keyed "rateLimit"), which alone is worth
+      // a short retry instead of being reported as "no data" like every
+      // other error here.
+      const isObjectErrors = !Array.isArray(json.errors) && json.errors && Object.keys(json.errors).length > 0;
+      const rateLimited = isObjectErrors && "rateLimit" in (json.errors as Record<string, string>);
+      if (rateLimited && attempt < MAX_ATTEMPTS) {
+        await sleep(250 * attempt);
+        continue;
+      }
+      if (isObjectErrors) {
+        return { data: [], error: String(Object.values(json.errors as Record<string, string>)[0]) };
+      }
 
-  return { data: json.response, error: null };
+      return { data: json.response, error: null };
+    }
+    return { data: [], error: "API-Football rate-limited after retries." };
+  });
 }
 
 // --- Response shapes (only the fields this app actually uses) ---
