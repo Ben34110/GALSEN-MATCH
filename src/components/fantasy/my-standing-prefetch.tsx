@@ -11,9 +11,14 @@ import { standingCache } from "@/lib/standing-cache";
 // cache.ts) as soon as the app opens, for the active journée — same
 // reasoning as fantasy-ratings-prefetch.tsx's per-player prefetch: by the
 // time the player actually looks at Actu or Fantasy XI, the "X points ·
-// #Y" badge is usually already warm instead of blank for a beat. No
-// loading UI of its own; renders nothing, mounted once app-wide (see
-// components/onboarding/onboarding-gate.tsx).
+// #Y" badge is usually already warm instead of blank for a beat. Keeps
+// refreshing every 45s rather than fetching once — points are computed
+// live from each squad's per-player ratings, not stored, so a one-shot
+// prefetch would otherwise go stale the moment a tracked match finishes
+// while the player isn't actively looking at Actu/Fantasy XI (those
+// screens' own polling only runs while mounted). No loading UI of its
+// own; renders nothing, mounted once app-wide (see components/
+// onboarding/onboarding-gate.tsx).
 export function MyStandingPrefetch() {
   const storage = useFantasyStorage();
   const { activeJournee } = useMemo(() => getGameweekInfo(), []);
@@ -21,9 +26,16 @@ export function MyStandingPrefetch() {
 
   useEffect(() => {
     if (!locked) return;
-    fetchMyLeaderboardStanding(getOrCreateDeviceId(), activeJournee).then((result) => {
-      if (result) standingCache.set(activeJournee, result);
-    });
+
+    function refresh() {
+      fetchMyLeaderboardStanding(getOrCreateDeviceId(), activeJournee).then((result) => {
+        if (result) standingCache.set(activeJournee, result);
+      });
+    }
+
+    refresh();
+    const interval = setInterval(refresh, 45_000);
+    return () => clearInterval(interval);
   }, [locked, activeJournee]);
 
   return null;

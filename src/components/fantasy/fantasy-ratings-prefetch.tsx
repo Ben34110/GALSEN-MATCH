@@ -33,15 +33,32 @@ export function FantasyRatingsPrefetch() {
     const pool = getAfricanPlayers();
     const { start, end } = getJourneeWeekRange(activeJournee);
 
-    for (const id of seatIds.split(",")) {
-      const key = ratingCacheKey(Number(id), activeJournee);
-      if (ratingCache.has(key)) continue;
-      const player = pool.find((p) => String(p.id) === id);
-      if (!player?.teamId) continue;
-      fetchPlayerJourneeRating(player.id, player.teamId, start.toISOString(), end.toISOString())
-        .then((result) => ratingCache.set(key, result))
-        .catch(() => {});
+    function refresh() {
+      for (const id of seatIds.split(",")) {
+        const key = ratingCacheKey(Number(id), activeJournee);
+        // "rated" is final — a finished match's rating never changes, so
+        // it's the only status worth never re-fetching. Anything else
+        // (missing entirely, "pending", "live") might still resolve
+        // differently on a retry — skipping those here (the original bug:
+        // this used to check ratingCache.has(key) alone, so a player whose
+        // very first fetch landed as "pending" — kickoff hadn't happened
+        // yet, or a transient hiccup — stayed stuck at "pending" for the
+        // rest of the session, with nothing to ever correct it unless the
+        // user happened to open Fantasy XI itself, where PitchView's own
+        // interval does retry) is what let a real "rated" player look
+        // like their note had vanished.
+        if (ratingCache.get(key)?.status === "rated") continue;
+        const player = pool.find((p) => String(p.id) === id);
+        if (!player?.teamId) continue;
+        fetchPlayerJourneeRating(player.id, player.teamId, start.toISOString(), end.toISOString())
+          .then((result) => ratingCache.set(key, result))
+          .catch(() => {});
+      }
     }
+
+    refresh();
+    const interval = setInterval(refresh, 45_000);
+    return () => clearInterval(interval);
   }, [locked, seatIds, activeJournee]);
 
   return null;

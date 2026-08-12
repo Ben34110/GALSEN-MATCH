@@ -1,11 +1,9 @@
 "use client";
 
 import { FORMATION_SEATS } from "@/lib/fantasy-formation";
-import { ratingColor } from "@/lib/rating-color";
 import { getAccentTheme, OTHER_COUNTRY_ID } from "@/lib/mock/accent-themes";
 import { getAfricanNation, jerseyColorFromHue } from "@/lib/data/african-nations";
 import { COUNTRY_LOGOS } from "@/lib/onboarding";
-import { ratingCache, ratingCacheKey } from "@/lib/fantasy-rating-cache";
 import type { AfricanPlayer } from "@/types";
 import type { SeatMap } from "@/lib/fantasy-lineup";
 
@@ -327,22 +325,6 @@ export async function generateSquadShareImage(options: ShareSquadOptions): Promi
       ctx.font = `800 17px ${FONT}`;
       ctx.textAlign = "center";
       ctx.fillText("C", cx + photoR - 6, cy - photoR + 7);
-      ctx.textAlign = "left";
-    }
-
-    const rating = ratingCache.get(ratingCacheKey(player.id, options.journee));
-    if (rating && (rating.status === "rated" || rating.status === "live") && rating.rating !== null) {
-      ctx.fillStyle = ratingColor(rating.rating);
-      ctx.beginPath();
-      ctx.arc(cx + photoR - 5, cy + photoR - 5, 18, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      ctx.fillStyle = "#ffffff";
-      ctx.font = `800 15px ${FONT}`;
-      ctx.textAlign = "center";
-      ctx.fillText(rating.rating.toFixed(1).replace(".", ","), cx + photoR - 5, cy + photoR - 4);
       ctx.textAlign = "left";
     }
 
