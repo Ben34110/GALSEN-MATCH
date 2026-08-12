@@ -35,7 +35,9 @@
     "chooseButton": "اختر لاعبيك الـ{total} ({filled}/{total})",
     "editButton": "تعديل الفريق",
     "prepareNext": "تحضير الجولة {journee}",
-    "backToActive": "العودة إلى الجولة {journee}"
+    "backToActive": "العودة إلى الجولة {journee}",
+    "shareTitle": "تشكيلتي في AfroLive — الجولة {journee}",
+    "shareAriaLabel": "مشاركة تشكيلتي"
   },
   "pitch": {
     "chooseGoalkeeper": "اختر حارس مرمى",

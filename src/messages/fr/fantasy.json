@@ -35,7 +35,9 @@
     "chooseButton": "Choisis tes {total} joueurs ({filled}/{total})",
     "editButton": "Modifier l'équipe",
     "prepareNext": "Préparer la journée {journee}",
-    "backToActive": "Revenir à la journée {journee}"
+    "backToActive": "Revenir à la journée {journee}",
+    "shareTitle": "Mon XI AfroLive — Journée {journee}",
+    "shareAriaLabel": "Partager mon équipe"
   },
   "pitch": {
     "chooseGoalkeeper": "Choisir un gardien",

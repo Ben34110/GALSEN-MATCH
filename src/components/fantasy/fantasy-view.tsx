@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { PitchView } from "@/components/fantasy/pitch-view";
 import { GameRulesSheet } from "@/components/fantasy/game-rules-sheet";
 import { MyJourneeStanding } from "@/components/fantasy/my-journee-standing";
+import { ShareSquadButton } from "@/components/fantasy/share-squad-button";
 import { useFantasyStorage, saveSquadForJournee } from "@/hooks/use-saved-lineup";
 import { useCountdown } from "@/hooks/use-countdown";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
@@ -140,6 +141,16 @@ export function FantasyView({ pool }: FantasyViewProps) {
         }
         action={
           <div className="flex shrink-0 items-center gap-2">
+            {complete && profile && (
+              <ShareSquadButton
+                username={profile.username}
+                countryId={profile.countryId}
+                journee={viewingJournee}
+                seats={squad.seats}
+                captainId={squad.captainId}
+                pool={pool}
+              />
+            )}
             <button
               type="button"
               onClick={() => setShowRules(true)}
