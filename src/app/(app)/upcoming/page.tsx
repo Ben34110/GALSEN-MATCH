@@ -1,7 +1,4 @@
-import { UpcomingEventsView } from "@/components/upcoming/upcoming-events-view";
-import { FifaRankingSection } from "@/components/upcoming/fifa-ranking-section";
-import { CanQualifiersSection } from "@/components/upcoming/can-qualifiers-section";
-import { U17WorldCupSection } from "@/components/upcoming/u17-world-cup-section";
+import { UpcomingTabs } from "@/components/upcoming/upcoming-tabs";
 import { getFifaRanking } from "@/lib/data/fifa-ranking";
 import { getCanQualifiersFixtures, getCanQualifiersStandings } from "@/lib/data/can-qualifiers";
 import { getU17WorldCupFixtures, getU17WorldCupStandings } from "@/lib/data/u17-world-cup";
@@ -16,23 +13,18 @@ export default async function UpcomingPage() {
   ]);
 
   return (
-    <div className="flex flex-col gap-10">
-      <FifaRankingSection rows={fifaRanking.rows} rankingDate={fifaRanking.rankingDate} />
-      <CanQualifiersSection
-        fixtures={canFixturesResult.fixtures}
-        fixturesError={canFixturesResult.error}
-        groups={canStandingsResult.groups}
-        groupsError={canStandingsResult.error}
-        groupsProvisional={canStandingsResult.isProvisional}
-      />
-      <U17WorldCupSection
-        fixtures={u17FixturesResult.fixtures}
-        fixturesError={u17FixturesResult.error}
-        groups={u17StandingsResult.groups}
-        groupsError={u17StandingsResult.error}
-        groupsProvisional={u17StandingsResult.isProvisional}
-      />
-      <UpcomingEventsView />
-    </div>
+    <UpcomingTabs
+      fifaRanking={fifaRanking}
+      canFixtures={canFixturesResult.fixtures}
+      canFixturesError={canFixturesResult.error}
+      canGroups={canStandingsResult.groups}
+      canGroupsError={canStandingsResult.error}
+      canGroupsProvisional={canStandingsResult.isProvisional}
+      u17Fixtures={u17FixturesResult.fixtures}
+      u17FixturesError={u17FixturesResult.error}
+      u17Groups={u17StandingsResult.groups}
+      u17GroupsError={u17StandingsResult.error}
+      u17GroupsProvisional={u17StandingsResult.isProvisional}
+    />
   );
 }

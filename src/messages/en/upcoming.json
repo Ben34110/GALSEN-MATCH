@@ -1,4 +1,10 @@
 {
+  "tabs": {
+    "can": "AFCON",
+    "u17": "U17",
+    "fifa": "FIFA",
+    "events": "Events"
+  },
   "fifaRanking": {
     "eyebrow": "National teams",
     "title": "FIFA Ranking",
