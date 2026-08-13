@@ -2,10 +2,27 @@
 // utilisable hors-ligne. Stratégie : network-first pour les pages (toujours
 // essayer le réseau, retomber sur le cache si hors-ligne), cache-first pour
 // les assets statiques (JS/CSS/icônes) versionnés par Next.js.
-const CACHE_NAME = "galsen-match-v3";
+// v4: precache list expanded (was just the 5 bottom-nav tabs) — every
+// route reachable without a dynamic id/onboarding gate, so a returning
+// visitor's first tap on any of them is instant and works offline, not
+// just the tab bar's own 5 entries. Version bump forces the activate
+// handler below to drop the old v3 cache instead of leaving it orphaned.
+const CACHE_NAME = "galsen-match-v4";
 const OFFLINE_URL = "/actu";
 
-const PRECACHE_URLS = ["/actu", "/upcoming", "/fantasy", "/chat", "/profil", "/icon-192.png"];
+const PRECACHE_URLS = [
+  "/actu",
+  "/upcoming",
+  "/fantasy",
+  "/fantasy/xi",
+  "/fantasy/quiz",
+  "/fantasy/ballon-dor",
+  "/chat",
+  "/mercato",
+  "/profil",
+  "/icon-192.png",
+  "/manifest.webmanifest",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

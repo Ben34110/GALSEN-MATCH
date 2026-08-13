@@ -51,18 +51,18 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<!-- Portrait-only, matching manifest.ts's orientation:"portrait" — the
+	     whole UI (bottom nav, single-column card layout) is designed for a
+	     phone-width portrait viewport and was never built/tested for
+	     landscape. -->
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
