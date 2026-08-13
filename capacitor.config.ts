@@ -12,9 +12,25 @@ const config: CapacitorConfig = {
   appId: "com.afrolive.app",
   appName: "AfroLive",
   webDir: "www",
+  backgroundColor: "#f7f7fc", // matches manifest.ts's theme_color/background_color
   server: {
     url: "https://galsen-match.vercel.app",
     cleartext: false,
+  },
+  plugins: {
+    SplashScreen: {
+      // Kept visible until components/pwa/native-bridge.tsx explicitly
+      // calls SplashScreen.hide() once the app has actually mounted —
+      // the default auto-hide timer can't know when a *remote* page has
+      // finished loading over the network, so a fixed duration would
+      // either flash blank content (too short) or hold the splash after
+      // the app is already usable (too long).
+      launchAutoHide: false,
+      backgroundColor: "#f7f7fc",
+    },
+    StatusBar: {
+      style: "DARK", // dark icons/text — this app is light-theme only (see globals.css)
+    },
   },
 };
 

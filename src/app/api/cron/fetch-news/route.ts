@@ -3,6 +3,7 @@ import webpush from "web-push";
 import { syncAllNewsSources } from "@/lib/news/rss-sync";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { getAfricanNation } from "@/lib/data/african-nations";
+import { dispatchToTarget } from "@/lib/push-dispatch";
 
 // Called every ~30 minutes by an external scheduler (cron-job.org / GitHub
 // Actions — see docs/notifications.md's "External scheduler" section for
@@ -63,16 +64,22 @@ async function notifySubscribers(insertedByCountry: Map<string, CountryBatch>): 
   // prefs' device_ids up front, since that list can no longer stand in for
   // the full set of relevant identities once user_id exists too.
   const targetKey = (row: { device_id: string; user_id: string | null }) => row.user_id ?? row.device_id;
-  const { data: subs } = await supabase.from("push_subscriptions").select("device_id, user_id, endpoint, p256dh, auth");
+  const [{ data: subs }, { data: apnsRows }] = await Promise.all([
+    supabase.from("push_subscriptions").select("device_id, user_id, endpoint, p256dh, auth"),
+    supabase.from("apns_tokens").select("device_id, user_id, token"),
+  ]);
   const subsByTarget = new Map((subs ?? []).map((s) => [targetKey(s), s]));
+  const apnsByTarget = new Map((apnsRows ?? []).map((r) => [targetKey(r), r.token]));
 
   let sent = 0;
-  const staleTargets = new Set<string>();
+  const staleWebTargets = new Set<string>();
+  const staleApnsTargets = new Set<string>();
   await Promise.allSettled(
     prefs.map(async (pref) => {
       const sub = subsByTarget.get(targetKey(pref));
+      const apnsToken = apnsByTarget.get(targetKey(pref));
       const batch = insertedByCountry.get(pref.country);
-      if (!sub || !batch || batch.titles.length === 0) return;
+      if ((!sub && !apnsToken) || !batch || batch.titles.length === 0) return;
 
       // iOS/Safari always renders web push notifications as [bold title] /
       // "from <manifest app name>" / [body] — that "from" line is native
@@ -84,30 +91,29 @@ async function notifySubscribers(insertedByCountry: Map<string, CountryBatch>): 
       // as if it were the sender. The country now lives in the body instead.
       const articleSummary = batch.titles.length === 1 ? batch.titles[0] : `${batch.titles.length} nouveaux articles disponibles`;
       const body = `📰 ${countryLabel(pref.country)} · ${articleSummary}`;
-      try {
-        await webpush.sendNotification(
-          { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
-          JSON.stringify({
-            title: "AfroLive",
-            body,
-            url: `/actu?country=${pref.country}`,
-            image: batch.imageUrl ?? undefined,
-          })
-        );
-        sent += 1;
-      } catch (err) {
-        const statusCode = (err as { statusCode?: number }).statusCode;
-        if (statusCode === 404 || statusCode === 410) staleTargets.add(targetKey(pref));
-      }
+      const result = await dispatchToTarget(sub, apnsToken, {
+        title: "AfroLive",
+        body,
+        url: `/actu?country=${pref.country}`,
+        image: batch.imageUrl ?? undefined,
+      });
+      if (result.sent) sent += 1;
+      if (result.staleWebPush) staleWebTargets.add(targetKey(pref));
+      if (result.staleApns) staleApnsTargets.add(targetKey(pref));
     })
   );
 
-  if (staleTargets.size > 0) {
-    const staleDeviceIds = Array.from(staleTargets).filter((target) => subsByTarget.get(target)?.user_id === null);
-    const staleUserIds = Array.from(staleTargets).filter((target) => subsByTarget.get(target)?.user_id !== null);
-    if (staleDeviceIds.length > 0) await supabase.from("push_subscriptions").delete().in("device_id", staleDeviceIds);
-    if (staleUserIds.length > 0) await supabase.from("push_subscriptions").delete().in("user_id", staleUserIds);
+  async function pruneStaleTargets(table: "push_subscriptions" | "apns_tokens", targets: Set<string>, byTarget: Map<string, { user_id: string | null }>) {
+    if (targets.size === 0) return;
+    const staleDeviceIds = Array.from(targets).filter((target) => byTarget.get(target)?.user_id === null);
+    const staleUserIds = Array.from(targets).filter((target) => byTarget.get(target)?.user_id !== null);
+    if (staleDeviceIds.length > 0) await supabase!.from(table).delete().in("device_id", staleDeviceIds);
+    if (staleUserIds.length > 0) await supabase!.from(table).delete().in("user_id", staleUserIds);
   }
+  await Promise.all([
+    pruneStaleTargets("push_subscriptions", staleWebTargets, subsByTarget),
+    pruneStaleTargets("apns_tokens", staleApnsTargets, new Map((apnsRows ?? []).map((r) => [targetKey(r), r]))),
+  ]);
 
   return sent;
 }

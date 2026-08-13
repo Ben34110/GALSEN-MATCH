@@ -11,6 +11,7 @@ import {
 } from "@/lib/api-football";
 import { getAfricanPlayers } from "@/lib/data/african-players";
 import { getGameweekInfo } from "@/lib/fantasy-gameweek";
+import { dispatchToTarget } from "@/lib/push-dispatch";
 
 // Called every 1-2 minutes by an external scheduler (cron-job.org / GitHub
 // Actions — see docs/notifications.md), protected by CRON_SECRET so it
@@ -47,6 +48,12 @@ interface SubscriptionRow {
   endpoint: string;
   p256dh: string;
   auth: string;
+}
+
+interface ApnsTokenRow {
+  device_id: string;
+  user_id: string | null;
+  token: string;
 }
 
 interface FantasySquadRow {
@@ -175,15 +182,17 @@ export async function GET(request: Request) {
   }
   webpush.setVapidDetails(vapidSubject, vapidPublic, vapidPrivate);
 
-  const [{ data: clubPrefs }, { data: playerPrefs }, { data: subs }] = await Promise.all([
+  const [{ data: clubPrefs }, { data: playerPrefs }, { data: subs }, { data: apnsRows }] = await Promise.all([
     supabase.from("favorite_club_notifications").select("*"),
     supabase.from("favorite_player_notifications").select("*"),
     supabase.from("push_subscriptions").select("*"),
+    supabase.from("apns_tokens").select("*"),
   ]);
 
   const clubPrefRows = (clubPrefs ?? []) as ClubPrefRow[];
   const playerPrefRows = (playerPrefs ?? []) as PlayerPrefRow[];
   const subsByTarget = new Map((subs ?? []).map((s) => [targetKey(s as SubscriptionRow), s as SubscriptionRow]));
+  const apnsByTarget = new Map((apnsRows ?? []).map((r) => [targetKey(r as ApnsTokenRow), (r as ApnsTokenRow).token]));
 
   if (clubPrefRows.length === 0 && playerPrefRows.length === 0) {
     return NextResponse.json({ ok: true, sent: 0, note: "no favorites with notifications enabled" });
@@ -509,32 +518,40 @@ export async function GET(request: Request) {
     await markKey(fixtureId, ratingsFetchedKey);
   }
 
-  // --- Send everything, dropping subscriptions the push service reports as gone ---
+  // --- Send everything (web-push and/or APNs, whichever channel(s) this
+  // target has), dropping whichever channel the push service reports as
+  // permanently gone ---
   let sent = 0;
-  const staleTargets = new Set<string>();
+  const staleWebTargets = new Set<string>();
+  const staleApnsTargets = new Set<string>();
   await Promise.allSettled(
     pending.map(async (message) => {
       const sub = subsByTarget.get(message.target);
-      if (!sub) return;
-      try {
-        await webpush.sendNotification(
-          { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
-          JSON.stringify({ title: message.title, body: message.body, url: message.url, icon: message.icon })
-        );
-        sent += 1;
-      } catch (err) {
-        const statusCode = (err as { statusCode?: number }).statusCode;
-        if (statusCode === 404 || statusCode === 410) staleTargets.add(message.target);
-      }
+      const apnsToken = apnsByTarget.get(message.target);
+      if (!sub && !apnsToken) return;
+      const result = await dispatchToTarget(sub, apnsToken, message);
+      if (result.sent) sent += 1;
+      if (result.staleWebPush) staleWebTargets.add(message.target);
+      if (result.staleApns) staleApnsTargets.add(message.target);
     })
   );
 
-  if (staleTargets.size > 0) {
-    const staleDeviceIds = Array.from(staleTargets).filter((target) => subsByTarget.get(target)?.user_id === null);
-    const staleUserIds = Array.from(staleTargets).filter((target) => subsByTarget.get(target)?.user_id !== null);
-    if (staleDeviceIds.length > 0) await supabase.from("push_subscriptions").delete().in("device_id", staleDeviceIds);
-    if (staleUserIds.length > 0) await supabase.from("push_subscriptions").delete().in("user_id", staleUserIds);
+  async function pruneStaleTargets(table: "push_subscriptions" | "apns_tokens", targets: Set<string>, byTarget: Map<string, { user_id: string | null }>) {
+    if (targets.size === 0) return;
+    const staleDeviceIds = Array.from(targets).filter((target) => byTarget.get(target)?.user_id === null);
+    const staleUserIds = Array.from(targets).filter((target) => byTarget.get(target)?.user_id !== null);
+    if (staleDeviceIds.length > 0) await supabase!.from(table).delete().in("device_id", staleDeviceIds);
+    if (staleUserIds.length > 0) await supabase!.from(table).delete().in("user_id", staleUserIds);
   }
+  await Promise.all([
+    pruneStaleTargets("push_subscriptions", staleWebTargets, subsByTarget),
+    pruneStaleTargets("apns_tokens", staleApnsTargets, new Map((apnsRows ?? []).map((r) => [targetKey(r as ApnsTokenRow), r as ApnsTokenRow]))),
+  ]);
 
-  return NextResponse.json({ ok: true, sent, queued: pending.length, staleRemoved: staleTargets.size });
+  return NextResponse.json({
+    ok: true,
+    sent,
+    queued: pending.length,
+    staleRemoved: staleWebTargets.size + staleApnsTargets.size,
+  });
 }

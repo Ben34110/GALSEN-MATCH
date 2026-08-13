@@ -42,6 +42,23 @@ export async function saveDeviceSubscription(deviceId: string, subscription: Pus
   return { ok: !error };
 }
 
+// Native-app counterpart to saveDeviceSubscription — called by
+// components/pwa/native-bridge.tsx once @capacitor/push-notifications hands
+// back this device's APNs token (only ever happens inside the Capacitor
+// app; a plain browser/PWA session never calls this). See lib/apns.ts for
+// why this needs its own table instead of reusing push_subscriptions.
+export async function saveApnsToken(deviceId: string, token: string): Promise<{ ok: boolean }> {
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return { ok: false };
+  const actor = await resolveActor(deviceId);
+
+  const { error } = await supabase.from("apns_tokens").upsert(
+    { device_id: deviceId, ...(actor.userId ? { user_id: actor.userId } : {}), token },
+    { onConflict: actor.matchColumn }
+  );
+  return { ok: !error };
+}
+
 export async function saveClubNotificationPrefs(
   deviceId: string,
   teamId: number,

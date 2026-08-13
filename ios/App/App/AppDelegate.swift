@@ -33,6 +33,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+    // Standard @capacitor/push-notifications wiring — forwards the raw
+    // APNs registration result to the plugin, which then fires the JS-side
+    // 'registration'/'registrationError' listeners (see components/pwa/
+    // native-bridge.tsx). Requires the Push Notifications capability to be
+    // added in Xcode (Signing & Capabilities → + Capability) — not done
+    // here, that step needs Xcode's GUI (see docs/ios-app.md).
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        NotificationCenter.default.post(name: .capacitorDidRegisterForRemoteNotifications, object: deviceToken)
+    }
+
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        NotificationCenter.default.post(name: .capacitorDidFailToRegisterForRemoteNotifications, object: error)
+    }
+
     func application(_ application: UIApplication,
                      configurationForConnecting connectingSceneSession: UISceneSession,
                      options: UIScene.ConnectionOptions) -> UISceneConfiguration {

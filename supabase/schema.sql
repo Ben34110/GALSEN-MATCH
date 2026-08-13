@@ -40,6 +40,20 @@ create table if not exists push_subscriptions (
 -- above for why the constraint shouldn't exist at all.
 alter table push_subscriptions drop constraint if exists push_subscriptions_endpoint_key;
 
+-- APNs device tokens — the native iOS app's equivalent of push_subscriptions
+-- (Web Push doesn't reach a Capacitor WKWebView, see docs/ios-app.md and
+-- lib/apns.ts). Deliberately a separate table rather than nullable columns
+-- bolted onto push_subscriptions: the two are sent via completely different
+-- code paths (webpush vs raw APNs HTTP/2) and a device is never expected to
+-- have both populated in the same row, so a shared table would mostly be
+-- null columns either way.
+create table if not exists apns_tokens (
+  id uuid primary key default gen_random_uuid(),
+  device_id text not null unique,
+  token text not null,
+  created_at timestamptz not null default now()
+);
+
 -- Per-device, per-favorited-club notification preferences. A row only
 -- exists if the device has favorited that club — deleting the row is how
 -- un-favoriting stops its notifications.
@@ -294,6 +308,10 @@ alter table push_subscriptions add column if not exists user_id uuid references 
 drop index if exists push_subscriptions_user_idx;
 create unique index push_subscriptions_user_idx on push_subscriptions (user_id);
 
+alter table apns_tokens add column if not exists user_id uuid references auth.users(id) on delete cascade;
+drop index if exists apns_tokens_user_idx;
+create unique index apns_tokens_user_idx on apns_tokens (user_id);
+
 alter table favorite_club_notifications add column if not exists user_id uuid references auth.users(id) on delete cascade;
 drop index if exists favorite_club_notifications_user_team_idx;
 create unique index favorite_club_notifications_user_team_idx on favorite_club_notifications (user_id, team_id);
@@ -342,6 +360,7 @@ alter table user_profiles add column if not exists avatar_config jsonb;
 -- touch app data (only Supabase Auth's own endpoints, for accounts above),
 -- so there's no client-side data access path to lock down.
 alter table push_subscriptions enable row level security;
+alter table apns_tokens enable row level security;
 alter table favorite_club_notifications enable row level security;
 alter table favorite_player_notifications enable row level security;
 alter table notified_events enable row level security;
