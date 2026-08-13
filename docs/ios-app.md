@@ -88,22 +88,63 @@ le faire à ta place. Suis les étapes ci-dessous.
    puis fais arriver un vrai événement (but d'un joueur suivi, etc.) ou
    attends le prochain rappel Fantasy.
 
-## Étapes une fois Xcode installé
+## Étapes précises pour ouvrir et lancer le projet dans Xcode
 
-1. `npm run ios:open` — ouvre `ios/App/App.xcworkspace` dans Xcode.
-2. Dans Xcode, sélectionne le projet **App** → onglet **Signing &
-   Capabilities** :
-   - Team : ton compte Apple Developer.
-   - Bundle Identifier : doit correspondre à `appId` dans
-     `capacitor.config.ts` (`com.afrolive.app`), ou modifie les deux pour
-     qu'ils correspondent.
-3. **Test rapide sur simulateur** : sélectionne un simulateur iPhone en
-   haut, ▶️ Run. L'app doit s'ouvrir et charger `/actu` en direct (les push
-   ne marcheront pas sur simulateur, tout le reste oui).
-4. **Test sur ton iPhone** : connecte-le en USB, sélectionne-le comme
-   destination, ▶️ Run (la première fois, il faudra faire confiance au
-   développeur dans Réglages → Général → VPN et gestion des appareils sur
-   l'iPhone).
+**0. Prérequis, une seule fois** (terminal, nécessite ton mot de passe admin) :
+```
+sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+sudo xcodebuild -license accept
+```
+Vérifie que ça a marché : `xcodebuild -version` doit afficher un numéro de
+version au lieu d'une erreur "requires Xcode".
+
+**1. Connecte ton compte Apple Developer à Xcode** (une seule fois) :
+Xcode → menu **Xcode** → **Settings…** (ou Preferences) → onglet
+**Accounts** → **+** en bas à gauche → **Apple ID** → connecte-toi avec le
+compte inscrit au programme Apple Developer. C'est ce compte qui apparaîtra
+ensuite dans le menu déroulant "Team".
+
+**2. Ouvre le projet** :
+```
+npm run ios:open
+```
+Ça ouvre `ios/App/App.xcworkspace`. **Important** : toujours ouvrir le
+`.xcworkspace`, jamais `App.xcodeproj` directement — ce projet utilise
+Swift Package Manager (`CapApp-SPM`), qui ne se résout correctement que via
+le workspace.
+
+**3. Configure la signature** : dans le panneau de gauche (le navigateur de
+fichiers), clique sur **App** tout en haut (l'icône bleue, pas un dossier)
+→ dans le panneau principal, sélectionne la cible **App** → onglet
+**Signing & Capabilities** :
+- **Team** : choisis ton compte (ajouté à l'étape 1).
+- **Bundle Identifier** : déjà réglé sur `com.afrolive.app` (généré depuis
+  `capacitor.config.ts`) — rien à changer sauf si tu veux un autre
+  identifiant.
+- Xcode doit afficher "✓ Signing Certificate: ..." sans erreur rouge. Une
+  erreur "no signing certificate" ou "no account" à ce stade veut dire que
+  l'étape 1 n'a pas abouti ou que le compte n'est pas encore inscrit au
+  programme payant.
+
+**4. Premier lancement, sur simulateur** (le plus rapide pour vérifier que
+tout charge) : en haut de la fenêtre Xcode, à côté du bouton ▶️, le menu
+déroulant de destination — choisis un simulateur (ex. "iPhone 16"). Appuie
+sur ▶️ (ou `Cmd+R`). Le simulateur démarre, l'app s'ouvre et doit charger
+`/actu` avec de vraies données. Les notifications push ne fonctionnent pas
+sur simulateur (limitation Apple) — tout le reste oui.
+
+**5. Test sur ton iPhone réel** : connecte-le en USB (ou Wi-Fi si déjà
+configuré). Il apparaît dans le même menu déroulant de destination —
+sélectionne-le, ▶️. La toute première fois, iOS refuse de lancer l'app tant
+que tu n'as pas explicitement fait confiance au développeur : sur
+l'iPhone, **Réglages → Général → VPN et gestion de l'appareil** → sous
+"App développeur", tape sur ton compte → **Faire confiance**. Relance
+ensuite depuis Xcode.
+
+**6. Ce qu'il faut vérifier une fois l'app ouverte** : navigation entre les
+onglets, une fiche joueur ou club (données API-Football en direct), et
+que rien n'affiche d'erreur réseau — tout doit se comporter exactement
+comme la version web.
 
 ## Distribuer pour le test d'une semaine (TestFlight)
 
