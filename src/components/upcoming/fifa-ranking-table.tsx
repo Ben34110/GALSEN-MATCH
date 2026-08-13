@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Globe2, Minus, TrendingDown, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -76,14 +75,9 @@ export function FifaRankingTable({ rows }: { rows: FifaRankingRow[] }) {
                   <td className="py-2 pl-1.5 pr-1 font-semibold text-foreground">
                     <span className="flex items-center gap-1.5">
                       {nation ? (
-                        <Image
-                          src={nation.logo}
-                          alt=""
-                          width={18}
-                          height={18}
-                          className="size-[18px] shrink-0 object-contain"
-                          unoptimized
-                        />
+                        <span className="shrink-0 text-base leading-none" aria-hidden>
+                          {nation.flag}
+                        </span>
                       ) : (
                         <Globe2 size={14} className="shrink-0 text-muted" aria-hidden />
                       )}

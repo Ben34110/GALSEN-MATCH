@@ -27,6 +27,8 @@
     "careerTransfers": "Career & transfers",
     "noTransfers": "No transfer on record.",
     "freeAgent": "Free agent",
+    "goalsScored": "{count, plural, one {# goal scored} other {# goals scored}}",
+    "assistsMade": "{count, plural, one {# assist} other {# assists}}",
     "positions": {
       "G": "Goalkeeper",
       "D": "Defender",

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Mail, UserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
-import { CountryCrest } from "@/components/ui/country-crest";
+import { CountryFlag } from "@/components/ui/country-flag";
 import { ProfileAvatar } from "@/components/ui/profile-avatar";
 import { CreateAccountSheet } from "@/components/profil/create-account-sheet";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
@@ -64,7 +64,7 @@ export function ProfileIdentityCard() {
       <div className="min-w-0">
         <p className="truncate text-base font-bold text-foreground">{username}</p>
         <p className="flex items-center gap-1.5 text-sm text-muted">
-          <CountryCrest countryId={countryId} size={16} className="size-4 shrink-0 object-contain" />
+          <CountryFlag countryId={countryId} size={16} className="size-4 shrink-0 object-contain" />
           {countryLabel} · {handle}
         </p>
         <ConnectionStatus />

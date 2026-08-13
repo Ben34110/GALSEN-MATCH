@@ -1,7 +1,7 @@
 {
   "tabs": {
     "can": "CAN",
-    "u17": "U17",
+    "u17": "CDM U17",
     "fifa": "FIFA",
     "events": "Agenda"
   },
@@ -58,8 +58,6 @@
         "won": "G",
         "drawn": "N",
         "lost": "P",
-        "goalsFor": "BP",
-        "goalsAgainst": "BC",
         "diff": "Diff"
       }
     }
@@ -103,8 +101,6 @@
         "won": "G",
         "drawn": "N",
         "lost": "P",
-        "goalsFor": "BP",
-        "goalsAgainst": "BC",
         "diff": "Diff"
       }
     }

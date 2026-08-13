@@ -27,6 +27,8 @@
     "careerTransfers": "المسيرة والانتقالات",
     "noTransfers": "لا يوجد انتقال مسجل.",
     "freeAgent": "لاعب حر",
+    "goalsScored": "{count, plural, one {هدف واحد} two {هدفان} few {# أهداف} other {# هدف}}",
+    "assistsMade": "{count, plural, one {تمريرة حاسمة واحدة} two {تمريرتان حاسمتان} few {# تمريرات حاسمة} other {# تمريرة حاسمة}}",
     "positions": {
       "G": "حارس مرمى",
       "D": "مدافع",

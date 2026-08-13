@@ -47,8 +47,6 @@ export function CanQualifiersStandings({
                 <col className="w-9" />
                 <col className="w-9" />
                 <col className="w-9" />
-                <col className="w-9" />
-                <col className="w-9" />
                 <col className="w-10" />
               </colgroup>
               <thead>
@@ -71,12 +69,6 @@ export function CanQualifiersStandings({
                   <th scope="col" className="py-2 text-right font-semibold">
                     {t("columns.lost")}
                   </th>
-                  <th scope="col" className="py-2 text-right font-semibold">
-                    {t("columns.goalsFor")}
-                  </th>
-                  <th scope="col" className="py-2 text-right font-semibold">
-                    {t("columns.goalsAgainst")}
-                  </th>
                   <th scope="col" className="py-2 pr-2 text-right font-semibold">
                     {t("columns.diff")}
                   </th>
@@ -95,7 +87,7 @@ export function CanQualifiersStandings({
                           className="size-[18px] shrink-0 object-contain"
                           unoptimized
                         />
-                        <span className="truncate">{row.teamName}</span>
+                        <span className="min-w-0">{row.teamName}</span>
                       </span>
                     </td>
                     <td className="py-2 text-right tabular-nums font-extrabold text-accent">{row.points}</td>
@@ -103,8 +95,6 @@ export function CanQualifiersStandings({
                     <td className="py-2 text-right tabular-nums text-muted">{row.won}</td>
                     <td className="py-2 text-right tabular-nums text-muted">{row.drawn}</td>
                     <td className="py-2 text-right tabular-nums text-muted">{row.lost}</td>
-                    <td className="py-2 text-right tabular-nums text-muted">{row.goalsFor}</td>
-                    <td className="py-2 text-right tabular-nums text-muted">{row.goalsAgainst}</td>
                     <td className="py-2 pr-2 text-right tabular-nums font-semibold text-foreground">
                       {row.goalsDiff > 0 ? `+${row.goalsDiff}` : row.goalsDiff}
                     </td>

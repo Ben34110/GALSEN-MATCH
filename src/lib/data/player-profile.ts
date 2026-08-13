@@ -2,8 +2,14 @@ import { getAfricanPlayers } from "@/lib/data/african-players";
 import { getTeamDirectory } from "@/lib/data/team-directory";
 import { getRecentMatchesForTeam, getUpcomingMatchesForTeam } from "@/lib/data/live";
 import { AFRICAN_NATIONS } from "@/lib/data/african-nations";
-import { getLeagueCurrentSeason, getPlayerProfile, getPlayerTransfers, type ApiPlayerStatEntry } from "@/lib/api-football";
-import type { PlayerDetail, PlayerSeasonStats, PlayerTransferRecord } from "@/types";
+import {
+  getFixturePlayerStats,
+  getLeagueCurrentSeason,
+  getPlayerProfile,
+  getPlayerTransfers,
+  type ApiPlayerStatEntry,
+} from "@/lib/api-football";
+import type { Match, PlayerDetail, PlayerMatchEvent, PlayerSeasonStats, PlayerTransferRecord } from "@/types";
 
 // Same "is this a real club, not a national-team or youth-team stat line"
 // filter as scripts/sync-african-players.mjs's isClubStatEntry/bestClubEntry
@@ -30,6 +36,41 @@ function bestClubEntry(entries: ApiPlayerStatEntry[]): ApiPlayerStatEntry | unde
 
 function displaySeasonLabel(season: number): string {
   return `${season}-${season + 1}`;
+}
+
+// This player's own goals/assists in one already-finished fixture — the
+// "3 derniers matchs" list's per-row ⚽/👟 icons need the PLAYER's stat
+// line, not just the team scoreline the row already shows. Searches both
+// teams' rosters (rather than assuming the player's own team's array,
+// which /fixtures/players doesn't order predictably) for the matching
+// player id; returns null on any miss (rotated out entirely, API error,
+// or a "did not play" 0-minute entry the caller treats the same as "no
+// events" either way).
+async function fetchMatchEvents(playerId: number, fixtureId: number): Promise<PlayerMatchEvent | null> {
+  const result = await getFixturePlayerStats(fixtureId);
+  if (result.error) return null;
+  for (const teamEntry of result.data) {
+    const playerEntry = teamEntry.players.find((p) => p.player.id === playerId);
+    if (playerEntry) {
+      const stats = playerEntry.statistics[0];
+      return { goals: stats?.goals.total ?? 0, assists: stats?.goals.assists ?? 0 };
+    }
+  }
+  return null;
+}
+
+// Only the 3 matches actually shown get their own fetch (one per fixture,
+// no batch endpoint exists) — capped by the caller already slicing to 3
+// before this runs, not here.
+async function fetchRecentMatchEvents(playerId: number, matches: Match[]): Promise<Record<string, PlayerMatchEvent>> {
+  const entries = await Promise.all(
+    matches.map(async (match): Promise<[string, PlayerMatchEvent] | null> => {
+      if (!match.apiFixtureId) return null;
+      const events = await fetchMatchEvents(playerId, match.apiFixtureId);
+      return events ? [match.id, events] : null;
+    })
+  );
+  return Object.fromEntries(entries.filter((entry): entry is [string, PlayerMatchEvent] => entry !== null));
 }
 
 // Every other endpoint this app calls with a `season` needs the exact
@@ -107,6 +148,9 @@ export async function getPlayerDetail(playerId: number): Promise<PlayerDetail | 
           clubTo: { id: t.teams.in.id as number, name: t.teams.in.name, logo: t.teams.in.logo },
         }));
 
+  const recentMatchesTop3 = recentMatches.slice(0, 3);
+  const recentMatchEvents = await fetchRecentMatchEvents(playerId, recentMatchesTop3);
+
   return {
     id: base.id,
     name: base.name,
@@ -120,7 +164,8 @@ export async function getPlayerDetail(playerId: number): Promise<PlayerDetail | 
     teamName: base.teamName,
     teamLogo: base.teamLogo,
     currentSeason,
-    recentMatches: recentMatches.slice(0, 3),
+    recentMatches: recentMatchesTop3,
+    recentMatchEvents,
     upcomingMatches: upcomingMatches.slice(0, 3),
     transfers,
   };

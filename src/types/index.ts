@@ -202,6 +202,14 @@ export interface PlayerSeasonStats {
   redCards: number;
 }
 
+// This player's own goals/assists in one specific match — the "3 derniers
+// matchs" list's per-row ⚽/👟 icons (see components/profile/match-compact-
+// list.tsx), distinct from the team-level scoreline the row already shows.
+export interface PlayerMatchEvent {
+  goals: number;
+  assists: number;
+}
+
 // Full detail for the player profile page (/joueur/[id]) — combines the
 // static bio already known from lib/data/african-players.json with live
 // API-Football lookups for whatever can't be pre-crawled cheaply (current
@@ -221,6 +229,9 @@ export interface PlayerDetail {
   teamLogo: string | null;
   currentSeason: PlayerSeasonStats | null;
   recentMatches: Match[];
+  // Keyed by Match.id — only ever populated for entries in recentMatches
+  // (a finished match has real stats to fetch; an upcoming one doesn't).
+  recentMatchEvents: Record<string, PlayerMatchEvent>;
   upcomingMatches: Match[];
   transfers: PlayerTransferRecord[];
 }

@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
 import { Send } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { getRecentChatMessages, getChatMessagesSince, sendChatMessage } from "@/app/actions/chat";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { COUNTRY_CODE_BY_THEME_ID } from "@/lib/onboarding";
-import { CountryCrest } from "@/components/ui/country-crest";
+import { CountryFlag } from "@/components/ui/country-flag";
 import { ProfileAvatar } from "@/components/ui/profile-avatar";
 import { SectionHeader } from "@/components/ui/section-header";
 import { ChatProfileSheet } from "@/components/chat/chat-profile-sheet";
@@ -128,11 +127,7 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
                 : "border-border bg-surface text-muted hover:text-foreground"
             )}
           >
-            {room.logo ? (
-              <Image src={room.logo} alt="" width={16} height={16} className="size-4 shrink-0 object-contain" unoptimized />
-            ) : (
-              <span aria-hidden>{room.flag}</span>
-            )}
+            <span aria-hidden>{room.flag}</span>
             {room.name}
           </button>
         ))}
@@ -161,7 +156,7 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
               {isOwn && profile && (
                 <div className="mb-1 flex items-center justify-end gap-1.5">
                   <span className="text-xs font-semibold text-foreground">{profile.username}</span>
-                  <CountryCrest countryId={profile.countryId} size={14} className="size-3.5 shrink-0 object-contain" />
+                  <CountryFlag countryId={profile.countryId} size={14} className="size-3.5 shrink-0 object-contain" />
                   <ProfileAvatar countryId={profile.countryId} size={10} />
                 </div>
               )}
@@ -169,7 +164,7 @@ export function ChatRoom({ rooms, playerPool }: { rooms: ChatRoomType[]; playerP
                 {!isOwn && (
                   <p className="mb-0.5 flex items-center gap-1 text-[11px] font-bold opacity-70">
                     {message.countryId && (
-                      <CountryCrest countryId={message.countryId} size={12} className="size-3 shrink-0 object-contain" />
+                      <CountryFlag countryId={message.countryId} size={12} className="size-3 shrink-0 object-contain" />
                     )}
                     {message.authorName}
                   </p>

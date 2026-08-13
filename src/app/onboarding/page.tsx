@@ -12,7 +12,7 @@ import { applyAccentTheme } from "@/components/theme/accent-theme-provider";
 import { writeLocalStorageValue } from "@/hooks/use-local-storage-value";
 import { NATIONALITY_BY_THEME_ID, ONBOARDING_STORAGE_KEY, normalizeTiktokHandle } from "@/lib/onboarding";
 import { OTHER_COUNTRY_ID } from "@/lib/mock/accent-themes";
-import { CountryCrest } from "@/components/ui/country-crest";
+import { CountryFlag } from "@/components/ui/country-flag";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { getOrCreateDeviceId } from "@/lib/device-id";
 import { ensurePushSubscription, usePushFailureMessage, type PushFailureReason } from "@/hooks/use-push-subscription";
@@ -446,7 +446,7 @@ export default function OnboardingPage() {
                       active ? "border-accent bg-accent/10" : "border-border bg-surface hover:border-accent/30"
                     )}
                   >
-                    <CountryCrest countryId={country.id} size={40} className="size-10 object-contain" />
+                    <CountryFlag countryId={country.id} size={40} className="size-10 object-contain" />
                     <span className="text-sm font-semibold text-foreground">{country.label}</span>
                     {active && <Check size={16} className="text-accent" aria-hidden />}
                   </button>
@@ -501,7 +501,7 @@ export default function OnboardingPage() {
               </p>
               {!playerSearch && (
                 <p className="flex items-center gap-1 text-[11px] text-muted">
-                  {countryId && <CountryCrest countryId={countryId} size={14} className="size-3.5 object-contain" />}
+                  {countryId && <CountryFlag countryId={countryId} size={14} className="size-3.5 object-contain" />}
                   {countryId === OTHER_COUNTRY_ID ? t("players.allPlayers") : t("players.ownNationFirst")}
                 </p>
               )}

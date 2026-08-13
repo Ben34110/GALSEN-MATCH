@@ -1,7 +1,7 @@
 {
   "tabs": {
     "can": "AFCON",
-    "u17": "U17",
+    "u17": "WC U17",
     "fifa": "FIFA",
     "events": "Events"
   },
@@ -58,8 +58,6 @@
         "won": "W",
         "drawn": "D",
         "lost": "L",
-        "goalsFor": "GF",
-        "goalsAgainst": "GA",
         "diff": "GD"
       }
     }
@@ -103,8 +101,6 @@
         "won": "W",
         "drawn": "D",
         "lost": "L",
-        "goalsFor": "GF",
-        "goalsAgainst": "GA",
         "diff": "Diff"
       }
     }

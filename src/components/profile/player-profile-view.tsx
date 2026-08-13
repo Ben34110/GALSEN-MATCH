@@ -152,7 +152,14 @@ export function PlayerProfileView({ player, backHref }: { player: PlayerDetail; 
 
       <div className="mb-6">
         <Subheading title={t("recentMatches")} />
-        <MatchCompactList matches={player.recentMatches} backHref={`${BACK_HREF}/${player.id}`} emptyLabel={t("noRecentMatches")} />
+        <MatchCompactList
+          matches={player.recentMatches}
+          backHref={`${BACK_HREF}/${player.id}`}
+          emptyLabel={t("noRecentMatches")}
+          eventsByMatchId={player.recentMatchEvents}
+          goalLabel={(count) => t("goalsScored", { count })}
+          assistLabel={(count) => t("assistsMade", { count })}
+        />
       </div>
 
       <div className="mb-6">

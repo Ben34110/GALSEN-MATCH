@@ -16,7 +16,7 @@ import {
 interface CountryOption {
   id: string;
   label: string;
-  logo: string | null;
+  flag: string | null;
 }
 
 // "donne la possibilité de mettre par exemple actus du sénégal en
@@ -41,8 +41,8 @@ export function NewsNotificationsSection() {
 
   const allOptions = useMemo<CountryOption[]>(
     () => [
-      { id: "general", label: t("generalOption"), logo: null },
-      ...AFRICAN_NATIONS.map((n) => ({ id: n.id, label: n.label, logo: n.logo })),
+      { id: "general", label: t("generalOption"), flag: null },
+      ...AFRICAN_NATIONS.map((n) => ({ id: n.id, label: n.label, flag: n.flag })),
     ],
     [t]
   );
@@ -124,9 +124,10 @@ export function NewsNotificationsSection() {
                 pendingId === option.id && "opacity-60"
               )}
             >
-              {option.logo ? (
-                // eslint-disable-next-line @next/next/no-img-element -- small fixed-domain crest, not worth the Image pipeline
-                <img src={option.logo} alt="" className="size-5 shrink-0 object-contain" />
+              {option.flag ? (
+                <span className="shrink-0 text-lg leading-none" aria-hidden>
+                  {option.flag}
+                </span>
               ) : (
                 <Globe2 size={18} className="shrink-0 text-muted" aria-hidden />
               )}

@@ -27,6 +27,8 @@
     "careerTransfers": "Carrière & transferts",
     "noTransfers": "Aucun transfert enregistré.",
     "freeAgent": "Agent libre",
+    "goalsScored": "{count, plural, one {# but marqué} other {# buts marqués}}",
+    "assistsMade": "{count, plural, one {# passe décisive} other {# passes décisives}}",
     "positions": {
       "G": "Gardien",
       "D": "Défenseur",

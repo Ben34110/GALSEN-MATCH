@@ -25,8 +25,9 @@ export function ArticleCard({ article }: { article: Article }) {
         <div className="flex items-center justify-between gap-2">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-foreground ring-1 ring-inset ring-accent/20">
             {nation ? (
-              // eslint-disable-next-line @next/next/no-img-element -- small fixed-domain crest, not worth the Image pipeline
-              <img src={nation.logo} alt="" className="size-3.5 shrink-0 object-contain" />
+              <span className="shrink-0 text-xs leading-none" aria-hidden>
+                {nation.flag}
+              </span>
             ) : (
               <Globe2 size={12} className="shrink-0" aria-hidden />
             )}

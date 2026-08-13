@@ -6,7 +6,7 @@ import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { getNationalityFlag } from "@/lib/data/nationality-flags";
 import { getChatProfile, type ChatProfileBundle } from "@/app/actions/chat-profile";
-import { CountryCrest } from "@/components/ui/country-crest";
+import { CountryFlag } from "@/components/ui/country-flag";
 import { ProfileAvatar } from "@/components/ui/profile-avatar";
 import { getAccentTheme } from "@/lib/mock/accent-themes";
 import { TiktokIcon } from "@/components/icons/tiktok-icon";
@@ -101,7 +101,7 @@ export function ChatProfileSheet({ deviceId, userId, playerPool, onClose }: Chat
                 <p className="truncate text-base font-bold text-foreground">{bundle.username}</p>
                 {bundle.countryId && countryLabel && (
                   <span className="flex items-center gap-1.5 text-sm text-muted">
-                    <CountryCrest countryId={bundle.countryId} size={16} className="size-4 shrink-0 object-contain" />
+                    <CountryFlag countryId={bundle.countryId} size={16} className="size-4 shrink-0 object-contain" />
                     {countryLabel}
                   </span>
                 )}
