@@ -42,3 +42,14 @@ next-env.d.ts
 
 # api-football sync cache (raw API dumps, regenerate via scripts/sync-african-players.mjs)
 .cache/
+
+# iOS (Capacitor) — the ios/ Xcode project itself IS committed (it's
+# hand-configured: bundle id, signing team, display name), only per-machine
+# build/user state is ignored. See docs/ios-app.md.
+ios/App/App/public/
+ios/App/Pods/
+ios/App/build/
+ios/DerivedData/
+ios/**/*.xcuserdatad/
+ios/**/xcuserdata/
+ios/**/.DS_Store
