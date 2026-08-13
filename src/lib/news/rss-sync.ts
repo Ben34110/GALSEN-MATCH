@@ -216,46 +216,56 @@ export interface ParsedNewsItem {
   publishedAt: string | null;
 }
 
+// Items within one feed are resolved concurrently (Promise.all) rather than
+// one at a time — each item's image resolution can involve up to 2 network
+// round-trips (fetchOgImage, verifyImageReachable), and a typical feed has
+// 10-20 items; doing that sequentially was a large chunk of why the whole
+// sync (14 sources) was slow enough to time out against cron-job.org's
+// request timeout (see syncAllNewsSources' own comment for the other half
+// of that fix). Failed/skippable items resolve to null and get filtered out
+// afterward instead of using `continue`, since a for-loop's early exit has
+// no direct Promise.all equivalent.
 export async function fetchSourceArticles(source: NewsSource): Promise<ParsedNewsItem[]> {
   const xml = await fetchFeedXml(source.feedUrl);
   const feed = await parser.parseString(xml);
-  const items: ParsedNewsItem[] = [];
 
-  for (const item of feed.items) {
-    const link = item.link?.trim();
-    if (!link || !item.title) continue;
+  const items = await Promise.all(
+    feed.items.map(async (item): Promise<ParsedNewsItem | null> => {
+      const link = item.link?.trim();
+      if (!link || !item.title) return null;
 
-    let imageUrl = resolveFeedImage(item) ?? (await fetchOgImage(link));
-    if (imageUrl && !(await verifyImageReachable(imageUrl))) imageUrl = null;
+      let imageUrl = resolveFeedImage(item) ?? (await fetchOgImage(link));
+      if (imageUrl && !(await verifyImageReachable(imageUrl))) imageUrl = null;
 
-    const title = fixMojibake(item.title.trim());
-    const summary = item.contentSnippet ? fixMojibake(truncate(item.contentSnippet, SUMMARY_MAX_LENGTH)) : null;
+      const title = fixMojibake(item.title.trim());
+      const summary = item.contentSnippet ? fixMojibake(truncate(item.contentSnippet, SUMMARY_MAX_LENGTH)) : null;
 
-    // A pan-African source (country: "general") gets its actual country
-    // detected per-article from the text itself, instead of every one of
-    // its articles landing in the catch-all "Général" bucket — e.g.
-    // Afrik-Foot covers the whole continent, but a given headline is
-    // almost always about one specific nation's team/league/mercato.
-    // Country-specific sources keep their fixed country as-is (no need to
-    // re-detect what's already known, and it avoids a French-language
-    // Senegal headline that happens to also mention "l'Algérie" getting
-    // reclassified away from wiwsport's actual home country).
-    const country = source.country === "general" ? (classifyCountry(`${title} ${summary ?? ""}`) ?? "general") : source.country;
+      // A pan-African source (country: "general") gets its actual country
+      // detected per-article from the text itself, instead of every one of
+      // its articles landing in the catch-all "Général" bucket — e.g.
+      // Afrik-Foot covers the whole continent, but a given headline is
+      // almost always about one specific nation's team/league/mercato.
+      // Country-specific sources keep their fixed country as-is (no need to
+      // re-detect what's already known, and it avoids a French-language
+      // Senegal headline that happens to also mention "l'Algérie" getting
+      // reclassified away from wiwsport's actual home country).
+      const country = source.country === "general" ? (classifyCountry(`${title} ${summary ?? ""}`) ?? "general") : source.country;
 
-    items.push({
-      title,
-      summary,
-      contentUrl: link,
-      imageUrl,
-      author: item.creator?.trim() ? fixMojibake(item.creator.trim()) : null,
-      sourceName: source.name,
-      country,
-      language: source.language,
-      publishedAt: item.isoDate ?? (item.pubDate ? new Date(item.pubDate).toISOString() : null),
-    });
-  }
+      return {
+        title,
+        summary,
+        contentUrl: link,
+        imageUrl,
+        author: item.creator?.trim() ? fixMojibake(item.creator.trim()) : null,
+        sourceName: source.name,
+        country,
+        language: source.language,
+        publishedAt: item.isoDate ?? (item.pubDate ? new Date(item.pubDate).toISOString() : null),
+      };
+    })
+  );
 
-  return items;
+  return items.filter((item): item is ParsedNewsItem => item !== null);
 }
 
 export interface SourceSyncResult {
@@ -291,6 +301,100 @@ const MAX_TRANSLATION_RETRIES_PER_SOURCE = 20;
 // existing rows still missing a translation — see above) — translating
 // every already-stored article on every sync regardless would burn through
 // mymemory.translated.net's free daily quota for nothing new.
+async function syncOneSource(source: NewsSource, supabase: NonNullable<ReturnType<typeof getSupabaseAdmin>>): Promise<SourceSyncResult> {
+  try {
+    const articles = await fetchSourceArticles(source);
+    if (articles.length === 0) {
+      return { source: source.id, fetched: 0, inserted: 0, insertedArticles: [] };
+    }
+
+    const { data: existing, error: selectError } = await supabase
+      .from("news")
+      .select("id, content_url, title_translated")
+      .in(
+        "content_url",
+        articles.map((a) => a.contentUrl)
+      );
+    if (selectError) throw new Error(selectError.message);
+    const existingByUrl = new Map((existing ?? []).map((row) => [row.content_url as string, row]));
+    const newArticles = articles.filter((a) => !existingByUrl.has(a.contentUrl));
+    const retryArticles = articles
+      .filter((a) => existingByUrl.get(a.contentUrl)?.title_translated == null && existingByUrl.has(a.contentUrl))
+      .slice(0, MAX_TRANSLATION_RETRIES_PER_SOURCE);
+
+    if (retryArticles.length > 0) {
+      await Promise.all(
+        retryArticles.map(async (article) => {
+          const { titleTranslated, summaryTranslated } = await translateArticle(article);
+          if (!titleTranslated) return; // still no luck — leave it for the next sync to retry
+          const row = existingByUrl.get(article.contentUrl)!;
+          await supabase
+            .from("news")
+            .update({ title_translated: titleTranslated, summary_translated: summaryTranslated })
+            .eq("id", row.id);
+        })
+      );
+    }
+
+    const rows = await Promise.all(
+      newArticles.map(async (article) => {
+        const { titleTranslated, summaryTranslated } = await translateArticle(article);
+        return {
+          title: article.title,
+          summary: article.summary,
+          content_url: article.contentUrl,
+          image_url: article.imageUrl,
+          author: article.author,
+          source_name: article.sourceName,
+          country: article.country,
+          language: article.language,
+          title_translated: titleTranslated,
+          summary_translated: summaryTranslated,
+          published_at: article.publishedAt,
+        };
+      })
+    );
+
+    if (rows.length === 0) {
+      return { source: source.id, fetched: articles.length, inserted: 0, insertedArticles: [] };
+    }
+
+    const { data, error } = await supabase
+      .from("news")
+      .upsert(rows, { onConflict: "content_url", ignoreDuplicates: true })
+      .select("id, title, country, image_url");
+
+    return {
+      source: source.id,
+      fetched: articles.length,
+      inserted: data?.length ?? 0,
+      error: error?.message,
+      insertedArticles: (data ?? []).map((row) => ({
+        title: row.title as string,
+        country: row.country as string,
+        imageUrl: row.image_url as string | null,
+      })),
+    };
+  } catch (err) {
+    return {
+      source: source.id,
+      fetched: 0,
+      inserted: 0,
+      error: err instanceof Error ? err.message : "unknown error",
+      insertedArticles: [],
+    };
+  }
+}
+
+// Sources are synced concurrently (Promise.all), not one after another —
+// with 14 sources each making several sequential network round-trips
+// (feed fetch, per-article image resolution, translation calls), the old
+// for-loop's total wall time was easily long enough to blow past cron-
+// job.org's request timeout (confirmed: "Échec (délai d'attente)" on
+// /api/cron/fetch-news specifically, while the much lighter /api/cron/poll
+// never times out). Each source already catches its own errors internally
+// (see syncOneSource) and never rejects, so Promise.all is safe here — one
+// slow/broken source can't block or fail the others.
 export async function syncAllNewsSources(): Promise<SourceSyncResult[]> {
   const supabase = getSupabaseAdmin();
   if (!supabase) {
@@ -303,92 +407,5 @@ export async function syncAllNewsSources(): Promise<SourceSyncResult[]> {
     }));
   }
 
-  const results: SourceSyncResult[] = [];
-  for (const source of NEWS_SOURCES) {
-    try {
-      const articles = await fetchSourceArticles(source);
-      if (articles.length === 0) {
-        results.push({ source: source.id, fetched: 0, inserted: 0, insertedArticles: [] });
-        continue;
-      }
-
-      const { data: existing, error: selectError } = await supabase
-        .from("news")
-        .select("id, content_url, title_translated")
-        .in(
-          "content_url",
-          articles.map((a) => a.contentUrl)
-        );
-      if (selectError) throw new Error(selectError.message);
-      const existingByUrl = new Map((existing ?? []).map((row) => [row.content_url as string, row]));
-      const newArticles = articles.filter((a) => !existingByUrl.has(a.contentUrl));
-      const retryArticles = articles
-        .filter((a) => existingByUrl.get(a.contentUrl)?.title_translated == null && existingByUrl.has(a.contentUrl))
-        .slice(0, MAX_TRANSLATION_RETRIES_PER_SOURCE);
-
-      if (retryArticles.length > 0) {
-        await Promise.all(
-          retryArticles.map(async (article) => {
-            const { titleTranslated, summaryTranslated } = await translateArticle(article);
-            if (!titleTranslated) return; // still no luck — leave it for the next sync to retry
-            const row = existingByUrl.get(article.contentUrl)!;
-            await supabase
-              .from("news")
-              .update({ title_translated: titleTranslated, summary_translated: summaryTranslated })
-              .eq("id", row.id);
-          })
-        );
-      }
-
-      const rows = await Promise.all(
-        newArticles.map(async (article) => {
-          const { titleTranslated, summaryTranslated } = await translateArticle(article);
-          return {
-            title: article.title,
-            summary: article.summary,
-            content_url: article.contentUrl,
-            image_url: article.imageUrl,
-            author: article.author,
-            source_name: article.sourceName,
-            country: article.country,
-            language: article.language,
-            title_translated: titleTranslated,
-            summary_translated: summaryTranslated,
-            published_at: article.publishedAt,
-          };
-        })
-      );
-
-      if (rows.length === 0) {
-        results.push({ source: source.id, fetched: articles.length, inserted: 0, insertedArticles: [] });
-        continue;
-      }
-
-      const { data, error } = await supabase
-        .from("news")
-        .upsert(rows, { onConflict: "content_url", ignoreDuplicates: true })
-        .select("id, title, country, image_url");
-
-      results.push({
-        source: source.id,
-        fetched: articles.length,
-        inserted: data?.length ?? 0,
-        error: error?.message,
-        insertedArticles: (data ?? []).map((row) => ({
-          title: row.title as string,
-          country: row.country as string,
-          imageUrl: row.image_url as string | null,
-        })),
-      });
-    } catch (err) {
-      results.push({
-        source: source.id,
-        fetched: 0,
-        inserted: 0,
-        error: err instanceof Error ? err.message : "unknown error",
-        insertedArticles: [],
-      });
-    }
-  }
-  return results;
+  return Promise.all(NEWS_SOURCES.map((source) => syncOneSource(source, supabase)));
 }

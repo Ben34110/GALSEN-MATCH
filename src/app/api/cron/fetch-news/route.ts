@@ -9,6 +9,12 @@ import { getAfricanNation } from "@/lib/data/african-nations";
 // the same setup pattern), protected by CRON_SECRET so it can't be
 // triggered by anyone else.
 export const dynamic = "force-dynamic";
+// 14 sources synced concurrently (see rss-sync.ts's syncAllNewsSources) can
+// still take longer than a typical serverless default (10s) in the worst
+// case — a slow RSS host or a burst of new articles needing translation.
+// 60s is Vercel's Hobby-plan ceiling; raise it if the account is ever on a
+// higher plan and this route still times out.
+export const maxDuration = 60;
 
 function countryLabel(country: string): string {
   if (country === "general") return "Actu Afrique";
