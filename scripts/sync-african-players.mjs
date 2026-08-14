@@ -186,6 +186,21 @@ const MANUAL_ADDITIONS = [
     // reconciling by hand again.
     nationality: "Cameroon",
   },
+  {
+    id: 18785,
+    name: "N. Mendy",
+    age: 34,
+    number: 6,
+    position: "Midfielder",
+    photo: "https://media.api-sports.io/football/players/18785.png",
+    // Nampalys Mendy — same /players/squads gap again, this time for
+    // Senegal (team 13, 26 players returned, includes two OTHER Mendys —
+    // É. Mendy the goalkeeper and A. Mendy — but not him). Just transferred
+    // Watford -> Metz (2026-07-30, confirmed via /transfers and his
+    // season=2026 stats, which is why STATS_SEASON=2025 alone would've
+    // shown him at Watford instead).
+    nationality: "Senegal",
+  },
 ];
 
 function isClubStatEntry(teamName) {
