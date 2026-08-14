@@ -232,17 +232,18 @@ export async function generateBallonDorShareImage(options: ShareBallonDorOptions
     ctx.fillText(String(slot.rank), blockX + blockW / 2, blockY + slot.height / 2 + 8);
     ctx.textAlign = "left";
 
-    // Player name — bigger and always black: it sits in the gap between
-    // the photo and the block, which is dark background above the block's
-    // top edge, but close enough to the block's light gold/silver/bronze
-    // fill that white read poorly there too. Black stays legible against
-    // both.
+    // Player name — bigger, always black (the block's gold/silver/bronze
+    // fill is light enough that black reads clearly on all three, see
+    // drawPlayerCircle's own ring-color reasoning), and given real
+    // breathing room: +40 from the photo's edge instead of +26, so it's
+    // clearly separated from both the photo above it and the block's own
+    // top edge, not crowded against either.
     if (player) {
       const label = truncate(player.name, 16);
       ctx.font = `800 24px ${FONT}`;
       ctx.fillStyle = "#1a1a1a";
       ctx.textAlign = "center";
-      ctx.fillText(label, photoCx, photoCy + photoR + 26);
+      ctx.fillText(label, photoCx, photoCy + photoR + 40);
       ctx.textAlign = "left";
     }
   }

@@ -71,7 +71,7 @@ export function LeagueChat({ leagueId }: { leagueId: string }) {
   }
 
   return (
-    <div className="flex h-[60vh] min-h-[360px] flex-col">
+    <div className="flex h-full min-h-0 flex-col">
       <div ref={scrollRef} className="flex min-h-0 flex-1 flex-col justify-end gap-2.5 overflow-y-auto rounded-2xl border border-border bg-surface p-3">
         {messages.length === 0 && <p className="py-8 text-center text-sm text-muted">{t("chatEmpty")}</p>}
         {messages.map((message) => {

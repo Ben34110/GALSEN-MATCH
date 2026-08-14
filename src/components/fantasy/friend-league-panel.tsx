@@ -112,20 +112,24 @@ export function FriendLeaguePanel({ journee }: { journee: number }) {
     navigator.clipboard?.writeText(text).catch(() => {});
   }
 
-  // --- A league is selected: show its filtered leaderboard ---
+  // --- A league is selected: show its filtered leaderboard or chat ---
+  // Same "fixed-height shell, only the content region scrolls" structure
+  // as components/chat/chat-room.tsx — the header/card/tabs are shrink-0,
+  // only the bottom region (leaderboard rows, or LeagueChat's own message
+  // log) scrolls, instead of the whole page moving.
   if (selected) {
     return (
-      <div>
+      <div className="flex h-full min-h-0 flex-col">
         <button
           type="button"
           onClick={() => setSelected(null)}
-          className="mb-3 inline-flex min-h-9 items-center gap-1 text-sm font-semibold text-muted transition-colors hover:text-foreground"
+          className="mb-3 inline-flex min-h-9 shrink-0 items-center gap-1 text-sm font-semibold text-muted transition-colors hover:text-foreground"
         >
           <ChevronLeft size={16} aria-hidden />
           {t("leagues.backToLeagues")}
         </button>
 
-        <Card className="mb-4 flex items-center justify-between gap-3">
+        <Card className="mb-4 flex shrink-0 items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="truncate text-sm font-bold text-foreground">{selected.name}</p>
             <p className="text-[11px] text-muted">{t("leagues.codeLabel", { code: selected.code })}</p>
@@ -150,7 +154,7 @@ export function FriendLeaguePanel({ journee }: { journee: number }) {
           </div>
         </Card>
 
-        <div className="mb-4 flex gap-2">
+        <div className="mb-4 flex shrink-0 gap-2">
           <button
             type="button"
             onClick={() => setView("classement")}
@@ -176,45 +180,51 @@ export function FriendLeaguePanel({ journee }: { journee: number }) {
         </div>
 
         {view === "chat" ? (
-          <LeagueChat leagueId={selected.id} />
-        ) : entries === undefined ? (
-          <p className="py-10 text-center text-sm text-muted">{t("common.loading")}</p>
-        ) : entries === null ? (
-          <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">
-            {t("common.leaderboardUnavailable")}
-          </p>
-        ) : entries.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">{t("leagues.empty")}</p>
+          <div className="min-h-0 flex-1">
+            <LeagueChat leagueId={selected.id} />
+          </div>
         ) : (
-          <ol className="flex flex-col gap-2">
-            {entries.map((entry, index) => (
-              <li key={`${entry.username}-${index}`}>
-                <div
-                  className={cn(
-                    "flex w-full items-center gap-3 rounded-xl border px-3.5 py-3",
-                    entry.isMe ? "border-accent bg-accent/10" : "border-border bg-surface"
-                  )}
-                >
-                  <span
-                    className={cn(
-                      "grid size-8 shrink-0 place-items-center text-sm font-extrabold tabular-nums",
-                      index < 3 ? RANK_COLORS[index] : "text-muted"
-                    )}
-                  >
-                    {index < 3 ? <Trophy size={16} aria-hidden /> : index + 1}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-semibold text-foreground">
-                      {entry.username}
-                      {entry.isMe && t("common.you")}
-                    </span>
-                    <span className="block text-[11px] text-muted">{t("leagues.membersPlayers", { filled: entry.filled })}</span>
-                  </span>
-                  <span className="shrink-0 text-lg font-extrabold tabular-nums text-accent">{entry.points}</span>
-                </div>
-              </li>
-            ))}
-          </ol>
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            {entries === undefined ? (
+              <p className="py-10 text-center text-sm text-muted">{t("common.loading")}</p>
+            ) : entries === null ? (
+              <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">
+                {t("common.leaderboardUnavailable")}
+              </p>
+            ) : entries.length === 0 ? (
+              <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">{t("leagues.empty")}</p>
+            ) : (
+              <ol className="flex flex-col gap-2">
+                {entries.map((entry, index) => (
+                  <li key={`${entry.username}-${index}`}>
+                    <div
+                      className={cn(
+                        "flex w-full items-center gap-3 rounded-xl border px-3.5 py-3",
+                        entry.isMe ? "border-accent bg-accent/10" : "border-border bg-surface"
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          "grid size-8 shrink-0 place-items-center text-sm font-extrabold tabular-nums",
+                          index < 3 ? RANK_COLORS[index] : "text-muted"
+                        )}
+                      >
+                        {index < 3 ? <Trophy size={16} aria-hidden /> : index + 1}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm font-semibold text-foreground">
+                          {entry.username}
+                          {entry.isMe && t("common.you")}
+                        </span>
+                        <span className="block text-[11px] text-muted">{t("leagues.membersPlayers", { filled: entry.filled })}</span>
+                      </span>
+                      <span className="shrink-0 text-lg font-extrabold tabular-nums text-accent">{entry.points}</span>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </div>
         )}
       </div>
     );
@@ -222,8 +232,8 @@ export function FriendLeaguePanel({ journee }: { journee: number }) {
 
   // --- No league selected: list + create/join ---
   return (
-    <div>
-      <div className="mb-4 flex gap-2">
+    <div className="flex h-full min-h-0 flex-col">
+      <div className="mb-4 flex shrink-0 gap-2">
         <button
           type="button"
           onClick={() => {
@@ -255,7 +265,7 @@ export function FriendLeaguePanel({ journee }: { journee: number }) {
       </div>
 
       {formMode === "create" && (
-        <Card className="mb-4 flex flex-col gap-2.5">
+        <Card className="mb-4 flex shrink-0 flex-col gap-2.5">
           <input
             value={nameInput}
             onChange={(event) => setNameInput(event.target.value)}
@@ -276,7 +286,7 @@ export function FriendLeaguePanel({ journee }: { journee: number }) {
       )}
 
       {formMode === "join" && (
-        <Card className="mb-4 flex flex-col gap-2.5">
+        <Card className="mb-4 flex shrink-0 flex-col gap-2.5">
           <input
             value={codeInput}
             onChange={(event) => setCodeInput(event.target.value.toUpperCase())}
@@ -296,30 +306,32 @@ export function FriendLeaguePanel({ journee }: { journee: number }) {
         </Card>
       )}
 
-      {leagues === null ? (
-        <p className="py-10 text-center text-sm text-muted">{t("common.loading")}</p>
-      ) : leagues.length === 0 ? (
-        <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">{t("leagues.noLeagues")}</p>
-      ) : (
-        <div className="flex flex-col gap-2">
-          {leagues.map((league) => (
-            <button
-              key={league.id}
-              type="button"
-              onClick={() => setSelected(league)}
-              className="flex min-h-14 items-center gap-3 rounded-xl border border-border bg-surface px-3.5 py-3 text-left transition-colors hover:border-accent/40"
-            >
-              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-accent/10 text-accent">
-                <Trophy size={16} aria-hidden />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-semibold text-foreground">{league.name}</span>
-                <span className="block text-[11px] text-muted">{t("leagues.memberCount", { count: league.memberCount })}</span>
-              </span>
-            </button>
-          ))}
-        </div>
-      )}
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        {leagues === null ? (
+          <p className="py-10 text-center text-sm text-muted">{t("common.loading")}</p>
+        ) : leagues.length === 0 ? (
+          <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">{t("leagues.noLeagues")}</p>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {leagues.map((league) => (
+              <button
+                key={league.id}
+                type="button"
+                onClick={() => setSelected(league)}
+                className="flex min-h-14 items-center gap-3 rounded-xl border border-border bg-surface px-3.5 py-3 text-left transition-colors hover:border-accent/40"
+              >
+                <span className="grid size-9 shrink-0 place-items-center rounded-full bg-accent/10 text-accent">
+                  <Trophy size={16} aria-hidden />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-semibold text-foreground">{league.name}</span>
+                  <span className="block text-[11px] text-muted">{t("leagues.memberCount", { count: league.memberCount })}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
