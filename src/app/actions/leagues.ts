@@ -149,17 +149,48 @@ export async function getLeagueLeaderboard(deviceId: string, leagueId: string, j
 
   const { data: members } = await supabase.from("friend_league_members").select("device_id, user_id").eq("league_id", leagueId);
   if (!members || members.length === 0) return [];
-  const memberKeys = new Set(members.map((m) => (m.user_id as string | null) ?? (m.device_id as string)));
 
-  const fullLeaderboard = await getLeaderboard(journee);
+  const memberDeviceIds = members.map((m) => m.device_id as string);
+  const memberUserIds = members.filter((m) => m.user_id).map((m) => m.user_id as string);
+
+  // Every member should show up, even one who hasn't picked a squad for
+  // this journée yet (0 points) — the previous version instead FILTERED
+  // getLeaderboard() down to members, so anyone without a fantasy_squads
+  // row for this exact journée (true for most people right after joining)
+  // silently never appeared at all, which is what was reported as "joined
+  // members don't show up".
+  //
+  // Username can't come from getLeaderboard() alone for the same reason
+  // (it only knows names from fantasy_squads rows) — user_profiles is
+  // queried by both device_id and user_id since a signed-in member's
+  // profile row may have last been written from a different device than
+  // the one recorded on their membership (device_id there is just a "last
+  // seen from" breadcrumb once user_id exists, see lib/auth.ts).
+  const [fullLeaderboard, { data: profilesByDevice }, profilesByUserResult] = await Promise.all([
+    getLeaderboard(journee),
+    supabase.from("user_profiles").select("device_id, user_id, username").in("device_id", memberDeviceIds),
+    memberUserIds.length > 0
+      ? supabase.from("user_profiles").select("device_id, user_id, username").in("user_id", memberUserIds)
+      : Promise.resolve({ data: [] as { device_id: string; user_id: string | null; username: string }[] }),
+  ]);
   if (!fullLeaderboard) return null;
 
-  return fullLeaderboard
-    .filter((entry) => memberKeys.has(entry.userId ?? entry.deviceId))
-    .map((entry) => ({
-      username: entry.username,
-      points: entry.points,
-      filled: entry.filled,
-      isMe: (entry.userId ?? entry.deviceId) === myKey,
-    }));
+  const leaderboardByKey = new Map(fullLeaderboard.map((entry) => [entry.userId ?? entry.deviceId, entry]));
+  const usernameByKey = new Map<string, string>();
+  for (const p of [...(profilesByDevice ?? []), ...(profilesByUserResult.data ?? [])]) {
+    usernameByKey.set((p.user_id as string | null) ?? (p.device_id as string), p.username as string);
+  }
+
+  return members
+    .map((member) => {
+      const key = (member.user_id as string | null) ?? (member.device_id as string);
+      const entry = leaderboardByKey.get(key);
+      return {
+        username: entry?.username ?? usernameByKey.get(key) ?? "—",
+        points: entry?.points ?? 0,
+        filled: entry?.filled ?? 0,
+        isMe: key === myKey,
+      };
+    })
+    .sort((a, b) => b.points - a.points);
 }

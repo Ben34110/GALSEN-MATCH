@@ -15,6 +15,7 @@ import { getOrCreateDeviceId } from "@/lib/device-id";
 import { syncBallonDorPrediction } from "@/app/actions/ballon-dor-sync";
 import { BALLON_DOR_SIZE } from "@/lib/ballon-dor";
 import { BallonDorPickerSheet } from "@/components/fantasy/ballon-dor-picker-sheet";
+import { ShareBallonDorButton } from "@/components/fantasy/share-ballon-dor-button";
 import type { AfricanPlayer } from "@/types";
 
 interface BallonDorViewProps {
@@ -76,7 +77,16 @@ export function BallonDorView({ pool }: BallonDorViewProps) {
         {t("common.back")}
       </Link>
 
-      <SectionHeader eyebrow={t("common.eyebrow")} title={t("ballonDor.title")} subtitle={t("ballonDor.subtitle")} />
+      <SectionHeader
+        eyebrow={t("common.eyebrow")}
+        title={t("ballonDor.title")}
+        subtitle={t("ballonDor.subtitle")}
+        action={
+          rankedPlayers.length >= 3 && profile ? (
+            <ShareBallonDorButton username={profile.username} countryId={profile.countryId} ranking={rankedPlayers} />
+          ) : undefined
+        }
+      />
 
       {rankedPlayers.length === 0 ? (
         <Card className="mb-4 flex items-center gap-3">

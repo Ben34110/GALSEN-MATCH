@@ -120,7 +120,9 @@
     "addPlayerButton": "Add a player ({count}/{size})",
     "save": "Save my prediction",
     "saved": "Prediction saved",
-    "pickerTitle": "Add a player"
+    "pickerTitle": "Add a player",
+    "shareTitle": "My Ballon d'Or prediction",
+    "shareAriaLabel": "Share my Ballon d'Or prediction"
   },
   "gameRules": {
     "title": "How it works",

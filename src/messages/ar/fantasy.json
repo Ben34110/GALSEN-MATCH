@@ -120,7 +120,9 @@
     "addPlayerButton": "إضافة لاعب ({count}/{size})",
     "save": "حفظ توقّعي",
     "saved": "تم حفظ التوقّع",
-    "pickerTitle": "إضافة لاعب"
+    "pickerTitle": "إضافة لاعب",
+    "shareTitle": "توقعي للكرة الذهبية",
+    "shareAriaLabel": "مشاركة توقعي للكرة الذهبية"
   },
   "gameRules": {
     "title": "كيف تعمل اللعبة",

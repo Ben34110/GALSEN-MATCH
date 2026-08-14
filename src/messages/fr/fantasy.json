@@ -120,7 +120,9 @@
     "addPlayerButton": "Ajouter un joueur ({count}/{size})",
     "save": "Enregistrer mon pronostic",
     "saved": "Pronostic enregistré",
-    "pickerTitle": "Ajouter un joueur"
+    "pickerTitle": "Ajouter un joueur",
+    "shareTitle": "Mon pronostic Ballon d'Or",
+    "shareAriaLabel": "Partager mon pronostic Ballon d'Or"
   },
   "gameRules": {
     "title": "Comment ça marche",
