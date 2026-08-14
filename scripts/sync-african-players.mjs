@@ -170,6 +170,22 @@ const MANUAL_ADDITIONS = [
     // position is pinned here too.
     nationality: "Central African Republic",
   },
+  {
+    id: 179399,
+    name: "E. Tchato",
+    age: 23,
+    number: 29,
+    position: "Defender",
+    photo: "https://media.api-sports.io/football/players/179399.png",
+    // Enzo Tchato, Montpellier — same /players/squads gap as Kondogbia
+    // above, this time for Cameroon (team 1530, 25 players returned, no
+    // match). Confirmed active: 29 Ligue 2 apps this season plus an AFCON
+    // qualifiers squad entry. Note: API-Football also has a second,
+    // statless duplicate id (275671) for this exact player — 179399 is the
+    // one with real season stats, use that one if this ever needs
+    // reconciling by hand again.
+    nationality: "Cameroon",
+  },
 ];
 
 function isClubStatEntry(teamName) {
