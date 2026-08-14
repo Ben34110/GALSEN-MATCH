@@ -277,6 +277,42 @@ create table if not exists user_profiles (
   updated_at timestamptz not null default now()
 );
 
+-- One row per device — last time it was seen open (see app/actions/
+-- device-activity.ts, called once per app mount by components/pwa/
+-- activity-heartbeat.tsx) and, separately, the last time a re-engagement
+-- push ("come back, here's what's new") was sent to it — see api/cron/
+-- poll/route.ts's own re-engagement block. Kept apart from
+-- push_subscriptions/apns_tokens (which only exist once notifications are
+-- actually enabled): this needs to track every device that's ever opened
+-- the app, not just the subset that opted into push.
+create table if not exists device_activity (
+  id uuid primary key default gen_random_uuid(),
+  device_id text not null unique,
+  last_active_at timestamptz not null default now(),
+  last_reengagement_sent_at timestamptz
+);
+
+-- A private leaderboard among friends, joined via a short shareable code —
+-- see app/actions/leagues.ts. The leaderboard itself isn't stored here:
+-- that action filters the same cached getLeaderboard() result (lib/data/
+-- fantasy-leaderboard.ts) down to a league's member identities, reusing
+-- the one shared computation instead of a second scoring pipeline.
+create table if not exists friend_leagues (
+  id uuid primary key default gen_random_uuid(),
+  code text not null unique,
+  name text not null,
+  creator_device_id text not null,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists friend_league_members (
+  id uuid primary key default gen_random_uuid(),
+  league_id uuid not null references friend_leagues(id) on delete cascade,
+  device_id text not null,
+  joined_at timestamptz not null default now()
+);
+create unique index if not exists friend_league_members_league_device_idx on friend_league_members (league_id, device_id);
+
 -- Optional real accounts (email/password or Google via Supabase Auth — see
 -- lib/auth.ts, lib/supabase-server.ts, lib/supabase-browser.ts). Additive,
 -- not a migration: device_id is untouched and keeps working exactly as
@@ -311,6 +347,16 @@ create unique index push_subscriptions_user_idx on push_subscriptions (user_id);
 alter table apns_tokens add column if not exists user_id uuid references auth.users(id) on delete cascade;
 drop index if exists apns_tokens_user_idx;
 create unique index apns_tokens_user_idx on apns_tokens (user_id);
+
+alter table device_activity add column if not exists user_id uuid references auth.users(id) on delete cascade;
+drop index if exists device_activity_user_idx;
+create unique index device_activity_user_idx on device_activity (user_id);
+
+alter table friend_leagues add column if not exists creator_user_id uuid references auth.users(id) on delete set null;
+
+alter table friend_league_members add column if not exists user_id uuid references auth.users(id) on delete cascade;
+drop index if exists friend_league_members_league_user_idx;
+create unique index friend_league_members_league_user_idx on friend_league_members (league_id, user_id);
 
 alter table favorite_club_notifications add column if not exists user_id uuid references auth.users(id) on delete cascade;
 drop index if exists favorite_club_notifications_user_team_idx;
@@ -361,6 +407,9 @@ alter table user_profiles add column if not exists avatar_config jsonb;
 -- so there's no client-side data access path to lock down.
 alter table push_subscriptions enable row level security;
 alter table apns_tokens enable row level security;
+alter table device_activity enable row level security;
+alter table friend_leagues enable row level security;
+alter table friend_league_members enable row level security;
 alter table favorite_club_notifications enable row level security;
 alter table favorite_player_notifications enable row level security;
 alter table notified_events enable row level security;

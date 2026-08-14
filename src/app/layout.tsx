@@ -4,6 +4,7 @@ import "./globals.css";
 import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import { InstallPrompt } from "@/components/pwa/install-prompt";
 import { NativeBridge } from "@/components/pwa/native-bridge";
+import { ActivityHeartbeat } from "@/components/pwa/activity-heartbeat";
 import { AccentThemeProvider } from "@/components/theme/accent-theme-provider";
 import { AppLocaleProvider } from "@/components/theme/locale-provider";
 
@@ -90,6 +91,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-dvh bg-background text-foreground antialiased">
         <ServiceWorkerRegister />
         <NativeBridge />
+        <ActivityHeartbeat />
         <AccentThemeProvider />
         <AppLocaleProvider>
           {children}

@@ -165,6 +165,19 @@ const LOCK_REMINDER_TEMPLATES = [
   (journee: number) => ({ title: "📢 Pense à verrouiller !", body: `Ta sélection pour la journée ${journee} attend d'être enregistrée.` }),
 ];
 
+// Sent to any device that's gone quiet for 2+ days (see api/actions/
+// device-activity.ts's heartbeat) — deliberately generic, not tied to a
+// specific match/player like every other template here, since a lapsed
+// user might not have any favorites at all. Several variants so the same
+// person going quiet twice in a row doesn't see the exact same line twice.
+const REENGAGEMENT_TEMPLATES = [
+  () => ({ title: "👋 On t'a manqué !", body: "Les actus du foot africain n'attendent que toi, viens jeter un œil." }),
+  () => ({ title: "⚽️ Ça bouge sur AfroLive !", body: "Résultats, transferts, actus fraîches... reviens voir ce que tu as raté." }),
+  () => ({ title: "🏆 Ton équipe Fantasy t'attend", body: "Viens checker tes points et préparer ta prochaine compo." }),
+  () => ({ title: "📰 T'as raté des trucs !", body: "De nouvelles actus sont tombées depuis ta dernière visite." }),
+  () => ({ title: "🔥 Reviens vite !", body: "Le foot africain continue même sans toi... mais c'est mieux avec toi." }),
+];
+
 export async function GET(request: Request) {
   const auth = request.headers.get("authorization");
   if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -194,8 +207,49 @@ export async function GET(request: Request) {
   const subsByTarget = new Map((subs ?? []).map((s) => [targetKey(s as SubscriptionRow), s as SubscriptionRow]));
   const apnsByTarget = new Map((apnsRows ?? []).map((r) => [targetKey(r as ApnsTokenRow), (r as ApnsTokenRow).token]));
 
+  // --- Re-engagement: nudge devices that have gone quiet for 2+ days ---
+  // Deliberately runs before the "nobody has favorites" early-return below
+  // — this targets ANY device that's ever opened the app (see
+  // device_activity, written by components/pwa/activity-heartbeat.tsx),
+  // not just ones with club/player notification prefs. A lapsed user who
+  // never favorited anything is exactly who this is for.
+  const REENGAGEMENT_INACTIVE_MS = 2 * 24 * 60 * 60 * 1000;
+  const reengagementCutoff = new Date(Date.now() - REENGAGEMENT_INACTIVE_MS).toISOString();
+  const { data: inactiveDevices } = await supabase
+    .from("device_activity")
+    .select("device_id, user_id, last_active_at, last_reengagement_sent_at")
+    .lt("last_active_at", reengagementCutoff);
+
+  let reengagementSent = 0;
+  const dueForReengagement = ((inactiveDevices ?? []) as { device_id: string; user_id: string | null; last_reengagement_sent_at: string | null }[]).filter(
+    (row) => !row.last_reengagement_sent_at || row.last_reengagement_sent_at < reengagementCutoff
+  );
+  if (dueForReengagement.length > 0) {
+    await Promise.allSettled(
+      dueForReengagement.map(async (row) => {
+        const target = targetKey(row);
+        const sub = subsByTarget.get(target);
+        const apnsToken = apnsByTarget.get(target);
+        if (!sub && !apnsToken) return;
+        const { title, body } = pick(REENGAGEMENT_TEMPLATES)();
+        const result = await dispatchToTarget(sub, apnsToken, { title, body, url: "/actu" });
+        if (result.sent) reengagementSent += 1;
+      })
+    );
+    // Marks every device checked this cycle, not just the ones that
+    // actually got a push — a device with no push channel at all would
+    // otherwise stay "due" and get re-queried every single poll forever.
+    await supabase
+      .from("device_activity")
+      .update({ last_reengagement_sent_at: new Date().toISOString() })
+      .in(
+        "device_id",
+        dueForReengagement.map((row) => row.device_id)
+      );
+  }
+
   if (clubPrefRows.length === 0 && playerPrefRows.length === 0) {
-    return NextResponse.json({ ok: true, sent: 0, note: "no favorites with notifications enabled" });
+    return NextResponse.json({ ok: true, sent: reengagementSent, reengagementSent, note: "no favorites with notifications enabled" });
   }
 
   const clubTeamIds = new Set(clubPrefRows.map((r) => r.team_id));
@@ -550,7 +604,8 @@ export async function GET(request: Request) {
 
   return NextResponse.json({
     ok: true,
-    sent,
+    sent: sent + reengagementSent,
+    reengagementSent,
     queued: pending.length,
     staleRemoved: staleWebTargets.size + staleApnsTargets.size,
   });

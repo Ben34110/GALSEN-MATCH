@@ -26,7 +26,7 @@ export default async function FantasyLeaderboardPage({
   const { journee: journeeParam, mode: modeParam, month: monthParam } = await searchParams;
   const { activeJournee } = getGameweekInfo();
   const journee = journeeParam ? Number(journeeParam) : activeJournee;
-  const mode = modeParam === "mois" ? "mois" : "semaine";
+  const mode = modeParam === "mois" ? "mois" : modeParam === "ligue" ? "ligue" : "semaine";
 
   const availableMonths = getAvailableLeaderboardMonths();
   const defaultMonth = availableMonths[availableMonths.length - 1] ?? new Date();
@@ -53,6 +53,7 @@ export default async function FantasyLeaderboardPage({
         selectedMonthKey={monthKey(monthStart)}
         weekHref={`/fantasy/xi/leaderboard?mode=semaine&journee=${journee}`}
         monthHref={`/fantasy/xi/leaderboard?mode=mois&month=${monthKey(monthStart)}`}
+        leagueHref={`/fantasy/xi/leaderboard?mode=ligue&journee=${journee}`}
         entries={entries}
         dataUnavailable={dataUnavailable}
       />

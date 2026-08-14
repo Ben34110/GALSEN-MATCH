@@ -82,7 +82,9 @@
     "emptyWeek": "No one has built a team for this matchday yet.",
     "emptyMonth": "No one has a ranking for this month yet.",
     "weeklyPlayers": "{filled}/11 players",
-    "monthlyPlayed": "{count, plural, one {# matchday played} other {# matchdays played}}"
+    "monthlyPlayed": "{count, plural, one {# matchday played} other {# matchdays played}}",
+    "modeLeague": "League",
+    "titleLeague": "Friend leagues"
   },
   "quiz": {
     "hub": {
@@ -132,5 +134,25 @@
   "standing": {
     "points": "{points, plural, one {# point} other {# points}}",
     "rankOf": "#{rank} of {total}"
+  },
+  "leagues": {
+    "createButton": "Create",
+    "joinButton": "Join",
+    "namePlaceholder": "League name",
+    "codePlaceholder": "6-character code",
+    "createConfirm": "Create league",
+    "joinConfirm": "Join",
+    "createError": "Couldn't create the league, try again.",
+    "joinNotFound": "No league matches this code.",
+    "joinError": "Couldn't join the league, try again.",
+    "backToLeagues": "My leagues",
+    "codeLabel": "Code: {code}",
+    "shareAriaLabel": "Share the league code",
+    "shareText": "Join my \"{name}\" league on AfroLive with the code {code}!",
+    "leaveAriaLabel": "Leave the league",
+    "noLeagues": "You haven't joined or created any league yet.",
+    "memberCount": "{count, plural, one {# member} other {# members}}",
+    "empty": "Nobody in this league has picked a squad for this matchday yet.",
+    "membersPlayers": "{filled}/11 players"
   }
 }

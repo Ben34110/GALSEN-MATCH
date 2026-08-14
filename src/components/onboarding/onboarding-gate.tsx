@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Capacitor } from "@capacitor/core";
 import type { Session } from "@supabase/supabase-js";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { ONBOARDING_STORAGE_KEY, parseOnboardingProfile } from "@/lib/onboarding";
@@ -33,6 +34,29 @@ export function OnboardingGate({ children }: { children: React.ReactNode }) {
   const [confirmedMissing, setConfirmedMissing] = useState(false);
   const lastSynced = useRef<string | null>(null);
   const linkedRef = useRef(false);
+
+  // true (no artificial delay) both during SSR and for the very first
+  // client render, matching each other exactly to avoid a hydration
+  // mismatch — Capacitor.isNativePlatform() can only be read once mounted
+  // (window.Capacitor genuinely doesn't exist during the server render,
+  // but does exist by hydration time inside the native app, so checking it
+  // in the initial useState computation itself would disagree between the
+  // two passes). useLayoutEffect (not useEffect) flips it before the
+  // browser paints, so a native launch still holds the loading screen
+  // (see AppLoadingScreen's own comment) without a visible flash of real
+  // content first.
+  const [nativeMinDurationElapsed, setNativeMinDurationElapsed] = useState(true);
+  useLayoutEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    // Deferred to a microtask — calling setState synchronously in an
+    // effect body triggers React's cascading-render lint warning; a
+    // microtask still resolves before the browser's next paint (unlike a
+    // macrotask/setTimeout(0) would), so the loading screen still never
+    // visibly flickers away and back.
+    Promise.resolve().then(() => setNativeMinDurationElapsed(false));
+    const timer = setTimeout(() => setNativeMinDurationElapsed(true), 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (!profile) return;
@@ -120,8 +144,11 @@ export function OnboardingGate({ children }: { children: React.ReactNode }) {
   // profile is null on the server render and for a frame after hydration
   // (see the rAF check above) — show a loading screen instead of letting
   // real content (or a blank flash) show before we actually know whether
-  // this visitor is onboarded.
-  if (!profile) return <AppLoadingScreen />;
+  // this visitor is onboarded. nativeMinDurationElapsed extends this same
+  // screen a bit longer inside the native app specifically (see its own
+  // comment above) — profile is very often already resolved instantly on
+  // web, where no such minimum applies.
+  if (!profile || !nativeMinDurationElapsed) return <AppLoadingScreen />;
   return (
     <>
       <FantasyRatingsPrefetch />

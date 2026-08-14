@@ -82,7 +82,9 @@
     "emptyWeek": "Personne n'a encore composé d'équipe pour cette journée.",
     "emptyMonth": "Personne n'a encore de classement pour ce mois.",
     "weeklyPlayers": "{filled}/11 joueurs",
-    "monthlyPlayed": "{count, plural, one {# journée jouée} other {# journées jouées}}"
+    "monthlyPlayed": "{count, plural, one {# journée jouée} other {# journées jouées}}",
+    "modeLeague": "Ligue",
+    "titleLeague": "Ligues entre potes"
   },
   "quiz": {
     "hub": {
@@ -132,5 +134,25 @@
   "standing": {
     "points": "{points, plural, one {# point} other {# points}}",
     "rankOf": "#{rank} / {total}"
+  },
+  "leagues": {
+    "createButton": "Créer",
+    "joinButton": "Rejoindre",
+    "namePlaceholder": "Nom de la ligue",
+    "codePlaceholder": "Code à 6 caractères",
+    "createConfirm": "Créer la ligue",
+    "joinConfirm": "Rejoindre",
+    "createError": "Impossible de créer la ligue, réessaie.",
+    "joinNotFound": "Aucune ligue ne correspond à ce code.",
+    "joinError": "Impossible de rejoindre la ligue, réessaie.",
+    "backToLeagues": "Mes ligues",
+    "codeLabel": "Code : {code}",
+    "shareAriaLabel": "Partager le code de la ligue",
+    "shareText": "Rejoins ma ligue \"{name}\" sur AfroLive avec le code {code} !",
+    "leaveAriaLabel": "Quitter la ligue",
+    "noLeagues": "Tu n'as encore rejoint ou créé aucune ligue.",
+    "memberCount": "{count, plural, one {# membre} other {# membres}}",
+    "empty": "Personne dans cette ligue n'a encore composé d'équipe pour cette journée.",
+    "membersPlayers": "{filled}/11 joueurs"
   }
 }

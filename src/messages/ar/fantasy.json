@@ -82,7 +82,9 @@
     "emptyWeek": "لم يُشكّل أحد فريقًا بعد لهذه الجولة.",
     "emptyMonth": "لا يوجد ترتيب لأحد بعد لهذا الشهر.",
     "weeklyPlayers": "{filled}/11 لاعبًا",
-    "monthlyPlayed": "{count, plural, zero {# جولة ملعوبة} one {جولة واحدة ملعوبة} two {جولتان ملعوبتان} few {# جولات ملعوبة} many {# جولة ملعوبة} other {# جولة ملعوبة}}"
+    "monthlyPlayed": "{count, plural, zero {# جولة ملعوبة} one {جولة واحدة ملعوبة} two {جولتان ملعوبتان} few {# جولات ملعوبة} many {# جولة ملعوبة} other {# جولة ملعوبة}}",
+    "modeLeague": "دوري",
+    "titleLeague": "دوريات الأصدقاء"
   },
   "quiz": {
     "hub": {
@@ -132,5 +134,25 @@
   "standing": {
     "points": "{points, plural, one {نقطة #} other {# نقطة}}",
     "rankOf": "#{rank} / {total}"
+  },
+  "leagues": {
+    "createButton": "إنشاء",
+    "joinButton": "انضمام",
+    "namePlaceholder": "اسم الدوري",
+    "codePlaceholder": "رمز من 6 أحرف",
+    "createConfirm": "إنشاء الدوري",
+    "joinConfirm": "انضمام",
+    "createError": "تعذر إنشاء الدوري، أعد المحاولة.",
+    "joinNotFound": "لا يوجد دوري يطابق هذا الرمز.",
+    "joinError": "تعذر الانضمام إلى الدوري، أعد المحاولة.",
+    "backToLeagues": "دورياتي",
+    "codeLabel": "الرمز: {code}",
+    "shareAriaLabel": "مشاركة رمز الدوري",
+    "shareText": "انضم إلى دوري \"{name}\" على AfroLive بالرمز {code}!",
+    "leaveAriaLabel": "مغادرة الدوري",
+    "noLeagues": "لم تنضم أو تُنشئ أي دوري بعد.",
+    "memberCount": "{count, plural, one {عضو واحد} two {عضوان} few {# أعضاء} other {# عضو}}",
+    "empty": "لم يقم أحد في هذا الدوري بتشكيل فريقه لهذه الجولة بعد.",
+    "membersPlayers": "{filled}/11 لاعب"
   }
 }

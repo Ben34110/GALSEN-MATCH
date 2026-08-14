@@ -139,6 +139,28 @@ body {
   animation: rise-in var(--duration-slow) var(--ease-out) both;
 }
 
+/* App-launch loading screen's progress bar (components/ui/app-loading-
+   screen.tsx) — indeterminate (no real "% loaded" to bind to, this is the
+   launch moment itself), a sweeping segment rather than a spinner to read
+   as "progress" rather than "stuck". */
+@keyframes loading-sweep {
+  0% {
+    transform: translateX(-100%);
+    width: 40%;
+  }
+  50% {
+    width: 60%;
+  }
+  100% {
+    transform: translateX(250%);
+    width: 40%;
+  }
+}
+
+.animate-loading-sweep {
+  animation: loading-sweep 1.3s var(--ease-in-out, ease-in-out) infinite;
+}
+
 /* Frosted-white chrome for nav bars / floating overlays — soft, not dark glass. */
 .glass-panel {
   background: var(--glass-surface);
