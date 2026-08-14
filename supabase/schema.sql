@@ -351,6 +351,26 @@ create table if not exists friend_league_members (
 );
 create unique index if not exists friend_league_members_league_device_idx on friend_league_members (league_id, device_id);
 
+-- One row per device_id, permanently binding it to whichever browser first
+-- established it (see lib/device-secret.ts) — device_id alone isn't proof
+-- of ownership, since it's broadcast to every other participant in a chat
+-- room a device has ever posted in (chat_messages.device_id, read back by
+-- app/actions/chat-profile.ts for the "tap a message to see who sent it"
+-- profile sheet). secret_hash is a sha256 of a random value stored in an
+-- httpOnly cookie only that device's own browser ever holds, never sent to
+-- any other client. app/actions/link-device-data.ts checks a caller's
+-- cookie against this table before letting a sign-in re-key a device_id's
+-- rows onto an account — otherwise anyone who learns a device_id (from
+-- chat) could "adopt" its guest data onto their own account just by
+-- calling that Server Action directly. First-write-wins, not a per-request
+-- policy: whoever's browser is the first to touch a given device_id claims
+-- it permanently.
+create table if not exists device_secrets (
+  device_id text primary key,
+  secret_hash text not null,
+  created_at timestamptz not null default now()
+);
+
 -- Optional real accounts (email/password or Google via Supabase Auth — see
 -- lib/auth.ts, lib/supabase-server.ts, lib/supabase-browser.ts). Additive,
 -- not a migration: device_id is untouched and keeps working exactly as
@@ -467,3 +487,4 @@ alter table ballon_dor_predictions enable row level security;
 alter table mercato_transfers enable row level security;
 alter table chat_messages enable row level security;
 alter table user_profiles enable row level security;
+alter table device_secrets enable row level security;

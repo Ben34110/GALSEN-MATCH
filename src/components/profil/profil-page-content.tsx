@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { BadgesSection } from "@/components/profil/badges-section";
 import { LocalePicker } from "@/components/profil/locale-picker";
@@ -37,6 +38,24 @@ export function ProfilPageContent() {
       <section className="mb-8">
         <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">{t("language")}</h2>
         <LocalePicker />
+      </section>
+
+      <section className="mb-8">
+        <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">{t("legal")}</h2>
+        <div className="flex flex-col gap-2">
+          <Link
+            href="/privacy"
+            className="flex min-h-11 items-center rounded-xl border border-border bg-surface px-4 text-sm font-semibold text-foreground transition-colors hover:border-accent/40"
+          >
+            {t("privacyPolicy")}
+          </Link>
+          <Link
+            href="/terms"
+            className="flex min-h-11 items-center rounded-xl border border-border bg-surface px-4 text-sm font-semibold text-foreground transition-colors hover:border-accent/40"
+          >
+            {t("terms")}
+          </Link>
+        </div>
       </section>
 
       <LogoutButton />

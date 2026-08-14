@@ -2,7 +2,10 @@
   "page": {
     "eyebrow": "الملف الشخصي",
     "title": "حسابك",
-    "language": "اللغة"
+    "language": "اللغة",
+    "legal": "قانوني",
+    "privacyPolicy": "سياسة الخصوصية",
+    "terms": "شروط الاستخدام"
   },
   "identityCard": {
     "guestMode": "وضع الضيف — لا يوجد حساب مرتبط بهذا الجهاز",

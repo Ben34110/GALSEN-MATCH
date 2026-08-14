@@ -2,6 +2,7 @@
 
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { resolveActor } from "@/lib/auth";
+import { claimOrVerifyDeviceSecret } from "@/lib/device-secret";
 
 // Called once per app mount by components/pwa/activity-heartbeat.tsx —
 // the only signal this app has for "this device is actually using the
@@ -15,13 +16,21 @@ export async function recordDeviceActivity(deviceId: string): Promise<void> {
   if (!supabase) return;
   const actor = await resolveActor(deviceId);
 
-  await supabase.from("device_activity").upsert(
-    {
-      device_id: deviceId,
-      ...(actor.userId ? { user_id: actor.userId } : {}),
-      last_active_at: new Date().toISOString(),
-      last_reengagement_sent_at: null,
-    },
-    { onConflict: actor.matchColumn }
-  );
+  // Also establishes this device_id's ownership claim (see
+  // lib/device-secret.ts) well before a sign-in could ever need to verify
+  // it — every real device passes through here on its very first app open.
+  // Result ignored here: a heartbeat has nothing actionable to do with a
+  // "mismatch" (linkDeviceData is the one place that gates on it).
+  await Promise.all([
+    supabase.from("device_activity").upsert(
+      {
+        device_id: deviceId,
+        ...(actor.userId ? { user_id: actor.userId } : {}),
+        last_active_at: new Date().toISOString(),
+        last_reengagement_sent_at: null,
+      },
+      { onConflict: actor.matchColumn }
+    ),
+    claimOrVerifyDeviceSecret(deviceId),
+  ]);
 }

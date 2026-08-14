@@ -13,12 +13,13 @@ function Block({ className }: { className: string }) {
 export default function ActuLoading() {
   return (
     <div>
-      <header className="mb-6 flex items-center justify-between gap-3 lg:mb-8">
-        <div className="flex flex-col gap-2">
-          <Block className="h-4 w-20" />
-          <Block className="h-7 w-40" />
-        </div>
-        <div className="size-12 shrink-0 animate-pulse rounded-full bg-surface-2" />
+      {/* Matches actu-page-client.tsx's real header: greeting + username
+          text only, no trailing avatar — that top-right slot is now the
+          floating search button rendered by the (app) layout itself (see
+          GlobalSearchButton), not part of this page's own header. */}
+      <header className="mb-6 flex flex-col gap-2 lg:mb-8">
+        <Block className="h-4 w-20" />
+        <Block className="h-7 w-40" />
       </header>
 
       <Card className="mb-6 flex items-center justify-between gap-3 lg:mb-8">

@@ -2,6 +2,7 @@
 
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { getAuthenticatedUserId } from "@/lib/auth";
+import { claimOrVerifyDeviceSecret } from "@/lib/device-secret";
 
 // Called once right after a successful sign-up/sign-in (see
 // onboarding-gate.tsx and app/onboarding/page.tsx's account step), passing
@@ -33,6 +34,16 @@ export async function linkDeviceData(deviceId: string): Promise<{ ok: boolean }>
   if (!userId) return { ok: false };
   const supabase = getSupabaseAdmin();
   if (!supabase) return { ok: false };
+
+  // A Server Action is a callable endpoint, not something only reachable
+  // through this app's own UI — without this check, anyone signed in could
+  // re-key another device's guest data (fantasy squad, chat history,
+  // profile) onto their own account just by knowing its device_id, which
+  // isn't actually secret (see lib/device-secret.ts's comment on why: it's
+  // broadcast to every other participant in any chat room that device has
+  // posted in). This ties the claim to an httpOnly cookie only the real
+  // device's own browser ever holds.
+  if ((await claimOrVerifyDeviceSecret(deviceId)) === "mismatch") return { ok: false };
 
   await Promise.all(
     DEVICE_SCOPED_TABLES.map((table) => supabase.from(table).update({ user_id: userId }).eq("device_id", deviceId).is("user_id", null))

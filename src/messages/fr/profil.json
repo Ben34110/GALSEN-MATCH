@@ -2,7 +2,10 @@
   "page": {
     "eyebrow": "Profil",
     "title": "Ton compte",
-    "language": "Langue"
+    "language": "Langue",
+    "legal": "Légal",
+    "privacyPolicy": "Politique de confidentialité",
+    "terms": "Conditions d'utilisation"
   },
   "identityCard": {
     "guestMode": "Mode invité — aucun compte lié sur cet appareil",
