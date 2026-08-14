@@ -74,6 +74,7 @@ const CLUB_SEASON = 2026;
 // as the final word after every API-derived guess.
 const POSITION_OVERRIDES = {
   409303: "Defender", // El Hadji Malick Diouf — West Ham left-back
+  926: "Midfielder", // Geoffrey Kondogbia — Marseille's Ligue 1 entry tags him "Defender", but he's a career defensive midfielder (Sevilla, Monaco, Inter, Valencia, Atlético Madrid, Marseille) — same per-competition tagging quirk as Diouf above.
 };
 
 // All 54 CAF member nations' senior national team ids, found via
@@ -153,6 +154,21 @@ const MANUAL_ADDITIONS = [
     position: "Attacker",
     photo: "https://media.api-sports.io/football/players/437901.png",
     nationality: "Senegal", // Pape Moussa Fall, FC Metz
+  },
+  {
+    id: 926,
+    name: "G. Kondogbia",
+    age: 33,
+    number: 19,
+    position: "Midfielder",
+    photo: "https://media.api-sports.io/football/players/926.png",
+    // Geoffrey Kondogbia, Marseille — missing from /players/squads?team=1527
+    // (Central African Republic) despite 6 caps this season alone
+    // (Friendlies + AFCON qualifiers per /players?id=926&season=2025) — that
+    // squad-list endpoint is simply incomplete for this federation (only 20
+    // players returned total). See POSITION_OVERRIDES above for why his
+    // position is pinned here too.
+    nationality: "Central African Republic",
   },
 ];
 

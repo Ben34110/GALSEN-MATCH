@@ -23628,5 +23628,22 @@
     "appearances": 27,
     "goals": 11,
     "assists": 1
+  },
+  {
+    "id": 926,
+    "name": "G. Kondogbia",
+    "firstname": "Geoffrey Edwin",
+    "lastname": "Kondogbia",
+    "age": 33,
+    "nationality": "Central African Republic",
+    "photo": "https://media.api-sports.io/football/players/926.png",
+    "position": "Midfielder",
+    "teamId": 81,
+    "teamName": "Marseille",
+    "teamLogo": "https://media.api-sports.io/football/teams/81.png",
+    "leagueName": "Ligue 1",
+    "appearances": 10,
+    "goals": 0,
+    "assists": 0
   }
 ]
