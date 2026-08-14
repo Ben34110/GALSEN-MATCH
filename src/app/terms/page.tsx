@@ -5,8 +5,8 @@ export const metadata: Metadata = {
   title: "Conditions d’utilisation",
 };
 
-const CONTACT_EMAIL = "bpriorediouf@gmail.com";
-const UPDATED_AT = "13 août 2026";
+const CONTACT_EMAIL = "fulgalsen@gmail.com";
+const UPDATED_AT = "14 août 2026";
 
 export default function TermsPage() {
   return (
@@ -86,9 +86,10 @@ export default function TermsPage() {
       <section>
         <h2>7. Résiliation</h2>
         <p>
-          Vous pouvez cesser d’utiliser l’application à tout moment et demander la suppression de vos données (voir
-          la Politique de confidentialité). Nous pouvons suspendre l’accès d’un appareil ou d’un compte en cas de
-          non-respect de ces conditions.
+          Vous pouvez cesser d’utiliser l’application à tout moment. Si vous avez un compte, vous pouvez le
+          supprimer vous-même depuis Profil → «&nbsp;Supprimer mon compte&nbsp;» (voir la Politique de
+          confidentialité) ; la suppression est définitive et immédiate. Nous pouvons suspendre l’accès d’un
+          appareil ou d’un compte en cas de non-respect de ces conditions.
         </p>
       </section>
 

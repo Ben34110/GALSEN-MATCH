@@ -5,8 +5,8 @@ export const metadata: Metadata = {
   title: "Politique de confidentialité",
 };
 
-const CONTACT_EMAIL = "bpriorediouf@gmail.com";
-const UPDATED_AT = "13 août 2026";
+const CONTACT_EMAIL = "fulgalsen@gmail.com";
+const UPDATED_AT = "14 août 2026";
 
 export default function PrivacyPolicyPage() {
   return (
@@ -122,10 +122,16 @@ export default function PrivacyPolicyPage() {
       <section>
         <h2>5. Conservation et suppression</h2>
         <p>
-          Vos données sont conservées tant que votre profil (invité ou compte) existe. Il n’existe pas encore de
-          suppression en libre-service dans l’application&nbsp;: pour demander la suppression de vos données
-          (compte, profil, historique de chat, etc.), écrivez-nous à l’adresse indiquée en section 7 — la demande
-          sera traitée manuellement dans un délai raisonnable.
+          Vos données sont conservées tant que votre profil (invité ou compte) existe. Si vous êtes connecté avec un
+          compte, vous pouvez le supprimer vous-même depuis Profil → «&nbsp;Supprimer mon compte&nbsp;»&nbsp;: la
+          suppression est immédiate et efface votre compte ainsi que toutes les données qui lui sont rattachées
+          (profil, historique de chat, équipe Fantasy, scores, pronostics, abonnements aux notifications). Une
+          ligue d’amis que vous avez créée n’est pas supprimée si d’autres membres en font encore partie — seule
+          votre appartenance à cette ligue l’est.
+        </p>
+        <p>
+          Pour un profil invité (sans compte), la suppression se fait en effaçant les données du site depuis votre
+          navigateur/appareil, ou en nous écrivant à l’adresse indiquée en section 7.
         </p>
       </section>
 

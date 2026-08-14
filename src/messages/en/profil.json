@@ -41,6 +41,20 @@
     "confirm": "Sign out? Your profile, favorites, and Fantasy squad will be cleared from this device.",
     "button": "Sign out"
   },
+  "deleteAccount": {
+    "button": "Delete my account",
+    "title": "Delete your account",
+    "close": "Close",
+    "warning": "This action is permanent and immediate. Your account and everything tied to it will be deleted, with no way to recover it.",
+    "itemProfile": "Your profile (username, country, favorite players)",
+    "itemChat": "Your chat message history",
+    "itemFantasy": "Your Fantasy XI squad and Ballon d'Or predictions",
+    "itemScores": "Your quiz scores and ranking",
+    "itemNotifications": "Your notification preferences and subscriptions",
+    "confirm": "Delete permanently",
+    "cancel": "Cancel",
+    "error": "Something went wrong. Try again or email us at fulgalsen@gmail.com."
+  },
   "notifications": {
     "title": "News notifications",
     "subtitle": "Get notified as soon as a new article comes out for the countries you choose.",

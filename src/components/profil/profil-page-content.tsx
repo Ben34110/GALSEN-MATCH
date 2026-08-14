@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { BadgesSection } from "@/components/profil/badges-section";
+import { DeleteAccountButton } from "@/components/profil/delete-account-button";
 import { LocalePicker } from "@/components/profil/locale-picker";
 import { LogoutButton } from "@/components/profil/logout-button";
 import { NewsNotificationsSection } from "@/components/profil/news-notifications-section";
@@ -58,7 +59,10 @@ export function ProfilPageContent() {
         </div>
       </section>
 
-      <LogoutButton />
+      <div className="flex flex-col gap-2">
+        <LogoutButton />
+        <DeleteAccountButton />
+      </div>
     </div>
   );
 }
