@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import webpush from "web-push";
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { isCronAuthorized } from "@/lib/cron-auth";
 import {
   getAllLiveFixtures,
   getFixtureEvents,
@@ -103,6 +104,17 @@ const PLAYER_LINEUP_TEMPLATES = [
   (player: string) => ({ title: `⭐️ ${player} dans le XI de départ !`, body: "On croise les doigts pour un but ou une passe déc." }),
 ];
 
+// Distinct from being benched (a sub is still part of the 23, just waiting
+// for their moment) — this fires when the player isn't named in the squad
+// at all once the lineup is out (injury, suspension, rotation), which is
+// worth a push precisely because there's now nothing left to hope for this
+// matchday.
+const PLAYER_NOT_IN_SQUAD_TEMPLATES = [
+  (player: string) => ({ title: `⛔️ ${player} n'est pas dans le groupe`, body: "Pas sur la feuille de match aujourd'hui." }),
+  (player: string) => ({ title: `😕 ${player} manque à l'appel`, body: "Absent de la feuille de match pour ce match." }),
+  (player: string) => ({ title: `📋 ${player} hors groupe`, body: "Ni titulaire ni remplaçant sur cette rencontre." }),
+];
+
 const CLUB_GOAL_TEMPLATES = [
   (team: string, scorer: string, score: string) => ({ title: "GOAL !! 🔥", body: `${team} vient de marquer${scorer} — ${score}` }),
   (team: string, scorer: string, score: string) => ({
@@ -191,8 +203,7 @@ const REENGAGEMENT_TEMPLATES = [
 ];
 
 export async function GET(request: Request) {
-  const auth = request.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!isCronAuthorized(request)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
@@ -485,10 +496,14 @@ export async function GET(request: Request) {
           }
           await markKey(fixtureId, lineupKey);
 
-          // Same lineup fetch also answers "is my favorited player starting?" —
-          // check it here instead of a second /fixtures/lineups call.
+          // Same lineup fetch also answers "is my favorited player starting?"
+          // (and, below, "are they even in the squad at all?") — check both
+          // here instead of a second /fixtures/lineups call.
           const teamLineup = lineupResult.data.find((l) => l.team.id === teamId);
           if (teamLineup) {
+            const startingIds = new Set(teamLineup.startXI.map((s) => s.player.id));
+            const substituteIds = new Set(teamLineup.substitutes.map((s) => s.player.id));
+
             for (const slot of teamLineup.startXI) {
               if (!favoritedPlayerMeta.has(slot.player.id)) continue;
               const playerKey = `player-lineup-${slot.player.id}`;
@@ -496,6 +511,22 @@ export async function GET(request: Request) {
               const player = favoritedPlayerMeta.get(slot.player.id)!;
               const { title: pTitle, body: pBody } = pick(PLAYER_LINEUP_TEMPLATES)(player.name);
               for (const device of playerPrefRows.filter((r) => r.player_id === slot.player.id && r.notify_lineup)) {
+                queue(targetKey(device), pTitle, pBody, fixtureId, player.photo);
+              }
+              await markKey(fixtureId, playerKey);
+            }
+
+            // Favorited players for this team who aren't in the squad at
+            // all — being on the bench (substituteIds) is its own, separate
+            // state (still might play) and gets no push, only the Fantasy
+            // pitch view's "sur le banc" treatment (see fantasy-ratings.ts).
+            for (const [playerId, player] of favoritedPlayerMeta) {
+              if (player.teamId !== teamId) continue;
+              if (startingIds.has(playerId) || substituteIds.has(playerId)) continue;
+              const playerKey = `player-not-in-squad-${playerId}`;
+              if (await notifiedKey(fixtureId, playerKey)) continue;
+              const { title: pTitle, body: pBody } = pick(PLAYER_NOT_IN_SQUAD_TEMPLATES)(player.name);
+              for (const device of playerPrefRows.filter((r) => r.player_id === playerId && r.notify_lineup)) {
                 queue(targetKey(device), pTitle, pBody, fixtureId, player.photo);
               }
               await markKey(fixtureId, playerKey);

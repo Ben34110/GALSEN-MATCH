@@ -18,6 +18,11 @@ const SESSION_MS = 60_000;
 // Brief pause after answering so the correct/incorrect highlight is
 // actually visible before the next question replaces it.
 const ANSWER_REVEAL_MS = 500;
+// Without a cost for a wrong guess, mashing the first button on every
+// question is a dominant strategy (more attempts per second than actually
+// reading the question) and inflates the record — docking time makes
+// guessing net-negative on average versus reading and answering correctly.
+const WRONG_ANSWER_PENALTY_MS = 5_000;
 
 interface QuizSessionViewProps {
   theme: QuizTheme;
@@ -82,7 +87,7 @@ export function QuizSessionView({ theme, onClose, onRestart }: QuizSessionViewPr
   // initializer (guaranteed to run exactly once, at mount) — not as a
   // plain expression evaluated on every render, and not stashed in a ref
   // read directly during render either.
-  const [deadline] = useState(() => new Date(Date.now() + SESSION_MS));
+  const [deadline, setDeadline] = useState(() => new Date(Date.now() + SESSION_MS));
   const countdown = useCountdown(deadline);
   const finished = countdown.expired;
 
@@ -123,7 +128,11 @@ export function QuizSessionView({ theme, onClose, onRestart }: QuizSessionViewPr
   function answer(index: number) {
     if (selected !== null || !current || finished) return;
     setSelected(index);
-    if (index === current.correctIndex) setScore((value) => value + 1);
+    if (index === current.correctIndex) {
+      setScore((value) => value + 1);
+    } else {
+      setDeadline((prev) => new Date(prev.getTime() - WRONG_ANSWER_PENALTY_MS));
+    }
 
     setTimeout(() => {
       const nextRecent = [...recentIds, current.id];
@@ -175,7 +184,12 @@ export function QuizSessionView({ theme, onClose, onRestart }: QuizSessionViewPr
       {!finished && current && (
         <div className="flex flex-1 flex-col px-4 py-6">
           <div className="mb-6 flex items-center justify-between">
-            <span className="text-2xl font-extrabold tabular-nums text-accent">{countdown.seconds}s</span>
+            <span className="flex items-center gap-2">
+              <span className="text-2xl font-extrabold tabular-nums text-accent">{countdown.seconds}s</span>
+              {selected !== null && current && selected !== current.correctIndex && (
+                <span className="text-sm font-bold text-accent-3">{t("quiz.session.penalty")}</span>
+              )}
+            </span>
             <span className="text-sm font-semibold text-muted">{t("quiz.session.score", { score })}</span>
           </div>
 

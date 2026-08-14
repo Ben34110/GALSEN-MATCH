@@ -4,6 +4,7 @@ import { syncAllNewsSources } from "@/lib/news/rss-sync";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { getAfricanNation } from "@/lib/data/african-nations";
 import { dispatchToTarget } from "@/lib/push-dispatch";
+import { isCronAuthorized } from "@/lib/cron-auth";
 
 // Called every ~30 minutes by an external scheduler (cron-job.org / GitHub
 // Actions — see docs/notifications.md's "External scheduler" section for
@@ -119,8 +120,7 @@ async function notifySubscribers(insertedByCountry: Map<string, CountryBatch>): 
 }
 
 export async function GET(request: Request) {
-  const auth = request.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!isCronAuthorized(request)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 

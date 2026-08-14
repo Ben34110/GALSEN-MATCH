@@ -63,6 +63,11 @@
     "yellowCard": "🟨 Carton jaune",
     "shotsOnTarget": "🥅 {made}/{total} tirs cadrés",
     "duelsWon": "💪 {made}/{total} duels gagnés",
+    "tacklesFact": "🛡️ {count, plural, one {# tacle réussi} other {# tacles réussis}}",
+    "savesFact": "🧤 {count, plural, one {# arrêt} other {# arrêts}}",
+    "onBenchWaiting": "🪑 Sur le banc — il va falloir attendre qu'il entre en jeu.",
+    "onBenchFinished": "🪑 Resté sur le banc, pas entré en jeu.",
+    "notInSquad": "⛔️ Pas dans le groupe pour ce match.",
     "liveRatingAria": "Note en direct : {rating} sur 10",
     "liveIndicatorAria": "Match en cours",
     "live": "En direct"
@@ -102,6 +107,7 @@
     "session": {
       "noQuestions": "Aucune question disponible pour ce thème pour l'instant.",
       "score": "Score : {score}",
+      "penalty": "-5s",
       "resultCaption": "{count, plural, =1 {bonne réponse} other {bonnes réponses}} en 60 secondes",
       "newRecord": "Nouveau record !",
       "replay": "Rejouer",

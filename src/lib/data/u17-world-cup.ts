@@ -1,6 +1,7 @@
 import {
   getGroupStageFixtures,
   getGroupStageStandings,
+  normalizeNationName,
   type GroupStageFixture,
   type GroupStageGroup,
   type GroupStageFixturesResult,
@@ -27,26 +28,14 @@ export type U17WorldCupStandingsResult = GroupStageStandingsResult;
 // still needs all 4 of its teams to make sense) is filtered down to only
 // matches involving at least one.
 //
-// Same country-name spelling mismatch already handled in scripts/sync-
-// fifa-ranking.mjs's NATION_NAME_ALIASES: API-Football's team names for
-// THIS competition use "Côte d'Ivoire" while AFRICAN_NATIONS.nationality
-// (the single source of truth for African country names elsewhere in this
-// app) uses "Ivory Coast" — confirmed via a live /fixtures?league=587 call
-// returning "Côte d'Ivoire U17" verbatim.
-const NATION_NAME_ALIASES: Record<string, string> = {
-  "Côte d'Ivoire": "Ivory Coast",
-  "Congo DR": "DR Congo",
-  "Cabo Verde": "Cape Verde",
-  "The Gambia": "Gambia",
-};
-
 const AFRICAN_NATION_NAMES = new Set(AFRICAN_NATIONS.map((n) => n.nationality));
 
 // Every U17 World Cup team name is "{Country} U17" (e.g. "Senegal U17",
 // "Côte d'Ivoire U17") — confirmed across all 48 teams in a live fetch.
+// normalizeNationName strips that suffix and resolves the same API-Football
+// naming mismatches used for the flag lookup (group-stage-helpers.ts).
 function isAfricanTeamName(teamName: string): boolean {
-  const countryName = teamName.replace(/\s+U17$/, "");
-  return AFRICAN_NATION_NAMES.has(NATION_NAME_ALIASES[countryName] ?? countryName);
+  return AFRICAN_NATION_NAMES.has(normalizeNationName(teamName));
 }
 
 export async function getU17WorldCupFixtures(): Promise<U17WorldCupFixturesResult> {

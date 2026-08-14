@@ -1,4 +1,4 @@
-import { getRecentFixturesForTeam, getFixturePlayerStats } from "@/lib/api-football";
+import { getRecentFixturesForTeam, getFixturePlayerStats, getFixtureLineups } from "@/lib/api-football";
 
 const FINISHED_STATUSES = new Set(["FT", "AET", "PEN"]);
 const STARTED_STATUSES = new Set(["1H", "2H", "HT", "ET", "P", "LIVE", "BT"]);
@@ -25,6 +25,8 @@ export interface PlayerMatchMoments {
   shotsOnTarget: number | null;
   duelsWon: number | null;
   duelsTotal: number | null;
+  tacklesTotal: number | null;
+  saves: number | null;
   opponentName: string;
   opponentLogo: string;
   isHome: boolean;
@@ -46,6 +48,13 @@ export interface PlayerJourneeRating {
   // the UNPLAYED_DEFAULT_RATING case below still has a fixture to describe,
   // just no personal stats to show beyond "didn't feature".
   moments?: PlayerMatchMoments;
+  // Only set once the player hasn't (yet) actually featured in the match
+  // (0 minutes) — distinguishes "still might come on" from "never had a
+  // chance to" so the pitch view can stop implying they're on the pitch
+  // (see pitch-view.tsx's live dot) and show the right waiting message
+  // instead. Undefined the moment they've played any minutes at all —
+  // from then on they're just a normal rated/live player, sub or not.
+  squadStatus?: "bench" | "excluded";
 }
 
 // Finds *this* journée's fixture for a team (by kickoff falling inside its
@@ -102,6 +111,8 @@ export async function getPlayerJourneeRating(
     shotsOnTarget: playerStats?.shots.on ?? null,
     duelsWon: playerStats?.duels.won ?? null,
     duelsTotal: playerStats?.duels.total ?? null,
+    tacklesTotal: playerStats?.tackles.total ?? null,
+    saves: playerStats?.goals.saves ?? null,
     opponentName: opponentTeam.name,
     opponentLogo: opponentTeam.logo,
     isHome,
@@ -109,11 +120,24 @@ export async function getPlayerJourneeRating(
     opponentScore: (isHome ? fixture.goals.away : fixture.goals.home) ?? null,
   };
 
+  let squadStatus: PlayerJourneeRating["squadStatus"];
+  if ((moments.minutes ?? 0) <= 0) {
+    // Same lineup source the "not in squad" push notification uses (see
+    // app/api/cron/poll/route.ts) — only fetched for this (rarer) case, so
+    // the common "actually played" path never pays for a second API call.
+    const lineupResult = await getFixtureLineups(fixture.fixture.id);
+    const teamLineup = lineupResult.error ? null : lineupResult.data.find((t) => t.team.id === teamId);
+    if (teamLineup) {
+      if (teamLineup.substitutes.some((s) => s.player.id === playerId)) squadStatus = "bench";
+      else if (!teamLineup.startXI.some((s) => s.player.id === playerId)) squadStatus = "excluded";
+    }
+  }
+
   if (isLive) {
     const liveRating = ratingStr ? Number.parseFloat(ratingStr) : null;
-    return { status: "live", rating: liveRating !== null && Number.isFinite(liveRating) ? liveRating : null, moments };
+    return { status: "live", rating: liveRating !== null && Number.isFinite(liveRating) ? liveRating : null, moments, squadStatus };
   }
 
   const rating = ratingStr ? Number.parseFloat(ratingStr) : UNPLAYED_DEFAULT_RATING;
-  return { status: "rated", rating: Number.isFinite(rating) ? rating : UNPLAYED_DEFAULT_RATING, moments };
+  return { status: "rated", rating: Number.isFinite(rating) ? rating : UNPLAYED_DEFAULT_RATING, moments, squadStatus };
 }

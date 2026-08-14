@@ -48,15 +48,17 @@ export function QuizLeaderboardView({ mode, entries, themeLabel, themeHref, gene
       />
 
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <Link
-          href={themeHref}
-          className={cn(
-            "flex min-h-9 items-center rounded-full border px-4 text-sm font-semibold transition-colors",
-            mode === "theme" ? "border-accent bg-accent/10 text-accent" : "border-border bg-surface text-muted"
-          )}
-        >
-          {t("quiz.leaderboard.modeTheme")}
-        </Link>
+        {mode !== "general" && (
+          <Link
+            href={themeHref}
+            className={cn(
+              "flex min-h-9 items-center rounded-full border px-4 text-sm font-semibold transition-colors",
+              mode === "theme" ? "border-accent bg-accent/10 text-accent" : "border-border bg-surface text-muted"
+            )}
+          >
+            {t("quiz.leaderboard.modeTheme")}
+          </Link>
+        )}
         <Link
           href={generalHref}
           className={cn(

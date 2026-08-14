@@ -63,6 +63,11 @@
     "yellowCard": "🟨 Yellow card",
     "shotsOnTarget": "🥅 {made}/{total} shots on target",
     "duelsWon": "💪 {made}/{total} duels won",
+    "tacklesFact": "🛡️ {count, plural, one {# successful tackle} other {# successful tackles}}",
+    "savesFact": "🧤 {count, plural, one {# save} other {# saves}}",
+    "onBenchWaiting": "🪑 On the bench — waiting for them to come on.",
+    "onBenchFinished": "🪑 Stayed on the bench, didn't come on.",
+    "notInSquad": "⛔️ Not in the squad for this match.",
     "liveRatingAria": "Live rating: {rating} out of 10",
     "liveIndicatorAria": "Match in progress",
     "live": "Live"
@@ -102,6 +107,7 @@
     "session": {
       "noQuestions": "No questions available for this theme yet.",
       "score": "Score: {score}",
+      "penalty": "-5s",
       "resultCaption": "{count, plural, =1 {correct answer} other {correct answers}} in 60 seconds",
       "newRecord": "New record!",
       "replay": "Play again",

@@ -210,8 +210,8 @@ export default function OnboardingPage() {
   // and the wizard continues normally from "country" to build one, which
   // will sync to this account automatically once finish() runs (see
   // lib/auth.ts's resolveActor).
-  async function proceedAfterSignIn(userId: string) {
-    const restored = await getProfileByUserId(userId);
+  async function proceedAfterSignIn() {
+    const restored = await getProfileByUserId();
     if (restored) {
       writeLocalStorageValue(ONBOARDING_STORAGE_KEY, JSON.stringify(restored));
       // Fantasy squads have no other restore path (see app/actions/
@@ -220,7 +220,7 @@ export default function OnboardingPage() {
       // device's local squad) would restore the profile but leave the
       // pitch view empty despite Supabase still having every journée's
       // squad for this account.
-      const fantasySquads = await getFantasySquadsByUserId(userId);
+      const fantasySquads = await getFantasySquadsByUserId();
       if (Object.keys(fantasySquads).length > 0) {
         writeLocalStorageValue(FANTASY_LINEUP_STORAGE_KEY, JSON.stringify(fantasySquads));
       }
@@ -271,7 +271,7 @@ export default function OnboardingPage() {
       setAccountStatus("check-email");
       return;
     }
-    await proceedAfterSignIn(data.user.id);
+    await proceedAfterSignIn();
   }
 
   async function continueWithGoogle() {

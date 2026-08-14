@@ -63,6 +63,11 @@
     "yellowCard": "🟨 بطاقة صفراء",
     "shotsOnTarget": "🥅 {made}/{total} تسديدات على المرمى",
     "duelsWon": "💪 {made}/{total} ثنائيات مكسوبة",
+    "tacklesFact": "🛡️ {count, plural, one {تدخل ناجح واحد} other {# تدخلات ناجحة}}",
+    "savesFact": "🧤 {count, plural, one {تصدي واحد} other {# تصديات}}",
+    "onBenchWaiting": "🪑 على مقاعد البدلاء — بانتظار دخوله الملعب.",
+    "onBenchFinished": "🪑 بقي على مقاعد البدلاء، لم يدخل الملعب.",
+    "notInSquad": "⛔️ غير مدرج في قائمة هذه المباراة.",
     "liveRatingAria": "التقييم المباشر: {rating} من 10",
     "liveIndicatorAria": "المباراة جارية",
     "live": "مباشر"
@@ -102,6 +107,7 @@
     "session": {
       "noQuestions": "لا توجد أسئلة متاحة لهذا الموضوع حاليًا.",
       "score": "النقاط: {score}",
+      "penalty": "-5 ث",
       "resultCaption": "{count, plural, =1 {إجابة صحيحة} other {إجابات صحيحة}} خلال 60 ثانية",
       "newRecord": "رقم قياسي جديد!",
       "replay": "إعادة اللعب",

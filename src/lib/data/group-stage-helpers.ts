@@ -6,6 +6,33 @@ import {
   type ApiFixtureTeam,
   type ApiStandingRow,
 } from "@/lib/api-football";
+import { getAfricanNationByNationality } from "@/lib/data/african-nations";
+
+// Every entrant in these competitions is a national team, so a country flag
+// reads faster than its federation crest and matches the flag-first
+// treatment used everywhere else a nation is represented in this app (see
+// fifa-ranking-table.tsx, player-picker-sheet.tsx). Team names from
+// API-Football don't always match AFRICAN_NATIONS.nationality verbatim —
+// same mismatches already catalogued in scripts/sync-fifa-ranking.mjs's own
+// NATION_NAME_ALIASES — and the U17 World Cup's names also carry a trailing
+// age-group suffix ("Senegal U17") on top of that.
+const NATION_NAME_ALIASES: Record<string, string> = {
+  "Côte d'Ivoire": "Ivory Coast",
+  "Congo DR": "DR Congo",
+  "Cabo Verde": "Cape Verde",
+  "The Gambia": "Gambia",
+};
+
+export function normalizeNationName(teamName: string): string {
+  const countryName = teamName.replace(/\s+U(17|20|23)$/, "");
+  return NATION_NAME_ALIASES[countryName] ?? countryName;
+}
+
+// undefined for the rare non-African/unmapped name — callers fall back to
+// the raw team logo in that case.
+export function getGroupStageTeamFlag(teamName: string): string | undefined {
+  return getAfricanNationByNationality(normalizeNationName(teamName))?.flag;
+}
 
 // Shared by lib/data/can-qualifiers.ts and lib/data/u17-world-cup.ts — both
 // are the same shape of competition (a 48-team, 12-group-of-4 group stage,

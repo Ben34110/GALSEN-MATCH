@@ -117,7 +117,7 @@ export function OnboardingGate({ children }: { children: React.ReactNode }) {
       supabase.auth.getUser().then(async ({ data }: { data: { user: { id: string } | null } }) => {
         const userId = data.user?.id ?? null;
         if (userId) {
-          const restored = await getProfileByUserId(userId);
+          const restored = await getProfileByUserId();
           if (restored) {
             writeLocalStorageValue(ONBOARDING_STORAGE_KEY, JSON.stringify(restored));
             // Fantasy squads have no other restore path (see
@@ -126,7 +126,7 @@ export function OnboardingGate({ children }: { children: React.ReactNode }) {
             // (including this same device right after LogoutButton wipes it)
             // would see an empty pitch view despite Supabase still having
             // every journée's squad for this account.
-            const fantasySquads = await getFantasySquadsByUserId(userId);
+            const fantasySquads = await getFantasySquadsByUserId();
             if (Object.keys(fantasySquads).length > 0) {
               writeLocalStorageValue(FANTASY_LINEUP_STORAGE_KEY, JSON.stringify(fantasySquads));
             }

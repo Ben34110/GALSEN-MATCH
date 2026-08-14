@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
@@ -8,6 +7,7 @@ import { formatKickoff, cn } from "@/lib/utils";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { getAfricanNation, nationTeamId } from "@/lib/data/african-nations";
 import { MatchFavoriteButton } from "@/components/upcoming/match-favorite-button";
+import { TeamFlagOrCrest } from "@/components/upcoming/team-flag-or-crest";
 import type { U17WorldCupFixture } from "@/lib/data/u17-world-cup";
 
 export function U17WorldCupFixturesList({ fixtures, error }: { fixtures: U17WorldCupFixture[]; error: string | null }) {
@@ -59,27 +59,13 @@ export function U17WorldCupFixturesList({ fixtures, error }: { fixtures: U17Worl
                     <Link href={`/live/match/${fixture.id}?from=/upcoming`} className="flex flex-1 items-center gap-3">
                       <div className="flex flex-1 items-center justify-end gap-2 text-right">
                         <span className="truncate text-sm font-semibold text-foreground">{fixture.homeTeam.name}</span>
-                        <Image
-                          src={fixture.homeTeam.logo}
-                          alt=""
-                          width={22}
-                          height={22}
-                          className="size-[22px] shrink-0 object-contain"
-                          unoptimized
-                        />
+                        <TeamFlagOrCrest name={fixture.homeTeam.name} logo={fixture.homeTeam.logo} size={22} />
                       </div>
                       <span className="shrink-0 text-[11px] font-semibold text-muted">
                         {formatKickoff(fixture.kickoffAt)}
                       </span>
                       <div className="flex flex-1 items-center gap-2">
-                        <Image
-                          src={fixture.awayTeam.logo}
-                          alt=""
-                          width={22}
-                          height={22}
-                          className="size-[22px] shrink-0 object-contain"
-                          unoptimized
-                        />
+                        <TeamFlagOrCrest name={fixture.awayTeam.name} logo={fixture.awayTeam.logo} size={22} />
                         <span className="truncate text-sm font-semibold text-foreground">{fixture.awayTeam.name}</span>
                       </div>
                     </Link>

@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { TeamFlagOrCrest } from "@/components/upcoming/team-flag-or-crest";
 import type { CanQualifierGroup } from "@/lib/data/can-qualifiers";
 
 // Two honest states, decided here (not in the data layer — see
@@ -79,14 +79,7 @@ export function CanQualifiersStandings({
                   <tr key={row.teamId} className="border-t border-border bg-surface transition-colors hover:bg-surface-2">
                     <td className="py-2 pl-2 pr-1 font-semibold text-foreground">
                       <span className="flex items-center gap-1.5">
-                        <Image
-                          src={row.teamLogo}
-                          alt=""
-                          width={18}
-                          height={18}
-                          className="size-[18px] shrink-0 object-contain"
-                          unoptimized
-                        />
+                        <TeamFlagOrCrest name={row.teamName} logo={row.teamLogo} size={18} />
                         <span className="min-w-0">{row.teamName}</span>
                       </span>
                     </td>

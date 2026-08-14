@@ -200,8 +200,9 @@ export interface ApiFixturePlayerStats {
     statistics: {
       games: { minutes: number | null; rating: string | null };
       shots: { total: number | null; on: number | null };
-      goals: { total: number | null; assists: number | null };
+      goals: { total: number | null; assists: number | null; saves: number | null };
       duels: { total: number | null; won: number | null };
+      tackles: { total: number | null };
       cards: { yellow: number | null; red: number | null };
     }[];
   }[];

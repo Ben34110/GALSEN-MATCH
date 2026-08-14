@@ -114,12 +114,14 @@ function FilledSeatToken({
               C
             </span>
           )}
-          {rating?.status === "live" && (
+          {rating?.status === "live" && !rating.squadStatus && (
             // Small dynamic "match in progress" indicator — a pinging ring
             // behind a solid dot, the common "LIVE" visual shorthand.
             // Independent of the rating badge below: shown even before the
             // player has an in-match rating yet (e.g. kickoff just
-            // happened), which the rating badge alone can't convey.
+            // happened), which the rating badge alone can't convey. Gated
+            // on !squadStatus — a benched/excluded player isn't actually on
+            // the pitch, so a "live" dot on them would just be misleading.
             <span className="absolute -left-1 -top-1 flex size-3" aria-hidden>
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-red-500 opacity-75" />
               <span className="relative inline-flex size-3 rounded-full border border-white bg-red-500" />
@@ -244,11 +246,21 @@ function MatchMomentsTooltip({ seat, rating }: { seat: SeatDef; rating: PlayerJo
   if (moments.assists > 0) facts.push(t("pitch.assistsFact", { count: moments.assists }));
   if (moments.redCards > 0) facts.push(t("pitch.redCard"));
   else if (moments.yellowCards > 0) facts.push(t("pitch.yellowCard"));
-  if (moments.shotsOnTarget !== null && moments.shotsTotal !== null) {
+  // Which extra fact shows depends on the seat's position — the position a
+  // player was fielded at in THIS squad, not necessarily their nominal
+  // real-world position, matching what the "note automatique" rule and the
+  // rest of this tooltip already key off (seat, not player.position).
+  if (seat.position === "A" && moments.shotsOnTarget !== null && moments.shotsTotal !== null) {
     facts.push(t("pitch.shotsOnTarget", { made: moments.shotsOnTarget, total: moments.shotsTotal }));
   }
-  if (moments.duelsWon !== null && moments.duelsTotal !== null) {
+  if (seat.position === "M" && moments.duelsWon !== null && moments.duelsTotal !== null) {
     facts.push(t("pitch.duelsWon", { made: moments.duelsWon, total: moments.duelsTotal }));
+  }
+  if (seat.position === "D" && moments.tacklesTotal !== null) {
+    facts.push(t("pitch.tacklesFact", { count: moments.tacklesTotal }));
+  }
+  if (seat.position === "G" && moments.saves !== null) {
+    facts.push(t("pitch.savesFact", { count: moments.saves }));
   }
 
   return (
@@ -263,26 +275,36 @@ function MatchMomentsTooltip({ seat, rating }: { seat: SeatDef; rating: PlayerJo
           <p className="truncate text-xs font-semibold text-foreground">{t("pitch.vsOpponent", { name: moments.opponentName })}</p>
           {scoreLabel && <p className="text-[10px] text-muted">{scoreLabel}</p>}
         </div>
-        {rating.status === "live" && (
+        {rating.status === "live" && !rating.squadStatus && (
           <span className="flex shrink-0 items-center gap-1 rounded-full bg-red-500/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-red-500">
             <span className="size-1.5 rounded-full bg-red-500" aria-hidden />
             {t("pitch.live")}
           </span>
         )}
       </div>
-      {moments.minutes !== null && (
-        <p className="mb-1 text-[10px] text-muted">{t("pitch.minutesPlayed", { minutes: moments.minutes })}</p>
+      {rating.squadStatus === "bench" && (
+        <p className="text-[11px] text-foreground">
+          {rating.status === "live" ? t("pitch.onBenchWaiting") : t("pitch.onBenchFinished")}
+        </p>
       )}
-      {facts.length > 0 ? (
-        <ul className="flex flex-col gap-0.5">
-          {facts.map((fact) => (
-            <li key={fact} className="text-[11px] text-foreground">
-              {fact}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-[11px] text-muted">{t("pitch.noHighlights")}</p>
+      {rating.squadStatus === "excluded" && <p className="text-[11px] text-foreground">{t("pitch.notInSquad")}</p>}
+      {!rating.squadStatus && (
+        <>
+          {moments.minutes !== null && (
+            <p className="mb-1 text-[10px] text-muted">{t("pitch.minutesPlayed", { minutes: moments.minutes })}</p>
+          )}
+          {facts.length > 0 ? (
+            <ul className="flex flex-col gap-0.5">
+              {facts.map((fact) => (
+                <li key={fact} className="text-[11px] text-foreground">
+                  {fact}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-[11px] text-muted">{t("pitch.noHighlights")}</p>
+          )}
+        </>
       )}
     </div>
   );

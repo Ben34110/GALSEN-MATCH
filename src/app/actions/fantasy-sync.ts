@@ -1,7 +1,7 @@
 "use server";
 
 import { getSupabaseAdmin } from "@/lib/supabase";
-import { resolveActor } from "@/lib/auth";
+import { resolveActor, getAuthenticatedUserId } from "@/lib/auth";
 import type { FantasyStorage, SeatMap } from "@/lib/fantasy-lineup";
 
 // Best-effort background sync, called after every local squad change (see
@@ -49,9 +49,15 @@ export async function syncFantasySquad(
 // signed-in account's squad with nothing to repopulate from on a device
 // that never had it locally — including this same device right after
 // LogoutButton deliberately wipes it as part of signing out.
-export async function getFantasySquadsByUserId(userId: string): Promise<FantasyStorage> {
+// Reads off the server-side session (getAuthenticatedUserId), not a
+// client-supplied userId — see getProfileByUserId's comment in
+// profile-sync.ts for why a Server Action can't trust that parameter to
+// mean "the caller's own account".
+export async function getFantasySquadsByUserId(): Promise<FantasyStorage> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return {};
+  const userId = await getAuthenticatedUserId();
+  if (!userId) return {};
 
   const { data, error } = await supabase.from("fantasy_squads").select("journee, seats, captain_id, locked").eq("user_id", userId);
   if (error || !data) return {};

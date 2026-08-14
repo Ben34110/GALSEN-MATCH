@@ -1,7 +1,7 @@
 "use server";
 
 import { getSupabaseAdmin } from "@/lib/supabase";
-import { resolveActor } from "@/lib/auth";
+import { resolveActor, getAuthenticatedUserId } from "@/lib/auth";
 
 // Best-effort background sync, called whenever the local onboarding profile
 // changes (see components/onboarding/onboarding-gate.tsx) — degrades to a
@@ -68,6 +68,16 @@ export async function isUsernameTaken(username: string, deviceId: string): Promi
 // this particular browser has no local profile yet (a fresh device signing
 // into an existing account) — fetches the account's previously-synced
 // profile so the wizard can be skipped instead of starting from zero.
+//
+// Reads the account to restore off the server-side session
+// (getAuthenticatedUserId) rather than trusting a client-supplied userId —
+// a Server Action is a callable endpoint, not UI-gated, so a userId
+// parameter here would let anyone who knows (or enumerates) another
+// account's id restore and read that account's synced profile through this
+// same action. The caller's freshly-resolved supabase.auth.getUser().id is
+// always what ends up authenticated server-side by the time this runs
+// anyway (same session, same cookies), so dropping the parameter changes
+// nothing for legitimate callers.
 export interface RestoredProfile {
   countryId: string;
   playerIds: string[];
@@ -76,9 +86,11 @@ export interface RestoredProfile {
   tiktokHandle: string | null;
 }
 
-export async function getProfileByUserId(userId: string): Promise<RestoredProfile | null> {
+export async function getProfileByUserId(): Promise<RestoredProfile | null> {
   const supabase = getSupabaseAdmin();
   if (!supabase) return null;
+  const userId = await getAuthenticatedUserId();
+  if (!userId) return null;
 
   const { data, error } = await supabase
     .from("user_profiles")

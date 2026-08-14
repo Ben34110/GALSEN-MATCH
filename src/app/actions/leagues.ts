@@ -150,6 +150,15 @@ export async function getLeagueLeaderboard(deviceId: string, leagueId: string, j
   const { data: members } = await supabase.from("friend_league_members").select("device_id, user_id").eq("league_id", leagueId);
   if (!members || members.length === 0) return [];
 
+  // Membership gate: without this, anyone who learns a league's UUID (a
+  // shared link, a screenshot, a stray log line) could read its full
+  // member list and scores despite never having the join code — the join
+  // code gates joining, but nothing previously gated reading. league_id
+  // values aren't practically guessable (a real UUID), but "not guessable"
+  // isn't the same guarantee as "requires membership".
+  const isMember = members.some((m) => ((m.user_id as string | null) ?? (m.device_id as string)) === myKey);
+  if (!isMember) return null;
+
   const memberDeviceIds = members.map((m) => m.device_id as string);
   const memberUserIds = members.filter((m) => m.user_id).map((m) => m.user_id as string);
 
