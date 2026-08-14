@@ -10,7 +10,6 @@ import { useCurrentIdentity, isCurrentIdentity } from "@/hooks/use-current-ident
 import { getAfricanPlayers } from "@/lib/data/african-players";
 import { ChatProfileSheet } from "@/components/chat/chat-profile-sheet";
 import { LeaderboardMonthPicker, type MonthOption } from "@/components/fantasy/leaderboard-month-picker";
-import { FriendLeaguePanel } from "@/components/fantasy/friend-league-panel";
 
 const RANK_COLORS = ["text-accent-2", "text-muted", "text-accent-3"];
 
@@ -28,14 +27,13 @@ export interface LeaderboardRow {
 }
 
 interface LeaderboardViewProps {
-  mode: "semaine" | "mois" | "ligue";
+  mode: "semaine" | "mois";
   journee: number;
   monthLabel: string;
   monthOptions: MonthOption[];
   selectedMonthKey: string;
   weekHref: string;
   monthHref: string;
-  leagueHref: string;
   entries: LeaderboardRow[] | null;
   dataUnavailable: boolean;
 }
@@ -48,7 +46,6 @@ export function LeaderboardView({
   selectedMonthKey,
   weekHref,
   monthHref,
-  leagueHref,
   entries,
   dataUnavailable,
 }: LeaderboardViewProps) {
@@ -75,13 +72,7 @@ export function LeaderboardView({
 
       <SectionHeader
         eyebrow={t("common.eyebrow")}
-        title={
-          mode === "semaine"
-            ? t("leaderboard.titleWeek", { journee })
-            : mode === "mois"
-              ? t("leaderboard.titleMonth", { month: monthLabel })
-              : t("leaderboard.titleLeague")
-        }
+        title={mode === "semaine" ? t("leaderboard.titleWeek", { journee }) : t("leaderboard.titleMonth", { month: monthLabel })}
         subtitle={t("leaderboard.subtitle")}
       />
 
@@ -104,21 +95,10 @@ export function LeaderboardView({
         >
           {t("leaderboard.modeMonth")}
         </Link>
-        <Link
-          href={leagueHref}
-          className={cn(
-            "flex min-h-9 items-center rounded-full border px-4 text-sm font-semibold transition-colors",
-            mode === "ligue" ? "border-accent bg-accent/10 text-accent" : "border-border bg-surface text-muted"
-          )}
-        >
-          {t("leaderboard.modeLeague")}
-        </Link>
         {mode === "mois" && <LeaderboardMonthPicker months={monthOptions} selected={selectedMonthKey} />}
       </div>
 
-      {mode === "ligue" ? (
-        <FriendLeaguePanel journee={journee} />
-      ) : dataUnavailable || entries === null ? (
+      {dataUnavailable || entries === null ? (
         <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">
           {t("common.leaderboardUnavailable")}
         </p>

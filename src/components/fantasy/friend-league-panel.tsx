@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { ChevronLeft, LogOut, Plus, Share2, Trophy, Users } from "lucide-react";
+import { ChevronLeft, LogOut, MessageCircle, Plus, Share2, Trophy, Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { getOrCreateDeviceId } from "@/lib/device-id";
@@ -15,6 +15,7 @@ import {
   type FriendLeague,
   type LeagueLeaderboardEntry,
 } from "@/app/actions/leagues";
+import { LeagueChat } from "@/components/fantasy/league-chat";
 
 const RANK_COLORS = ["text-accent-2", "text-muted", "text-accent-3"];
 
@@ -29,6 +30,7 @@ export function FriendLeaguePanel({ journee }: { journee: number }) {
 
   const [leagues, setLeagues] = useState<FriendLeague[] | null>(null);
   const [selected, setSelected] = useState<FriendLeague | null>(null);
+  const [view, setView] = useState<"classement" | "chat">("classement");
   const [entries, setEntries] = useState<LeagueLeaderboardEntry[] | null | undefined>(undefined);
 
   const [formMode, setFormMode] = useState<"create" | "join" | null>(null);
@@ -41,6 +43,12 @@ export function FriendLeaguePanel({ journee }: { journee: number }) {
     getMyLeagues(deviceId).then(setLeagues);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- deviceId is stable for the component's lifetime
   }, []);
+
+  useEffect(() => {
+    // Switching leagues (or leaving one) always lands back on "classement"
+    // rather than staying on whatever sub-tab was open for the previous one.
+    Promise.resolve().then(() => setView("classement"));
+  }, [selected]);
 
   useEffect(() => {
     // Nothing renders `entries` while `selected` is null (see the two
@@ -142,7 +150,34 @@ export function FriendLeaguePanel({ journee }: { journee: number }) {
           </div>
         </Card>
 
-        {entries === undefined ? (
+        <div className="mb-4 flex gap-2">
+          <button
+            type="button"
+            onClick={() => setView("classement")}
+            className={cn(
+              "flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-full border px-4 text-sm font-semibold transition-colors",
+              view === "classement" ? "border-accent bg-accent/10 text-accent" : "border-border bg-surface text-muted"
+            )}
+          >
+            <Trophy size={14} aria-hidden />
+            {t("leagues.tabStandings")}
+          </button>
+          <button
+            type="button"
+            onClick={() => setView("chat")}
+            className={cn(
+              "flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-full border px-4 text-sm font-semibold transition-colors",
+              view === "chat" ? "border-accent bg-accent/10 text-accent" : "border-border bg-surface text-muted"
+            )}
+          >
+            <MessageCircle size={14} aria-hidden />
+            {t("leagues.tabChat")}
+          </button>
+        </div>
+
+        {view === "chat" ? (
+          <LeagueChat leagueId={selected.id} />
+        ) : entries === undefined ? (
           <p className="py-10 text-center text-sm text-muted">{t("common.loading")}</p>
         ) : entries === null ? (
           <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">

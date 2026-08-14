@@ -17,7 +17,9 @@
     "ballonDorTitle": "African Ballon d'Or",
     "ballonDorDescription": "Predict the African Ballon d'Or podium.",
     "quizTitle": "African Football Quiz",
-    "quizDescription": "A one-minute sprint on African football."
+    "quizDescription": "A one-minute sprint on African football.",
+    "leaguesTitle": "Friend leagues",
+    "leaguesDescription": "Create or join a private league and chat with your friends."
   },
   "xi": {
     "eyebrow": "Starting XI",
@@ -155,6 +157,13 @@
     "noLeagues": "You haven't joined or created any league yet.",
     "memberCount": "{count, plural, one {# member} other {# members}}",
     "empty": "Nobody in this league has picked a squad for this matchday yet.",
-    "membersPlayers": "{filled}/11 players"
+    "membersPlayers": "{filled}/11 players",
+    "pageSubtitle": "Private leaderboards among friends, with a dedicated chat.",
+    "tabStandings": "Standings",
+    "tabChat": "Chat",
+    "chatEmpty": "No messages yet — start the conversation!",
+    "chatSendError": "Message not sent, try again.",
+    "chatPlaceholder": "Write a message…",
+    "chatSend": "Send"
   }
 }

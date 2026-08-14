@@ -17,7 +17,9 @@
     "ballonDorTitle": "Ballon d'Or الأفريقي",
     "ballonDorDescription": "توقّع منصة تتويج Ballon d'Or الأفريقي.",
     "quizTitle": "مسابقة الكرة الأفريقية",
-    "quizDescription": "تحدٍّ سريع لمدة دقيقة عن كرة القدم الأفريقية."
+    "quizDescription": "تحدٍّ سريع لمدة دقيقة عن كرة القدم الأفريقية.",
+    "leaguesTitle": "دوريات الأصدقاء",
+    "leaguesDescription": "أنشئ أو انضم إلى دوري خاص ودردش مع أصدقائك."
   },
   "xi": {
     "eyebrow": "Starting XI",
@@ -155,6 +157,13 @@
     "noLeagues": "لم تنضم أو تُنشئ أي دوري بعد.",
     "memberCount": "{count, plural, one {عضو واحد} two {عضوان} few {# أعضاء} other {# عضو}}",
     "empty": "لم يقم أحد في هذا الدوري بتشكيل فريقه لهذه الجولة بعد.",
-    "membersPlayers": "{filled}/11 لاعب"
+    "membersPlayers": "{filled}/11 لاعب",
+    "pageSubtitle": "تصنيفات خاصة بين الأصدقاء، مع دردشة مخصصة.",
+    "tabStandings": "الترتيب",
+    "tabChat": "الدردشة",
+    "chatEmpty": "لا توجد رسائل بعد — ابدأ المحادثة!",
+    "chatSendError": "لم يتم إرسال الرسالة، أعد المحاولة.",
+    "chatPlaceholder": "اكتب رسالة…",
+    "chatSend": "إرسال"
   }
 }

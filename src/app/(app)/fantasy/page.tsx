@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Shirt, Trophy, Zap } from "lucide-react";
+import { Shirt, Trophy, Users, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { SectionHeader } from "@/components/ui/section-header";
 
 const GAMES = [
   { href: "/fantasy/xi", icon: Shirt, key: "xi" },
+  { href: "/fantasy/leagues", icon: Users, key: "leagues" },
   { href: "/fantasy/ballon-dor", icon: Trophy, key: "ballonDor" },
   { href: "/fantasy/quiz", icon: Zap, key: "quiz" },
 ] as const;
