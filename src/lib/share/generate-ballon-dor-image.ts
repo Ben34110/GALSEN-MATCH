@@ -211,18 +211,12 @@ export async function generateBallonDorShareImage(options: ShareBallonDorOptions
     const photoCx = blockX + blockW / 2;
     const photoCy = blockY - photoR - 14;
 
-    if (player) {
-      drawPlayerCircle(ctx, playerImageById.get(player.id) ?? null, player, photoCx, photoCy, photoR, color);
+    if (player) drawPlayerCircle(ctx, playerImageById.get(player.id) ?? null, player, photoCx, photoCy, photoR, color);
 
-      const label = truncate(player.name, 16);
-      ctx.font = `700 16px ${FONT}`;
-      ctx.fillStyle = "#ffffff";
-      ctx.textAlign = "center";
-      ctx.fillText(label, photoCx, photoCy + photoR + 24);
-      ctx.textAlign = "left";
-    }
-
-    // Podium block itself.
+    // Podium block itself — drawn BEFORE the name label below, not after:
+    // the block used to paint over the name (both landed in the same
+    // region, block drawn last), which is what made it "barely visible"
+    // rather than just low-contrast.
     roundedRect(ctx, blockX, blockY, blockW, slot.height, 14);
     const blockGradient = ctx.createLinearGradient(0, blockY, 0, blockY + slot.height);
     blockGradient.addColorStop(0, color);
@@ -237,6 +231,20 @@ export async function generateBallonDorShareImage(options: ShareBallonDorOptions
     ctx.textAlign = "center";
     ctx.fillText(String(slot.rank), blockX + blockW / 2, blockY + slot.height / 2 + 8);
     ctx.textAlign = "left";
+
+    // Player name — bigger and always black: it sits in the gap between
+    // the photo and the block, which is dark background above the block's
+    // top edge, but close enough to the block's light gold/silver/bronze
+    // fill that white read poorly there too. Black stays legible against
+    // both.
+    if (player) {
+      const label = truncate(player.name, 16);
+      ctx.font = `800 24px ${FONT}`;
+      ctx.fillStyle = "#1a1a1a";
+      ctx.textAlign = "center";
+      ctx.fillText(label, photoCx, photoCy + photoR + 26);
+      ctx.textAlign = "left";
+    }
   }
 
   // --- Ranks 4-10, plain numbered list ---
