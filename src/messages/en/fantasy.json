@@ -95,7 +95,9 @@
       "intro": "A one-minute sprint, one correct answer per question.",
       "record": "Best: {best}",
       "noRecord": "No record yet",
-      "leaderboardLink": "Leaderboard"
+      "leaderboardLink": "Leaderboard",
+      "generalLeaderboardLink": "Overall leaderboard",
+      "hallOfFameLink": "Hall of Fame"
     },
     "session": {
       "noQuestions": "No questions available for this theme yet.",
@@ -109,7 +111,21 @@
     "leaderboard": {
       "title": "Leaderboard — {theme}",
       "subtitle": "Best scores on this theme, in 60 seconds.",
-      "empty": "No one has played this theme yet."
+      "empty": "No one has played this theme yet.",
+      "titleGeneral": "Overall leaderboard — this week",
+      "subtitleGeneral": "Sum of each theme's best score played this week. Resets every Sunday night.",
+      "modeTheme": "This theme",
+      "modeGeneral": "Overall",
+      "emptyGeneral": "Nobody has played yet this week."
+    },
+    "hallOfFame": {
+      "back": "Back",
+      "eyebrow": "African Football Quiz",
+      "title": "Hall of Fame",
+      "subtitle": "The overall leaderboard's top 3 for every week, forever.",
+      "unavailable": "Hall of Fame unavailable for now.",
+      "empty": "No week has ended yet — check back after the first Sunday night!",
+      "weekLabel": "Week {week}"
     }
   },
   "ballonDor": {

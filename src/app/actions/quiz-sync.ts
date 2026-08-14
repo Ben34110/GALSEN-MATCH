@@ -46,3 +46,45 @@ export async function syncQuizScore(deviceId: string, theme: QuizTheme, username
   );
   return { ok: !error };
 }
+
+// The weekly counterpart — called on every completed run regardless of
+// whether it beat the all-time best (unlike syncQuizScore above), since a
+// run can be this WEEK's best without beating an all-time record set in a
+// previous week. Always re-checks server-side rather than trusting a local
+// "is this an improvement" flag, for the same reason: there's no existing
+// local weekly-best cache to compare against client-side (see
+// use-quiz-best-scores.ts, which only ever tracked the all-time value).
+export async function syncQuizWeeklyScore(
+  deviceId: string,
+  theme: QuizTheme,
+  week: number,
+  username: string,
+  score: number
+): Promise<{ ok: boolean }> {
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return { ok: false };
+  const actor = await resolveActor(deviceId);
+
+  const { data: existing } = await supabase
+    .from("quiz_weekly_scores")
+    .select("best_score")
+    .eq(actor.matchColumn, actor.matchValue)
+    .eq("theme", theme)
+    .eq("week", week)
+    .maybeSingle();
+  if (existing && existing.best_score >= score) return { ok: true };
+
+  const { error } = await supabase.from("quiz_weekly_scores").upsert(
+    {
+      device_id: deviceId,
+      ...(actor.userId ? { user_id: actor.userId } : {}),
+      theme,
+      week,
+      username,
+      best_score: score,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: `${actor.matchColumn},theme,week` }
+  );
+  return { ok: !error };
+}

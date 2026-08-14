@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ListOrdered, Trophy, Zap } from "lucide-react";
+import { ChevronLeft, ListOrdered, Medal, Trophy, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { SectionHeader } from "@/components/ui/section-header";
@@ -42,6 +42,23 @@ export function QuizThemePicker() {
         </span>
         <p className="text-sm leading-snug text-muted">{t("quiz.hub.intro")}</p>
       </Card>
+
+      <div className="mb-5 flex gap-2">
+        <Link
+          href="/fantasy/quiz/leaderboard?mode=general"
+          className="flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-full border border-border bg-surface px-4 text-sm font-semibold text-foreground transition-transform active:scale-[0.98]"
+        >
+          <ListOrdered size={16} aria-hidden />
+          {t("quiz.hub.generalLeaderboardLink")}
+        </Link>
+        <Link
+          href="/fantasy/quiz/hall-of-fame"
+          className="flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-full border border-border bg-surface px-4 text-sm font-semibold text-foreground transition-transform active:scale-[0.98]"
+        >
+          <Medal size={16} aria-hidden />
+          {t("quiz.hub.hallOfFameLink")}
+        </Link>
+      </div>
 
       <div className="grid grid-cols-2 gap-3">
         {QUIZ_THEMES.map((theme) => {

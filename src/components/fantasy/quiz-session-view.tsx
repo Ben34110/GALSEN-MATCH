@@ -10,7 +10,8 @@ import { getQuizQuestions, pickNextQuestion, QUIZ_THEMES } from "@/lib/data/quiz
 import { useQuizBestScores, saveQuizBestScoreIfImproved } from "@/hooks/use-quiz-best-scores";
 import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { getOrCreateDeviceId } from "@/lib/device-id";
-import { syncQuizScore } from "@/app/actions/quiz-sync";
+import { syncQuizScore, syncQuizWeeklyScore } from "@/app/actions/quiz-sync";
+import { getGameweekInfo } from "@/lib/fantasy-gameweek";
 import type { QuizQuestion, QuizTheme } from "@/types";
 
 const SESSION_MS = 60_000;
@@ -105,6 +106,16 @@ export function QuizSessionView({ theme, onClose, onRestart }: QuizSessionViewPr
     if (saveQuizBestScoreIfImproved(theme, score, bestScores)) {
       Promise.resolve(true).then(setImproved);
       if (profile) syncQuizScore(getOrCreateDeviceId(), theme, profile.username, score);
+    }
+    // Weekly "classement général" sync — unlike the all-time best above,
+    // this can't be gated behind a local "did this beat my best" check
+    // (use-quiz-best-scores.ts only ever tracked the all-time value, not a
+    // per-week one), so it fires on every completed run and lets the
+    // server decide whether it actually improves this week's score (see
+    // syncQuizWeeklyScore's own compare-before-write).
+    if (profile) {
+      const { activeJournee } = getGameweekInfo();
+      syncQuizWeeklyScore(getOrCreateDeviceId(), theme, activeJournee, profile.username, score);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- deliberately only reacts to `finished`, runs once via the ref guard
   }, [finished]);

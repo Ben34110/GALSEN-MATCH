@@ -10,6 +10,7 @@ import { BADGES, HAS_ADDED_CALENDAR_EVENT_KEY, HAS_CHATTED_KEY, computeUnlockedB
 import { getAfricanPlayers } from "@/lib/data/african-players";
 import { getOrCreateDeviceId } from "@/lib/device-id";
 import { checkTopWeeklyRankRecord } from "@/app/actions/fantasy-records";
+import { checkQuizHallOfFameRecord } from "@/app/actions/quiz-records";
 import { BadgeDetailSheet } from "@/components/profil/badge-detail-sheet";
 
 export function BadgesSection() {
@@ -21,21 +22,24 @@ export function BadgesSection() {
   const pool = useMemo(() => getAfricanPlayers(), []);
   const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
 
-  // The one badge that isn't derivable from localStorage alone — it needs
-  // every past journée's leaderboard (see app/actions/fantasy-records.ts) —
-  // so it's fetched once on mount and merged into the otherwise-synchronous
-  // unlocked set below, instead of computeUnlockedBadgeIds needing to
-  // become async itself for this one case.
+  // Two badges that aren't derivable from localStorage alone — each needs
+  // a server round-trip (past journées' leaderboards for one, the
+  // quiz_hall_of_fame archive for the other) — fetched once on mount and
+  // merged into the otherwise-synchronous unlocked set below, instead of
+  // computeUnlockedBadgeIds needing to become async itself for these two.
   const [hasTopWeeklyRank, setHasTopWeeklyRank] = useState(false);
+  const [hasQuizPodium, setHasQuizPodium] = useState(false);
   useEffect(() => {
     checkTopWeeklyRankRecord(getOrCreateDeviceId()).then(setHasTopWeeklyRank);
+    checkQuizHallOfFameRecord(getOrCreateDeviceId()).then(setHasQuizPodium);
   }, []);
 
   const unlocked = useMemo(() => {
     const set = computeUnlockedBadgeIds(rawProfile, rawFantasy, hasChatted, hasAddedCalendarEvent, pool);
     if (hasTopWeeklyRank) set.add("top-semaine");
+    if (hasQuizPodium) set.add("quiz-podium");
     return set;
-  }, [rawProfile, rawFantasy, hasChatted, hasAddedCalendarEvent, pool, hasTopWeeklyRank]);
+  }, [rawProfile, rawFantasy, hasChatted, hasAddedCalendarEvent, pool, hasTopWeeklyRank, hasQuizPodium]);
 
   return (
     <section>

@@ -12,6 +12,7 @@ import {
 import { getAfricanPlayers } from "@/lib/data/african-players";
 import { getGameweekInfo } from "@/lib/fantasy-gameweek";
 import { dispatchToTarget } from "@/lib/push-dispatch";
+import { getQuizWeeklyLeaderboard } from "@/lib/data/quiz-leaderboard";
 
 // Called every 1-2 minutes by an external scheduler (cron-job.org / GitHub
 // Actions — see docs/notifications.md), protected by CRON_SECRET so it
@@ -154,6 +155,17 @@ const JOURNEE_LAUNCH_TEMPLATES = [
   (journee: number) => ({ title: `📅 Journée ${journee} en cours !`, body: "Reviens souvent voir les notes tomber au fur et à mesure des matchs." }),
   (journee: number) => ({ title: `⚡️ La journée ${journee} a commencé !`, body: "Surveille tes joueurs, leurs notes s'affichent dès leur match terminé." }),
 ];
+
+// Sent once per week, to the top 3 of the quiz's "classement général"
+// (see the rollover block below) — rank-specific rather than one shared
+// template, since 1st/2nd/3rd genuinely deserve different framing.
+const QUIZ_HALL_OF_FAME_TEMPLATES: Record<1 | 2 | 3, ((score: number) => { title: string; body: string })[]> = {
+  1: [
+    (score) => ({ title: "🏆 Champion du Quiz !", body: `1er du classement général avec ${score} pts cette semaine — direction le Hall of Fame !` }),
+  ],
+  2: [(score) => ({ title: "🥈 Sur le podium !", body: `2e place du classement général avec ${score} pts — bravo, te voilà au Hall of Fame !` })],
+  3: [(score) => ({ title: "🥉 Sur le podium !", body: `3e place du classement général avec ${score} pts — te voilà au Hall of Fame !` })],
+};
 
 // Sent once, 4h before a journée's deadline, to anyone with a squad for it
 // that's still unlocked — see the reminder block below for why "has a
@@ -347,6 +359,41 @@ export async function GET(request: Request) {
     }
 
     await markKey(activationFixtureId, activationEventKey);
+  }
+
+  // Archives last week's Quiz "classement général" top 3 into
+  // quiz_hall_of_fame the moment a new week starts (activeJournee just
+  // incremented past it, so the week is genuinely over) — same synthetic-
+  // negative-key idempotency as the journée-activation block above; a
+  // distinct event_key on the same numeric key means no collision even
+  // though both use "-someWeekNumber" as the fixture_id slot.
+  const previousQuizWeek = activeJournee - 1;
+  if (previousQuizWeek >= 1) {
+    const quizRolloverEventKey = "quiz-week-rollover";
+    if (!(await notifiedKey(-previousQuizWeek, quizRolloverEventKey))) {
+      const weekly = await getQuizWeeklyLeaderboard(previousQuizWeek);
+      const top3 = (weekly ?? []).slice(0, 3);
+      if (top3.length > 0) {
+        await supabase.from("quiz_hall_of_fame").upsert(
+          top3.map((entry, index) => ({
+            week: previousQuizWeek,
+            rank: index + 1,
+            device_id: entry.deviceId,
+            ...(entry.userId ? { user_id: entry.userId } : {}),
+            username: entry.username,
+            total_score: entry.total,
+          })),
+          { onConflict: "week,rank" }
+        );
+
+        top3.forEach((entry, index) => {
+          const rank = (index + 1) as 1 | 2 | 3;
+          const { title, body } = pick(QUIZ_HALL_OF_FAME_TEMPLATES[rank])(entry.total);
+          pending.push({ target: targetKey({ device_id: entry.deviceId, user_id: entry.userId }), title, body, url: "/fantasy/quiz/hall-of-fame" });
+        });
+      }
+      await markKey(-previousQuizWeek, quizRolloverEventKey);
+    }
   }
 
   // Reminds anyone who's started but not locked their squad for the

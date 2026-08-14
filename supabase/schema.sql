@@ -199,6 +199,44 @@ create table if not exists quiz_scores (
 
 create index if not exists quiz_scores_theme_idx on quiz_scores (theme);
 
+-- Same all-time-best-per-theme shape as quiz_scores, but scoped to one
+-- week (the same Monday-to-Monday week Fantasy XI already uses — see
+-- lib/fantasy-gameweek.ts's getGameweekInfo — reused here rather than
+-- inventing a second week-numbering scheme). Powers the "classement
+-- général" (sum of each theme's best score this week) on top of the
+-- always-existed per-theme all-time leaderboards, which stay on
+-- quiz_scores untouched. A new week's rows simply start empty — that IS
+-- the "reset every Sunday night" behavior, no explicit clearing needed.
+create table if not exists quiz_weekly_scores (
+  id uuid primary key default gen_random_uuid(),
+  device_id text not null,
+  theme text not null,
+  week integer not null,
+  username text not null,
+  best_score integer not null,
+  updated_at timestamptz not null default now(),
+  unique (device_id, theme, week)
+);
+
+create index if not exists quiz_weekly_scores_week_idx on quiz_weekly_scores (week);
+
+-- Archive of each week's top 3 in the aggregate quiz leaderboard —
+-- written once per week by cron/poll/route.ts's rollover block, right
+-- after a new week starts (so the week just ended is final). Also what
+-- "does this identity have the quiz podium badge" checks against (see
+-- lib/data/quiz-hall-of-fame.ts) — appearing here at all, for any past
+-- week, is the badge.
+create table if not exists quiz_hall_of_fame (
+  id uuid primary key default gen_random_uuid(),
+  week integer not null,
+  rank integer not null,
+  device_id text not null,
+  username text not null,
+  total_score integer not null,
+  created_at timestamptz not null default now(),
+  unique (week, rank)
+);
+
 -- One row per device, holding its current Ballon d'Or Africain top-10
 -- prediction (ranked, index 0 = predicted winner). True 1-row-per-device
 -- (device_id itself is unique, not a composite key like fantasy_squads'
@@ -383,6 +421,12 @@ alter table quiz_scores add column if not exists user_id uuid references auth.us
 drop index if exists quiz_scores_user_theme_idx;
 create unique index quiz_scores_user_theme_idx on quiz_scores (user_id, theme);
 
+alter table quiz_weekly_scores add column if not exists user_id uuid references auth.users(id) on delete cascade;
+drop index if exists quiz_weekly_scores_user_theme_week_idx;
+create unique index quiz_weekly_scores_user_theme_week_idx on quiz_weekly_scores (user_id, theme, week);
+
+alter table quiz_hall_of_fame add column if not exists user_id uuid references auth.users(id) on delete cascade;
+
 alter table ballon_dor_predictions add column if not exists user_id uuid references auth.users(id) on delete cascade;
 drop index if exists ballon_dor_predictions_user_idx;
 create unique index ballon_dor_predictions_user_idx on ballon_dor_predictions (user_id);
@@ -417,6 +461,8 @@ alter table fantasy_squads enable row level security;
 alter table news enable row level security;
 alter table news_notification_prefs enable row level security;
 alter table quiz_scores enable row level security;
+alter table quiz_weekly_scores enable row level security;
+alter table quiz_hall_of_fame enable row level security;
 alter table ballon_dor_predictions enable row level security;
 alter table mercato_transfers enable row level security;
 alter table chat_messages enable row level security;

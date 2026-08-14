@@ -1,6 +1,7 @@
 "use server";
 
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { hasQuizHallOfFameBadge } from "@/lib/data/quiz-hall-of-fame";
 
 // The bundle shown in the chat profile sheet (see
 // components/chat/chat-profile-sheet.tsx) when a message is clicked.
@@ -15,6 +16,13 @@ export interface ChatProfileBundle {
   playerIds: string[];
   ballonDorTop3: string[]; // rankings.slice(0, 3); [] if that identity never predicted
   tiktokHandle: string | null;
+  // The one badge visible to someone viewing ANOTHER identity's profile —
+  // see lib/badges.ts's "quiz-podium". Every other badge in BADGES is
+  // computed from the viewer's OWN localStorage (components/profil/
+  // badges-section.tsx), which has no way to answer "does *this other*
+  // identity have it" — this one can, since quiz_hall_of_fame is a
+  // server-side record keyed by identity, not local device state.
+  hasQuizHallOfFameBadge: boolean;
 }
 
 // Reads two tables for someone else's identity — the first place in this
@@ -39,10 +47,14 @@ export async function getChatProfile(deviceId: string, userId: string | null): P
     .maybeSingle();
   if (error || !profileRow) return null;
 
-  const { data: ballonDorRow } = await supabase.from("ballon_dor_predictions").select("rankings").eq(matchColumn, matchValue).maybeSingle();
+  const [{ data: ballonDorRow }, hasQuizBadge] = await Promise.all([
+    supabase.from("ballon_dor_predictions").select("rankings").eq(matchColumn, matchValue).maybeSingle(),
+    hasQuizHallOfFameBadge(profileRow.device_id, userId),
+  ]);
 
   return {
     deviceId: profileRow.device_id,
+    hasQuizHallOfFameBadge: hasQuizBadge,
     username: profileRow.username,
     countryId: profileRow.country_id,
     playerIds: Array.isArray(profileRow.player_ids) ? profileRow.player_ids : [],

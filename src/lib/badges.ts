@@ -42,6 +42,12 @@ export const BADGES: Badge[] = [
     description: "Termine n°1 du classement hebdomadaire d'une journée au moins une fois — un record acquis pour toujours.",
     emoji: "👑",
   },
+  {
+    id: "quiz-podium",
+    label: "Podium Quiz",
+    description: "Termine dans le top 3 du classement général hebdomadaire du Quiz au moins une fois — entrée au Hall of Fame acquise pour toujours.",
+    emoji: "🧠",
+  },
 ];
 
 function countCompleteJournees(storage: FantasyStorage): number {

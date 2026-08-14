@@ -105,6 +105,15 @@ export function ChatProfileSheet({ deviceId, userId, playerPool, onClose }: Chat
                     {countryLabel}
                   </span>
                 )}
+                {bundle.hasQuizHallOfFameBadge && (
+                  <span
+                    className="mt-1 inline-flex items-center gap-1 rounded-full bg-accent/10 px-2 py-0.5 text-[11px] font-semibold text-accent"
+                    title={t("quizPodiumBadge")}
+                  >
+                    <span aria-hidden>🧠</span>
+                    {t("quizPodiumBadge")}
+                  </span>
+                )}
               </div>
               {bundle.tiktokHandle && (
                 <a

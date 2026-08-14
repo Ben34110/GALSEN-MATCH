@@ -34,3 +34,44 @@ export async function getQuizLeaderboard(theme: QuizTheme): Promise<QuizLeaderbo
     })
   );
 }
+
+export interface QuizWeeklyLeaderboardEntry {
+  deviceId: string;
+  userId: string | null;
+  username: string;
+  total: number;
+}
+
+// "Classement général" — each identity's THIS-WEEK best score per theme
+// (quiz_weekly_scores, distinct from quiz_scores' all-time bests), summed
+// across every theme they've played this week. A new week starting is
+// what "resets" this: last week's rows simply stop being read once `week`
+// moves on, nothing needs to be cleared.
+export async function getQuizWeeklyLeaderboard(week: number): Promise<QuizWeeklyLeaderboardEntry[] | null> {
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return null;
+
+  const { data, error } = await supabase
+    .from("quiz_weekly_scores")
+    .select("device_id, user_id, username, best_score")
+    .eq("week", week);
+  if (error || !data) return null;
+
+  const totals = new Map<string, QuizWeeklyLeaderboardEntry>();
+  for (const row of data) {
+    const key = (row.user_id as string | null) ?? (row.device_id as string);
+    const existing = totals.get(key);
+    if (existing) {
+      existing.total += row.best_score as number;
+    } else {
+      totals.set(key, {
+        deviceId: row.device_id as string,
+        userId: row.user_id as string | null,
+        username: row.username as string,
+        total: row.best_score as number,
+      });
+    }
+  }
+
+  return Array.from(totals.values()).sort((a, b) => b.total - a.total);
+}

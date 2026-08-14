@@ -95,7 +95,9 @@
       "intro": "Un sprint d'une minute, une seule bonne réponse par question.",
       "record": "Record : {best}",
       "noRecord": "Aucun record",
-      "leaderboardLink": "Classement"
+      "leaderboardLink": "Classement",
+      "generalLeaderboardLink": "Classement général",
+      "hallOfFameLink": "Hall of Fame"
     },
     "session": {
       "noQuestions": "Aucune question disponible pour ce thème pour l'instant.",
@@ -109,7 +111,21 @@
     "leaderboard": {
       "title": "Classement — {theme}",
       "subtitle": "Meilleurs scores sur ce thème, en 60 secondes.",
-      "empty": "Personne n'a encore joué ce thème."
+      "empty": "Personne n'a encore joué ce thème.",
+      "titleGeneral": "Classement général — cette semaine",
+      "subtitleGeneral": "Somme du meilleur score de chaque thème joué cette semaine. Remise à zéro chaque dimanche soir.",
+      "modeTheme": "Ce thème",
+      "modeGeneral": "Général",
+      "emptyGeneral": "Personne n'a encore joué cette semaine."
+    },
+    "hallOfFame": {
+      "back": "Retour",
+      "eyebrow": "Quiz Foot Africain",
+      "title": "Hall of Fame",
+      "subtitle": "Le top 3 du classement général de chaque semaine, pour toujours.",
+      "unavailable": "Hall of Fame indisponible pour l'instant.",
+      "empty": "Aucune semaine terminée pour l'instant — reviens après le premier dimanche soir !",
+      "weekLabel": "Semaine {week}"
     }
   },
   "ballonDor": {
