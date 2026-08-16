@@ -58,7 +58,7 @@ Add one entry to `NEWS_SOURCES` in `src/lib/news/sources.ts`:
 
 `country` should match an id in `src/lib/data/african-nations.ts`, or `"general"` for a pan-African outlet with no single home country. Verify the feed URL actually returns RSS/XML by hand first (`curl <url> | head`) — a source with no real feed, or whose "category" feed turns out to just be an unfiltered general-news feed at a different URL (seen on Yabiladi and Linfodrome), is left commented out rather than wired in with something that isn't actually usable.
 
-**Eleven sources are live today**, all hand-verified against real, actively-publishing feeds:
+**Sixteen sources are live today**, all hand-verified against real, actively-publishing feeds:
 
 | Source | Country | Language |
 |---|---|---|
@@ -73,10 +73,16 @@ Add one entry to `NEWS_SOURCES` in `src/lib/news/sources.ts`:
 | Journal du Mali (sport) | Mali | fr |
 | Afrik-Foot | Général (pan-African) | fr |
 | RFI (Afrique Foot) | Général (pan-African) | fr |
+| RMC Sport (football) | Général (mercato/foot europ.) | fr |
+| Football Tunisien | Tunisie | fr |
+| SABC News Sport | Afrique du Sud | en |
+| Guineefoot | Guinée | fr |
+| Foot RDC | RD Congo | fr |
+| Journal de Brazza (football) | Congo | fr |
 
 **Sport News Africa** was requested but doesn't currently publish a public RSS/XML feed — checked `/feed`, `/feed/`, `/feed.xml`, `/rss`, `/rss.xml`, `/?feed=rss2`, and `robots.txt`/`sitemap.xml` for a pointer to one. It's a Laravel/Filament app (not WordPress), so no default `/feed/` route exists. Left as a commented-out placeholder — add it for real the moment they ship one. Afrik-Foot (added above) covers similar pan-African ground in the meantime.
 
-**Côte d'Ivoire** has no dedicated source wired in after trying ~25 candidates across two rounds (Fratmat, Abidjan.net, Koaci, Linfodrome, Soir Info, AIP, Alerte Info, Notre Voie, Le Patriote, and several guessed football-specific domains that don't resolve). Linfodrome and Connectionivoirienne are both real, working, Ivorian feeds — but general-news only: Linfodrome's `/rss/sport`/`/rss?rubrique=sport` paths return the exact same unfiltered feed as the homepage, and Connectionivoirienne's real "Sports" section (`/sports/`) has no RSS at all, only the site-wide feed. Not a total gap though — RFI's pan-African feed (added above) regularly covers Côte d'Ivoire specifically and gets correctly classified per-article (see step 3 in "How it works" above). Revisit if a dedicated Ivorian sports outlet with a real feed turns up.
+**Côte d'Ivoire** still has no dedicated source wired in after trying ~26 candidates across three rounds (Fratmat, Abidjan.net, Koaci, Linfodrome, Soir Info, AIP, Alerte Info, Notre Voie, Le Patriote, several guessed football-specific domains that don't resolve, and — most recently — sport-ivoire.ci, which has a real "Football - Elephants" section but times out on every feed path tried, no response within 10s). Linfodrome and Connectionivoirienne are both real, working, Ivorian feeds — but general-news only: Linfodrome's `/rss/sport`/`/rss?rubrique=sport` paths return the exact same unfiltered feed as the homepage, and Connectionivoirienne's real "Sports" section (`/sports/`) has no RSS at all, only the site-wide feed. Not a total gap though — RFI's pan-African feed (added above) regularly covers Côte d'Ivoire specifically and gets correctly classified per-article (see step 3 in "How it works" above). Revisit if a dedicated Ivorian sports outlet with a real, reliable feed turns up.
 
 ## Per-country push notifications
 

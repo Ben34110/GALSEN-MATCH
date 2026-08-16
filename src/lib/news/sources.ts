@@ -42,6 +42,23 @@ export const NEWS_SOURCES: NewsSource[] = [
   // items, today's date, major European clubs/transfers.
   { id: "rmcsport", name: "RMC Sport", feedUrl: "https://rmcsport.bfmtv.com/rss/football/", country: "general", language: "fr" },
 
+  { id: "footballtunisien", name: "Football Tunisien", feedUrl: "https://footballtunisien.com/feed/", country: "tn", language: "fr" },
+  // SABC News' Sport category, not football-exclusive (also rugby, cricket,
+  // athletics — same "general sport category" pattern already accepted for
+  // Actu Cameroun below) — no dedicated South African football-only feed
+  // found with a comparable posting cadence. Verified live: today's date,
+  // real PSL content (Sundowns/Kaizer Chiefs) and Banyana Banyana (women's
+  // national team) alongside the other sports.
+  { id: "sabcsport", name: "SABC News Sport", feedUrl: "https://www.sabcnews.com/sabcnews/category/sport/feed/", country: "za", language: "en" },
+  { id: "guineefoot", name: "Guineefoot", feedUrl: "https://guineefoot.info/feed", country: "gn", language: "fr" },
+  { id: "footrdc", name: "Foot RDC", feedUrl: "https://footrdc.com/feed/", country: "cd", language: "fr" },
+  // Slower cadence than every other source here (roughly one post every
+  // 1-2 weeks) but genuinely dedicated Diables Rouges/Fécofoot coverage —
+  // the only Congo-Brazzaville-specific football feed found; FECOFOOT's own
+  // feed (fecofoot.cg/feed) updates more often but is almost entirely
+  // administrative/electoral notices, not fan-facing news.
+  { id: "journaldebrazzafoot", name: "Journal de Brazza", feedUrl: "https://www.journaldebrazza.com/category/sport/football/feed/", country: "cg", language: "fr" },
+
   // Sport News Africa doesn't currently publish a public RSS/XML feed —
   // checked /feed, /feed/, /feed.xml, /rss, /rss.xml, /?feed=rss2 and
   // robots.txt/sitemap.xml for a pointer to one; the site only exposes
@@ -55,7 +72,12 @@ export const NEWS_SOURCES: NewsSource[] = [
   // Koaci, Linfodrome, Soir Info, AIP, Alerte Info, Notre Voie, Le
   // Patriote, and several guessed football-specific domains that don't
   // resolve at all — 225football.com, sport225.com, footivoiresport.com,
-  // eburnietoday.com, footballivoire.net, ivoirefoot.net). Linfodrome and
+  // eburnietoday.com, footballivoire.net, ivoirefoot.net), plus a third
+  // round: sport-ivoire.ci (dedicated Ivorian sports site, "Football -
+  // Elephants" section exists) times out on every feed path tried
+  // (/feed, /rss, /football/feed) — TLS handshake succeeds but the server
+  // never answers the actual request within 10s, so even if it worked
+  // once it's too unreliable for a 30-min cron sync. Linfodrome and
   // Connectionivoirienne are both real, working, Ivorian feeds — but
   // general-news only: Linfodrome's "sport" paths (/rss/sport,
   // /rss?rubrique=sport) return the exact same unfiltered feed as the
