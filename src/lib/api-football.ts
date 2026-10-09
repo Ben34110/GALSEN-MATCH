@@ -316,7 +316,11 @@ export function getStandingsForSeason(leagueId: number, season: number) {
 
 export interface ApiPlayerStatEntry {
   team: { id: number; name: string; logo: string };
-  league: { id: number; name: string; season: number };
+  // country: "World" marks a continental/intercontinental competition
+  // (Champions League, Europa League, Club World Cup, ...) rather than a
+  // real domestic one — used to break appearance ties toward the domestic
+  // entry (see lib/data/player-profile.ts's bestClubEntry).
+  league: { id: number; name: string; season: number; country: string | null };
   games: { appearences: number | null; position: string | null; rating: string | null };
   goals: { total: number | null; assists: number | null };
   cards: { yellow: number | null; red: number | null };

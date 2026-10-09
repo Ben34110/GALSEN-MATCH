@@ -168,6 +168,15 @@ const NATIONAL_TEAMS = [
 ];
 
 const NATION_NAME_SET = new Set(NATIONAL_TEAMS.map((n) => n.name.toLowerCase()));
+// Matching by id, not just name — confirmed live (L. Mpasi, id 24012,
+// 2026-10-09): API-Football labels DR Congo's senior team "Congo DR" in
+// some contexts (AFCON qualifiers stat lines) vs "DR Congo" elsewhere, so
+// the name-only check let a national-team stat line slip through as if it
+// were a "club", with real appearance counts high enough to occasionally
+// win bestClubEntry outright — showing "Congo DR"/"World Cup" as the
+// player's club on their own profile. Team ids are stable regardless of
+// which display name a given endpoint happens to use.
+const NATION_ID_SET = new Set(NATIONAL_TEAMS.map((n) => n.id));
 const YOUTH_TEAM_RE = /\bU1[5-9]\b|\bU2[0-3]\b/i;
 
 // Players confirmed (by hand, via their real API-Football `nationality`
@@ -233,12 +242,33 @@ const MANUAL_ADDITIONS = [
     // shown him at Watford instead).
     nationality: "Senegal",
   },
+  {
+    id: 161620,
+    name: "J. Kadile",
+    age: 23,
+    number: 28,
+    position: "Attacker",
+    photo: "https://media.api-sports.io/football/players/161620.png",
+    // Junior Kadile, RC Lens — a different gap than the others above: he's
+    // on Lens's real squad and his own /players nationality field still
+    // says "France" (birth nationality, not yet updated), AND he's absent
+    // from DR Congo's /players/squads AND /players?team=1508&season=
+    // call-ups for every season checked (2023-2026) despite having played
+    // DR Congo's 2026-10-02/10-05 matches vs Uganda (confirmed by hand) —
+    // API-Football's own national-team call-up records simply haven't
+    // caught up yet. Re-check periodically; once they do, this script's
+    // normal enumeration will find him on its own and this entry becomes
+    // redundant (harmless either way — existingById dedup keeps whichever
+    // was resolved first).
+    nationality: "DR Congo",
+  },
 ];
 
-function isClubStatEntry(teamName) {
-  if (!teamName) return false;
-  if (NATION_NAME_SET.has(teamName.toLowerCase())) return false;
-  if (YOUTH_TEAM_RE.test(teamName)) return false;
+function isClubStatEntry(team) {
+  if (!team?.name) return false;
+  if (NATION_ID_SET.has(team.id)) return false;
+  if (NATION_NAME_SET.has(team.name.toLowerCase())) return false;
+  if (YOUTH_TEAM_RE.test(team.name)) return false;
   return true;
 }
 
@@ -435,9 +465,25 @@ async function fetchNationalCallUps(nation, season) {
   return verified;
 }
 
+// Confirmed live (Junior Kadile, id 161620, 2026-10-09): tied on 1
+// appearance each for Lens in both the UEFA Champions League and Ligue 1,
+// a plain appearances-only sort picked whichever the API happened to list
+// first — Champions League, which then became his stored `leagueId`
+// (continental competition ids aren't in RATINGS_COVERED_LEAGUE_IDS, see
+// lib/data/ratings-coverage.ts, so this would have wrongly excluded him
+// from Fantasy despite playing in a genuinely rated domestic league).
+// league.country === "World" marks a continental/intercontinental
+// competition (Champions League, Europa League, Club World Cup, ...) as
+// opposed to a real domestic one — ties now prefer the domestic entry.
 function bestClubEntry(entry) {
-  const clubEntries = (entry?.statistics ?? []).filter((s) => isClubStatEntry(s.team?.name));
-  return clubEntries.sort((a, b) => (b.games.appearences ?? 0) - (a.games.appearences ?? 0))[0];
+  const clubEntries = (entry?.statistics ?? []).filter((s) => isClubStatEntry(s.team));
+  return clubEntries.sort((a, b) => {
+    const appsDiff = (b.games.appearences ?? 0) - (a.games.appearences ?? 0);
+    if (appsDiff !== 0) return appsDiff;
+    const aDomestic = a.league?.country !== "World" ? 1 : 0;
+    const bDomestic = b.league?.country !== "World" ? 1 : 0;
+    return bDomestic - aDomestic;
+  })[0];
 }
 
 // /players season stats only report a club once the player has actually

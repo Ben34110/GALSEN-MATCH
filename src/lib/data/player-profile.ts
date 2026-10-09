@@ -20,19 +20,41 @@ import type { Match, PlayerDetail, PlayerMatchEvent, PlayerSeasonStats, PlayerTr
 // player's actual club. Built from AFRICAN_NATIONS instead of a second
 // copy of the sync script's literal list, so the two can't drift apart.
 const NATION_NAME_SET = new Set(AFRICAN_NATIONS.map((n) => n.nationality.toLowerCase()));
+// Matching by id too, not just name — confirmed live (2026-10-09):
+// API-Football labels some nations' senior team differently depending on
+// context (DR Congo shows as "Congo DR" in AFCON qualifier stat lines vs
+// "DR Congo" elsewhere), which let a national-team line slip through the
+// name-only check as if it were a club. Team ids are stable regardless of
+// display name; AFRICAN_NATIONS has no dedicated numeric-id field, but
+// `logo` already embeds the same NATIONAL_TEAMS id this was copied from
+// (see that field's own comment) — parsed here instead of threading a new
+// field through all 54 entries for one extra lookup.
+const NATION_ID_SET = new Set(
+  AFRICAN_NATIONS.map((n) => Number(n.logo.match(/\/teams\/(\d+)\.png$/)?.[1])).filter((id) => !Number.isNaN(id))
+);
 const YOUTH_TEAM_RE = /\bU1[5-9]\b|\bU2[0-3]\b/i;
 
-function isClubStatEntry(teamName: string | null | undefined): boolean {
-  if (!teamName) return false;
-  if (NATION_NAME_SET.has(teamName.toLowerCase())) return false;
-  if (YOUTH_TEAM_RE.test(teamName)) return false;
+function isClubStatEntry(team: { id: number; name: string } | null | undefined): boolean {
+  if (!team?.name) return false;
+  if (NATION_ID_SET.has(team.id)) return false;
+  if (NATION_NAME_SET.has(team.name.toLowerCase())) return false;
+  if (YOUTH_TEAM_RE.test(team.name)) return false;
   return true;
 }
 
+// Ties on appearances prefer the domestic competition over a continental
+// one (league.country "World") — same fix, same reasoning, as
+// scripts/sync-african-players.mjs's bestClubEntry.
 function bestClubEntry(entries: ApiPlayerStatEntry[]): ApiPlayerStatEntry | undefined {
   return [...entries]
-    .filter((entry) => isClubStatEntry(entry.team?.name))
-    .sort((a, b) => (b.games.appearences ?? 0) - (a.games.appearences ?? 0))[0];
+    .filter((entry) => isClubStatEntry(entry.team))
+    .sort((a, b) => {
+      const appsDiff = (b.games.appearences ?? 0) - (a.games.appearences ?? 0);
+      if (appsDiff !== 0) return appsDiff;
+      const aDomestic = a.league?.country !== "World" ? 1 : 0;
+      const bDomestic = b.league?.country !== "World" ? 1 : 0;
+      return bDomestic - aDomestic;
+    })[0];
 }
 
 function displaySeasonLabel(season: number): string {

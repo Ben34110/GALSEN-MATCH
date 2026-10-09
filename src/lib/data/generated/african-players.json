@@ -87,12 +87,12 @@
     "teamId": 50,
     "teamName": "Manchester City",
     "teamLogo": "https://media.api-sports.io/football/teams/50.png",
-    "leagueId": 2,
-    "leagueName": "UEFA Champions League",
+    "leagueId": 48,
+    "leagueName": "League Cup",
     "appearances": 17,
     "goals": 0,
     "assists": 2,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 4561,
@@ -1353,7 +1353,7 @@
     "appearances": 34,
     "goals": 3,
     "assists": 3,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 381024,
@@ -2180,7 +2180,7 @@
     "appearances": 29,
     "goals": 4,
     "assists": 1,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 24121,
@@ -2199,7 +2199,7 @@
     "appearances": 8,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 336160,
@@ -2251,12 +2251,12 @@
     "teamId": 160,
     "teamName": "SC Freiburg",
     "teamLogo": "https://media.api-sports.io/football/teams/160.png",
-    "leagueId": 848,
-    "leagueName": "UEFA Europa Conference League",
+    "leagueId": 78,
+    "leagueName": "Bundesliga",
     "appearances": 10,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 393092,
@@ -2906,7 +2906,7 @@
     "appearances": 27,
     "goals": 0,
     "assists": 1,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 302622,
@@ -3291,15 +3291,15 @@
     "nationality": "Cape Verde",
     "photo": "https://media.api-sports.io/football/players/15304.png",
     "position": "Goalkeeper",
-    "teamId": 1533,
-    "teamName": "Cape Verde Islands",
-    "teamLogo": "https://media.api-sports.io/football/teams/1533.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 2315,
+    "teamName": "Colo Colo",
+    "teamLogo": "https://media.api-sports.io/football/teams/2315.png",
+    "leagueId": 265,
+    "leagueName": "Primera División",
     "appearances": 19,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 163200,
@@ -3329,15 +3329,15 @@
     "nationality": "Cape Verde",
     "photo": "https://media.api-sports.io/football/players/41608.png",
     "position": "Defender",
-    "teamId": 1533,
-    "teamName": "Cape Verde Islands",
-    "teamLogo": "https://media.api-sports.io/football/teams/1533.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 2874,
+    "teamName": "Sharjah FC",
+    "teamLogo": "https://media.api-sports.io/football/teams/2874.png",
+    "leagueId": 301,
+    "leagueName": "Pro League",
     "appearances": 11,
     "goals": 1,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 21997,
@@ -3500,15 +3500,15 @@
     "nationality": "Cape Verde",
     "photo": "https://media.api-sports.io/football/players/37435.png",
     "position": "Midfielder",
-    "teamId": 1533,
-    "teamName": "Cape Verde Islands",
-    "teamLogo": "https://media.api-sports.io/football/teams/1533.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 566,
+    "teamName": "Ludogorets",
+    "teamLogo": "https://media.api-sports.io/football/teams/566.png",
+    "leagueId": 172,
+    "leagueName": "First League",
     "appearances": 34,
     "goals": 1,
     "assists": 1,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 37436,
@@ -3595,15 +3595,15 @@
     "nationality": "Cape Verde",
     "photo": "https://media.api-sports.io/football/players/128007.png",
     "position": "Midfielder",
-    "teamId": 1533,
-    "teamName": "Cape Verde Islands",
-    "teamLogo": "https://media.api-sports.io/football/teams/1533.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 231,
+    "teamName": "Farense",
+    "teamLogo": "https://media.api-sports.io/football/teams/231.png",
+    "leagueId": 95,
+    "leagueName": "Segunda Liga",
     "appearances": 31,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 44612,
@@ -3614,15 +3614,15 @@
     "nationality": "Cape Verde",
     "photo": "https://media.api-sports.io/football/players/44612.png",
     "position": "Attacker",
-    "teamId": 1533,
-    "teamName": "Cape Verde Islands",
-    "teamLogo": "https://media.api-sports.io/football/teams/1533.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 602,
+    "teamName": "Apollon Limassol",
+    "teamLogo": "https://media.api-sports.io/football/teams/602.png",
+    "leagueId": 318,
+    "leagueName": "1. Division",
     "appearances": 31,
     "goals": 2,
     "assists": 2,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 22265,
@@ -3633,15 +3633,15 @@
     "nationality": "Cape Verde",
     "photo": "https://media.api-sports.io/football/players/22265.png",
     "position": "Attacker",
-    "teamId": 1533,
-    "teamName": "Cape Verde Islands",
-    "teamLogo": "https://media.api-sports.io/football/teams/1533.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 1005,
+    "teamName": "Antalyaspor",
+    "teamLogo": "https://media.api-sports.io/football/teams/1005.png",
+    "leagueId": 204,
+    "leagueName": "1. Lig",
     "appearances": 26,
     "goals": 3,
     "assists": 1,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 1494,
@@ -3690,15 +3690,15 @@
     "nationality": "Cape Verde",
     "photo": "https://media.api-sports.io/football/players/291024.png",
     "position": "Forward",
-    "teamId": 1533,
-    "teamName": "Cape Verde Islands",
-    "teamLogo": "https://media.api-sports.io/football/teams/1533.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 604,
+    "teamName": "Maccabi Tel Aviv",
+    "teamLogo": "https://media.api-sports.io/football/teams/604.png",
+    "leagueId": 383,
+    "leagueName": "Ligat Ha'al",
     "appearances": 30,
     "goals": 3,
     "assists": 2,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 50270,
@@ -3709,15 +3709,15 @@
     "nationality": "Cape Verde",
     "photo": "https://media.api-sports.io/football/players/50270.png",
     "position": "Midfielder",
-    "teamId": 1533,
-    "teamName": "Cape Verde Islands",
-    "teamLogo": "https://media.api-sports.io/football/teams/1533.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 17259,
+    "teamName": "Iğdır FK",
+    "teamLogo": "https://media.api-sports.io/football/teams/17259.png",
+    "leagueId": 204,
+    "leagueName": "1. Lig",
     "appearances": 28,
     "goals": 5,
     "assists": 2,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 309182,
@@ -5028,15 +5028,15 @@
     "nationality": "DR Congo",
     "photo": "https://media.api-sports.io/football/players/48501.png",
     "position": "Goalkeeper",
-    "teamId": 630,
-    "teamName": "FC Sion",
-    "teamLogo": "https://media.api-sports.io/football/teams/630.png",
-    "leagueId": 37,
-    "leagueName": "World Cup - Qualification Intercontinental Play-offs",
+    "teamId": 3684,
+    "teamName": "FC Noah",
+    "teamLogo": "https://media.api-sports.io/football/teams/3684.png",
+    "leagueId": 848,
+    "leagueName": "UEFA Europa Conference League",
     "appearances": 5,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 24012,
@@ -5047,15 +5047,15 @@
     "nationality": "DR Congo",
     "photo": "https://media.api-sports.io/football/players/24012.png",
     "position": "Goalkeeper",
-    "teamId": 1508,
-    "teamName": "Congo DR",
-    "teamLogo": "https://media.api-sports.io/football/teams/1508.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 111,
+    "teamName": "Le Havre",
+    "teamLogo": "https://media.api-sports.io/football/teams/111.png",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
     "appearances": 4,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 8445,
@@ -5180,15 +5180,15 @@
     "nationality": "DR Congo",
     "photo": "https://media.api-sports.io/football/players/19182.png",
     "position": "Defender",
-    "teamId": 1508,
-    "teamName": "Congo DR",
-    "teamLogo": "https://media.api-sports.io/football/teams/1508.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 108,
+    "teamName": "Auxerre",
+    "teamLogo": "https://media.api-sports.io/football/teams/108.png",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
     "appearances": 14,
     "goals": 1,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 18846,
@@ -5199,15 +5199,15 @@
     "nationality": "DR Congo",
     "photo": "https://media.api-sports.io/football/players/18846.png",
     "position": "Defender",
-    "teamId": 1508,
-    "teamName": "Congo DR",
-    "teamLogo": "https://media.api-sports.io/football/teams/1508.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 66,
+    "teamName": "Aston Villa",
+    "teamLogo": "https://media.api-sports.io/football/teams/66.png",
+    "leagueId": 39,
+    "leagueName": "Premier League",
     "appearances": 25,
     "goals": 0,
     "assists": 2,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 1424,
@@ -5332,15 +5332,15 @@
     "nationality": "DR Congo",
     "photo": "https://media.api-sports.io/football/players/129670.png",
     "position": "Attacker",
-    "teamId": 1508,
-    "teamName": "Congo DR",
-    "teamLogo": "https://media.api-sports.io/football/teams/1508.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 735,
+    "teamName": "St. Truiden",
+    "teamLogo": "https://media.api-sports.io/football/teams/735.png",
+    "leagueId": 144,
+    "leagueName": "Jupiler Pro League",
     "appearances": 30,
     "goals": 4,
     "assists": 5,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 8627,
@@ -5446,15 +5446,15 @@
     "nationality": "DR Congo",
     "photo": "https://media.api-sports.io/football/players/47545.png",
     "position": "Midfielder",
-    "teamId": 1508,
-    "teamName": "Congo DR",
-    "teamLogo": "https://media.api-sports.io/football/teams/1508.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 953,
+    "teamName": "Larisa",
+    "teamLogo": "https://media.api-sports.io/football/teams/953.png",
+    "leagueId": 197,
+    "leagueName": "Super League 1",
     "appearances": 11,
     "goals": 1,
     "assists": 2,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 179699,
@@ -5465,15 +5465,15 @@
     "nationality": "DR Congo",
     "photo": "https://media.api-sports.io/football/players/179699.png",
     "position": "Attacker",
-    "teamId": 1508,
-    "teamName": "Congo DR",
-    "teamLogo": "https://media.api-sports.io/football/teams/1508.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 1036,
+    "teamName": "Pyramids FC",
+    "teamLogo": "https://media.api-sports.io/football/teams/1036.png",
+    "leagueId": 233,
+    "leagueName": "Premier League",
     "appearances": 24,
     "goals": 5,
     "assists": 2,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 20649,
@@ -6874,7 +6874,7 @@
     "appearances": 17,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 153715,
@@ -9385,7 +9385,7 @@
     "appearances": 8,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 352523,
@@ -9404,7 +9404,7 @@
     "appearances": 13,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 56726,
@@ -10368,12 +10368,12 @@
     "teamId": 80,
     "teamName": "Lyon",
     "teamLogo": "https://media.api-sports.io/football/teams/80.png",
-    "leagueId": 2,
-    "leagueName": "UEFA Champions League",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
     "appearances": 3,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 199837,
@@ -11251,12 +11251,12 @@
     "teamId": 645,
     "teamName": "Galatasaray",
     "teamLogo": "https://media.api-sports.io/football/teams/645.png",
-    "leagueId": 2,
-    "leagueName": "UEFA Champions League",
+    "leagueId": 203,
+    "leagueName": "Süper Lig",
     "appearances": 18,
     "goals": 2,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 281437,
@@ -12442,7 +12442,7 @@
     "appearances": 4,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 438531,
@@ -13080,7 +13080,7 @@
     "appearances": 1,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 574015,
@@ -15586,15 +15586,15 @@
     "nationality": "Mauritania",
     "photo": "https://media.api-sports.io/football/players/423347.png",
     "position": "Goalkeeper",
-    "teamId": 2153,
-    "teamName": "Raufoss",
-    "teamLogo": "https://media.api-sports.io/football/teams/2153.png",
+    "teamId": 325,
+    "teamName": "Tromso",
+    "teamLogo": "https://media.api-sports.io/football/teams/325.png",
     "leagueId": 848,
     "leagueName": "UEFA Europa Conference League",
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 46937,
@@ -18070,7 +18070,7 @@
     "appearances": 3,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 571823,
@@ -18473,12 +18473,12 @@
     "teamId": 553,
     "teamName": "Olympiakos Piraeus",
     "teamLogo": "https://media.api-sports.io/football/teams/553.png",
-    "leagueId": 2,
-    "leagueName": "UEFA Champions League",
+    "leagueId": 197,
+    "leagueName": "Super League 1",
     "appearances": 16,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 539962,
@@ -18571,7 +18571,7 @@
     "appearances": 5,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 539421,
@@ -19942,12 +19942,12 @@
     "teamId": 52,
     "teamName": "Crystal Palace",
     "teamLogo": "https://media.api-sports.io/football/teams/52.png",
-    "leagueId": 3,
-    "leagueName": "UEFA Europa League",
+    "leagueId": 39,
+    "leagueName": "Premier League",
     "appearances": 28,
     "goals": 9,
     "assists": 1,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 575076,
@@ -24215,7 +24215,7 @@
     "appearances": 31,
     "goals": 0,
     "assists": 1,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 20363,
@@ -24455,12 +24455,12 @@
     "teamId": 254,
     "teamName": "Heart Of Midlothian",
     "teamLogo": "https://media.api-sports.io/football/teams/254.png",
-    "leagueId": 848,
-    "leagueName": "UEFA Europa Conference League",
+    "leagueId": 179,
+    "leagueName": "Premiership",
     "appearances": 3,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 488210,
@@ -25827,12 +25827,12 @@
     "teamId": 2903,
     "teamName": "Al-Gharafa",
     "teamLogo": "https://media.api-sports.io/football/teams/2903.png",
-    "leagueId": 17,
-    "leagueName": "AFC Champions League Elite",
+    "leagueId": 305,
+    "leagueName": "Stars League",
     "appearances": 18,
     "goals": 1,
     "assists": 2,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 8777,
@@ -26972,7 +26972,7 @@
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 30753,
@@ -27010,7 +27010,7 @@
     "appearances": 33,
     "goals": 2,
     "assists": 5,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 2203,
@@ -28416,7 +28416,7 @@
     "appearances": 13,
     "goals": 3,
     "assists": 0,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 7355,
@@ -28484,15 +28484,15 @@
     "nationality": "Burkina Faso",
     "photo": "https://media.api-sports.io/football/players/81749.png",
     "position": "Attacker",
-    "teamId": 8053,
-    "teamName": "Al-Ittihad",
-    "teamLogo": "https://media.api-sports.io/football/teams/8053.png",
+    "teamId": 968,
+    "teamName": "Wydad AC",
+    "teamLogo": "https://media.api-sports.io/football/teams/968.png",
     "leagueId": 15,
     "leagueName": "FIFA Club World Cup",
     "appearances": 2,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 125201,
@@ -29206,15 +29206,15 @@
     "nationality": "Burkina Faso",
     "photo": "https://media.api-sports.io/football/players/21005.png",
     "position": "Midfielder",
-    "teamId": 5652,
-    "teamName": "Dalian Huayi",
-    "teamLogo": "https://media.api-sports.io/football/teams/5652.png",
+    "teamId": 568,
+    "teamName": "Sheriff Tiraspol",
+    "teamLogo": "https://media.api-sports.io/football/teams/568.png",
     "leagueId": 848,
     "leagueName": "UEFA Europa Conference League",
     "appearances": 1,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 162455,
@@ -30164,7 +30164,7 @@
     "appearances": 21,
     "goals": 4,
     "assists": 2,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 1241,
@@ -31049,15 +31049,15 @@
     "nationality": "Cape Verde",
     "photo": "https://media.api-sports.io/football/players/279447.png",
     "position": "Defender",
-    "teamId": 1533,
-    "teamName": "Cape Verde Islands",
-    "teamLogo": "https://media.api-sports.io/football/teams/1533.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 568,
+    "teamName": "Sheriff Tiraspol",
+    "teamLogo": "https://media.api-sports.io/football/teams/568.png",
+    "leagueId": 394,
+    "leagueName": "Super Liga",
     "appearances": 5,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 41452,
@@ -31125,15 +31125,15 @@
     "nationality": "Cape Verde",
     "photo": "https://media.api-sports.io/football/players/11108.png",
     "position": "Midfielder",
-    "teamId": 1533,
-    "teamName": "Cape Verde Islands",
-    "teamLogo": "https://media.api-sports.io/football/teams/1533.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 11238,
+    "teamName": "Araz",
+    "teamLogo": "https://media.api-sports.io/football/teams/11238.png",
+    "leagueId": 419,
+    "leagueName": "Premyer Liqa",
     "appearances": 30,
     "goals": 4,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 41579,
@@ -31163,15 +31163,15 @@
     "nationality": "Cape Verde",
     "photo": "https://media.api-sports.io/football/players/41594.png",
     "position": "Midfielder",
-    "teamId": 1533,
-    "teamName": "Cape Verde Islands",
-    "teamLogo": "https://media.api-sports.io/football/teams/1533.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
-    "appearances": 21,
-    "goals": 1,
-    "assists": 2,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "teamId": 5499,
+    "teamName": "Turan",
+    "teamLogo": "https://media.api-sports.io/football/teams/5499.png",
+    "leagueId": 419,
+    "leagueName": "Premyer Liqa",
+    "appearances": 6,
+    "goals": 0,
+    "assists": 0,
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 123466,
@@ -31429,15 +31429,15 @@
     "nationality": "Cape Verde",
     "photo": "https://media.api-sports.io/football/players/47553.png",
     "position": "Midfielder",
-    "teamId": 1533,
-    "teamName": "Cape Verde Islands",
-    "teamLogo": "https://media.api-sports.io/football/teams/1533.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 9390,
+    "teamName": "Ibiza",
+    "teamLogo": "https://media.api-sports.io/football/teams/9390.png",
+    "leagueId": 1006,
+    "leagueName": "Primera División RFEF - Play Offs",
     "appearances": 30,
     "goals": 3,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 231081,
@@ -31475,7 +31475,7 @@
     "appearances": 13,
     "goals": 9,
     "assists": 1,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 83754,
@@ -31589,7 +31589,7 @@
     "appearances": 15,
     "goals": 4,
     "assists": 2,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 141861,
@@ -33180,12 +33180,12 @@
     "teamId": 249,
     "teamName": "Hibernian",
     "teamLogo": "https://media.api-sports.io/football/teams/249.png",
-    "leagueId": 37,
-    "leagueName": "World Cup - Qualification Intercontinental Play-offs",
+    "leagueId": 179,
+    "leagueName": "Premiership",
     "appearances": 26,
     "goals": 3,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 8651,
@@ -33261,7 +33261,7 @@
     "appearances": 1,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 267728,
@@ -34724,7 +34724,7 @@
     "appearances": 29,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 129078,
@@ -34800,7 +34800,7 @@
     "appearances": 9,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 296188,
@@ -34819,7 +34819,7 @@
     "appearances": 5,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 168612,
@@ -36985,7 +36985,7 @@
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 277085,
@@ -37498,7 +37498,7 @@
     "appearances": 2,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 129692,
@@ -37574,7 +37574,7 @@
     "appearances": 33,
     "goals": 2,
     "assists": 1,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 122421,
@@ -37593,7 +37593,7 @@
     "appearances": 6,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 20530,
@@ -37859,7 +37859,7 @@
     "appearances": 30,
     "goals": 10,
     "assists": 4,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 16858,
@@ -38201,7 +38201,7 @@
     "appearances": 20,
     "goals": 0,
     "assists": 1,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 127751,
@@ -38462,12 +38462,12 @@
     "teamId": 347,
     "teamName": "Lech Poznan",
     "teamLogo": "https://media.api-sports.io/football/teams/347.png",
-    "leagueId": 3,
-    "leagueName": "UEFA Europa League",
+    "leagueId": 106,
+    "leagueName": "Ekstraklasa",
     "appearances": 24,
     "goals": 0,
     "assists": 1,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 434427,
@@ -38600,7 +38600,7 @@
     "appearances": 9,
     "goals": 0,
     "assists": 1,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 61418,
@@ -38961,7 +38961,7 @@
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 1944,
@@ -39716,12 +39716,12 @@
     "teamId": 566,
     "teamName": "Ludogorets",
     "teamLogo": "https://media.api-sports.io/football/teams/566.png",
-    "leagueId": 3,
-    "leagueName": "UEFA Europa League",
+    "leagueId": 172,
+    "leagueName": "First League",
     "appearances": 1,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 191151,
@@ -40058,12 +40058,12 @@
     "teamId": 651,
     "teamName": "Ferencvarosi TC",
     "teamLogo": "https://media.api-sports.io/football/teams/651.png",
-    "leagueId": 3,
-    "leagueName": "UEFA Europa League",
+    "leagueId": 271,
+    "leagueName": "NB I",
     "appearances": 10,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 24288,
@@ -40481,7 +40481,7 @@
     "appearances": 13,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 336955,
@@ -40609,12 +40609,12 @@
     "teamId": 397,
     "teamName": "FC Midtjylland",
     "teamLogo": "https://media.api-sports.io/football/teams/397.png",
-    "leagueId": 848,
-    "leagueName": "UEFA Europa Conference League",
+    "leagueId": 119,
+    "leagueName": "Superliga",
     "appearances": 21,
     "goals": 17,
     "assists": 3,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 20627,
@@ -41540,12 +41540,12 @@
     "teamId": 217,
     "teamName": "SC Braga",
     "teamLogo": "https://media.api-sports.io/football/teams/217.png",
-    "leagueId": 848,
-    "leagueName": "UEFA Europa Conference League",
+    "leagueId": 94,
+    "leagueName": "Primeira Liga",
     "appearances": 20,
     "goals": 2,
     "assists": 1,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 885,
@@ -42058,7 +42058,7 @@
     "appearances": 27,
     "goals": 2,
     "assists": 1,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 193501,
@@ -42072,12 +42072,12 @@
     "teamId": 81,
     "teamName": "Marseille",
     "teamLogo": "https://media.api-sports.io/football/teams/81.png",
-    "leagueId": 3,
-    "leagueName": "UEFA Europa League",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
     "appearances": 25,
     "goals": 0,
     "assists": 3,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 293949,
@@ -42286,7 +42286,7 @@
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 24679,
@@ -44509,7 +44509,7 @@
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 49177,
@@ -45169,12 +45169,12 @@
     "teamId": 80,
     "teamName": "Lyon",
     "teamLogo": "https://media.api-sports.io/football/teams/80.png",
-    "leagueId": 3,
-    "leagueName": "UEFA Europa League",
+    "leagueId": 66,
+    "leagueName": "Coupe de France",
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 449153,
@@ -45364,7 +45364,7 @@
     "appearances": 27,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 49507,
@@ -45668,7 +45668,7 @@
     "appearances": 0,
     "goals": 9,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 293944,
@@ -46770,7 +46770,7 @@
     "appearances": 10,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 8587,
@@ -47150,7 +47150,7 @@
     "appearances": 29,
     "goals": 4,
     "assists": 2,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 174937,
@@ -47264,7 +47264,7 @@
     "appearances": 3,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 36555,
@@ -47625,7 +47625,7 @@
     "appearances": 4,
     "goals": 0,
     "assists": 1,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 8681,
@@ -47834,7 +47834,7 @@
     "appearances": 24,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 119437,
@@ -47910,7 +47910,7 @@
     "appearances": 11,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 385720,
@@ -47948,7 +47948,7 @@
     "appearances": 26,
     "goals": 1,
     "assists": 1,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 154839,
@@ -49601,7 +49601,7 @@
     "appearances": 7,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 403554,
@@ -49707,15 +49707,15 @@
     "nationality": "Nigeria",
     "photo": "https://media.api-sports.io/football/players/2772.png",
     "position": "Defender",
-    "teamId": 1004,
-    "teamName": "Kasimpasa",
-    "teamLogo": "https://media.api-sports.io/football/teams/1004.png",
+    "teamId": 2246,
+    "teamName": "CFR 1907 Cluj",
+    "teamLogo": "https://media.api-sports.io/football/teams/2246.png",
     "leagueId": 848,
     "leagueName": "UEFA Europa Conference League",
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 2773,
@@ -50665,7 +50665,7 @@
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 484574,
@@ -51002,12 +51002,12 @@
     "teamId": 1393,
     "teamName": "Union St. Gilloise",
     "teamLogo": "https://media.api-sports.io/football/teams/1393.png",
-    "leagueId": 2,
-    "leagueName": "UEFA Champions League",
+    "leagueId": 144,
+    "leagueName": "Jupiler Pro League",
     "appearances": 30,
     "goals": 2,
     "assists": 1,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 371839,
@@ -51064,7 +51064,7 @@
     "appearances": 10,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 2985,
@@ -51273,7 +51273,7 @@
     "appearances": 25,
     "goals": 1,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 282706,
@@ -51743,12 +51743,12 @@
     "teamId": 564,
     "teamName": "Başakşehir",
     "teamLogo": "https://media.api-sports.io/football/teams/564.png",
-    "leagueId": 848,
-    "leagueName": "UEFA Europa Conference League",
+    "leagueId": 203,
+    "leagueName": "Süper Lig",
     "appearances": 17,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 180823,
@@ -52793,7 +52793,7 @@
     "appearances": 17,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 46259,
@@ -53534,7 +53534,7 @@
     "appearances": 23,
     "goals": 1,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 355137,
@@ -54750,7 +54750,7 @@
     "appearances": 11,
     "goals": 1,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 78756,
@@ -55358,7 +55358,7 @@
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 43173,
@@ -56555,7 +56555,7 @@
     "appearances": 13,
     "goals": 1,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 7106,
@@ -57068,7 +57068,7 @@
     "appearances": 13,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 21660,
@@ -57543,7 +57543,7 @@
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 3242,
@@ -60996,12 +60996,12 @@
     "teamId": 406,
     "teamName": "Aarhus",
     "teamLogo": "https://media.api-sports.io/football/teams/406.png",
-    "leagueId": 2,
-    "leagueName": "UEFA Champions League",
+    "leagueId": 119,
+    "leagueName": "Superliga",
     "appearances": 32,
     "goals": 4,
     "assists": 5,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 46642,
@@ -63376,7 +63376,7 @@
     "appearances": 2,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 515470,
@@ -63984,7 +63984,7 @@
     "appearances": 6,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 24883,
@@ -64231,7 +64231,7 @@
     "appearances": 24,
     "goals": 1,
     "assists": 4,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 41353,
@@ -64459,7 +64459,7 @@
     "appearances": 9,
     "goals": 1,
     "assists": 0,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 49602,
@@ -64630,7 +64630,7 @@
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 397444,
@@ -64744,7 +64744,7 @@
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 39078,
@@ -64907,15 +64907,15 @@
     "nationality": "Tunisia",
     "photo": "https://media.api-sports.io/football/players/210198.png",
     "position": "Midfielder",
-    "teamId": 988,
-    "teamName": "Club Africain",
-    "teamLogo": "https://media.api-sports.io/football/teams/988.png",
+    "teamId": 5242,
+    "teamName": "Al Shorta",
+    "teamLogo": "https://media.api-sports.io/football/teams/5242.png",
     "leagueId": 17,
     "leagueName": "AFC Champions League Elite",
     "appearances": 2,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 264419,
@@ -68487,7 +68487,7 @@
     "appearances": 14,
     "goals": 1,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 427585,
@@ -68601,7 +68601,7 @@
     "appearances": 12,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 471290,
@@ -68916,15 +68916,15 @@
     "nationality": "Cape Verde",
     "photo": "https://media.api-sports.io/football/players/41807.png",
     "position": "Midfielder",
-    "teamId": 1533,
-    "teamName": "Cape Verde Islands",
-    "teamLogo": "https://media.api-sports.io/football/teams/1533.png",
-    "leagueId": 1,
-    "leagueName": "World Cup",
+    "teamId": 17692,
+    "teamName": "CF Os Belenenses",
+    "teamLogo": "https://media.api-sports.io/football/teams/17692.png",
+    "leagueId": 865,
+    "leagueName": "Liga 3",
     "appearances": 13,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 178854,
@@ -69532,7 +69532,7 @@
     "appearances": 1,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 449669,
@@ -69627,7 +69627,7 @@
     "appearances": 7,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 525383,
@@ -69684,7 +69684,7 @@
     "appearances": 16,
     "goals": 1,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 587442,
@@ -69931,7 +69931,7 @@
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 125316,
@@ -70064,7 +70064,7 @@
     "appearances": 37,
     "goals": 1,
     "assists": 1,
-    "refreshedAt": "2026-10-09T09:59:20.351Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 504648,
@@ -70463,7 +70463,7 @@
     "appearances": 27,
     "goals": 1,
     "assists": 0,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 175208,
@@ -72054,12 +72054,12 @@
     "teamId": 499,
     "teamName": "Atalanta",
     "teamLogo": "https://media.api-sports.io/football/teams/499.png",
-    "leagueId": 2,
-    "leagueName": "UEFA Champions League",
+    "leagueId": 135,
+    "leagueName": "Serie A",
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 484522,
@@ -72515,7 +72515,7 @@
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 206361,
@@ -72700,12 +72700,12 @@
     "teamId": 554,
     "teamName": "Anderlecht",
     "teamLogo": "https://media.api-sports.io/football/teams/554.png",
-    "leagueId": 3,
-    "leagueName": "UEFA Europa League",
+    "leagueId": 144,
+    "leagueName": "Jupiler Pro League",
     "appearances": 25,
     "goals": 0,
     "assists": 4,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 417907,
@@ -74187,7 +74187,7 @@
     "appearances": 0,
     "goals": 0,
     "assists": 0,
-    "refreshedAt": "2026-10-09T12:01:01.151Z"
+    "refreshedAt": "2026-10-09T12:36:39.785Z"
   },
   {
     "id": 517901,
@@ -74549,5 +74549,24 @@
     "goals": 0,
     "assists": 0,
     "refreshedAt": "2026-10-09T12:01:01.151Z"
+  },
+  {
+    "id": 161620,
+    "name": "J. Kadile",
+    "firstname": "Junior",
+    "lastname": "Morau Kadile",
+    "age": 23,
+    "nationality": "DR Congo",
+    "photo": "https://media.api-sports.io/football/players/161620.png",
+    "position": "Attacker",
+    "teamId": 116,
+    "teamName": "Lens",
+    "teamLogo": "https://media.api-sports.io/football/teams/116.png",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "appearances": 20,
+    "goals": 3,
+    "assists": 5,
+    "refreshedAt": "2026-10-09T12:33:22.668Z"
   }
 ]
