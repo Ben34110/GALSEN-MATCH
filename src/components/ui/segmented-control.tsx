@@ -27,11 +27,19 @@ interface SegmentedControlProps {
 // bg-accent/text-accent-ink active state, text-muted inactive).
 export function SegmentedControl({ items, activeId, onChange, className }: SegmentedControlProps) {
   return (
-    <div className={cn("inline-flex gap-1 rounded-full border border-border bg-surface p-1", className)}>
+    // max-w-full + overflow-x-auto: with enough items (5, once the
+    // "Championnats africains" tab joined upcoming-tabs.tsx), the row's
+    // natural width can exceed a narrow viewport — confirmed: it pushed
+    // the whole page wider, turning an ordinary tab row into an
+    // unintended horizontal swipe on the entire screen. Scrolling
+    // contained here (scrollbar-none hides the bar, same rail pattern as
+    // Actu's country-filter chips) keeps that swipe scoped to the pill
+    // row itself instead of the page.
+    <div className={cn("inline-flex max-w-full gap-1 overflow-x-auto rounded-full border border-border bg-surface p-1 scrollbar-none", className)}>
       {items.map((item) => {
         const active = item.id === activeId;
         const itemClassName = cn(
-          "min-h-9 flex-1 whitespace-nowrap rounded-full px-4 text-sm font-semibold text-center",
+          "min-h-9 flex-1 shrink-0 whitespace-nowrap rounded-full px-4 text-sm font-semibold text-center",
           "transition-colors duration-[var(--duration-fast)] active:scale-95",
           active ? "bg-accent text-accent-ink" : "text-muted hover:text-foreground"
         );
