@@ -13,7 +13,9 @@
 create extension if not exists "pgcrypto";
 create extension if not exists "pg_trgm";
 
+
 -- One row per subscribed browser/device. A device can have at most one
+
 -- active subscription (re-subscribing replaces it via upsert on device_id)
 -- — device_id is the one identity key that matters here. `endpoint` is
 -- deliberately NOT unique: the browser's push service (e.g. Apple's
