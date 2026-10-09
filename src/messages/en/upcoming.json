@@ -46,7 +46,10 @@
       "preliminary": "Preliminary round"
     },
     "fixtures": {
-      "unavailable": "Fixtures are unavailable for now."
+      "unavailable": "Fixtures are unavailable for now.",
+      "showAll": "Show all matches",
+      "showFavoriteOnly": "Show my team only",
+      "noFavoriteMatch": "No match for your team this matchday."
     },
     "standings": {
       "unavailable": "Standings are unavailable for now.",

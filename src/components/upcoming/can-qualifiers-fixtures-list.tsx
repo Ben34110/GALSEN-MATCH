@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
@@ -32,6 +33,13 @@ export function CanQualifiersFixturesList({
   const profile = useOnboardingProfile();
   const userTeamId = profile ? nationTeamId(getAfricanNation(profile.countryId)) : null;
 
+  // Defaults to the user's own team only (when known) — scanning every
+  // fixture for the one that matters was exactly what the highlight below
+  // already tried to shortcut, so filtering down by default goes the rest
+  // of the way. No onboarding profile at all means there's no "favorite"
+  // to filter to, so everyone shows unfiltered rather than an empty list.
+  const [showAll, setShowAll] = useState(userTeamId == null);
+
   if (fixtures.length === 0) {
     return (
       <p className="rounded-2xl border border-dashed border-border py-10 text-center text-sm text-muted">
@@ -41,15 +49,31 @@ export function CanQualifiersFixturesList({
     );
   }
 
-  const rounds = Array.from(new Set(fixtures.map((fixture) => fixture.round)));
+  const visibleFixtures =
+    showAll || userTeamId == null ? fixtures : fixtures.filter((f) => f.homeTeam.id === userTeamId || f.awayTeam.id === userTeamId);
+  const rounds = Array.from(new Set(visibleFixtures.map((fixture) => fixture.round)));
 
   return (
     <div className="flex flex-col gap-5">
+      {userTeamId != null && (
+        <button
+          type="button"
+          onClick={() => setShowAll((current) => !current)}
+          className="self-start rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-muted transition-colors hover:text-foreground"
+        >
+          {showAll ? t("fixtures.showFavoriteOnly") : t("fixtures.showAll")}
+        </button>
+      )}
+
+      {!showAll && visibleFixtures.length === 0 && (
+        <p className="rounded-2xl border border-dashed border-border py-6 text-center text-sm text-muted">{t("fixtures.noFavoriteMatch")}</p>
+      )}
+
       {rounds.map((round) => (
         <div key={round}>
           <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">{roundLabel(round)}</h3>
           <div className="flex flex-col gap-2">
-            {fixtures
+            {visibleFixtures
               .filter((fixture) => fixture.round === round)
               .map((fixture) => {
                 const isUserMatch =

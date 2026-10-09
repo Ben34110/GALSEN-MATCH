@@ -46,7 +46,10 @@
       "preliminary": "الجولة التمهيدية"
     },
     "fixtures": {
-      "unavailable": "الجدول غير متوفر حالياً."
+      "unavailable": "الجدول غير متوفر حالياً.",
+      "showAll": "عرض كل المباريات",
+      "showFavoriteOnly": "عرض منتخبي فقط",
+      "noFavoriteMatch": "لا توجد مباراة لمنتخبك في هذه الجولة."
     },
     "standings": {
       "unavailable": "الترتيب غير متوفر حالياً.",

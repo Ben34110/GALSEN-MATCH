@@ -46,7 +46,10 @@
       "preliminary": "Tour préliminaire"
     },
     "fixtures": {
-      "unavailable": "Calendrier indisponible pour l'instant."
+      "unavailable": "Calendrier indisponible pour l'instant.",
+      "showAll": "Voir tous les matchs",
+      "showFavoriteOnly": "Voir mon équipe uniquement",
+      "noFavoriteMatch": "Aucun match de votre équipe pour cette journée."
     },
     "standings": {
       "unavailable": "Classement indisponible pour l'instant.",
