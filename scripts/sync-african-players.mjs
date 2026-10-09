@@ -257,13 +257,15 @@ mkdirSync(CACHE_DIR, { recursive: true });
 // and started also re-verifying already-known players (ROTATION_BATCH_SIZE
 // below) rather than just enumerating new call-ups, then raised again
 // (1300 -> 6000) once the account moved to a 75,000/day API-Football plan
-// and CALL_UP_SEASONS widened from 3 to 8 seasons: enumeration alone now
-// costs ~500-650 requests (54 nations x ~9-12 calls across 8 seasons),
-// leaving headroom for the rotation batch (200 players x 3 calls = 600)
-// plus a large batch of new candidates — the deeper season history
-// surfaces many more previously-invisible dual-nationals on the first few
-// runs after this widened. Still well clear of the account-wide daily cap
-// shared with poll/mercato/the new domestic-leagues sync scripts.
+// and CALL_UP_SEASONS widened from 3 to 8 seasons, then again once U20/U23
+// squads joined the enumeration (fetchYouthSquad): enumeration alone now
+// costs ~750-900 requests (54 nations x (~9-12 senior calls across 8
+// seasons + ~4 youth discovery/squad calls)), leaving headroom for the
+// rotation batch (200 players x 3 calls = 600) plus a large batch of new
+// candidates — the deeper season history and youth-team coverage both
+// surface many previously-invisible dual-nationals on the first few runs
+// after each was added. Still well clear of the account-wide daily cap
+// shared with poll/mercato/the domestic-leagues sync scripts.
 const MAX_LIVE_REQUESTS = Number(process.env.SYNC_MAX_LIVE_REQUESTS ?? 6000);
 let liveRequestCount = 0;
 let stoppedOnBudget = false;
@@ -349,6 +351,39 @@ async function fetchNationalSquad(nation) {
     return players.map((p) => ({ ...p, nationality: nation.name }));
   } catch (err) {
     console.warn(`[${nation.name}] failed: ${err.message}`);
+    return [];
+  }
+}
+
+// U20/U23 squads — unlike NATIONAL_TEAMS (54 senior-team ids, found once by
+// hand and hardcoded), a youth team's id is discovered at runtime via
+// /teams?search="<nation> U20|U23" rather than hardcoded: 108 extra ids
+// would need the same manual upkeep NATIONAL_TEAMS already requires, for
+// data that — confirmed by hand — has real coverage gaps per nation
+// (Senegal U23 has none at all; Nigeria U20/U23 and Morocco U23 do, 15-24
+// players each). Discovery results are cached like every other apiGet call,
+// so this only costs live requests on a cold cache. Found players are
+// tagged with the SENIOR nation name (not "Senegal U20") as `nationality` —
+// this app's AfricanPlayer.nationality is always a senior-team country
+// name, and a U20/U23 cap already represents real commitment to that
+// nation, exactly the kind of candidate the CALL_UP_SEASONS widening above
+// was for: a dual-national already in an African nation's youth setup who
+// hasn't earned a senior cap yet was invisible to this script until now.
+async function fetchYouthSquad(nationName, ageGroup) {
+  const searchName = `${nationName} ${ageGroup}`;
+  try {
+    const teamsResult = await apiGet("/teams", { search: searchName });
+    // The search can also return a women's team ("Nigeria U20 W") or
+    // other near-matches — only the exact name is the real youth team.
+    const team = (teamsResult.response ?? []).find((t) => t.team.name === searchName);
+    if (!team) return [];
+
+    const squadResult = await apiGet("/players/squads", { team: team.team.id });
+    const players = squadResult.response[0]?.players ?? [];
+    console.log(`[${searchName}] ${players.length} players`);
+    return players.map((p) => ({ ...p, nationality: nationName }));
+  } catch (err) {
+    console.warn(`[${searchName}] failed: ${err.message}`);
     return [];
   }
 }
@@ -450,11 +485,28 @@ async function fetchPlayerClubDetail(playerId) {
     const statsBest = bestClubEntry(statsEntry);
     // Prefer the current season's club (post-transfer-window); fall back to
     // last season's if the player has no CLUB_SEASON entry yet.
-    let clubBest = bestClubEntry(clubSeasonEntry) ?? statsBest;
+    const clubSeasonBest = bestClubEntry(clubSeasonEntry);
+    let clubBest = clubSeasonBest ?? statsBest;
 
-    const latestTransfer = await fetchLatestTransferRecord(playerId);
-    if (latestTransfer?.teamIn && latestTransfer.teamIn.id !== clubBest?.team?.id) {
-      clubBest = { team: latestTransfer.teamIn, league: clubBest?.league, games: clubBest?.games };
+    // /transfers can lag /players season stats just as often as the other
+    // way around — confirmed live (Nicolas Jackson, id 283058, 2026-10-09):
+    // his CLUB_SEASON entry already showed 4 real Premier League
+    // appearances for Aston Villa, but /transfers' most recent record was
+    // still "Bayern München -> Chelsea" (his PREVIOUS move, back in June).
+    // Overriding with the transfer record here would have reverted a
+    // confirmed, played-games club back to a stale one. Real appearances
+    // in CLUB_SEASON for the club already found is strong enough evidence
+    // to skip the transfer check entirely — it only exists for the
+    // opposite case this was originally written for (a transfer
+    // confirmed, but the player hasn't appeared in a match for the new
+    // club yet, so CLUB_SEASON has nothing for them there — see
+    // fetchLatestTransferRecord's own comment).
+    const hasConfirmedCurrentClubAppearances = (clubSeasonBest?.games?.appearences ?? 0) > 0;
+    if (!hasConfirmedCurrentClubAppearances) {
+      const latestTransfer = await fetchLatestTransferRecord(playerId);
+      if (latestTransfer?.teamIn && latestTransfer.teamIn.id !== clubBest?.team?.id) {
+        clubBest = { team: latestTransfer.teamIn, league: clubBest?.league, games: clubBest?.games };
+      }
     }
 
     const source = statsEntry ?? clubSeasonEntry;
@@ -525,6 +577,8 @@ async function main() {
   const squadResults = [];
   outer: for (const nation of NATIONAL_TEAMS) {
     squadResults.push(...(await fetchNationalSquad(nation)));
+    squadResults.push(...(await fetchYouthSquad(nation.name, "U20")));
+    squadResults.push(...(await fetchYouthSquad(nation.name, "U23")));
     for (const season of CALL_UP_SEASONS) {
       try {
         squadResults.push(...(await fetchNationalCallUps(nation, season)));
