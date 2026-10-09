@@ -22,6 +22,14 @@ import { getQuizWeeklyLeaderboard } from "@/lib/data/quiz-leaderboard";
 // this is what keeps quota usage flat regardless of how many users favorite
 // things.
 export const dynamic = "force-dynamic";
+// Unset before — fell back to the platform default, which is short enough
+// that a busy day (several live African fixtures at once, each event
+// processed with a handful of sequential Supabase round-trips) could run
+// past it and have the scheduler report a timeout instead of a clean
+// response. 30s matches the actual worst case with headroom; raise it if
+// this route ever legitimately needs more (see fetch-news/route.ts's own
+// maxDuration for the same reasoning at a busier duration).
+export const maxDuration = 30;
 
 interface ClubPrefRow {
   device_id: string;
