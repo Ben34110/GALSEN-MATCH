@@ -285,6 +285,18 @@ function zeroStandingRow(team: ApiFixtureTeam): GroupStageStandingRow {
   };
 }
 
+// Points, then goal difference, then goals scored — the standard CAF/FIFA
+// group-stage tiebreak order. API-Football's own /standings response is
+// already rank-ordered this way in practice (confirmed by hand), but
+// nothing here enforced it — relying on that implicitly meant a future
+// API quirk, or the 0-point provisional fallback below (where every row
+// ties on everything until real results exist), could silently show two
+// same-points teams in the wrong order. Sorted explicitly instead of
+// trusted.
+function sortStandingRows(rows: GroupStageStandingRow[]): GroupStageStandingRow[] {
+  return [...rows].sort((a, b) => b.points - a.points || b.goalsDiff - a.goalsDiff || b.goalsFor - a.goalsFor);
+}
+
 export async function getGroupStageStandings(leagueId: number): Promise<GroupStageStandingsResult> {
   const season = await getLeagueCurrentSeason(leagueId);
   if (!season) return { groups: null, error: "Saison introuvable via API-Football.", isProvisional: false };
@@ -297,7 +309,7 @@ export async function getGroupStageStandings(leagueId: number): Promise<GroupSta
     return {
       groups: apiGroups
         .filter((group) => group.length > 0)
-        .map((group): GroupStageGroup => ({ groupLabel: group[0].group, rows: group.map(toStandingRow) }))
+        .map((group): GroupStageGroup => ({ groupLabel: group[0].group, rows: sortStandingRows(group.map(toStandingRow)) }))
         .sort((a, b) => a.groupLabel.localeCompare(b.groupLabel)),
       error: null,
       isProvisional: false,
@@ -313,7 +325,7 @@ export async function getGroupStageStandings(leagueId: number): Promise<GroupSta
   if (derivedGroups.length === 0) return { groups: null, error: fixturesError, isProvisional: false };
 
   return {
-    groups: derivedGroups.map((group) => ({ groupLabel: group.groupLabel, rows: group.teams.map(zeroStandingRow) })),
+    groups: derivedGroups.map((group) => ({ groupLabel: group.groupLabel, rows: sortStandingRows(group.teams.map(zeroStandingRow)) })),
     error: null,
     isProvisional: true,
   };
