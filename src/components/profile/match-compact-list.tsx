@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Goal, SportShoe } from "lucide-react";
+import { Volleyball, SportShoe } from "lucide-react";
 import { formatKickoff } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import type { Match, PlayerMatchEvent } from "@/types";
@@ -20,8 +20,11 @@ function MatchEventIcons({
   if (events.goals === 0 && events.assists === 0) return null;
   return (
     <div className="mt-1.5 flex items-center justify-center gap-1 border-t border-border pt-1.5">
+      {/* lucide-react has no dedicated football/soccer-ball icon — Volleyball
+          is the closest round-ball shape it ships, used as a stand-in
+          instead of the previous Goal icon (a goal-net, not a ball). */}
       {Array.from({ length: events.goals }).map((_, i) => (
-        <Goal key={`goal-${i}`} size={14} className="text-accent" aria-hidden />
+        <Volleyball key={`goal-${i}`} size={14} className="text-accent" aria-hidden />
       ))}
       {Array.from({ length: events.assists }).map((_, i) => (
         <SportShoe key={`assist-${i}`} size={14} className="text-accent-2" aria-hidden />
