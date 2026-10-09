@@ -1,0 +1,38 @@
+name: Sync FIFA ranking
+
+on:
+  schedule:
+    # Monthly — FIFA republishes its World Ranking roughly once a month
+    # (see scripts/sync-fifa-ranking.mjs's own header comment), and this
+    # had no automation at all until now: "re-run by hand" meant it simply
+    # didn't happen (confirmed: last update July 20, still showing that
+    # date in October). No API key, no quota cost — a plain HTML scrape of
+    # futbor.com — so there's no reason this couldn't run even more often,
+    # but monthly already covers every real FIFA update.
+    - cron: "0 8 1 * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: node scripts/sync-fifa-ranking.mjs
+      - name: Commit updated ranking if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- src/lib/data/generated/fifa-ranking.json; then
+            echo "No ranking changes."
+          else
+            git add src/lib/data/generated/fifa-ranking.json
+            git commit -m "chore: sync FIFA ranking"
+            git push
+          fi
