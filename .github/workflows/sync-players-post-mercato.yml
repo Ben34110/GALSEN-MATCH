@@ -1,0 +1,58 @@
+name: Sync players — post-mercato full refresh
+
+on:
+  schedule:
+    # A week after each major European transfer window closes (summer:
+    # Aug 31/Sept 1, winter: Jan 31) — not ON closing day, since
+    # API-Football's own /transfers endpoint can lag the real transfer by
+    # weeks (confirmed: a player's 2026-08-31 move still wasn't showing in
+    # /transfers over a month later, on Oct 9 — the actual fix for that
+    # specific gap is sync-african-players.mjs's fetchPlayerClubDetail
+    # preferring confirmed season-stat appearances over a possibly-stale
+    # transfer record, but a full pass right after the window still helps
+    # catch everything that DOES update promptly). The daily sync
+    # (sync-players.yml) only rotates ROTATION_BATCH_SIZE (200) players a
+    # day — at that pace, reaching every one of ~4000 tracked players after
+    # a transfer window takes weeks; this run instead re-verifies
+    # everyone in one go, right when transfer activity (and the odds of a
+    # stale club/league showing up) is highest. Scoped to the two
+    # standardized European windows, not the 54 CAF federations' own
+    # (much less uniform) transfer periods.
+    - cron: "0 7 7 9 *" # September 7
+    - cron: "0 7 7 2 *" # February 7
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: node scripts/sync-african-players.mjs
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          # Full-dataset rotation instead of the daily default (200) — see
+          # this file's schedule comment above for why.
+          SYNC_ROTATION_BATCH_SIZE: "6000"
+          SYNC_MAX_LIVE_REQUESTS: "20000"
+      - run: node scripts/sync-search-tables.mjs
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      - name: Commit updated player data if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- src/lib/data/generated/african-players.json; then
+            echo "No player data changes."
+          else
+            git add src/lib/data/generated/african-players.json
+            git commit -m "chore: post-mercato full player refresh"
+            git push
+          fi
