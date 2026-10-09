@@ -2,14 +2,21 @@ name: Sync African players
 
 on:
   schedule:
-    # Weekly, offset an hour from sync-mercato's every-3-days 06:00 UTC slot
-    # so the two rarely land in the exact same run even on days they
-    # coincide. ~54 national-squad calls + ~1 detail call per player (see
-    # scripts/sync-african-players.mjs) is comparable in cost to mercato's
-    # sync — weekly trades a little club-change staleness for quota
-    # headroom, same reasoning as mercato's cadence. Adjust the cron
-    # expression to change it.
-    - cron: "0 7 * * 0"
+    # Daily (was weekly) — moved up once sync-african-players.mjs started
+    # periodically re-verifying already-known players instead of only
+    # enumerating new call-ups (see that script's ROTATION_BATCH_SIZE):
+    # weekly meant any already-captured player's club/stats could go
+    # months without a re-check, which is what let the whole dataset
+    # silently freeze (confirmed: zero changes across 7 straight "success"
+    # weekly runs, Aug 16 - Oct 4 2026). Daily runs cycle the ~2885-player
+    # backlog through at ROTATION_BATCH_SIZE (200) players/day — about 2
+    # weeks for a full pass — while staying well under the account's
+    # 7500/day cap alongside poll/mercato (see that script's
+    # MAX_LIVE_REQUESTS comment for the budget math). Offset an hour from
+    # sync-mercato's 06:00 UTC slot so the two rarely land in the exact
+    # same run even on days they coincide. Adjust the cron expression to
+    # change it.
+    - cron: "0 7 * * *"
   workflow_dispatch: {}
 
 permissions:
@@ -30,7 +37,7 @@ jobs:
       # Re-seeds the players/teams Supabase tables that back global search
       # (see scripts/sync-search-tables.mjs) from the freshly-written JSON
       # above — no API-Football calls, just a Supabase upsert, so running
-      # it every week alongside the player sync costs nothing quota-wise.
+      # it every day alongside the player sync costs nothing quota-wise.
       - run: node scripts/sync-search-tables.mjs
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}

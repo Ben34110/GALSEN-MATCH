@@ -496,7 +496,7 @@ alter table user_profiles enable row level security;
 -- sheet never has to ship ~1.3MB of JSON to every visitor just to let them
 -- type a query. Written by scripts/sync-search-tables.mjs (run after
 -- sync:players/sync:teams regenerate those JSON files, and automatically
--- every week by .github/workflows/sync-players.yml) — never by request-time
+-- every day by .github/workflows/sync-players.yml) — never by request-time
 -- app code, and never from API-Football directly (this is a search index,
 -- not a live data source).
 --

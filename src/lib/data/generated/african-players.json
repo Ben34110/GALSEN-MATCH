@@ -14,7 +14,8 @@
     "leagueName": "Ligue 1",
     "appearances": 14,
     "goals": 0,
-    "assists": 0
+    "assists": 0,
+    "refreshedAt": "2026-10-09T07:57:52.317Z"
   },
   {
     "id": 304229,
@@ -31,7 +32,8 @@
     "leagueName": "Super League",
     "appearances": 0,
     "goals": 0,
-    "assists": 0
+    "assists": 0,
+    "refreshedAt": "2026-10-09T07:57:52.317Z"
   },
   {
     "id": 732,
@@ -48,7 +50,8 @@
     "leagueName": "Segunda División",
     "appearances": 26,
     "goals": 0,
-    "assists": 0
+    "assists": 0,
+    "refreshedAt": "2026-10-09T07:57:52.317Z"
   },
   {
     "id": 342740,
@@ -49043,5 +49046,41 @@
     "appearances": 30,
     "goals": 3,
     "assists": 3
+  },
+  {
+    "id": 344075,
+    "name": "L. Bern",
+    "firstname": "Liam",
+    "lastname": "Bern",
+    "age": 22,
+    "nationality": "South Africa",
+    "photo": "https://media.api-sports.io/football/players/344075.png",
+    "position": "Defender",
+    "teamId": 2669,
+    "teamName": "Amazulu",
+    "teamLogo": "https://media.api-sports.io/football/teams/2669.png",
+    "leagueName": "Premier Soccer League",
+    "appearances": 16,
+    "goals": 0,
+    "assists": 1,
+    "refreshedAt": "2026-10-09T07:57:52.317Z"
+  },
+  {
+    "id": 330170,
+    "name": "E. Mokwana",
+    "firstname": "Elias",
+    "lastname": "Mokwana",
+    "age": 26,
+    "nationality": "South Africa",
+    "photo": "https://media.api-sports.io/football/players/330170.png",
+    "position": "Attacker",
+    "teamId": 980,
+    "teamName": "ES Tunis",
+    "teamLogo": "https://media.api-sports.io/football/teams/980.png",
+    "leagueName": "Pro League",
+    "appearances": 24,
+    "goals": 1,
+    "assists": 2,
+    "refreshedAt": "2026-10-09T07:57:52.317Z"
   }
 ]

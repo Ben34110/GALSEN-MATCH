@@ -3,7 +3,7 @@
 // committed src/lib/data/generated/*.json files — no API-Football calls at
 // all, this only pushes data that sync-african-players.mjs/sync-teams.mjs
 // already fetched. Run manually after either of those (`npm run
-// sync:search-tables`), or automatically every week right after
+// sync:search-tables`), or automatically every day right after
 // sync-african-players.mjs in .github/workflows/sync-players.yml.
 //
 // search_text duplicates lib/utils.ts's normalizeForSearch (accent-stripped,

@@ -31,13 +31,17 @@
 // requests (every new candidate needs the same ~3-call detail fetch as
 // before) — far more than fits in one day of this app's own API quota
 // alongside its live cron traffic. Every run loads whatever's already in
-// african-players.json and treats those entries as already-resolved (never
-// re-fetched, never lost) — only genuinely new candidates get detail-
-// fetched, up to MAX_LIVE_REQUESTS live (non-cached) requests, after which
-// the run stops cleanly and writes out everything resolved so far. Re-run
-// on a later day (once quota resets) to keep making progress; the on-disk
-// response cache (.cache/api-football/) also means anything already fetched
-// this run is free to re-read even mid-development.
+// african-players.json; a new candidate always gets detail-fetched, and an
+// already-known player gets periodically RE-fetched too (see
+// ROTATION_BATCH_SIZE below — not "never re-fetched" as the original
+// version of this comment said, which is exactly why club/stats used to
+// silently go stale forever for anyone already captured). Both are capped
+// by the same MAX_LIVE_REQUESTS live (non-cached) request budget, after
+// which the run stops cleanly and writes out everything resolved so far —
+// re-run (or just wait for tomorrow's scheduled run, see
+// .github/workflows/sync-players.yml) once quota resets to keep making
+// progress; the on-disk response cache (.cache/api-football/) also means
+// anything already fetched this run is free to re-read even mid-development.
 //
 // Run with: node scripts/sync-african-players.mjs
 // Reads API_FOOTBALL_KEY from .env.local (parsed manually — this script
@@ -247,9 +251,30 @@ mkdirSync(CACHE_DIR, { recursive: true });
 // known to be larger/smaller than the conservative default. Checked inside
 // apiGet, before each live fetch; cache hits are never throttled or
 // counted against this, so a mostly-cached re-run stays fast and free.
-const MAX_LIVE_REQUESTS = Number(process.env.SYNC_MAX_LIVE_REQUESTS ?? 600);
+//
+// Raised from 600 once this ran daily (see .github/workflows/sync-players.yml)
+// and started also re-verifying already-known players (ROTATION_BATCH_SIZE
+// below) rather than just enumerating new call-ups: enumeration alone costs
+// ~216 requests (54 nations x ~4 calls), leaving headroom for the rotation
+// batch (200 players x 3 calls = 600) plus new candidates, while staying
+// well clear of the 7500/day account-wide cap shared with poll/mercato.
+const MAX_LIVE_REQUESTS = Number(process.env.SYNC_MAX_LIVE_REQUESTS ?? 1300);
 let liveRequestCount = 0;
 let stoppedOnBudget = false;
+
+// Counters this script's pre-existing design never needed: every candidate
+// used to be brand-new (resumable, but never REVISITED — see this file's
+// opening comment). Once already-known players also get periodically
+// re-verified (the rotation batch below), a transfer window, a change of
+// club, or updated season stats for someone already in the dataset can
+// actually surface instead of being frozen at whatever was true on their
+// first capture. refreshedAt (ISO date, set on every candidate written —
+// new or rotated) is what ranks "who's most overdue" for next run: an entry
+// with no refreshedAt at all (every one of the 2885 players captured before
+// this existed) sorts first, so the whole backlog works through oldest-
+// first once this ships, then settles into a steady ~2-week full-dataset
+// cycle at the batch size below.
+const ROTATION_BATCH_SIZE = Number(process.env.SYNC_ROTATION_BATCH_SIZE ?? 200);
 
 async function apiGet(pathname, params) {
   const cacheKey = `${pathname.replace(/\//g, "_")}_${Object.entries(params)
@@ -442,6 +467,31 @@ async function fetchPlayerClubDetail(playerId) {
   }
 }
 
+// Shared by both the new-candidate path and the rotation-refresh path below
+// — same fields either way, the only difference is whether `candidate` came
+// from this run's squad/call-up enumeration or from an existing entry being
+// re-verified.
+function buildPlayerRecord(candidate, detail, now) {
+  return {
+    id: candidate.id,
+    name: candidate.name,
+    firstname: detail.firstname,
+    lastname: detail.lastname,
+    age: detail.age ?? candidate.age,
+    nationality: candidate.nationality,
+    photo: candidate.photo,
+    position: POSITION_OVERRIDES[candidate.id] ?? detail.position ?? candidate.position,
+    teamId: detail.teamId,
+    teamName: detail.teamName,
+    teamLogo: detail.teamLogo,
+    leagueName: detail.leagueName ?? "Sélection nationale",
+    appearances: detail.appearances ?? 0,
+    goals: detail.goals ?? 0,
+    assists: detail.assists ?? 0,
+    refreshedAt: now,
+  };
+}
+
 async function main() {
   const outDir = path.join(ROOT, "src/lib/data/generated");
   mkdirSync(outDir, { recursive: true });
@@ -491,33 +541,47 @@ async function main() {
   const toFetch = uniqueCandidates.filter((p) => !existingById.has(p.id));
   console.log(`${uniqueCandidates.length} unique candidates total — ${existingById.size} already resolved, ${toFetch.length} need fetching this run.`);
 
+  const now = new Date().toISOString();
+
   let done = 0;
   const newlyDetailed = await runPool(toFetch, 2, async (player) => {
     const detail = await fetchPlayerClubDetail(player.id);
     done += 1;
     if (done % 50 === 0) console.log(`  ...${done}/${toFetch.length} (${liveRequestCount}/${MAX_LIVE_REQUESTS} live requests used)`);
     if (!detail) return null; // failed, or budget-exhausted — stays missing for the next run
-    return {
-      id: player.id,
-      name: player.name,
-      firstname: detail.firstname,
-      lastname: detail.lastname,
-      age: detail.age ?? player.age,
-      nationality: player.nationality,
-      photo: player.photo,
-      position: POSITION_OVERRIDES[player.id] ?? detail.position ?? player.position,
-      teamId: detail.teamId,
-      teamName: detail.teamName,
-      teamLogo: detail.teamLogo,
-      leagueName: detail.leagueName ?? "Sélection nationale",
-      appearances: detail.appearances ?? 0,
-      goals: detail.goals ?? 0,
-      assists: detail.assists ?? 0,
-    };
+    return buildPlayerRecord(player, detail, now);
   });
 
   const resolvedThisRun = newlyDetailed.filter(Boolean);
-  const merged = [...existing, ...resolvedThisRun];
+
+  // Re-verify a bounded batch of already-known players, oldest-refreshed
+  // first (no refreshedAt at all — every entry from before this existed —
+  // sorts first, so the pre-existing 2885-player backlog works through in
+  // refreshedAt order once this ships). This is what actually catches a
+  // transfer or updated season stats for someone already in the dataset —
+  // see this file's MAX_LIVE_REQUESTS comment for why ROTATION_BATCH_SIZE
+  // is sized the way it is.
+  const rotationCandidates = [...existing]
+    .sort((a, b) => (a.refreshedAt ?? "").localeCompare(b.refreshedAt ?? ""))
+    .slice(0, ROTATION_BATCH_SIZE);
+
+  let rotationDone = 0;
+  const rotationUpdates = await runPool(rotationCandidates, 2, async (player) => {
+    const detail = await fetchPlayerClubDetail(player.id);
+    rotationDone += 1;
+    if (rotationDone % 50 === 0) {
+      console.log(`  ...rotation ${rotationDone}/${rotationCandidates.length} (${liveRequestCount}/${MAX_LIVE_REQUESTS} live requests used)`);
+    }
+    // Budget ran out, or a transient per-player failure — leave refreshedAt
+    // untouched so this player stays at the front of next run's rotation
+    // instead of silently losing their place in the queue.
+    if (!detail) return null;
+    return buildPlayerRecord(player, detail, now);
+  });
+  const rotationUpdatesById = new Map(rotationUpdates.filter(Boolean).map((p) => [p.id, p]));
+  const rotatedCount = rotationUpdatesById.size;
+
+  const merged = [...existing.map((p) => rotationUpdatesById.get(p.id) ?? p), ...resolvedThisRun];
 
   const byNationality = {};
   for (const p of merged) byNationality[p.nationality] = (byNationality[p.nationality] ?? 0) + 1;
@@ -528,7 +592,9 @@ async function main() {
 
   writeFileSync(outPath, JSON.stringify(merged, null, 2));
   const stillPending = toFetch.length - resolvedThisRun.length;
-  console.log(`\nWrote ${merged.length} players to ${path.relative(ROOT, outPath)} (was ${existing.length}, +${resolvedThisRun.length} new this run).`);
+  console.log(
+    `\nWrote ${merged.length} players to ${path.relative(ROOT, outPath)} (was ${existing.length}, +${resolvedThisRun.length} new, ${rotatedCount}/${rotationCandidates.length} re-verified this run).`
+  );
   if (stillPending > 0 || stoppedOnBudget) {
     console.log(`${stillPending} candidates still pending — re-run (ideally on a later day, once quota resets) to keep going.`);
   }
