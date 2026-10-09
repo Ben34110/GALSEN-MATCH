@@ -1,21 +1,58 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { getNationalityFlag } from "@/lib/data/nationality-flags";
-import { searchGlobal } from "@/lib/data/global-search";
+import { searchGlobalAction } from "@/app/actions/search";
+import type { GlobalSearchResult } from "@/lib/data/global-search";
+
+// Searches via a Server Action (searchGlobalAction) instead of a local
+// array filter — the player/team datasets and the Supabase client both stay
+// server-side, so this component never ships the ~1.3MB player dataset to
+// the browser and never gets a path to call API-Football on a keystroke.
+// Debounced by hand (no shared hook exists yet for this) so fast typing
+// doesn't fire one request per keystroke.
+const SEARCH_DEBOUNCE_MS = 250;
 
 export function GlobalSearchSheet({ onClose }: { onClose: () => void }) {
   const t = useTranslations("search.bar");
   const [query, setQuery] = useState("");
+  const [results, setResults] = useState<GlobalSearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const pathname = usePathname();
   const from = `?from=${encodeURIComponent(pathname)}`;
 
-  const results = useMemo(() => searchGlobal(query), [query]);
+  useEffect(() => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      setIsSearching(true);
+      searchGlobalAction(trimmed).then((found) => {
+        if (!cancelled) {
+          setResults(found);
+          setIsSearching(false);
+        }
+      });
+    }, SEARCH_DEBOUNCE_MS);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [query]);
+
+  // Stale results from a previous, longer query are never shown once the
+  // field is cleared or shortened back down to empty — computed at render
+  // time instead of resetting `results` synchronously inside the effect
+  // above (which would cascade a render on every keystroke, including the
+  // ones that get debounced away).
+  const visibleResults = query.trim() ? results : [];
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-background">
@@ -47,12 +84,12 @@ export function GlobalSearchSheet({ onClose }: { onClose: () => void }) {
       <div className="flex-1 overflow-y-auto px-4 pb-[calc(1.5rem+var(--safe-bottom))]">
         {query.trim() === "" && <p className="py-10 text-center text-sm text-muted">{t("prompt")}</p>}
 
-        {query.trim() !== "" && results.length === 0 && (
+        {query.trim() !== "" && !isSearching && visibleResults.length === 0 && (
           <p className="py-10 text-center text-sm text-muted">{t("noResults", { query: query.trim() })}</p>
         )}
 
         <div className="flex flex-col gap-1.5">
-          {results.map((result) =>
+          {visibleResults.map((result) =>
             result.kind === "player" ? (
               <Link
                 key={`player-${result.player.id}`}

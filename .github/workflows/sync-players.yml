@@ -27,6 +27,14 @@ jobs:
       - run: node scripts/sync-african-players.mjs
         env:
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+      # Re-seeds the players/teams Supabase tables that back global search
+      # (see scripts/sync-search-tables.mjs) from the freshly-written JSON
+      # above — no API-Football calls, just a Supabase upsert, so running
+      # it every week alongside the player sync costs nothing quota-wise.
+      - run: node scripts/sync-search-tables.mjs
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       # Unlike sync-mercato.mjs (writes straight to Supabase), this script's
       # output is the static src/lib/data/generated/african-players.json
       # file the app imports at build time — nothing changes for the

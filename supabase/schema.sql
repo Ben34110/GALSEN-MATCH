@@ -11,6 +11,7 @@
 -- something new is added, every statement here is idempotent.
 
 create extension if not exists "pgcrypto";
+create extension if not exists "pg_trgm";
 
 -- One row per subscribed browser/device. A device can have at most one
 -- active subscription (re-subscribing replaces it via upsert on device_id)
@@ -487,4 +488,60 @@ alter table ballon_dor_predictions enable row level security;
 alter table mercato_transfers enable row level security;
 alter table chat_messages enable row level security;
 alter table user_profiles enable row level security;
+
+-- Global search's backing store (see lib/data/global-search.ts and
+-- app/actions/search.ts) — a read replica of the pre-crawled
+-- lib/data/generated/african-players.json and generated/teams.json, kept in
+-- Supabase instead of only in the Next.js bundle so a "use client" search
+-- sheet never has to ship ~1.3MB of JSON to every visitor just to let them
+-- type a query. Written by scripts/sync-search-tables.mjs (run after
+-- sync:players/sync:teams regenerate those JSON files, and automatically
+-- every week by .github/workflows/sync-players.yml) — never by request-time
+-- app code, and never from API-Football directly (this is a search index,
+-- not a live data source).
+--
+-- search_text is precomputed in JS at seed time using the exact same
+-- accent-stripping/lowercasing lib/utils.ts's normalizeForSearch already
+-- does for the previous client-side filter, so query behavior (e.g. "diaz"
+-- matching "Díaz") is unchanged — just moved server-side. A trigram GIN
+-- index lets `ilike '%token%'` (substring-anywhere, not just prefix) stay
+-- fast at this row count instead of a full sequential scan per keystroke.
+create table if not exists players (
+  id bigint primary key,
+  name text not null,
+  firstname text,
+  lastname text,
+  age integer,
+  nationality text not null,
+  photo text not null,
+  position text,
+  team_id bigint,
+  team_name text,
+  team_logo text,
+  league_name text not null,
+  appearances integer not null default 0,
+  goals integer not null default 0,
+  assists integer not null default 0,
+  search_text text not null
+);
+create index if not exists players_search_trgm_idx on players using gin (search_text gin_trgm_ops);
+
+create table if not exists teams (
+  id bigint primary key,
+  name text not null,
+  logo text not null,
+  country text not null,
+  league_id integer not null,
+  league_name text not null,
+  type text not null check (type in ('club', 'national')),
+  search_text text not null
+);
+create index if not exists teams_search_trgm_idx on teams using gin (search_text gin_trgm_ops);
+
+-- Read-only from the app's perspective (service_role bypasses RLS for the
+-- writer script same as every other table here); enabled for consistency
+-- with the rest of this schema, not because any client ever queries these
+-- directly.
+alter table players enable row level security;
+alter table teams enable row level security;
 alter table device_secrets enable row level security;

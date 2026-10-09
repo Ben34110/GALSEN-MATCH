@@ -11,6 +11,7 @@
     "sync:teams": "node scripts/sync-teams.mjs",
     "sync:fifa-ranking": "node scripts/sync-fifa-ranking.mjs",
     "sync:mercato": "node scripts/sync-mercato.mjs",
+    "sync:search-tables": "node scripts/sync-search-tables.mjs",
     "ios:sync": "cap sync ios",
     "ios:open": "cap open ios"
   },
