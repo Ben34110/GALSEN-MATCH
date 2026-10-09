@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MatchCompactList } from "@/components/profile/match-compact-list";
+import { PlayerFavoriteButton } from "@/components/profile/player-favorite-button";
 import { getNationalityFlag } from "@/lib/data/nationality-flags";
 import { positionCode } from "@/lib/data/african-players";
 import { formatDate } from "@/lib/utils";
@@ -127,6 +128,7 @@ export function PlayerProfileView({ player, backHref }: { player: PlayerDetail; 
             </div>
           )}
         </div>
+        <PlayerFavoriteButton playerId={player.id} playerName={player.name} />
       </Card>
 
       <div className="mb-6">

@@ -34,6 +34,14 @@
       "D": "Defender",
       "M": "Midfielder",
       "A": "Forward"
+    },
+    "favorite": {
+      "add": "Add {name} to my favorite players",
+      "manage": "Manage notifications for {name}",
+      "panelTitle": "Notifications for {name}",
+      "limitReached": "You already have 3 favorite players. Manage them from your profile.",
+      "close": "Close",
+      "removeFavorite": "Remove from favorites"
     }
   },
   "team": {

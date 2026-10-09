@@ -34,6 +34,14 @@
       "D": "Défenseur",
       "M": "Milieu",
       "A": "Attaquant"
+    },
+    "favorite": {
+      "add": "Ajouter {name} à mes joueurs favoris",
+      "manage": "Gérer les notifications pour {name}",
+      "panelTitle": "Notifications pour {name}",
+      "limitReached": "Vous avez déjà 3 joueurs favoris. Gérez-les depuis votre profil.",
+      "close": "Fermer",
+      "removeFavorite": "Retirer des favoris"
     }
   },
   "team": {
