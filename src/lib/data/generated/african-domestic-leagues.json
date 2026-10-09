@@ -1,0 +1,314 @@
+[
+  {
+    "country": "Angola",
+    "status": "OK",
+    "leagueId": 397,
+    "leagueName": "Girabola",
+    "season": 2026,
+    "teamCount": 16,
+    "ambiguous": false
+  },
+  {
+    "country": "Benin",
+    "status": "OK",
+    "leagueId": 415,
+    "leagueName": "Championnat National",
+    "season": 2026,
+    "teamCount": 18,
+    "ambiguous": false
+  },
+  {
+    "country": "Botswana",
+    "status": "OK",
+    "leagueId": 412,
+    "leagueName": "Premier League",
+    "season": 2026,
+    "teamCount": 16,
+    "ambiguous": false
+  },
+  {
+    "country": "Burkina Faso",
+    "status": "NO_CURRENT_LEAGUE"
+  },
+  {
+    "country": "Burundi",
+    "status": "OK",
+    "leagueId": 566,
+    "leagueName": "Ligue A",
+    "season": 2026,
+    "teamCount": 16,
+    "ambiguous": false
+  },
+  {
+    "country": "Cameroon",
+    "status": "OK",
+    "leagueId": 411,
+    "leagueName": "Elite One",
+    "season": 2026
+  },
+  {
+    "country": "Cape Verde",
+    "status": "NO_CURRENT_LEAGUE"
+  },
+  {
+    "country": "Central African Republic",
+    "status": "NO_CURRENT_LEAGUE"
+  },
+  {
+    "country": "Chad",
+    "status": "NO_CURRENT_LEAGUE"
+  },
+  {
+    "country": "Comoros",
+    "status": "NO_CURRENT_LEAGUE"
+  },
+  {
+    "country": "DR Congo",
+    "status": "NO_CURRENT_LEAGUE"
+  },
+  {
+    "country": "Congo",
+    "status": "OK",
+    "leagueId": 844,
+    "leagueName": "Ligue 1",
+    "season": 2025,
+    "teamCount": 16,
+    "ambiguous": false
+  },
+  {
+    "country": "Djibouti",
+    "status": "NO_CURRENT_LEAGUE"
+  },
+  {
+    "country": "Equatorial Guinea",
+    "status": "NO_CURRENT_LEAGUE"
+  },
+  {
+    "country": "Eritrea",
+    "status": "NO_CURRENT_LEAGUE"
+  },
+  {
+    "country": "Eswatini",
+    "status": "OK",
+    "leagueId": 847,
+    "leagueName": "Premier League",
+    "season": 2026,
+    "teamCount": 16,
+    "ambiguous": false
+  },
+  {
+    "country": "Ethiopia",
+    "status": "OK",
+    "leagueId": 363,
+    "leagueName": "Premier League",
+    "season": 2026,
+    "teamCount": 18,
+    "ambiguous": false
+  },
+  {
+    "country": "Gabon",
+    "status": "OK",
+    "leagueId": 968,
+    "leagueName": "Championnat D1",
+    "season": 2026,
+    "teamCount": 14,
+    "ambiguous": false
+  },
+  {
+    "country": "Gambia",
+    "status": "OK",
+    "leagueId": 845,
+    "leagueName": "GFA League",
+    "season": 2025,
+    "teamCount": 16,
+    "ambiguous": false
+  },
+  {
+    "country": "Guinea",
+    "status": "OK",
+    "leagueId": 378,
+    "leagueName": "Ligue 1",
+    "season": 2025,
+    "teamCount": 14,
+    "ambiguous": false
+  },
+  {
+    "country": "Guinea-Bissau",
+    "status": "NO_CURRENT_LEAGUE"
+  },
+  {
+    "country": "Kenya",
+    "status": "OK",
+    "leagueId": 277,
+    "leagueName": "Super League",
+    "season": 2025
+  },
+  {
+    "country": "Lesotho",
+    "status": "OK",
+    "leagueId": 962,
+    "leagueName": "Premier League",
+    "season": 2026,
+    "teamCount": 16,
+    "ambiguous": false
+  },
+  {
+    "country": "Liberia",
+    "status": "OK",
+    "leagueId": 760,
+    "leagueName": "LFA First Division",
+    "season": 2025,
+    "teamCount": 15,
+    "ambiguous": false
+  },
+  {
+    "country": "Libya",
+    "status": "OK",
+    "leagueId": 584,
+    "leagueName": "Premier League",
+    "season": 2025,
+    "teamCount": 36,
+    "ambiguous": false
+  },
+  {
+    "country": "Madagascar",
+    "status": "NO_CURRENT_LEAGUE"
+  },
+  {
+    "country": "Malawi",
+    "status": "OK",
+    "leagueId": 391,
+    "leagueName": "Super League",
+    "season": 2026,
+    "teamCount": 16,
+    "ambiguous": false
+  },
+  {
+    "country": "Mali",
+    "status": "OK",
+    "leagueId": 598,
+    "leagueName": "Première Division",
+    "season": 2025,
+    "teamCount": 14,
+    "ambiguous": false
+  },
+  {
+    "country": "Mauritania",
+    "status": "OK",
+    "leagueId": 762,
+    "leagueName": "Premier League",
+    "season": 2025,
+    "teamCount": 14,
+    "ambiguous": false
+  },
+  {
+    "country": "Mauritius",
+    "status": "OK",
+    "leagueId": 763,
+    "leagueName": "Mauritian League",
+    "season": 2024,
+    "teamCount": 10,
+    "ambiguous": false
+  },
+  {
+    "country": "Mozambique",
+    "status": "NO_CURRENT_LEAGUE"
+  },
+  {
+    "country": "Namibia",
+    "status": "OK",
+    "leagueId": 409,
+    "leagueName": "Premier League",
+    "season": 2018,
+    "teamCount": 16,
+    "ambiguous": false
+  },
+  {
+    "country": "Niger",
+    "status": "NO_CURRENT_LEAGUE"
+  },
+  {
+    "country": "Rwanda",
+    "status": "OK",
+    "leagueId": 405,
+    "leagueName": "National Soccer League",
+    "season": 2026,
+    "teamCount": 18,
+    "ambiguous": false
+  },
+  {
+    "country": "Seychelles",
+    "status": "NO_CURRENT_LEAGUE"
+  },
+  {
+    "country": "Sierra Leone",
+    "status": "NO_CURRENT_LEAGUE"
+  },
+  {
+    "country": "Somalia",
+    "status": "OK",
+    "leagueId": 846,
+    "leagueName": "Somali Premier League",
+    "season": 2024,
+    "teamCount": 12,
+    "ambiguous": false
+  },
+  {
+    "country": "South Sudan",
+    "status": "NO_CURRENT_LEAGUE"
+  },
+  {
+    "country": "Sudan",
+    "status": "OK",
+    "leagueId": 402,
+    "leagueName": "Sudani Premier League",
+    "season": 2026,
+    "teamCount": 24,
+    "ambiguous": false
+  },
+  {
+    "country": "Tanzania",
+    "status": "OK",
+    "leagueId": 567,
+    "leagueName": "Ligi kuu Bara",
+    "season": 2026,
+    "teamCount": 16,
+    "ambiguous": false
+  },
+  {
+    "country": "Togo",
+    "status": "OK",
+    "leagueId": 1084,
+    "leagueName": "Championnat National",
+    "season": 2024,
+    "teamCount": 14,
+    "ambiguous": false
+  },
+  {
+    "country": "Uganda",
+    "status": "OK",
+    "leagueId": 585,
+    "leagueName": "Premier League",
+    "season": 2026,
+    "teamCount": 18,
+    "ambiguous": false
+  },
+  {
+    "country": "Zambia",
+    "status": "OK",
+    "leagueId": 400,
+    "leagueName": "Super League",
+    "season": 2026,
+    "teamCount": 20,
+    "ambiguous": false
+  },
+  {
+    "country": "Zimbabwe",
+    "status": "OK",
+    "leagueId": 401,
+    "leagueName": "Premier Soccer League",
+    "season": 2026,
+    "teamCount": 18,
+    "ambiguous": false
+  }
+]

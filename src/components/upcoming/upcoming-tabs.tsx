@@ -7,9 +7,11 @@ import { FifaRankingSection } from "@/components/upcoming/fifa-ranking-section";
 import { CanQualifiersSection } from "@/components/upcoming/can-qualifiers-section";
 import { U17WorldCupSection } from "@/components/upcoming/u17-world-cup-section";
 import { UpcomingEventsView } from "@/components/upcoming/upcoming-events-view";
-import type { FifaRankingRow } from "@/types";
+import { AfricanLeaguesSection } from "@/components/upcoming/african-leagues-section";
+import type { FifaRankingRow, DomesticClub } from "@/types";
 import type { CanQualifierFixture, CanQualifierGroup } from "@/lib/data/can-qualifiers";
 import type { U17WorldCupFixture, U17WorldCupGroup } from "@/lib/data/u17-world-cup";
+import type { DomesticLeagueSummary } from "@/lib/data/domestic-leagues";
 
 interface UpcomingTabsProps {
   fifaRanking: { rows: FifaRankingRow[]; rankingDate: string };
@@ -23,6 +25,8 @@ interface UpcomingTabsProps {
   u17Groups: U17WorldCupGroup[] | null;
   u17GroupsError: string | null;
   u17GroupsProvisional: boolean;
+  africanLeagues: DomesticLeagueSummary[];
+  africanClubsByCountry: Record<string, DomesticClub[]>;
 }
 
 // Top-level tab switcher for the Matchs page — CAN 2027 and the U17 World
@@ -42,6 +46,8 @@ export function UpcomingTabs({
   u17Groups,
   u17GroupsError,
   u17GroupsProvisional,
+  africanLeagues,
+  africanClubsByCountry,
 }: UpcomingTabsProps) {
   const t = useTranslations("upcoming.tabs");
   const [tab, setTab] = useState<string>("can");
@@ -50,6 +56,7 @@ export function UpcomingTabs({
     { id: "u17", label: t("u17") },
     { id: "fifa", label: t("fifa") },
     { id: "events", label: t("events") },
+    { id: "africa", label: t("africa") },
   ];
 
   return (
@@ -82,6 +89,7 @@ export function UpcomingTabs({
       )}
       {tab === "fifa" && <FifaRankingSection rows={fifaRanking.rows} rankingDate={fifaRanking.rankingDate} />}
       {tab === "events" && <UpcomingEventsView />}
+      {tab === "africa" && <AfricanLeaguesSection leagues={africanLeagues} clubsByCountry={africanClubsByCountry} />}
     </div>
   );
 }

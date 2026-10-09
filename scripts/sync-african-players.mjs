@@ -15,9 +15,10 @@
 // André Onana, Vincent Aboubakar, and André Zambo Anguissa for Cameroon —
 // the squad-list endpoint for that team returned only 25 mostly-fringe
 // players. This version additionally enumerates /players?team=<nation>
-// &season=<year> across the last 3 seasons (CALL_UP_SEASONS below), which
-// returns anyone with a real recorded statistics entry for that national
-// team — an actual call-up, not a point-in-time roster guess. That raw
+// &season=<year> across the last 8 seasons (CALL_UP_SEASONS below, widened
+// from 3 once the API quota allowed it), which returns anyone with a real
+// recorded statistics entry for that national team — an actual call-up, not
+// a point-in-time roster guess. That raw
 // endpoint has its own real (if less common) data-quality issue — a handful
 // of entries get cross-tagged with a foreign domestic league under the
 // national team's id (e.g. a Costa Rican player's stats block showing
@@ -254,11 +255,16 @@ mkdirSync(CACHE_DIR, { recursive: true });
 //
 // Raised from 600 once this ran daily (see .github/workflows/sync-players.yml)
 // and started also re-verifying already-known players (ROTATION_BATCH_SIZE
-// below) rather than just enumerating new call-ups: enumeration alone costs
-// ~216 requests (54 nations x ~4 calls), leaving headroom for the rotation
-// batch (200 players x 3 calls = 600) plus new candidates, while staying
-// well clear of the 7500/day account-wide cap shared with poll/mercato.
-const MAX_LIVE_REQUESTS = Number(process.env.SYNC_MAX_LIVE_REQUESTS ?? 1300);
+// below) rather than just enumerating new call-ups, then raised again
+// (1300 -> 6000) once the account moved to a 75,000/day API-Football plan
+// and CALL_UP_SEASONS widened from 3 to 8 seasons: enumeration alone now
+// costs ~500-650 requests (54 nations x ~9-12 calls across 8 seasons),
+// leaving headroom for the rotation batch (200 players x 3 calls = 600)
+// plus a large batch of new candidates — the deeper season history
+// surfaces many more previously-invisible dual-nationals on the first few
+// runs after this widened. Still well clear of the account-wide daily cap
+// shared with poll/mercato/the new domestic-leagues sync scripts.
+const MAX_LIVE_REQUESTS = Number(process.env.SYNC_MAX_LIVE_REQUESTS ?? 6000);
 let liveRequestCount = 0;
 let stoppedOnBudget = false;
 
@@ -347,11 +353,15 @@ async function fetchNationalSquad(nation) {
   }
 }
 
-// "Depuis 3 saisons" — the last 3 completed seasons. 2026 is excluded (only
-// just started this early in the year — see fetchPlayerClubDetail's own
-// CLUB_SEASON, which still separately picks up anyone who's already played
-// in it for club purposes).
-const CALL_UP_SEASONS = [2025, 2024, 2023];
+// "Depuis 8 saisons" (was 3) — widened to catch dual-nationals who were
+// capped further in the past but haven't played for the nation recently
+// (a player who switched allegiance years ago, or whose last call-up
+// predates the old 3-season window, was invisible to this script before —
+// enumeration-only cost, no detail-fetch budget impact until a genuinely
+// new id turns up). 2026 is excluded (only just started this early in the
+// year — see fetchPlayerClubDetail's own CLUB_SEASON, which still
+// separately picks up anyone who's already played in it for club purposes).
+const CALL_UP_SEASONS = [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018];
 
 // The real-call-ups counterpart to fetchNationalSquad above — see this
 // file's opening comment for why both sources are needed and how the
@@ -456,6 +466,7 @@ async function fetchPlayerClubDetail(playerId) {
       teamId: clubBest?.team?.id ?? null,
       teamName: clubBest?.team?.name ?? null,
       teamLogo: clubBest?.team?.logo ?? null,
+      leagueId: clubBest?.league?.id ?? null,
       leagueName: clubBest?.league?.name ?? null,
       appearances: statsBest?.games?.appearences ?? 0,
       goals: statsBest?.goals?.total ?? 0,
@@ -484,6 +495,7 @@ function buildPlayerRecord(candidate, detail, now) {
     teamId: detail.teamId,
     teamName: detail.teamName,
     teamLogo: detail.teamLogo,
+    leagueId: detail.leagueId ?? null,
     leagueName: detail.leagueName ?? "Sélection nationale",
     appearances: detail.appearances ?? 0,
     goals: detail.goals ?? 0,

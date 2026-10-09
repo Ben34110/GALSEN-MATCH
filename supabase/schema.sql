@@ -526,6 +526,16 @@ create table if not exists players (
 );
 create index if not exists players_search_trgm_idx on players using gin (search_text gin_trgm_ops);
 
+-- 'international' (written by scripts/sync-search-tables.mjs, mirroring
+-- lib/data/generated/african-players.json) or 'domestic' (written by
+-- scripts/sync-domestic-players.mjs, for African-nationality players in
+-- the static-tier domestic leagues who've never been capped). Not used by
+-- any app-facing query today — exists so sync-domestic-players.mjs can
+-- tell "already resolved by me" apart from "resolved by the international
+-- sync, never overwrite" without reading the full generated JSON on every
+-- run, and for debugging which pipeline a given row came from.
+alter table players add column if not exists source text;
+
 create table if not exists teams (
   id bigint primary key,
   name text not null,

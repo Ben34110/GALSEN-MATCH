@@ -8,6 +8,7 @@ import { cn, formatKickoff } from "@/lib/utils";
 import { fetchTeamUpcomingMatches, fetchPlayerJourneeRating } from "@/app/(app)/live/actions";
 import { getNationalityFlag } from "@/lib/data/nationality-flags";
 import { positionCode } from "@/lib/data/african-players";
+import { hasRatingsCoverage } from "@/lib/data/ratings-coverage";
 import { FORMATION_SEATS, type SeatDef, type SeatId } from "@/lib/fantasy-formation";
 import { getJourneeWeekRange } from "@/lib/fantasy-gameweek";
 import { ratingColor } from "@/lib/rating-color";
@@ -494,10 +495,17 @@ export function PitchView({ pool, seats, captainId, editable, journee, onAssign,
           candidates={pool.filter((p) => {
             if (positionCode(p.position) !== pickerSeat.position) return false;
             const id = String(p.id);
+            // Already-seated players stay visible regardless of ratings
+            // coverage (a pick made before this restriction existed, or
+            // while their club was still unresolved, shouldn't vanish from
+            // their own seat) — the coverage check below only gates NEW
+            // picks, same as the filledPlayerIds exception right after it.
+            if (id === seats[pickerSeat.id]) return true;
+            if (!hasRatingsCoverage(p.leagueId)) return false;
             // Available for this seat unless already sitting in a *different*
             // seat — the player currently in *this* seat still needs to show
             // up (highlighted) so re-opening the picker doesn't hide them.
-            return id === seats[pickerSeat.id] || !filledPlayerIds.includes(id);
+            return !filledPlayerIds.includes(id);
           })}
           onPick={(player) => {
             onAssign?.(pickerSeat.id, String(player.id));

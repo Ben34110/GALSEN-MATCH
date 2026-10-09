@@ -85,6 +85,7 @@ async function main() {
     appearances: p.appearances,
     goals: p.goals,
     assists: p.assists,
+    source: "international",
     search_text: normalizeForSearch([p.name, p.firstname, p.lastname, p.nationality, p.teamName].filter(Boolean).join(" ")),
   }));
 

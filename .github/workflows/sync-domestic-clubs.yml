@@ -1,0 +1,44 @@
+name: Sync African domestic clubs
+
+on:
+  schedule:
+    # Weekly — club/league membership barely changes week to week (unlike
+    # player call-ups or transfers), so there's no reason to run this daily
+    # like sync-players.yml. Re-runs discover-african-leagues.mjs first
+    # since a league's current season can roll over, or a previously-
+    # untracked federation can gain coverage, between runs.
+    - cron: "0 8 * * 0"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: node scripts/discover-african-leagues.mjs
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+      - run: node scripts/sync-african-domestic-clubs.mjs
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+      # Same pattern as sync-players.yml — these are static JSON files the
+      # app imports at build time, so nothing changes for the deployed app
+      # until committed, which is what triggers Vercel's auto-deploy.
+      - name: Commit updated domestic league/club data if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- src/lib/data/generated/african-domestic-leagues.json src/lib/data/generated/african-domestic-clubs.json; then
+            echo "No domestic league/club data changes."
+          else
+            git add src/lib/data/generated/african-domestic-leagues.json src/lib/data/generated/african-domestic-clubs.json
+            git commit -m "chore: sync African domestic leagues/clubs data"
+            git push
+          fi

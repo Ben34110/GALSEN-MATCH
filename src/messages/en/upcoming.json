@@ -3,7 +3,8 @@
     "can": "AFCON",
     "u17": "WC U17",
     "fifa": "FIFA",
-    "events": "Events"
+    "events": "Events",
+    "africa": "Leagues"
   },
   "fifaRanking": {
     "eyebrow": "National teams",
@@ -104,5 +105,16 @@
         "diff": "Diff"
       }
     }
+  },
+  "africanLeagues": {
+    "eyebrow": "Africa",
+    "title": "African leagues",
+    "subtitle": "Matches and rosters for domestic leagues not covered by live tracking.",
+    "matchesHeading": "Matches",
+    "clubsHeading": "Clubs ({count})",
+    "noMatches": "No matches available right now.",
+    "loadingMatches": "Loading…",
+    "loadingRoster": "Loading roster…",
+    "noRoster": "No African player found for this club."
   }
 }

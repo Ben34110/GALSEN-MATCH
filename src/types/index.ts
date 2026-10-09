@@ -72,6 +72,13 @@ export interface AfricanPlayer {
   teamId: number | null; // real API-Football club id — powers "prochain match" lookups
   teamName: string | null;
   teamLogo: string | null;
+  // The current club's real API-Football league id (distinct from
+  // leagueName, which is free text — "Ligue 1" alone is ambiguous between
+  // France and Senegal). null for players whose club wasn't resolved to a
+  // specific league (e.g. still only known via a national-team stat line).
+  // See lib/data/ratings-coverage.ts — this is what determines whether a
+  // player can ever receive a Fantasy rating.
+  leagueId: number | null;
   leagueName: string;
   appearances: number;
   goals: number;
@@ -173,6 +180,27 @@ export interface LeagueTeam {
   leagueId: number;
   leagueName: string;
   type: "club" | "national";
+}
+
+// A club in one of the ~37 African domestic leagues this app has usable
+// data for, pre-crawled via scripts/sync-african-domestic-clubs.mjs into
+// lib/data/generated/african-domestic-clubs.json. Deliberately NOT a
+// LeagueTeam and NOT merged into teams.json/team-directory.ts — this
+// dataset is read only by the "Championnats africains" tab (see
+// lib/data/domestic-leagues.ts) for a read-only matches+roster browse, and
+// must never become favoritable (preferences-editor.tsx) or show up in
+// global search, which LeagueTeam's consumers assume every entry already
+// is. See the plan's "jeu de données séparé" decision for the full
+// reasoning (team-directory.ts ships into the client bundle of the
+// favorites screen — merging ~700+ more clubs there would triple it for
+// clubs that were never meant to be favoritable).
+export interface DomesticClub {
+  id: number;
+  name: string;
+  logo: string;
+  country: string;
+  leagueId: number;
+  leagueName: string;
 }
 
 // One /transfers entry for a player — doubles as both "carrière" (the

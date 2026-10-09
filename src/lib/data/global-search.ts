@@ -46,6 +46,10 @@ function mapPlayerRow(row: PlayerRow): AfricanPlayer {
     teamId: row.team_id,
     teamName: row.team_name,
     teamLogo: row.team_logo,
+    // Search results never feed the Fantasy pickers (see
+    // lib/data/ratings-coverage.ts) — no league id is stored for search
+    // rows, and none is needed here.
+    leagueId: null,
     leagueName: row.league_name,
     appearances: row.appearances,
     goals: row.goals,

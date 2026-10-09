@@ -161,6 +161,16 @@ export function getRecentFixturesForTeam(teamId: number, count = 5) {
   return apiFootballGet<ApiFixture>("/fixtures", { team: teamId, last: count }, 15 * 60);
 }
 
+// The league-wide counterpart to getUpcomingFixturesForTeam/
+// getRecentFixturesForTeam — a whole domestic league's own next/last N
+// fixtures across every club in it, rather than one specific team's. Powers
+// the "Championnats africains" tab (lib/data/domestic-leagues.ts) browsing
+// a static-tier country's Ligue 1 without picking a team first. Same cache
+// window as the per-team variants.
+export function getFixturesForLeague(leagueId: number, season: number, mode: "next" | "last", count = 10) {
+  return apiFootballGet<ApiFixture>("/fixtures", { league: leagueId, season, [mode]: count }, 15 * 60);
+}
+
 // Every fixture live right now, across every league in the world — one
 // request instead of one per favorited team, used by the notification
 // poller (see app/api/cron/poll/route.ts) to find goals/cards for

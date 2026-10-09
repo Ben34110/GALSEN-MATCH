@@ -2,6 +2,7 @@ import { getAfricanPlayers } from "@/lib/data/african-players";
 import { getTeamDirectory } from "@/lib/data/team-directory";
 import { getRecentMatchesForTeam, getUpcomingMatchesForTeam } from "@/lib/data/live";
 import { AFRICAN_NATIONS } from "@/lib/data/african-nations";
+import { getSupabaseAdmin } from "@/lib/supabase";
 import {
   getFixturePlayerStats,
   getLeagueCurrentSeason,
@@ -102,9 +103,106 @@ async function resolveSeasonCandidates(teamId: number | null): Promise<number[]>
 // upcoming fixtures). Returns null only when the id isn't in the tracked
 // pool at all (not a transient fetch failure — each section below degrades
 // independently instead of blanking the whole page).
+interface DomesticPlayerRow {
+  id: number;
+  name: string;
+  firstname: string | null;
+  lastname: string | null;
+  age: number | null;
+  nationality: string;
+  photo: string;
+  position: string | null;
+  team_id: number | null;
+  team_name: string | null;
+  team_logo: string | null;
+  league_name: string;
+  appearances: number;
+  goals: number;
+  assists: number;
+}
+
+// Fallback for a player found via global search (lib/data/global-search.ts)
+// but absent from getAfricanPlayers() — a domestic-only African player from
+// one of the static-tier leagues (see scripts/sync-domestic-players.mjs),
+// who exists only in Supabase's `players` table. Degrades two things
+// relative to the international path above, deliberately rather than by
+// omission:
+// - currentSeason is built straight from the stored row instead of a live
+//   getPlayerProfile call: this data already came from the exact same
+//   endpoint at sync time, so a second live call would just re-fetch the
+//   same (likely unchanged) numbers at extra API cost for a marginal
+//   freshness gain.
+// - recentMatchEvents is always empty — confirmed by hand (2026-10-09)
+//   that /fixtures/players (the endpoint it needs) returns zero results for
+//   every static-tier African league, so calling it here would only ever
+//   waste a request for a guaranteed-empty result.
+// recentMatches/upcomingMatches/transfers are still live (team-id-keyed and
+// generic — no reason they'd be any less accurate for a domestic player).
+async function getDomesticPlayerDetail(playerId: number): Promise<PlayerDetail | null> {
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return null;
+
+  const { data } = await supabase.from("players").select("*").eq("id", playerId).maybeSingle();
+  if (!data) return null;
+  const row = data as DomesticPlayerRow;
+
+  const [transfersResult, recentMatches, upcomingMatches] = await Promise.all([
+    getPlayerTransfers(playerId),
+    row.team_id ? getRecentMatchesForTeam(row.team_id, 5) : Promise.resolve([]),
+    row.team_id ? getUpcomingMatchesForTeam(row.team_id, 5).catch(() => []) : Promise.resolve([]),
+  ]);
+
+  const transfers: PlayerTransferRecord[] = transfersResult.error
+    ? []
+    : (transfersResult.data[0]?.transfers ?? [])
+        .filter((t) => t.teams.in.id != null)
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 15)
+        .map((t) => ({
+          date: t.date,
+          type: t.type,
+          clubFrom: t.teams.out?.id != null ? { id: t.teams.out.id, name: t.teams.out.name, logo: t.teams.out.logo } : null,
+          clubTo: { id: t.teams.in.id as number, name: t.teams.in.name, logo: t.teams.in.logo },
+        }));
+
+  const currentSeason: PlayerSeasonStats | null = row.team_name
+    ? {
+        displaySeason: displaySeasonLabel(new Date().getFullYear()),
+        leagueName: row.league_name,
+        teamName: row.team_name,
+        teamLogo: row.team_logo ?? "",
+        appearances: row.appearances,
+        goals: row.goals,
+        assists: row.assists,
+        rating: null,
+        yellowCards: 0,
+        redCards: 0,
+      }
+    : null;
+
+  return {
+    id: row.id,
+    name: row.name,
+    firstname: row.firstname,
+    lastname: row.lastname,
+    age: row.age,
+    nationality: row.nationality,
+    photo: row.photo,
+    position: row.position,
+    teamId: row.team_id,
+    teamName: row.team_name,
+    teamLogo: row.team_logo,
+    currentSeason,
+    recentMatches: recentMatches.slice(0, 3),
+    recentMatchEvents: {},
+    upcomingMatches: upcomingMatches.slice(0, 3),
+    transfers,
+  };
+}
+
 export async function getPlayerDetail(playerId: number): Promise<PlayerDetail | null> {
   const base = getAfricanPlayers().find((p) => p.id === playerId);
-  if (!base) return null;
+  if (!base) return getDomesticPlayerDetail(playerId);
 
   const seasonCandidates = await resolveSeasonCandidates(base.teamId);
 

@@ -12,6 +12,8 @@
     "sync:fifa-ranking": "node scripts/sync-fifa-ranking.mjs",
     "sync:mercato": "node scripts/sync-mercato.mjs",
     "sync:search-tables": "node scripts/sync-search-tables.mjs",
+    "discover:african-leagues": "node scripts/discover-african-leagues.mjs",
+    "sync:domestic-clubs": "node scripts/sync-african-domestic-clubs.mjs",
     "ios:sync": "cap sync ios",
     "ios:open": "cap open ios"
   },
