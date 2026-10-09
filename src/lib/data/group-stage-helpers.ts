@@ -1,5 +1,5 @@
 import {
-  getFixturesForRound,
+  getAllFixturesForSeason,
   getLeagueCurrentSeason,
   getStandingsForSeason,
   type ApiFixture,
@@ -26,6 +26,45 @@ const NATION_NAME_ALIASES: Record<string, string> = {
 export function normalizeNationName(teamName: string): string {
   const countryName = teamName.replace(/\s+U(17|20|23)$/, "");
   return NATION_NAME_ALIASES[countryName] ?? countryName;
+}
+
+// A handful of competing nations' full names are long enough to overflow a
+// fixture row's fixed-width team-name slot even with `truncate` applied
+// (confirmed: "Equatorial Guinea" and "Central African Republic" both
+// compete in the CAN 2027 qualifiers) — shortened here rather than relying
+// on an ellipsis mid-word, which reads worse than a clear abbreviation.
+// Keyed on the raw API-Football team name (matches fixture.teams.home/
+// away.name directly, before any U17 suffix stripping), not run through
+// normalizeNationName, since callers display this instead of the original
+// name, not as a lookup key.
+const LONG_NAME_SHORTHANDS: Record<string, string> = {
+  "Equatorial Guinea": "Eq. Guinea",
+  "Central African Republic": "CAR",
+  "Sao Tome and Principe": "Sao Tome & Principe",
+  "Democratic Republic of Congo": "DR Congo",
+};
+
+export function shortenTeamName(teamName: string): string {
+  const suffixMatch = teamName.match(/^(.*?)(\s+U(?:17|20|23))$/);
+  const base = suffixMatch ? suffixMatch[1] : teamName;
+  const suffix = suffixMatch ? suffixMatch[2] : "";
+  return (LONG_NAME_SHORTHANDS[base] ?? base) + suffix;
+}
+
+// A fixture's `round` string is a raw API-Football value ("Group Stage -
+// 3", "Preliminary Round", ...) — this pulls out just the matchday number
+// (or signals the preliminary round) so the UI (can-qualifiers-fixtures-
+// list.tsx, u17-world-cup-fixtures-list.tsx) can render a translated label
+// for WHATEVER round is currently showing, instead of a fixed two-entry
+// map tied to specific matchday numbers (which is what let those labels
+// carry a hardcoded calendar date that went stale the moment that
+// matchday was actually played — the round shown is now picked
+// dynamically, see currentRoundWindow below).
+export function parseGroupStageRound(round: string): { matchday: number } | { preliminary: true } | null {
+  const match = round.match(/^Group Stage - (\d+)$/);
+  if (match) return { matchday: Number(match[1]) };
+  if (round === "Preliminary Round") return { preliminary: true };
+  return null;
 }
 
 // undefined for the rare non-African/unmapped name — callers fall back to
@@ -130,18 +169,58 @@ interface GroupStageRoundsResult {
   error: string | null;
 }
 
-// Fetches the first two named matchdays for a competition — empty on any
-// failure (unconfigured/network/season not resolvable), never throws.
-// Shared by getGroupStageFixtures and getGroupStageStandings's pre-season
-// fallback so both call sites derive groups from the exact same fetch
-// (Next.js dedupes the identical underlying `fetch` calls within a request).
-export async function getGroupStageRounds(leagueId: number, matchdayRounds: [string, string]): Promise<GroupStageRoundsResult> {
+const FINISHED_STATUSES = new Set(["FT", "AET", "PEN", "AWD", "WO"]);
+
+// Which matchday(s) to actually show — the earliest round that isn't fully
+// finished yet (its own kickoff date may already be in the past: a round
+// spread across several days, or a postponed fixture, still counts as
+// "current" until every one of its fixtures has a final result), plus the
+// round right after it for the same two-matchday window the UI has always
+// shown. Used to replace a hardcoded round name (which used to go stale
+// the moment that matchday was actually played — confirmed: the CAN
+// qualifiers section kept showing the 23/27 September matchdays long after
+// both had finished) with whatever's genuinely next. Falls back to the
+// single last round once the whole competition is over (nothing left to
+// be "current"), so there's still something to show instead of blanking
+// the section.
+function currentRoundWindow(allFixtures: ApiFixture[]): string[] {
+  const byRound = new Map<string, ApiFixture[]>();
+  for (const fixture of allFixtures) {
+    const list = byRound.get(fixture.league.round) ?? [];
+    list.push(fixture);
+    byRound.set(fixture.league.round, list);
+  }
+
+  const rounds = Array.from(byRound.entries())
+    .map(([round, fixtures]) => ({
+      round,
+      minDate: Math.min(...fixtures.map((f) => new Date(f.fixture.date).getTime())),
+      allFinished: fixtures.every((f) => FINISHED_STATUSES.has(f.fixture.status.short)),
+    }))
+    .sort((a, b) => a.minDate - b.minDate);
+
+  if (rounds.length === 0) return [];
+
+  const currentIndex = rounds.findIndex((r) => !r.allFinished);
+  const startIndex = currentIndex === -1 ? rounds.length - 1 : currentIndex;
+  return rounds.slice(startIndex, startIndex + 2).map((r) => r.round);
+}
+
+// Fetches the whole season's fixtures once, then narrows to whichever
+// matchday(s) are current — empty on any failure (unconfigured/network/
+// season not resolvable), never throws. Shared by getGroupStageFixtures
+// and getGroupStageStandings's pre-season fallback so both call sites
+// derive groups from the exact same fetch (Next.js dedupes the identical
+// underlying `fetch` call within a request).
+export async function getGroupStageRounds(leagueId: number): Promise<GroupStageRoundsResult> {
   const season = await getLeagueCurrentSeason(leagueId);
   if (!season) return { fixtures: [], groups: [], error: "Saison introuvable via API-Football." };
 
-  const rounds = await Promise.all(matchdayRounds.map((round) => getFixturesForRound(leagueId, season.querySeason, round)));
+  const result = await getAllFixturesForSeason(leagueId, season.querySeason);
+  if (result.error) return { fixtures: [], groups: [], error: result.error };
 
-  const rawFixtures = rounds.flatMap((result) => (result.error ? [] : result.data));
+  const windowRounds = new Set(currentRoundWindow(result.data));
+  const rawFixtures = result.data.filter((fixture) => windowRounds.has(fixture.league.round));
 
   const fixtures = rawFixtures
     .map(
@@ -155,12 +234,11 @@ export async function getGroupStageRounds(leagueId: number, matchdayRounds: [str
     )
     .sort((a, b) => new Date(a.kickoffAt).getTime() - new Date(b.kickoffAt).getTime());
 
-  const roundError = rounds.find((result) => result.error)?.error ?? null;
-  return { fixtures, groups: deriveGroups(rawFixtures), error: fixtures.length === 0 ? roundError : null };
+  return { fixtures, groups: deriveGroups(rawFixtures), error: fixtures.length === 0 ? "Aucun calendrier disponible." : null };
 }
 
-export async function getGroupStageFixtures(leagueId: number, matchdayRounds: [string, string]): Promise<GroupStageFixturesResult> {
-  const { fixtures, error } = await getGroupStageRounds(leagueId, matchdayRounds);
+export async function getGroupStageFixtures(leagueId: number): Promise<GroupStageFixturesResult> {
+  const { fixtures, error } = await getGroupStageRounds(leagueId);
   return { fixtures, error };
 }
 
@@ -207,7 +285,7 @@ function zeroStandingRow(team: ApiFixtureTeam): GroupStageStandingRow {
   };
 }
 
-export async function getGroupStageStandings(leagueId: number, matchdayRounds: [string, string]): Promise<GroupStageStandingsResult> {
+export async function getGroupStageStandings(leagueId: number): Promise<GroupStageStandingsResult> {
   const season = await getLeagueCurrentSeason(leagueId);
   if (!season) return { groups: null, error: "Saison introuvable via API-Football.", isProvisional: false };
 
@@ -231,7 +309,7 @@ export async function getGroupStageStandings(leagueId: number, matchdayRounds: [
   // and teams are visible immediately instead of a placeholder message.
   // This becomes dead weight the moment API-Football populates real
   // standings — the branch above takes over automatically.
-  const { groups: derivedGroups, error: fixturesError } = await getGroupStageRounds(leagueId, matchdayRounds);
+  const { groups: derivedGroups, error: fixturesError } = await getGroupStageRounds(leagueId);
   if (derivedGroups.length === 0) return { groups: null, error: fixturesError, isProvisional: false };
 
   return {

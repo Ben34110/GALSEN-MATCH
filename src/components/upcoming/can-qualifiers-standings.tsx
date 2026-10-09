@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { TeamFlagOrCrest } from "@/components/upcoming/team-flag-or-crest";
+import { shortenTeamName } from "@/lib/data/group-stage-helpers";
 import type { CanQualifierGroup } from "@/lib/data/can-qualifiers";
 
 // Two honest states, decided here (not in the data layer — see
@@ -80,7 +81,7 @@ export function CanQualifiersStandings({
                     <td className="py-2 pl-2 pr-1 font-semibold text-foreground">
                       <span className="flex items-center gap-1.5">
                         <TeamFlagOrCrest name={row.teamName} logo={row.teamLogo} size={18} />
-                        <span className="min-w-0">{row.teamName}</span>
+                        <span className="min-w-0 truncate">{shortenTeamName(row.teamName)}</span>
                       </span>
                     </td>
                     <td className="py-2 text-right tabular-nums font-extrabold text-accent">{row.points}</td>

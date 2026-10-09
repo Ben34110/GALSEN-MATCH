@@ -70,7 +70,7 @@ function MatchesList({ fixtures, error }: { fixtures: DomesticFixture[]; error: 
       {fixtures.map((fixture) => (
         <Link key={fixture.id} href={`/live/match/${fixture.id}?from=/upcoming`}>
           <Card interactive className="flex items-center gap-2 p-3">
-            <div className="flex flex-1 items-center justify-end gap-2 text-right">
+            <div className="flex min-w-0 flex-1 items-center justify-end gap-2 text-right">
               <span className="truncate text-sm font-semibold text-foreground">{fixture.homeTeam.name}</span>
               {fixture.homeTeam.logo && (
                 <Image src={fixture.homeTeam.logo} alt="" width={20} height={20} className="size-5 shrink-0 object-contain" unoptimized />
@@ -79,7 +79,7 @@ function MatchesList({ fixtures, error }: { fixtures: DomesticFixture[]; error: 
             <span className="shrink-0 text-[11px] font-semibold text-muted">
               {fixture.status === "finished" ? formatKickoff(fixture.kickoffAt).split(" ").slice(0, 2).join(" ") : formatKickoff(fixture.kickoffAt)}
             </span>
-            <div className="flex flex-1 items-center gap-2">
+            <div className="flex min-w-0 flex-1 items-center gap-2">
               {fixture.awayTeam.logo && (
                 <Image src={fixture.awayTeam.logo} alt="" width={20} height={20} className="size-5 shrink-0 object-contain" unoptimized />
               )}
@@ -113,9 +113,9 @@ function CountryRow({ league, clubs }: { league: DomesticLeagueSummary; clubs: D
         className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left"
         aria-expanded={open}
       >
-        <span>
-          <span className="block text-sm font-bold text-foreground">{league.country}</span>
-          <span className="block text-[11px] text-muted">{league.leagueName}</span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-sm font-bold text-foreground">{league.country}</span>
+          <span className="block truncate text-[11px] text-muted">{league.leagueName}</span>
         </span>
         <ChevronDown size={18} className={cn("shrink-0 text-muted transition-transform", open && "rotate-180")} aria-hidden />
       </button>

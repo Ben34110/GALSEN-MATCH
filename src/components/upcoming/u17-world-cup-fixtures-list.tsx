@@ -8,14 +8,17 @@ import { useOnboardingProfile } from "@/hooks/use-onboarding-profile";
 import { getAfricanNation, nationTeamId } from "@/lib/data/african-nations";
 import { MatchFavoriteButton } from "@/components/upcoming/match-favorite-button";
 import { TeamFlagOrCrest } from "@/components/upcoming/team-flag-or-crest";
+import { parseGroupStageRound, shortenTeamName } from "@/lib/data/group-stage-helpers";
 import type { U17WorldCupFixture } from "@/lib/data/u17-world-cup";
 
 export function U17WorldCupFixturesList({ fixtures, error }: { fixtures: U17WorldCupFixture[]; error: string | null }) {
   const t = useTranslations("upcoming.u17WorldCup");
-  const roundLabels: Record<string, string> = {
-    "Group Stage - 1": t("rounds.group1"),
-    "Group Stage - 2": t("rounds.group2"),
-  };
+
+  function roundLabel(round: string): string {
+    const parsed = parseGroupStageRound(round);
+    if (!parsed) return round;
+    return "preliminary" in parsed ? t("rounds.preliminary") : t("rounds.matchday", { n: parsed.matchday });
+  }
 
   // Unlike the CAN qualifiers (all-African), this is a global field — still
   // worth highlighting the visitor's own country's match the same way,
@@ -38,7 +41,7 @@ export function U17WorldCupFixturesList({ fixtures, error }: { fixtures: U17Worl
     <div className="flex flex-col gap-5">
       {rounds.map((round) => (
         <div key={round}>
-          <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">{roundLabels[round] ?? round}</h3>
+          <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">{roundLabel(round)}</h3>
           <div className="flex flex-col gap-2">
             {fixtures
               .filter((fixture) => fixture.round === round)
@@ -56,17 +59,17 @@ export function U17WorldCupFixturesList({ fixtures, error }: { fixtures: U17Worl
                       isUserMatch && "border-accent bg-accent/5 ring-1 ring-inset ring-accent/30"
                     )}
                   >
-                    <Link href={`/live/match/${fixture.id}?from=/upcoming`} className="flex flex-1 items-center gap-3">
-                      <div className="flex flex-1 items-center justify-end gap-2 text-right">
-                        <span className="truncate text-sm font-semibold text-foreground">{fixture.homeTeam.name}</span>
+                    <Link href={`/live/match/${fixture.id}?from=/upcoming`} className="flex min-w-0 flex-1 items-center gap-3">
+                      <div className="flex min-w-0 flex-1 items-center justify-end gap-2 text-right">
+                        <span className="truncate text-sm font-semibold text-foreground">{shortenTeamName(fixture.homeTeam.name)}</span>
                         <TeamFlagOrCrest name={fixture.homeTeam.name} logo={fixture.homeTeam.logo} size={22} />
                       </div>
                       <span className="shrink-0 text-[11px] font-semibold text-muted">
                         {formatKickoff(fixture.kickoffAt)}
                       </span>
-                      <div className="flex flex-1 items-center gap-2">
+                      <div className="flex min-w-0 flex-1 items-center gap-2">
                         <TeamFlagOrCrest name={fixture.awayTeam.name} logo={fixture.awayTeam.logo} size={22} />
-                        <span className="truncate text-sm font-semibold text-foreground">{fixture.awayTeam.name}</span>
+                        <span className="truncate text-sm font-semibold text-foreground">{shortenTeamName(fixture.awayTeam.name)}</span>
                       </div>
                     </Link>
                     <MatchFavoriteButton fixtureId={fixture.id} matchLabel={matchLabel} />

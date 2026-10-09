@@ -195,11 +195,20 @@ async function main() {
 
   console.log(`${clubs.length} clubs, ${internationalIds.size} known internationals to skip, ${alreadyResolvedIds.size} domestic players already resolved.\n`);
 
+  // A player can appear on more than one club's squad listing within the
+  // same run (a mid-season transfer not yet reflected everywhere, or a
+  // loan showing up on both sides) — keeping only the first sighting
+  // avoids two candidate rows for the same id reaching the Supabase
+  // upsert batch below, which Postgres rejects outright ("ON CONFLICT DO
+  // UPDATE command cannot affect row a second time") rather than silently
+  // picking one.
+  const seenCandidateIds = new Set();
   const allCandidates = [];
   for (const club of clubs) {
     const squad = await fetchSquad(club.id);
     for (const player of squad) {
-      if (internationalIds.has(player.id) || alreadyResolvedIds.has(player.id)) continue;
+      if (internationalIds.has(player.id) || alreadyResolvedIds.has(player.id) || seenCandidateIds.has(player.id)) continue;
+      seenCandidateIds.add(player.id);
       allCandidates.push({ ...player, club });
     }
   }
@@ -250,7 +259,10 @@ async function main() {
     };
   });
 
-  const toWrite = (rows ?? []).filter(Boolean);
+  // Belt-and-suspenders on top of the seenCandidateIds guard above — keeps
+  // a single batch upsert safe even if some other duplicate source ever
+  // slips through.
+  const toWrite = [...new Map((rows ?? []).filter(Boolean).map((row) => [row.id, row])).values()];
   console.log(`\n${toWrite.length} African domestic players found (out of ${checked} checked). Upserting to Supabase...`);
 
   for (let i = 0; i < toWrite.length; i += 500) {

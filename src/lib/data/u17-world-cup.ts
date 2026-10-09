@@ -15,7 +15,6 @@ import { AFRICAN_NATIONS } from "@/lib/data/african-nations";
 // Senegal, Mali, Côte d'Ivoire, Egypt, Uganda, Tanzania, Morocco,
 // Mozambique confirmed in round 1 alone).
 const U17_WORLD_CUP_LEAGUE_ID = 587;
-const FIRST_TWO_MATCHDAYS: [string, string] = ["Group Stage - 1", "Group Stage - 2"];
 
 export type U17WorldCupFixture = GroupStageFixture;
 export type U17WorldCupGroup = GroupStageGroup;
@@ -39,7 +38,7 @@ function isAfricanTeamName(teamName: string): boolean {
 }
 
 export async function getU17WorldCupFixtures(): Promise<U17WorldCupFixturesResult> {
-  const result = await getGroupStageFixtures(U17_WORLD_CUP_LEAGUE_ID, FIRST_TWO_MATCHDAYS);
+  const result = await getGroupStageFixtures(U17_WORLD_CUP_LEAGUE_ID);
   return {
     ...result,
     fixtures: result.fixtures.filter(
@@ -49,5 +48,5 @@ export async function getU17WorldCupFixtures(): Promise<U17WorldCupFixturesResul
 }
 
 export function getU17WorldCupStandings(): Promise<U17WorldCupStandingsResult> {
-  return getGroupStageStandings(U17_WORLD_CUP_LEAGUE_ID, FIRST_TWO_MATCHDAYS);
+  return getGroupStageStandings(U17_WORLD_CUP_LEAGUE_ID);
 }

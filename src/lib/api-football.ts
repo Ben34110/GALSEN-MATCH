@@ -279,6 +279,16 @@ export function getFixturesForRound(leagueId: number, season: number, round: str
   return apiFootballGet<ApiFixture>("/fixtures", { league: leagueId, season, round }, 6 * 60 * 60);
 }
 
+// Every fixture across every round of a competition's season, no round
+// filter — used by group-stage-helpers.ts to figure out which matchday is
+// "current" (the earliest round not yet fully finished) instead of a
+// hardcoded round name going stale the moment that matchday is played.
+// Same 6h cache as getFixturesForRound: which round is current doesn't
+// change minute to minute.
+export function getAllFixturesForSeason(leagueId: number, season: number) {
+  return apiFootballGet<ApiFixture>("/fixtures", { league: leagueId, season }, 6 * 60 * 60);
+}
+
 export interface ApiStandingRow {
   rank: number;
   team: { id: number; name: string; logo: string };

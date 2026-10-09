@@ -36,14 +36,14 @@
   "canQualifiers": {
     "eyebrow": "CAN 2027",
     "title": "Qualifications",
-    "subtitle": "Les deux premières journées de septembre 2026, groupe par groupe.",
+    "subtitle": "Calendrier et classement de la journée en cours, groupe par groupe.",
     "views": {
       "matches": "Matchs",
       "standings": "Classement"
     },
     "rounds": {
-      "group1": "1ère journée — 23 septembre 2026",
-      "group2": "2e journée — 27 septembre 2026"
+      "matchday": "{n}e journée",
+      "preliminary": "Tour préliminaire"
     },
     "fixtures": {
       "unavailable": "Calendrier indisponible pour l'instant."
@@ -79,14 +79,14 @@
   "u17WorldCup": {
     "eyebrow": "Coupe du Monde",
     "title": "U17",
-    "subtitle": "Les deux premières journées, du 19 au 22 novembre 2026, groupe par groupe.",
+    "subtitle": "Calendrier et classement de la journée en cours, groupe par groupe.",
     "views": {
       "matches": "Matchs",
       "standings": "Classement"
     },
     "rounds": {
-      "group1": "1ère journée — 19 novembre 2026",
-      "group2": "2e journée — 22 novembre 2026"
+      "matchday": "{n}e journée",
+      "preliminary": "Tour préliminaire"
     },
     "fixtures": {
       "unavailable": "Calendrier indisponible pour l'instant."
