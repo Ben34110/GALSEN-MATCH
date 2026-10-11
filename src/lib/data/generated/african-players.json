@@ -74568,5 +74568,43 @@
     "goals": 3,
     "assists": 5,
     "refreshedAt": "2026-10-09T12:33:22.668Z"
+  },
+  {
+    "id": 334518,
+    "name": "M. Jarju",
+    "firstname": "Moses",
+    "lastname": "Jarju",
+    "age": 22,
+    "nationality": "Gambia",
+    "photo": "https://media.api-sports.io/football/players/334518.png",
+    "position": "Defender",
+    "teamId": 3615,
+    "teamName": "Chornomorets",
+    "teamLogo": "https://media.api-sports.io/football/teams/3615.png",
+    "leagueId": 333,
+    "leagueName": "Premier League",
+    "appearances": 0,
+    "goals": 0,
+    "assists": 0,
+    "refreshedAt": "2026-10-11T13:57:29.722Z"
+  },
+  {
+    "id": 408528,
+    "name": "M. Marong",
+    "firstname": "Modou Lamin",
+    "lastname": "Marong",
+    "age": 20,
+    "nationality": "Gambia",
+    "photo": "https://media.api-sports.io/football/players/408528.png",
+    "position": "Attacker",
+    "teamId": 10545,
+    "teamName": "Šamorín",
+    "teamLogo": "https://media.api-sports.io/football/teams/10545.png",
+    "leagueId": 271,
+    "leagueName": "NB I",
+    "appearances": 0,
+    "goals": 0,
+    "assists": 0,
+    "refreshedAt": "2026-10-11T13:57:29.722Z"
   }
 ]
