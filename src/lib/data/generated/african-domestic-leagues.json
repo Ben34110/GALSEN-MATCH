@@ -44,7 +44,7 @@
     "status": "OK",
     "leagueId": 411,
     "leagueName": "Elite One",
-    "season": 2026
+    "season": 2027
   },
   {
     "country": "Cape Verde",
@@ -157,8 +157,8 @@
     "status": "OK",
     "leagueId": 760,
     "leagueName": "LFA First Division",
-    "season": 2025,
-    "teamCount": 15,
+    "season": 2026,
+    "teamCount": 18,
     "ambiguous": false
   },
   {

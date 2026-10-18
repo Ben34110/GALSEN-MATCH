@@ -552,14 +552,6 @@
     "leagueName": "Elite One"
   },
   {
-    "id": 5405,
-    "name": "Fortuna Mfou",
-    "logo": "https://media.api-sports.io/football/teams/5405.png",
-    "country": "Cameroon",
-    "leagueId": 411,
-    "leagueName": "Elite One"
-  },
-  {
     "id": 5409,
     "name": "PWD Bamenda",
     "logo": "https://media.api-sports.io/football/teams/5409.png",
@@ -624,14 +616,6 @@
     "leagueName": "Elite One"
   },
   {
-    "id": 16526,
-    "name": "Jeunes Fauves",
-    "logo": "https://media.api-sports.io/football/teams/16526.png",
-    "country": "Cameroon",
-    "leagueId": 411,
-    "leagueName": "Elite One"
-  },
-  {
     "id": 20799,
     "name": "Aigle Royal de Moungo",
     "logo": "https://media.api-sports.io/football/teams/20799.png",
@@ -643,6 +627,14 @@
     "id": 20800,
     "name": "Victoria United",
     "logo": "https://media.api-sports.io/football/teams/20800.png",
+    "country": "Cameroon",
+    "leagueId": 411,
+    "leagueName": "Elite One"
+  },
+  {
+    "id": 25430,
+    "name": "Union Abong-Mbang",
+    "logo": "https://media.api-sports.io/football/teams/25430.png",
     "country": "Cameroon",
     "leagueId": 411,
     "leagueName": "Elite One"
@@ -1728,6 +1720,14 @@
     "leagueName": "LFA First Division"
   },
   {
+    "id": 16146,
+    "name": "NPA Anchors",
+    "logo": "https://media.api-sports.io/football/teams/16146.png",
+    "country": "Liberia",
+    "leagueId": 760,
+    "leagueName": "LFA First Division"
+  },
+  {
     "id": 16151,
     "name": "Watanga",
     "logo": "https://media.api-sports.io/football/teams/16151.png",
@@ -1744,9 +1744,9 @@
     "leagueName": "LFA First Division"
   },
   {
-    "id": 19890,
-    "name": "Jubilee",
-    "logo": "https://media.api-sports.io/football/teams/19890.png",
+    "id": 18111,
+    "name": "Invincible Eleven",
+    "logo": "https://media.api-sports.io/football/teams/18111.png",
     "country": "Liberia",
     "leagueId": 760,
     "leagueName": "LFA First Division"
@@ -1768,9 +1768,9 @@
     "leagueName": "LFA First Division"
   },
   {
-    "id": 25192,
-    "name": "Fassell",
-    "logo": "https://media.api-sports.io/football/teams/25192.png",
+    "id": 25193,
+    "name": "Shaita",
+    "logo": "https://media.api-sports.io/football/teams/25193.png",
     "country": "Liberia",
     "leagueId": 760,
     "leagueName": "LFA First Division"
@@ -1803,6 +1803,22 @@
     "id": 26910,
     "name": "Gardnersville",
     "logo": "https://media.api-sports.io/football/teams/26910.png",
+    "country": "Liberia",
+    "leagueId": 760,
+    "leagueName": "LFA First Division"
+  },
+  {
+    "id": 28535,
+    "name": "Golden Dream",
+    "logo": "https://media.api-sports.io/football/teams/28535.png",
+    "country": "Liberia",
+    "leagueId": 760,
+    "leagueName": "LFA First Division"
+  },
+  {
+    "id": 28536,
+    "name": "District 17",
+    "logo": "https://media.api-sports.io/football/teams/28536.png",
     "country": "Liberia",
     "leagueId": 760,
     "leagueName": "LFA First Division"
