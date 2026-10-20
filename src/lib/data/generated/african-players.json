@@ -74682,5 +74682,43 @@
     "goals": 2,
     "assists": 0,
     "refreshedAt": "2026-10-13T14:55:45.866Z"
+  },
+  {
+    "id": 579375,
+    "name": "Djibirin Harouna",
+    "firstname": "Harouna",
+    "lastname": "Djibirin",
+    "age": 19,
+    "nationality": "Cameroon",
+    "photo": "https://media.api-sports.io/football/players/579375.png",
+    "position": "Attacker",
+    "teamId": 77,
+    "teamName": "Angers",
+    "teamLogo": "https://media.api-sports.io/football/teams/77.png",
+    "leagueId": 61,
+    "leagueName": "Ligue 1",
+    "appearances": 9,
+    "goals": 2,
+    "assists": 1,
+    "refreshedAt": "2026-10-20T12:39:59.053Z"
+  },
+  {
+    "id": 419919,
+    "name": "M. Jobe",
+    "firstname": null,
+    "lastname": null,
+    "age": 19,
+    "nationality": "Gambia",
+    "photo": "https://media.api-sports.io/football/players/419919.png",
+    "position": "Midfielder",
+    "teamId": 3615,
+    "teamName": "Chornomorets",
+    "teamLogo": "https://media.api-sports.io/football/teams/3615.png",
+    "leagueId": 333,
+    "leagueName": "Premier League",
+    "appearances": 0,
+    "goals": 0,
+    "assists": 0,
+    "refreshedAt": "2026-10-20T12:39:59.053Z"
   }
 ]
