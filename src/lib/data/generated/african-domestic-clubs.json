@@ -600,14 +600,6 @@
     "leagueName": "Elite One"
   },
   {
-    "id": 15566,
-    "name": "Gazelle",
-    "logo": "https://media.api-sports.io/football/teams/15566.png",
-    "country": "Cameroon",
-    "leagueId": 411,
-    "leagueName": "Elite One"
-  },
-  {
     "id": 16524,
     "name": "Dynamo de Douala",
     "logo": "https://media.api-sports.io/football/teams/16524.png",
@@ -635,6 +627,14 @@
     "id": 25430,
     "name": "Union Abong-Mbang",
     "logo": "https://media.api-sports.io/football/teams/25430.png",
+    "country": "Cameroon",
+    "leagueId": 411,
+    "leagueName": "Elite One"
+  },
+  {
+    "id": 28568,
+    "name": "Gazelle",
+    "logo": "https://media.api-sports.io/football/teams/28568.png",
     "country": "Cameroon",
     "leagueId": 411,
     "leagueName": "Elite One"
@@ -1352,14 +1352,6 @@
     "leagueName": "Ligue 1"
   },
   {
-    "id": 18182,
-    "name": "Afrique Football Élite",
-    "logo": "https://media.api-sports.io/football/teams/18182.png",
-    "country": "Guinea",
-    "leagueId": 378,
-    "leagueName": "Ligue 1"
-  },
-  {
     "id": 20627,
     "name": "ASM Sangarédi",
     "logo": "https://media.api-sports.io/football/teams/20627.png",
@@ -1371,6 +1363,14 @@
     "id": 20726,
     "name": "Renaissance",
     "logo": "https://media.api-sports.io/football/teams/20726.png",
+    "country": "Guinea",
+    "leagueId": 378,
+    "leagueName": "Ligue 1"
+  },
+  {
+    "id": 25447,
+    "name": "Guinée Foot Elite",
+    "logo": "https://media.api-sports.io/football/teams/25447.png",
     "country": "Guinea",
     "leagueId": 378,
     "leagueName": "Ligue 1"
@@ -1392,9 +1392,9 @@
     "leagueName": "Ligue 1"
   },
   {
-    "id": 2466,
-    "name": "Vihiga United FC",
-    "logo": "https://media.api-sports.io/football/teams/2466.png",
+    "id": 2468,
+    "name": "Kariobangi Sharks",
+    "logo": "https://media.api-sports.io/football/teams/2468.png",
     "country": "Kenya",
     "leagueId": 277,
     "leagueName": "Super League"
@@ -1403,6 +1403,14 @@
     "id": 2469,
     "name": "Nzoia Sugar",
     "logo": "https://media.api-sports.io/football/teams/2469.png",
+    "country": "Kenya",
+    "leagueId": 277,
+    "leagueName": "Super League"
+  },
+  {
+    "id": 2470,
+    "name": "Sofapaka",
+    "logo": "https://media.api-sports.io/football/teams/2470.png",
     "country": "Kenya",
     "leagueId": 277,
     "leagueName": "Super League"
@@ -1448,49 +1456,9 @@
     "leagueName": "Super League"
   },
   {
-    "id": 19482,
-    "name": "MCF",
-    "logo": "https://media.api-sports.io/football/teams/19482.png",
-    "country": "Kenya",
-    "leagueId": 277,
-    "leagueName": "Super League"
-  },
-  {
-    "id": 19484,
-    "name": "Migori Youth",
-    "logo": "https://media.api-sports.io/football/teams/19484.png",
-    "country": "Kenya",
-    "leagueId": 277,
-    "leagueName": "Super League"
-  },
-  {
-    "id": 19485,
-    "name": "Mombasa Elite",
-    "logo": "https://media.api-sports.io/football/teams/19485.png",
-    "country": "Kenya",
-    "leagueId": 277,
-    "leagueName": "Super League"
-  },
-  {
-    "id": 19487,
-    "name": "Mwatate United",
-    "logo": "https://media.api-sports.io/football/teams/19487.png",
-    "country": "Kenya",
-    "leagueId": 277,
-    "leagueName": "Super League"
-  },
-  {
     "id": 19488,
     "name": "Naivas",
     "logo": "https://media.api-sports.io/football/teams/19488.png",
-    "country": "Kenya",
-    "leagueId": 277,
-    "leagueName": "Super League"
-  },
-  {
-    "id": 20686,
-    "name": "Darajani Gogo",
-    "logo": "https://media.api-sports.io/football/teams/20686.png",
     "country": "Kenya",
     "leagueId": 277,
     "leagueName": "Super League"
@@ -1520,9 +1488,9 @@
     "leagueName": "Super League"
   },
   {
-    "id": 24667,
-    "name": "3K",
-    "logo": "https://media.api-sports.io/football/teams/24667.png",
+    "id": 25751,
+    "name": "Kibera Soccer",
+    "logo": "https://media.api-sports.io/football/teams/25751.png",
     "country": "Kenya",
     "leagueId": 277,
     "leagueName": "Super League"
@@ -1547,6 +1515,38 @@
     "id": 26876,
     "name": "Gucha Stars",
     "logo": "https://media.api-sports.io/football/teams/26876.png",
+    "country": "Kenya",
+    "leagueId": 277,
+    "leagueName": "Super League"
+  },
+  {
+    "id": 27732,
+    "name": "Mfalme",
+    "logo": "https://media.api-sports.io/football/teams/27732.png",
+    "country": "Kenya",
+    "leagueId": 277,
+    "leagueName": "Super League"
+  },
+  {
+    "id": 28563,
+    "name": "Spitfire FC",
+    "logo": "https://media.api-sports.io/football/teams/28563.png",
+    "country": "Kenya",
+    "leagueId": 277,
+    "leagueName": "Super League"
+  },
+  {
+    "id": 28564,
+    "name": "Kiminini Combined",
+    "logo": "https://media.api-sports.io/football/teams/28564.png",
+    "country": "Kenya",
+    "leagueId": 277,
+    "leagueName": "Super League"
+  },
+  {
+    "id": 28565,
+    "name": "BB FC",
+    "logo": "https://media.api-sports.io/football/teams/28565.png",
     "country": "Kenya",
     "leagueId": 277,
     "leagueName": "Super League"
@@ -1744,14 +1744,6 @@
     "leagueName": "LFA First Division"
   },
   {
-    "id": 18111,
-    "name": "Invincible Eleven",
-    "logo": "https://media.api-sports.io/football/teams/18111.png",
-    "country": "Liberia",
-    "leagueId": 760,
-    "leagueName": "LFA First Division"
-  },
-  {
     "id": 22358,
     "name": "Paynesville",
     "logo": "https://media.api-sports.io/football/teams/22358.png",
@@ -1763,6 +1755,14 @@
     "id": 25191,
     "name": "Black Man Warrior",
     "logo": "https://media.api-sports.io/football/teams/25191.png",
+    "country": "Liberia",
+    "leagueId": 760,
+    "leagueName": "LFA First Division"
+  },
+  {
+    "id": 25192,
+    "name": "Fassell",
+    "logo": "https://media.api-sports.io/football/teams/25192.png",
     "country": "Liberia",
     "leagueId": 760,
     "leagueName": "LFA First Division"
