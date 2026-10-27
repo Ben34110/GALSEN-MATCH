@@ -74720,5 +74720,43 @@
     "goals": 0,
     "assists": 0,
     "refreshedAt": "2026-10-20T12:39:59.053Z"
+  },
+  {
+    "id": 8972,
+    "name": "S. Tabekou",
+    "firstname": "Serge William",
+    "lastname": "Tabekou Ouambé",
+    "age": 29,
+    "nationality": "Cameroon",
+    "photo": "https://media.api-sports.io/football/players/8972.png",
+    "position": "Midfielder",
+    "teamId": 3424,
+    "teamName": "Krasava Ypsonas",
+    "teamLogo": "https://media.api-sports.io/football/teams/3424.png",
+    "leagueId": 318,
+    "leagueName": "1. Division",
+    "appearances": 0,
+    "goals": 0,
+    "assists": 0,
+    "refreshedAt": "2026-10-27T13:08:25.330Z"
+  },
+  {
+    "id": 20897,
+    "name": "Steve Ambri",
+    "firstname": "Steve Brahim Joshep Omar",
+    "lastname": "Ambri",
+    "age": 27,
+    "nationality": "Guinea-Bissau",
+    "photo": "https://media.api-sports.io/football/players/20897.png",
+    "position": "Attacker",
+    "teamId": 14126,
+    "teamName": "Omonia 29is Maiou",
+    "teamLogo": "https://media.api-sports.io/football/teams/14126.png",
+    "leagueId": 318,
+    "leagueName": "1. Division",
+    "appearances": 0,
+    "goals": 0,
+    "assists": 0,
+    "refreshedAt": "2026-10-27T13:08:25.330Z"
   }
 ]
