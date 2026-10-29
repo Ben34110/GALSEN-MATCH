@@ -74758,5 +74758,43 @@
     "goals": 0,
     "assists": 0,
     "refreshedAt": "2026-10-27T13:08:25.330Z"
+  },
+  {
+    "id": 53634,
+    "name": "P. Boumal",
+    "firstname": "Petrus",
+    "lastname": "Boumal Mayega",
+    "age": 32,
+    "nationality": "Cameroon",
+    "photo": "https://media.api-sports.io/football/players/53634.png",
+    "position": "Midfielder",
+    "teamId": 5327,
+    "teamName": "Al-Nahda",
+    "teamLogo": "https://media.api-sports.io/football/teams/5327.png",
+    "leagueId": 18,
+    "leagueName": "AFC Champions League Two",
+    "appearances": 0,
+    "goals": 0,
+    "assists": 0,
+    "refreshedAt": "2026-10-29T14:05:30.867Z"
+  },
+  {
+    "id": 330558,
+    "name": "K. Peprah",
+    "firstname": "Kwame",
+    "lastname": "Peprah",
+    "age": 25,
+    "nationality": "Ghana",
+    "photo": "https://media.api-sports.io/football/players/330558.png",
+    "position": "Attacker",
+    "teamId": 5396,
+    "teamName": "Svay Rieng",
+    "teamLogo": "https://media.api-sports.io/football/teams/5396.png",
+    "leagueId": 18,
+    "leagueName": "AFC Champions League Two",
+    "appearances": 0,
+    "goals": 0,
+    "assists": 0,
+    "refreshedAt": "2026-10-29T14:05:30.867Z"
   }
 ]
