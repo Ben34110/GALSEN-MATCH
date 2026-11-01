@@ -1560,14 +1560,6 @@
     "leagueName": "Premier League"
   },
   {
-    "id": 12457,
-    "name": "SC Villa",
-    "logo": "https://media.api-sports.io/football/teams/12457.png",
-    "country": "Lesotho",
-    "leagueId": 962,
-    "leagueName": "Premier League"
-  },
-  {
     "id": 15563,
     "name": "Bantu",
     "logo": "https://media.api-sports.io/football/teams/15563.png",
@@ -1675,6 +1667,14 @@
     "id": 26611,
     "name": "Members",
     "logo": "https://media.api-sports.io/football/teams/26611.png",
+    "country": "Lesotho",
+    "leagueId": 962,
+    "leagueName": "Premier League"
+  },
+  {
+    "id": 28600,
+    "name": "Villa",
+    "logo": "https://media.api-sports.io/football/teams/28600.png",
     "country": "Lesotho",
     "leagueId": 962,
     "leagueName": "Premier League"
@@ -2272,14 +2272,6 @@
     "leagueName": "Première Division"
   },
   {
-    "id": 12669,
-    "name": "Bougouni",
-    "logo": "https://media.api-sports.io/football/teams/12669.png",
-    "country": "Mali",
-    "leagueId": 598,
-    "leagueName": "Première Division"
-  },
-  {
     "id": 12677,
     "name": "Réal Bamako",
     "logo": "https://media.api-sports.io/football/teams/12677.png",
@@ -2336,17 +2328,25 @@
     "leagueName": "Première Division"
   },
   {
-    "id": 27222,
-    "name": "Mali Coura",
-    "logo": "https://media.api-sports.io/football/teams/27222.png",
+    "id": 27223,
+    "name": "Derby Academie",
+    "logo": "https://media.api-sports.io/football/teams/27223.png",
     "country": "Mali",
     "leagueId": 598,
     "leagueName": "Première Division"
   },
   {
-    "id": 27223,
-    "name": "Derby Academie",
-    "logo": "https://media.api-sports.io/football/teams/27223.png",
+    "id": 28592,
+    "name": "CS Bamako",
+    "logo": "https://media.api-sports.io/football/teams/28592.png",
+    "country": "Mali",
+    "leagueId": 598,
+    "leagueName": "Première Division"
+  },
+  {
+    "id": 28593,
+    "name": "AS Kayes",
+    "logo": "https://media.api-sports.io/football/teams/28593.png",
     "country": "Mali",
     "leagueId": 598,
     "leagueName": "Première Division"
@@ -3232,25 +3232,9 @@
     "leagueName": "Ligi kuu Bara"
   },
   {
-    "id": 5313,
-    "name": "Espoir",
-    "logo": "https://media.api-sports.io/football/teams/5313.png",
-    "country": "Togo",
-    "leagueId": 1084,
-    "leagueName": "Championnat National"
-  },
-  {
     "id": 6424,
     "name": "ASC Kara",
     "logo": "https://media.api-sports.io/football/teams/6424.png",
-    "country": "Togo",
-    "leagueId": 1084,
-    "leagueName": "Championnat National"
-  },
-  {
-    "id": 8086,
-    "name": "Etoile Filante",
-    "logo": "https://media.api-sports.io/football/teams/8086.png",
     "country": "Togo",
     "leagueId": 1084,
     "leagueName": "Championnat National"
@@ -3339,6 +3323,22 @@
     "id": 25446,
     "name": "Haknour",
     "logo": "https://media.api-sports.io/football/teams/25446.png",
+    "country": "Togo",
+    "leagueId": 1084,
+    "leagueName": "Championnat National"
+  },
+  {
+    "id": 26153,
+    "name": "Etoile Filante",
+    "logo": "https://media.api-sports.io/football/teams/26153.png",
+    "country": "Togo",
+    "leagueId": 1084,
+    "leagueName": "Championnat National"
+  },
+  {
+    "id": 27006,
+    "name": "Espoir",
+    "logo": "https://media.api-sports.io/football/teams/27006.png",
     "country": "Togo",
     "leagueId": 1084,
     "leagueName": "Championnat National"
