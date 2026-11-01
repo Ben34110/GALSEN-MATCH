@@ -74796,5 +74796,24 @@
     "goals": 0,
     "assists": 0,
     "refreshedAt": "2026-10-29T14:05:30.867Z"
+  },
+  {
+    "id": 78406,
+    "name": "Rafidine Abdullah",
+    "firstname": "Rafidine",
+    "lastname": "Abdullah",
+    "age": 28,
+    "nationality": "Comoros",
+    "photo": "https://media.api-sports.io/football/players/78406.png",
+    "position": "Midfielder",
+    "teamId": 3381,
+    "teamName": "Velež",
+    "teamLogo": "https://media.api-sports.io/football/teams/3381.png",
+    "leagueId": 315,
+    "leagueName": "Premijer Liga",
+    "appearances": 0,
+    "goals": 0,
+    "assists": 0,
+    "refreshedAt": "2026-11-01T14:11:28.180Z"
   }
 ]
