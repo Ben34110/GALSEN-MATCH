@@ -75043,5 +75043,43 @@
     "goals": 0,
     "assists": 0,
     "refreshedAt": "2026-11-03T15:00:39.884Z"
+  },
+  {
+    "id": 3027,
+    "name": "A. Zola",
+    "firstname": "Arsène",
+    "lastname": "Zola Kiaku",
+    "age": 29,
+    "nationality": "DR Congo",
+    "photo": "https://media.api-sports.io/football/players/3027.png",
+    "position": "Defender",
+    "teamId": 3535,
+    "teamName": "Al Kuwait",
+    "teamLogo": "https://media.api-sports.io/football/teams/3535.png",
+    "leagueId": 18,
+    "leagueName": "AFC Champions League Two",
+    "appearances": 0,
+    "goals": 0,
+    "assists": 0,
+    "refreshedAt": "2026-11-05T15:18:20.669Z"
+  },
+  {
+    "id": 134612,
+    "name": "E. Barrahma",
+    "firstname": "El Mehdi",
+    "lastname": "Barrahma",
+    "age": 33,
+    "nationality": "Morocco",
+    "photo": "https://media.api-sports.io/football/players/134612.png",
+    "position": "Midfielder",
+    "teamId": 3535,
+    "teamName": "Al Kuwait",
+    "teamLogo": "https://media.api-sports.io/football/teams/3535.png",
+    "leagueId": 18,
+    "leagueName": "AFC Champions League Two",
+    "appearances": 0,
+    "goals": 0,
+    "assists": 0,
+    "refreshedAt": "2026-11-05T15:18:20.669Z"
   }
 ]
